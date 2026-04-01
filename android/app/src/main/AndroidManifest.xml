@@ -1,4 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ====== PERMISSIONS ====== -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!-- Declare camera hardware as optional -->
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+
+    <!-- Add this line here -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+
     <application
         android:label="e_shop"
         android:name="${applicationName}"

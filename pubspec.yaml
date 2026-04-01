@@ -37,22 +37,31 @@ dependencies:
   persistent_bottom_nav_bar_v2: ^6.2.0
   http: ^1.6.0
   flutter_spinkit: ^5.2.2
+  icons_launcher: ^3.0.3
+  shared_preferences: ^2.5.4
+  flutter_secure_storage: ^9.0.0
+  flutter_login: ^6.0.0
+  image_picker: ^1.2.1
+  provider: ^6.0.7
+  carousel_slider: ^5.1.2
+  url_launcher: ^6.3.2
+  smooth_page_indicator: ^1.1.0
+  lottie: ^3.3.2
+  jwt_decoder: ^2.0.1
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+  flutter_map: ^8.2.2
+  latlong2: ^0.9.1
+  crystal_navigation_bar: ^1.1.0
+  flutter_dotenv: ^5.1.0
+
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_native_splash: ^2.4.7
-
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^6.0.0
-
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+  flutter_native_splash: ^2.4.7
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -62,16 +71,24 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/images/logo_shop.png
+    - assets/images/
+    - assets/animations/
     # ---------- Top-level flutter_native_splash ----------
-flutter_native_splash:
-  color: "#ffffff"                     # Background color
-  image: assets/images/logo_shop.png   # Path to your logo
-  android: true
-  ios: true
-  fill: true
+#flutter_native_splash:
+#  color: "#ffffff"                     # Background color
+#  image: assets/images/logo_shop.png   # Path to your logo
+#  android: true
+#  ios: true
+#  fill: true
 
-
+# ---------- App Icon config (TOP LEVEL) ----------
+icons_launcher:
+  image_path: "assets/images/logo_app.png"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
 
   # To add assets to your application, add an assets section, like this:
   # assets:
