@@ -3,6 +3,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/config/env.dart';
+
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
 
@@ -12,7 +14,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   // Mapbox access token (replace with your real token)
-  final String mapboxToken = "pk.eyJ1IjoiY2hoYWlyaW5uIiwiYSI6ImNtbjNkMjI0bDAwMjYycnBzZjZkeWFvbXgifQ.nxV6sPzC2Apsu1FzEViBLw";
+  final String tokenMap = Env.mapboxToken;
 
   // Available Mapbox styles
   final Map<String, String> mapStyles = {
@@ -92,7 +94,7 @@ class _MapScreenState extends State<MapScreen> {
                 urlTemplate:
                 "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
                 additionalOptions: {
-                  "accessToken": mapboxToken,
+                  "accessToken": tokenMap,
                   "id": mapStyles[currentStyle]!,
                 },
               ),
