@@ -1,0 +1,110 @@
+import 'package:e_shop/data/models/user/get_user_model.dart';
+
+import '../../core/storage/token_storage.dart';
+import '../datasources/user_auth_service.dart';
+import '../models/user_model.dart';
+import 'dart:convert';
+import 'dart:developer' as developer;
+
+class User_AuthRepository {
+  final AuthService service;
+  final TokenStorage storage;
+
+  User_AuthRepository({
+    required this.service,
+    required this.storage,
+  });
+
+  // LOGIN
+  Future<UserModel> login(String username, String password) async {
+    try {
+      final res = await service.login(username, password);
+      final user = UserModel.fromJson(res, loginUsername: username);
+
+      if (user.token.isEmpty) throw Exception('No token returned from API');
+
+      // Save user info
+      await storage.writeToken(user.token);
+      await storage.writeUserId(user.id);
+      await storage.writeUsername(user.username);
+      await storage.writeUserEmail(user.email);
+
+      print("Login saved user: ${user.username}, token: ${user.token}");
+      return user;
+    } catch (e) {
+      throw Exception('Login Error: $e');
+    }
+  }
+
+  // REGISTER
+  Future<UserModel> register({
+    required String username,
+    required String email,
+    required String password,
+    required String fullName,
+  }) async {
+    try {
+      // Call register API
+      final res = await service.register(
+        username: username,
+        email: email,
+        password: password,
+        fullName: fullName,
+      );
+
+      print("REGISTER RAW RESPONSE: $res");
+
+      // Parse UserModel from register response
+      final user = UserModel.fromJson(res);
+
+      // Save user info to storage
+      await storage.writeToken(user.token);
+      await storage.writeUserId(user.id);
+      await storage.writeUsername(user.username);
+      await storage.writeUserEmail(user.email);
+
+      if (user.fullName != null) await storage.saveFullName(user.fullName!);
+
+      print('Saved fullName : ${user.fullName}');
+
+
+      // Return user directly instead of calling login
+      return user;
+
+    } catch (e) {
+      print("REGISTER ERROR: $e");
+      rethrow;
+    }
+  }
+
+  // LOGOUT
+  Future<void> logout() async {
+    await storage.deleteToken();
+    await storage.deleteUsername();
+    await storage.deleteUserImage();
+  }
+
+  // CHECK STORED DATA
+  Future<void> checkStoredData() async {
+    try {
+      final allData = await storage.getAllUserInfo();
+      developer.log("========== STORED DATA ==========");
+      developer.log("Token: ${allData['token']?.toString().substring(0, 20)}...");
+      developer.log("Username: ${allData['username']}");
+      developer.log("Email: ${allData['email']}");
+      developer.log("UserId: ${allData['userId']}");
+      developer.log("Has Token: ${allData['token'] != null}");
+      developer.log("=================================");
+    } catch (e) {
+      developer.log('Error checking stored data: $e');
+    }
+  }
+
+  Future<bool> isLoggedIn() async {
+    final token = await storage.readToken();
+    return token != null && token.isNotEmpty;
+  }
+
+  Future<int?> getCurrentUserId() async => await storage.readUserId();
+  Future<String?> getCurrentUsername() async => await storage.readUsername();
+}
