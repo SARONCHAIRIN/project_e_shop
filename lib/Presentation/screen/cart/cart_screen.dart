@@ -341,7 +341,7 @@ class CartScreen extends StatelessWidget {
           }
         },        style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blueAccent,
-          padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 13),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
@@ -352,13 +352,14 @@ class CartScreen extends StatelessWidget {
           children: [
             const Text(
               "Proceed to Checkout",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.white),
+              overflow: TextOverflow.visible,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.white),
             ),
             SizedBox(width: 5,),
             Icon(
               Icons.arrow_forward,
               color: Colors.white,
-              size: 25,
+              size: 22,
             ),
           ],
         ),

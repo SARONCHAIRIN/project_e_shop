@@ -1,5 +1,8 @@
+import 'package:e_shop/data/models/product_model_eshop.dart';
+
 class CartItem {
   final int id;
+  final ProductSku productSku;
   final String name;
   final int quantity;
   final int totalPrice;
@@ -7,6 +10,7 @@ class CartItem {
 
   CartItem({
     required this.id,
+    required this.productSku,
     required this.name,
     required this.quantity,
     required this.totalPrice,
@@ -18,6 +22,7 @@ class CartItem {
       id: json['id'] != null
           ? (json['id'] is double ? (json['id'] as double).toInt() : json['id'])
           : 0,
+      productSku: ProductSku.fromJson(json['productSku']),
       name: json['name'] ?? '',
       quantity: json['quantity'] != null
           ? (json['quantity'] is double ? (json['quantity'] as double).toInt() : json['quantity'])

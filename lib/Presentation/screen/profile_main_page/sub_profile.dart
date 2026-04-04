@@ -59,9 +59,9 @@ class _ProfilepageState extends State<Profilepage> {
   @override
   void initState() {
     super.initState();
-    fetchUser();
     _loadUser();
     _loadSavedImage();
+    fetchUser();
   }
 
 
@@ -162,7 +162,7 @@ class _ProfilepageState extends State<Profilepage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body  : _buildBody(),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade50,
 
     );
   }

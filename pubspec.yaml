@@ -73,6 +73,7 @@ flutter:
   assets:
     - assets/images/
     - assets/animations/
+    - .env
     # ---------- Top-level flutter_native_splash ----------
 #flutter_native_splash:
 #  color: "#ffffff"                     # Background color
