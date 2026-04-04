@@ -1,3 +1,4 @@
+import 'package:e_shop/Presentation/screen/map/map_screen.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/models/address/address_model.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
@@ -89,7 +90,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
         style: TextStyle(
           color: Colors.black,
           fontSize: 25,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
         ),),
       ),
 
@@ -120,14 +121,14 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 25,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              SizedBox(height: 50,),
+              SizedBox(height: 40,),
 
               _buildaddressMap(),
-              SizedBox(height: 50,),
+              SizedBox(height: 40,),
 
 
               //address line 1
@@ -175,40 +176,52 @@ class _AddAddressPageState extends State<AddAddressPage> {
               _buildCityandZipcode(),
               SizedBox(height: 40,),
 
-
-              //save address user
-              is_loading
-                  ? _buildaftersave()
-                  : _buildbeforeSave(),
-
-
-
             ],
           ),
         ),
       ),
+
+      //bottomnav
+      bottomNavigationBar:
+
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 5,
+              right: 5,
+              bottom: 13
+            ),
+            child: is_loading
+              ? _buildaftersave()
+                : _buildbeforeSave(),
+          ),
+
+
     );
   }
 
-  Widget _buildaddressMap() => Container(
+  Widget _buildaddressMap() => GestureDetector(
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => MapScreen()));
+    },
+    child: Container(
 
-    width: double.infinity,
-    height: 200,
-    decoration: BoxDecoration(
+      width: double.infinity,
+      height: 200,
+      decoration: BoxDecoration(
 
-      borderRadius: BorderRadius.circular(15),
-      color: Colors.white,
-      boxShadow: [
-        BoxShadow(
-          blurRadius: 1,
-          blurStyle: BlurStyle.outer,
-          color: Colors.blue.shade200,
-        ),
-      ],
+        borderRadius: BorderRadius.circular(15),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 1,
+            blurStyle: BlurStyle.outer,
+            color: Colors.blue.shade200,
+          ),
+        ],
+      ),
+      child: MapScreen(),
     ),
   );
-
-
 
  Widget _buildAddressline1 () =>  Container(
    width: double.infinity,
@@ -247,7 +260,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
      style: TextStyle(
        color: Colors.black,
        fontSize: 20,
-       fontWeight: FontWeight.w500,
+       fontWeight: FontWeight.w400,
      ),
    ),
  );
@@ -272,7 +285,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
      style: TextStyle(
        color: Colors.black,
        fontSize: 20,
-       fontWeight: FontWeight.w500,
+       fontWeight: FontWeight.w400,
      ),
 
      decoration: InputDecoration(
@@ -308,7 +321,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                style: TextStyle(
                  color: Colors.black,
                  fontSize: 16,
-                 fontWeight: FontWeight.w500,
+                 fontWeight: FontWeight.w400,
                ),
              ),
            ),
@@ -335,7 +348,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                style: TextStyle(
                  color: Colors.black,
                  fontSize: 20,
-                 fontWeight: FontWeight.w500,
+                 fontWeight: FontWeight.w400,
                ),
                decoration: InputDecoration(
                 hintText : 'PHNOM PENH',
@@ -371,7 +384,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                style: TextStyle(
                  color: Colors.black,
                  fontSize: 16,
-                 fontWeight: FontWeight.w500,
+                 fontWeight: FontWeight.w400,
                ),
              ),
            ),
@@ -397,7 +410,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
            style: TextStyle(
            color: Colors.black,
            fontSize: 20,
-           fontWeight: FontWeight.w500,
+           fontWeight: FontWeight.w400,
            ),
 
            decoration: InputDecoration(
@@ -423,71 +436,77 @@ class _AddAddressPageState extends State<AddAddressPage> {
 
 
  //====build save address====
-
-
   //before save
   Widget _buildaftersave() =>
-      SizedBox(
-          width: double.infinity,
-          height: 55,
-          child:
-          OutlinedButton(
-            onPressed: () {
-              submit();
-            },
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.blue.shade200),
-              backgroundColor: Colors.blue.shade100,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: EdgeInsets.symmetric(vertical: 16),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SpinKitCircle(color: Colors.blue,size: 30,),
-                Text(
-                  "Save Address",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
+      Padding(
+        padding: const EdgeInsets.only(
+          left: 20,
+          right: 20,
+        ),
+        child: SizedBox(
+            width: double.infinity,
+            height: 55,
+            child: OutlinedButton(
+              onPressed: () {
+                submit();
+              },
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Colors.blue.shade200),
+                backgroundColor: Colors.blue.shade100,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
-              ],
-            ),
-          )
+                padding: EdgeInsets.symmetric(vertical: 10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SpinKitCircle(color: Colors.blue,size: 30,),
+                  Text(
+                    "Save Address",
+                    style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            )
+        ),
       );
 
-
-
   //after save
-Widget _buildbeforeSave() => SizedBox(
-   width: double.infinity,
-   height: 55,
-   child:
-   OutlinedButton(
-     onPressed: () {
-       submit();
-     },
-     style: OutlinedButton.styleFrom(
-       backgroundColor: Colors.blue.shade200,
-       side: BorderSide(color: Colors.blue.shade200),
-       shape: RoundedRectangleBorder(
-         borderRadius: BorderRadius.circular(12),
+Widget _buildbeforeSave() => Padding(
+  padding: const EdgeInsets.only(
+    right: 20,
+    left: 20,
+  ),
+  child: SizedBox(
+     width: double.infinity,
+     height: 50,
+     child: OutlinedButton(
+       onPressed: () {
+         submit();
+       },
+       style: OutlinedButton.styleFrom(
+         backgroundColor: Colors.blue.shade200,
+         side: BorderSide(color: Colors.blue.shade200),
+         shape: RoundedRectangleBorder(
+           borderRadius: BorderRadius.circular(20),
+         ),
+         padding: EdgeInsets.symmetric(vertical: 16),
        ),
-       padding: EdgeInsets.symmetric(vertical: 16),
-     ),
-     child: Text(
-       "Save Address",
-       style: TextStyle(
-         color: Colors.white,
-         fontSize: 18,
-         fontWeight: FontWeight.w600,
+       child: Text(
+         "Save Address",
+         style: TextStyle(
+           color: Colors.white,
+           fontSize: 17,
+           fontWeight: FontWeight.w600,
+         ),
        ),
      ),
-   )
- );
+   ),
+);
 
 }

@@ -21,17 +21,14 @@ class OrderService {
       );
       if (response.statusCode == 200) {
         final decoded = json.decode(response.body);
-        final data = decoded['data'];
+        final data = decoded['content']; //  FIX HERE
 
         if (data is List) {
           return data;
-        } else if (data != null) {
-          return [data]; //  wrap single object
         } else {
           return [];
         }
-      }
-      else {
+      } else {
         throw Exception('Failed to fetch orders : ${response.statusCode}');
       }
     } catch (e) {

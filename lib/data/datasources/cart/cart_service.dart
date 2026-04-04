@@ -72,12 +72,14 @@ class CartService {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
         "Accept": "application/json",
-
       },
       body: jsonEncode({
         'quantity': quantity,
+         'product_id': cartItemId,
       }),
     );
+    print("STATUS: ${response.statusCode}");
+    print("BODY: ${response.body}");
 
     if (response.statusCode != 200 && response.statusCode != 201) {
       print('Update failed: ${response.body}');

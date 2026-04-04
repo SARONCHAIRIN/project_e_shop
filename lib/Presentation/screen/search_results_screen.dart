@@ -41,11 +41,13 @@ class SearchResultsScreen extends StatelessWidget {
 
                 return ListTile(
                   leading: Image.network(
+                    fit: BoxFit.fill,
                     product.mainImage,
                     width: 50,
                     height: 50,
                     errorBuilder: (_, __, ___) =>
                     const Icon(Icons.image_not_supported),
+
                   ),
 
                   title: Text(product.name),
@@ -64,6 +66,4 @@ class SearchResultsScreen extends StatelessWidget {
       },
     );
   }
-
-
 }

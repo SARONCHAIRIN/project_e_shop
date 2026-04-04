@@ -246,9 +246,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               onTap: () {
                                 setState(() {
                                   selectIndex = index;
-
-
-
                                   selectedSku = widget.product.skus.firstWhere(
                                         (sku) => sku.size == sizeOption[index],
                                     orElse: () => selectedSku!,
@@ -260,8 +257,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 transform: Matrix4.identity()
                                   ..scale(isAvailable ? 0.95 : 1.0),
 
-                                width: 60,
-                                height: 60,
+                                width: 50,
+                                height: 50,
                                 decoration: BoxDecoration(
                                   color: isAvailable ? Colors.blue : Colors.white,
                                   borderRadius: BorderRadius.circular(16),
@@ -323,8 +320,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               padding: EdgeInsets.all(3),
                                transform: Matrix4.identity()
                                  ..scale(isselected ? 1.10 : 1.0),
-                              width: 60,
-                               height: 60,
+                              width: 50,
+                               height: 50,
                                decoration: BoxDecoration(
                                  shape: BoxShape.circle,
                                   color: colorOption[index],
@@ -402,7 +399,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
+
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Colors.grey.shade200,
+                  ),
+                  SizedBox(height: 10,),
 
 
                   // Avaibility of product
@@ -418,6 +422,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           ),
                          SizedBox(width: 20,),
+
+
                          Container(
                            alignment: Alignment.center,
                            width: 100,
@@ -428,9 +434,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 2),
+                                  color: Colors.grey.shade400,
+                                  blurRadius: 1,
+                                  offset: const Offset(0, 1),
                                   blurStyle: BlurStyle.outer,
                                 ),
                               ],
@@ -467,13 +473,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           duration: Duration(milliseconds: 150),
                           curve: Curves.bounceInOut,
                           transform: Matrix4.identity()
-                            ..scale(pressed1 ? 1.02: 1.0),
+                            ..scale(pressed1 ? 1.0: 1.02),
                           alignment: Alignment.center,
-                          width: 180,
+                          width: 160,
                           height: 100,
                           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                           decoration: BoxDecoration(
-                            color: pressed1 ? Colors.blue.shade50 : Colors.white,
+                            color: pressed1 ? Colors.white : Colors.white,
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
@@ -486,7 +492,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
                                   width: 35,
@@ -503,21 +509,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     ],
                                   ),
                                   child: Icon(Icons.star,
-                                    color: pressed1 ? Colors.redAccent : Colors.blueGrey,
+                                    color: pressed1 ? Colors.blueGrey : Colors.redAccent,
                                   ),
                               ),
-                              SizedBox(width: 10,),
+                              SizedBox(width: 5,),
 
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  SizedBox(height: 10,),
 
                                   Text('WARRANTY',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: Colors.grey,
-                                      fontSize: 16,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -528,7 +535,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       overflow: TextOverflow.clip,
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 17,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -542,7 +549,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       ),
 
-                       SizedBox(width: 20,),
                        //delivery info
                        GestureDetector(
                         onTap: (){
@@ -554,13 +560,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           duration: Duration(milliseconds: 150),
                           curve: Curves.bounceInOut,
                           transform: Matrix4.identity()
-                          ..scale(pressed2 ? 1.02: 1.0),
+                          ..scale(pressed2 ? 1.0: 1.02),
                           alignment: Alignment.center,
-                          width: 180,
+                          width: 160,
                           height: 100,
                           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                           decoration: BoxDecoration(
-                            color: pressed2 ? Colors.blue.shade50 : Colors.white,
+                            color: pressed2 ? Colors.white : Colors.white,
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
@@ -573,7 +579,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
                                 width: 35,
@@ -591,20 +597,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   ),
                                   child: Icon(
                                     Icons.local_shipping_outlined,
-                                    color: pressed2 ? Colors.redAccent : Colors.blueGrey,
+                                    color: pressed2 ? Colors.blueGrey : Colors.redAccent,
                                   )),
-                              SizedBox(width: 10,),
+                              SizedBox(width: 5,),
 
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-
+                                  SizedBox(height: 10,),
                                   Text('Shipping',
                                     maxLines: 1,
                                      overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: Colors.grey,
-                                      fontSize: 16,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -615,22 +621,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                        overflow: TextOverflow.clip,
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 17,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ),
-
-
                                 ],
                               ),
                             ],
                           ),
                         ),
-                      ),
-
-
-
+                       ),
                     ],
                   ),
                   SizedBox(height: 30,),
