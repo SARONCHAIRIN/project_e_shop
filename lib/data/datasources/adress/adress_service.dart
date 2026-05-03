@@ -8,32 +8,6 @@ import '../../models/address/address_model.dart';
 
 class AddressService {
 
-
-  // //post address for user
-  // Future<AddressModel> createAddress(int userId, String token, Map<String , dynamic> body )
-  // async {
-  //   final url = Uri.parse("${AddressConstants.createaddress}/$userId");
-  //
-  //   try{
-  //     final response  = await http.post(
-  //       url,
-  //       headers: {
-  //         'accept' : 'application/json',
-  //         'Content-Type' :  'application/json',
-  //         'Authorization' : 'Bearer $token',
-  //       },
-  //       body: jsonEncode(body),
-  //
-  //     );
-  //     print('Response Body ${response.body}');
-  //     print('Status API ${response.statusCode}');
-  //     return jsonDecode(response.body);
-  //
-  //   }catch(e){
-  //     throw Exception('aoi not fount');
-  //   }
-  //   }
-
   Future<AddressModel> createAddress(
       int userId,
       String token,
@@ -41,7 +15,6 @@ class AddressService {
       ) async {
     final url = Uri.parse("${AddressConstants.createaddress}/$userId");
 
-    // ✅ លុប try/catch ចេញ — ឬ handle ត្រឹមត្រូវ
     final response = await http.post(
       url,
       headers: {
@@ -57,7 +30,6 @@ class AddressService {
 
     final decoded = jsonDecode(response.body);
 
-    // ✅ 201 = Created, 200 = OK — ទាំងពីរ success
     if (response.statusCode == 200 || response.statusCode == 201) {
       return AddressModel.fromJson(decoded['data']);
     }
@@ -79,13 +51,6 @@ class AddressService {
             "Authorization" : 'Bearer $token',
           }
       );
-      // final List<dynamic> jsonList = jsonDecode(response.body);
-      //
-      // // Map each item -> AddressModel.fromJson(item['data'])
-      // return jsonList
-      //     .map((item) => AddressModel.fromJson(item['data']))
-      //     .toList();
-
 
       print("STATUS: ${response.statusCode}");
       print("BODY: ${response.body}");

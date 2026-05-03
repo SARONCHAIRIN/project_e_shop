@@ -39,55 +39,6 @@ class _AddAddressPageState extends State<AddAddressPage> {
   }
 
 
-  // void submit() async {
-  //   setState(() {
-  //     is_loading = true;
-  //   });
-  //   try {
-  //
-  //     final userId = await widget.storage.getUserId();
-  //     final token = await widget.storage.getToken();
-  //
-  //     final address = AddressModel(
-  //       city: citycontroller.text.trim(),
-  //       country: countrycontroller.text.trim(),
-  //       addressline1: addressline1controller.text.trim(),
-  //       zipcode: zipcodecontroller.text.trim(),
-  //       isdefault: true,
-  //     );
-  //      await widget.repo.addAddress(
-  //         userId: userId!,
-  //         token: token!,
-  //         address: address
-  //     );
-  //
-  //     if(!mounted) return;
-  //
-  //     Navigator.push(context, MaterialPageRoute(builder: (_) => PaymentScreen(
-  //       userId: userId,
-  //       token: token,
-  //       addressId: address.id!,
-  //     )));
-  //
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Add address '),),
-  //     );
-  //
-  //   }catch(e){
-  //     print("Error$e");
-  //     if(!mounted) return;
-  //
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Field to load Address'),),
-  //     );
-  //
-  //   }finally{
-  //    if(mounted) setState(() {
-  //      is_loading = false;
-  //    });
-  //   }
-  // }
-
   void submit() async {
     setState(() => is_loading = true);
 
