@@ -14,12 +14,21 @@ class AddressRepository {
 
 
   //add or post address for user
-  Future<void> addAddress({
-    required  int userId,
+  Future<AddressModel> addAddress({
+    required int userId,
     required String token,
     required AddressModel address,
-}) async{
-    await service.createAddress(userId  , token , address.toJson());
+  }) async {
+    try {
+      final result = await service.createAddress(
+        userId,
+        token,
+        address.toJson(),
+      );
+      return result; // ✅ return inside try
+    } catch (e) {
+      throw Exception('Failed to add address: $e'); // ✅ throw inside catch
+    }
   }
 
   //get address userId
