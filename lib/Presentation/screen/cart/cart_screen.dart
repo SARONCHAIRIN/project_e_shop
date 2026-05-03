@@ -1,5 +1,7 @@
-import 'package:e_shop/Presentation/controllers/order/order_controller.dart';
-import 'package:e_shop/Presentation/screen/order/order_screnn.dart';
+import 'package:e_shop/Presentation/screen/order/checkout_page.dart';
+import 'package:e_shop/core/storage/token_storage.dart';
+import 'package:e_shop/data/datasources/adress/adress_service.dart';
+import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +17,12 @@ class CartScreen extends StatelessWidget {
     required this.token,
   });
 
+
+
   @override
   Widget build(BuildContext context) {
-    final cartController = Provider.of<CartController>(context);
+    final cartController = context.watch<CartController>();
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -304,42 +309,60 @@ class CartScreen extends StatelessWidget {
         onPressed: cartController.cart == null || cartController.cart!.items.isEmpty
             ? null
             : () async {
-          final orderController = context.read<OrderController>();
+          Navigator.push(context, MaterialPageRoute(builder: (_) => CheckoutPage(
+            repo: AddressRepository(AddressService()),
+            storage: TokenStorage(),
+            userId: userId,
+            token: token,
+            addressId: 0,
 
 
 
-          //  CALL CHECKOUT FIRST
-          bool success = await orderController.checkout(
-            userId,
-            token,
-            22, //  address_id (change later)
-            "COD",
-          );
-
-          if (success) {
-            //  FETCH ORDER AFTER CHECKOUT
-            await orderController.fetchOrders(userId, token);
+          )));
+        },
 
 
-            //  NAVIGATE
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => OrderScreen(
-                  userId: userId,
-                  token: token,
-                ),
-              ),
-            );
+        // async {
+        //   final orderController = context.read<OrderController>();
+        //
+        //
+        //
+        //   //  CALL CHECKOUT FIRST
+        //   bool success = await orderController.checkout(
+        //     userId,
+        //     token,
+        //     22, //  address_id (change later)
+        //     "COD",
+        //   );
+        //
+        //   if (success) {
+        //     //  FETCH ORDER AFTER CHECKOUT
+        //     await orderController.fetchOrders(userId, token);
+        //
+        //
+        //     //  NAVIGATE
+        //     // Navigator.push(
+        //     //   context,
+        //     //   MaterialPageRoute(
+        //     //     builder: (_) => OrderScreen(
+        //     //       userId: userId,
+        //     //       token: token,
+        //     //     ),
+        //     //   ),
+        //     // );
+        //
+        //     Navigator.push(context, MaterialPageRoute(builder: (_) => CheckoutStepIndicator()));
+        //
+        //     //when checkout is successful, clear the cart
+        //     cartController.clearCart();
+        //   } else {
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       SnackBar(content: Text("Checkout failed - please try again")),
+        //     );
+        //   }
+        // },
 
-            //when checkout is successful, clear the cart
-            cartController.clearCart();
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Checkout failed - please try again")),
-            );
-          }
-        },        style: ElevatedButton.styleFrom(
+          style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blueAccent,
           padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 13),
           shape: RoundedRectangleBorder(

@@ -1,3 +1,4 @@
+import 'package:e_shop/Presentation/screen/home_main_page/home_main_page.dart';
 import 'package:e_shop/data/datasources/order/order_service.dart';
 import 'package:e_shop/data/repositories/order/order_repository.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +75,39 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+
+      onGenerateRoute: (settings) {
+
+        if (settings.name == '/home') {
+
+          final args = settings.arguments as Map?;
+
+          // return MaterialPageRoute(
+
+            // builder: (_) => HomePage(
+            //
+            //   tab: args?['tab'] ?? 0,
+            //
+            // ),
+
+          // );
+
+        }
+
+        if (settings.name == '/homemainppage') {
+
+          return MaterialPageRoute(
+
+            builder: (_) => HomeMainPage(authRepository: authRepository),
+
+          );
+
+        }
+
+        return null;
+
+      },
+
       title: 'E-Shop',
       theme: ThemeData(primarySwatch: Colors.green),
       home: Builder(

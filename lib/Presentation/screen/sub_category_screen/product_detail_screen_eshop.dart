@@ -39,10 +39,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final List<Color> colorOption =
   [
     Colors.black,
+    Colors.white,
     Colors.red,
     Colors.blue,
     Colors.green,
     Colors.orange,
+
   ];
   bool isExpandedText = false;
 
@@ -171,27 +173,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       Expanded(
                         child: Text(
                           product.name,
+                          // maxLines: 3,
+                          // overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-
-
-                      // Price
-                      Text(
-                        selectedSku != null
-                            ? "\$${selectedSku!.price.toStringAsFixed(2)}"
-                            : "\$${product.lowestPrice.toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                      ),
-
                     ],
+                  ),
+
+                  SizedBox(height: 10,),
+
+                  // Price
+                  Text(
+                    selectedSku != null
+                        ? "\$${selectedSku!.price.toStringAsFixed(2)}"
+                        : "\$${product.lowestPrice.toStringAsFixed(2)}",
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
                   ),
                   const SizedBox(height: 25),
 
@@ -257,8 +261,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 transform: Matrix4.identity()
                                   ..scale(isAvailable ? 0.95 : 1.0),
 
-                                width: 50,
-                                height: 50,
+                                width: 47,
+                                height: 47,
                                 decoration: BoxDecoration(
                                   color: isAvailable ? Colors.blue : Colors.white,
                                   borderRadius: BorderRadius.circular(16),
@@ -320,13 +324,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               padding: EdgeInsets.all(3),
                                transform: Matrix4.identity()
                                  ..scale(isselected ? 1.10 : 1.0),
-                              width: 50,
-                               height: 50,
+                              width: 45,
+                               height: 45,
                                decoration: BoxDecoration(
                                  shape: BoxShape.circle,
                                   color: colorOption[index],
                                  border: Border.all(
-                                   color: isselected ? Colors.yellowAccent: Colors.white,
+                                   color: isselected ? Colors.redAccent : Colors.white,
                                    width: 3,
                                  ),
                                   boxShadow: [
@@ -388,8 +392,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       curve: Curves.easeInOut,
                       child: Text(
                         isExpandedText
-                            ? 'Show Less ⬆ '
-                            :  'Show More ⬇ ',
+                            ? 'Show Less  '
+                            :  'Show More...  ',
                         style: TextStyle(
                           color: Colors.blueAccent,
                           fontSize: 16,
