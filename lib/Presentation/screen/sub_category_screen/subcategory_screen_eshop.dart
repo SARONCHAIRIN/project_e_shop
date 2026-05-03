@@ -1,7 +1,6 @@
 import 'package:e_shop/Presentation/screen/sub_category_screen/subcategory_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import '../../../../data/datasources/subcategory_service_eshop.dart';
 import '../../../../data/models/subcategory_model_eshop.dart';
 
@@ -26,13 +25,6 @@ class _SubcategoriesScreenState extends State<SubcategoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      // appBar: AppBar(
-      //   title: const Text('Subcategories'),
-      //   centerTitle: true,
-      //   elevation: 2,
-      //   backgroundColor: Colors.blue,
-      //   foregroundColor: Colors.white,
-      // ),
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {
@@ -99,108 +91,6 @@ class _SubcategoriesScreenState extends State<SubcategoriesScreen> {
             // Data loaded successfully
             List<SubcategoryData> subcategories = snapshot.data!;
 
-
-            //use ListView
-            // return ListView.builder(
-            //   padding: const EdgeInsets.all(8),
-            //   itemCount: subcategories.length,
-            //   itemBuilder: (context, index) {
-            //     final subcategory = subcategories[index];
-            //     return Card(
-            //       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            //       elevation: 2,
-            //       shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(12),
-            //       ),
-            //       child: ListTile(
-            //         contentPadding: const EdgeInsets.all(8),
-            //         leading: ClipRRect(
-            //           borderRadius: BorderRadius.circular(8),
-            //           child: Image.network(
-            //             subcategory.image,
-            //             width: 60,
-            //             height: 60,
-            //             fit: BoxFit.cover,
-            //             errorBuilder: (context, error, stackTrace) {
-            //               return Container(
-            //                 width: 60,
-            //                 height: 60,
-            //                 color: Colors.grey[300],
-            //                 child: const Icon(Icons.broken_image, color: Colors.grey),
-            //               );
-            //             },
-            //             loadingBuilder: (context, child, loadingProgress) {
-            //               if (loadingProgress == null) return child;
-            //               return Container(
-            //                 width: 60,
-            //                 height: 60,
-            //                 color: Colors.grey[200],
-            //                 child: const Center(
-            //                   child: CircularProgressIndicator(strokeWidth: 2),
-            //                 ),
-            //               );
-            //             },
-            //           ),
-            //         ),
-            //         title: Text(
-            //           subcategory.name,
-            //           style: const TextStyle(
-            //             fontWeight: FontWeight.bold,
-            //             fontSize: 16,
-            //           ),
-            //         ),
-            //         subtitle: Column(
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             const SizedBox(height: 4),
-            //             Text(
-            //               subcategory.description,
-            //               maxLines: 2,
-            //               overflow: TextOverflow.ellipsis,
-            //               style: TextStyle(
-            //                 color: Colors.grey[600],
-            //                 fontSize: 14,
-            //               ),
-            //             ),
-            //             const SizedBox(height: 4),
-            //
-            //             Container(
-            //               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            //               decoration: BoxDecoration(
-            //                 color: Colors.blue[50],
-            //                 borderRadius: BorderRadius.circular(12),
-            //               ),
-            //
-            //               child: Text(
-            //                 subcategory.categoryName,
-            //                 style: TextStyle(
-            //                   color: Colors.blue[800],
-            //                   fontSize: 12,
-            //                   fontWeight: FontWeight.w500,
-            //                 ),
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //         isThreeLine: true,
-            //         onTap: () {
-            //           Navigator.push(
-            //             context,
-            //             MaterialPageRoute(
-            //               builder: (context) => SubcategoryDetailScreen(
-            //                 subcategory: subcategory,
-            //               ),
-            //             ),
-            //           );
-            //         },
-            //       ),
-            //     );
-            //   },
-            // );
-
-
-
-            // gridview builder
             return GridView.builder(
 
               padding: EdgeInsets.symmetric(
@@ -349,14 +239,11 @@ class _SubcategoriesScreenState extends State<SubcategoriesScreen> {
                                ],
                              ),
                            ),
-
                          ],
                        ),
-
                      ),
                    ),
                  );
-
                 }
             );
           },

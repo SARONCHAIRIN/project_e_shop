@@ -2,7 +2,6 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:e_shop/Presentation/controllers/user/get_user_controller.dart';
 import 'package:e_shop/Presentation/controllers/user/put_user_controller.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/user/put_info_user.dart';
 import 'package:e_shop/data/datasources/user/get_user_Id_service.dart';

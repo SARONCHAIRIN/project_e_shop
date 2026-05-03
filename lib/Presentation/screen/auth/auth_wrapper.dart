@@ -41,8 +41,6 @@ class _AuthWrapperState extends State<AuthWrapper> {
       );
     }
 
-    // បើមាន token -> ទៅកាន់ Main App ដែលមាន Bottom Nav
-    // បើគ្មាន token -> ទៅកាន់ Login Screen ដែលគ្មាន Bottom Nav
     return _isLoggedIn
         ? DivicesNav(authRepository: widget.authRepository)  // មាន Bottom Nav
         : LoginScreen(authRepository: widget.authRepository); // គ្មាន Bottom Nav

@@ -8,16 +8,13 @@ import '../../../data/models/product_model_eshop.dart';
 import '../../controllers/cart/cart_controller.dart';
 
 
-
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
 
-  // final AuthRepository authRepository;
 
   const ProductDetailScreen({
     super.key,
     required this.product,
-    // required this.authRepository,
   });
 
   @override

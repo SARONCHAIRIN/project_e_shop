@@ -11,7 +11,6 @@ class ApiService {
   Future<List<SubcategoryData>> fetchSubcategories() async {
     final response = await http.get(
       // Uri.parse('$baseUrl/subcategories/All'),
-      // Uri.parse('$baseUrl/subcategories/All'),
       Uri.parse('$baseUrl/subcategories/All?page=0&size=100'),
       headers: {
         'Content-Type': 'application/json',

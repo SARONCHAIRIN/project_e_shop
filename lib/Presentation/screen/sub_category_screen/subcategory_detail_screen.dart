@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../../data/models/subcategory_model_eshop.dart';
 
 class SubcategoryDetailScreen extends StatelessWidget {

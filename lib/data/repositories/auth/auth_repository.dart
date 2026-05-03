@@ -1,86 +1,3 @@
-// // lib/data/repositories/auth_repository.dart
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
-//
-// class AuthRepository {
-//   final String baseUrl = 'https://your-api-url.com'; // Replace with your API URL
-//
-//   // Login API call
-//   Future<Map<String, dynamic>> login(String username, String password) async {
-//     try {
-//       final response = await http.post(
-//         Uri.parse('$baseUrl/api/auth/login'),
-//         headers: {'Content-Type': 'application/json'},
-//         body: json.encode({
-//           'username': username,
-//           'password': password,
-//         }),
-//       );
-//
-//       if (response.statusCode == 200) {
-//         return {
-//           'success': true,
-//           'token': json.decode(response.body)['token'],
-//           'user': json.decode(response.body)['user'],
-//         };
-//       } else {
-//         return {
-//           'success': false,
-//           'message': json.decode(response.body)['message'] ?? 'Login failed',
-//         };
-//       }
-//     } catch (e) {
-//       print('AuthRepository login error: $e');
-//       return {
-//         'success': false,
-//         'message': 'Network error',
-//       };
-//     }
-//   }
-//
-//   // Register API call
-//   Future<Map<String, dynamic>> register({
-//     required String username,
-//     required String email,
-//     required String password,
-//   }) async {
-//     try {
-//       final response = await http.post(
-//         Uri.parse('$baseUrl/api/auth/register'),
-//         headers: {'Content-Type': 'application/json'},
-//         body: json.encode({
-//           'username': username,
-//           'email': email,
-//           'password': password,
-//         }),
-//       );
-//
-//       if (response.statusCode == 200 || response.statusCode == 201) {
-//         return {
-//           'success': true,
-//           'message': 'Registration successful',
-//         };
-//       } else if (response.statusCode == 400) {
-//         return {
-//           'success': false,
-//           'message': json.decode(response.body)['message'] ??
-//               'Username or email already exists',
-//         };
-//       } else {
-//         return {
-//           'success': false,
-//           'message': 'Registration failed',
-//         };
-//       }
-//     } catch (e) {
-//       print('AuthRepository register error: $e');
-//       return {
-//         'success': false,
-//         'message': 'Network error',
-//       };
-//     }
-//   }
-// }
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../core/constants/api_endpoints.dart';
@@ -142,17 +59,15 @@ class AuthRepository {
     required String username,
     required String email,
     required String password,
-    String? fullName, // បន្ថែម fullName
+    String? fullName,
   }) async {
     try {
-      // រៀបចំ body សម្រាប់ផ្ញើទៅ API
       Map<String, dynamic> body = {
         'username': username,
         'email': email,
         'password': password,
       };
 
-      // បើមាន fullName ទើបបន្ថែម
       if (fullName != null && fullName.isNotEmpty) {
         body['fullName'] = fullName;
         body['full_name'] = fullName;

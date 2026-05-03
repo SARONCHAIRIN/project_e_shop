@@ -14,19 +14,9 @@ class ButtonInAppBar extends StatelessWidget
   Size get preferredSize => const Size.fromHeight(45);
 
 
- /* TextEditingController searchController = TextEditingController();
-  List<SearchProductModel> products  = [];
-  void searchProduct() async{
-    final service = SearchService();
-    final result = await service.searchProducts(searchController.text);
-    setState(() {
-      products = result;
-    });
-
-
-  }*/
-
+  @override
   Widget build(BuildContext context) {
+
     // final searchController = Provider.of<SearchController>(context);
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
@@ -82,7 +72,6 @@ class ButtonInAppBar extends StatelessWidget
               ),
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
             ),
-            // onChanged: (value) => searchController.search(value),
           ),
         )
             : const SizedBox(),

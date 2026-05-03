@@ -6,27 +6,6 @@ import '../models/product_model_eshop.dart';
 class ProductService {
   static const String baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
 
-  // // Fetch all products
-  // Future<List<Product>> fetchAllProducts() async {
-  //   final response = await http.get(
-  //     Uri.parse('$baseUrl/products'),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Accept': 'application/json',
-  //     },
-  //   );
-  //
-  //   if (response.statusCode == 200) {
-  //     var jsonResponse = jsonDecode(response.body);
-  //     ProductApiResponse apiResponse = ProductApiResponse.fromJson(jsonResponse);
-  //     return apiResponse.content.map((item) => item.data).toList();
-  //   } else {
-  //     throw Exception('Failed to load products. Status code: ${response.statusCode}');
-  //   }
-  // }
-
-
-  // product to cart
   Future<List<Product>> fetchAllProducts() async {
     final response = await http.get(
       Uri.parse(ApiConstants.products),
@@ -66,12 +45,8 @@ class ProductService {
   Future<List<Product>> fetchProductsByCategory(String categoryName) async {
     final allProducts = await fetchAllProducts();
 
-    // Filter products by category_name
-    // Note: This is client-side filtering. If the API supports server-side filtering,
-    // it would be more efficient to use query parameters.
+
     return allProducts.where((product) {
-      // You might need to adjust this based on how categories are stored in your products
-      // For now, we're filtering by the category_name field in the product data
       return product.name.contains(categoryName) ||
           product.description.contains(categoryName);
     }).toList();

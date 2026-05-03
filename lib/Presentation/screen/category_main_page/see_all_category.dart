@@ -23,13 +23,6 @@ class _SeeAllCategoryState extends State<SeeAllCategory> {
       body: CustomScrollView(
         // controller: _scrollController,
         slivers: [
-          // Your app bar - will scroll away
-          // SliverMainAppBar(
-          //   showBars: showBars,
-          //   authRepository: widget.authRepository,
-          // ),
-
-
           // Your other slivers...
           SliverToBoxAdapter(
             child: Column(

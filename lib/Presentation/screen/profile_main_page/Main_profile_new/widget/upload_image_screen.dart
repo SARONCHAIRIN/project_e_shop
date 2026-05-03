@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
@@ -13,12 +12,12 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   final picker = ImagePicker();
 
   Future<void> uploadUserImage(String userId, String token) async {
-    // ជ្រើសរូបភាពពី gallery
+    // choose from  gallery
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile == null) return; // ប្រើ cancel
 
     var uri = Uri.parse('https://e-shop-1-m034.onrener.com/api/v1/user/$userId/iamge');
-    var request = http.MultipartRequest('POST', uri); // ប្រើ POST ប្រសិនបើ API តម្រូវ
+    var request = http.MultipartRequest('POST', uri);
     request.headers['Authorization'] = 'Bearer $token';
 
     // attach file
@@ -32,9 +31,9 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     // send request
     var response = await request.send();
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print('ផ្ញើរូបភាពបានជោគជ័យ!');
+      print('send image success');
     } else {
-      print('ផ្ញើរូបភាពបរាជ័យ. Status: ${response.statusCode}');
+      print('send field. Status: ${response.statusCode}');
       var respStr = await response.stream.bytesToString();
       print('Response: $respStr');
     }
@@ -49,7 +48,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
           onPressed: () async {
             await uploadUserImage('1', '<YOUR_TOKEN_HERE>'); // ប្ដូរ ID និង Token
           },
-          child: Text('ជ្រើសរូបភាព និង Upload'),
+          child: Text('Choose and Upload'),
         ),
       ),
     );

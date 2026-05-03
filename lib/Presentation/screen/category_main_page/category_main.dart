@@ -39,10 +39,6 @@ class _CategoryMainState extends State<CategoryMain> {
   @override
   Widget build(BuildContext context) {
     final apiClient = ApiClient();
-    // final service = SubcategoryService(apiClient);
-    // final repository = SubcategoryRepository(service);
-    // final usecase = GetAllSubcategories(repository);
-    // final controller = SubcategoriesController(usecase);
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -61,12 +57,6 @@ class _CategoryMainState extends State<CategoryMain> {
             child: Column(
               children: [
                 const SizedBox(height: 10),
-                // CarouselSlider(
-                //   options: CarouselOptions(
-                //
-                //   ),
-                //     // items: ,
-                //      )
                 const SizedBox(height: 20),
               ],
             ),
