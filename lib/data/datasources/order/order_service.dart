@@ -1,14 +1,12 @@
 
 import 'dart:convert';
-
-import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 
 class OrderService {
   final String baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1/orders';
 
   Future<List> fetchOrders(int userId, String token) async {
-    final url = Uri.parse("$baseUrl/user/$userId");
+    final url = Uri.parse("$baseUrl/user/$userId/4?page=0&size=100");
 
     try {
       final response = await http.get(
@@ -77,8 +75,7 @@ class OrderService {
  Future<bool> cancelOrder(
      int orderId,
      int userId,
-      String token,
-     
+     String token,
      ) async {
     final url = await Uri.parse(
       "$baseUrl/$orderId/user/$userId/cancel",
@@ -88,7 +85,7 @@ class OrderService {
         url,
         headers: {
           'accept': 'application/json',
-          'Authorization ': "Beater $token",
+          'Authorization ': "Beater$token",
         }
       );
       return reponse.statusCode == 200 || reponse.statusCode == 201;

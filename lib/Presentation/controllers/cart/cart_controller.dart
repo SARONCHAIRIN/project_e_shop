@@ -68,28 +68,55 @@ class CartController extends ChangeNotifier {
   // =========================
   // UPDATE ITEM
   // =========================
+  // Future<void> updateItem(int cartItemId, int quantity) async {
+  //   final storage = TokenStorage();
+  //   final token = await storage.readToken();
+  //   final userId = await storage.readUserId();
+  //   if(quantity < 1 ) return;
+  //
+  //   if (token == null || userId == null) {
+  //     debugPrint(" Token or userId is null");
+  //     return;
+  //   }
+  //
+  //   try {
+  //     isLoading = true;
+  //     notifyListeners();
+  //
+  //     await repository.updateItem(userId, cartItemId, quantity, token);
+  //     await fetchCart();
+  //   } catch (e) {
+  //     debugPrint(" Update item error: $e");
+  //   } finally {
+  //     isLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
+
   Future<void> updateItem(int cartItemId, int quantity) async {
     final storage = TokenStorage();
     final token = await storage.readToken();
     final userId = await storage.readUserId();
-    if(quantity < 1 ) return;
+    if (quantity < 1) return;
 
     if (token == null || userId == null) {
-      debugPrint(" Token or userId is null");
+      debugPrint("Token or userId is null");
       return;
     }
 
-    try {
-      isLoading = true;
+    // Update locally immediately — no isLoading, no flicker
+    final index = cart!.items.indexWhere((item) => item.id == cartItemId);
+    if (index != -1) {
+      cart!.items[index].quantity = quantity;
       notifyListeners();
+    }
 
+    try {
       await repository.updateItem(userId, cartItemId, quantity, token);
-      await fetchCart();
     } catch (e) {
-      debugPrint(" Update item error: $e");
-    } finally {
-      isLoading = false;
-      notifyListeners();
+      debugPrint("Update item error: $e");
+      // Revert by re-fetching if API fails
+      await fetchCart();
     }
   }
 

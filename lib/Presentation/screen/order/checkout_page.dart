@@ -119,27 +119,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
           Expanded(
             child: pages[currentStep],
           ),
-
-           // Buttons
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: prevStep,
-                  child: Text("Back"),
-                ),
-                ElevatedButton(
-                  onPressed: nextStep,
-                  child: Text("Next"),
-                ),
-              ],
-            ),
-          ),
-
-
-
           SizedBox(height: 50,),
         ],
       ),
