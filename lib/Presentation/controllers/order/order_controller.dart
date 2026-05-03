@@ -49,6 +49,8 @@ class OrderController extends ChangeNotifier{
     }
   }
 
+
+
   //cancel order
   Future<void> cancelOrder(
   int userId,
@@ -56,7 +58,6 @@ class OrderController extends ChangeNotifier{
   int orderId,
       )async{
     try{
-
       await repository.cancelOrder(userId, token, orderId);
       // After cancelling, refresh the orders list
       await fetchOrders(userId, token);
@@ -65,6 +66,5 @@ class OrderController extends ChangeNotifier{
       print('Error cancelling order: $e');
     }
   }
-
 }
 

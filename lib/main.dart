@@ -1,4 +1,6 @@
+import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
 import 'package:e_shop/Presentation/screen/home_main_page/home_main_page.dart';
+import 'package:e_shop/Presentation/screen/order/trackOrder.dart';
 import 'package:e_shop/data/datasources/order/order_service.dart';
 import 'package:e_shop/data/repositories/order/order_repository.dart';
 import 'package:flutter/material.dart';
@@ -78,16 +80,28 @@ class MyApp extends StatelessWidget {
 
       onGenerateRoute: (settings) {
 
-        if (settings.name == '/home') {
+        if (settings.name == '/trackorder') {
 
           final args = settings.arguments as Map?;
+          return MaterialPageRoute(
+
+            builder: (_) => TrackOrderPage(),
+          );
         }
 
         if (settings.name == '/homemainppage') {
 
           return MaterialPageRoute(
 
-            builder: (_) => HomeMainPage(authRepository: authRepository),
+            builder: (_) => DivicesNav(authRepository: authRepository),
+          );
+        }
+
+        if (settings.name == '/divicenav') {
+
+          return MaterialPageRoute(
+
+            builder: (_) => DivicesNav(authRepository: authRepository),
           );
         }
         return null;

@@ -1,10 +1,18 @@
+import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
+import 'package:e_shop/Presentation/screen/Message_main_page/message_main.dart';
+import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:e_shop/Presentation/controllers/order/order_controller.dart';
 
 class OrderSuccessScreen extends StatefulWidget {
   final paymentMethod;
+  final int orderId;
   const OrderSuccessScreen({
     super.key,
     required this.paymentMethod,
+    required this.orderId,
+
   });
 
   @override
@@ -165,12 +173,13 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                     SizedBox(
                       width:  double.infinity,
                       height: 52,
-                      child: ElevatedButton.icon(
+                      child:
+                      ElevatedButton.icon(
                         onPressed: () {
                           // Navigate to orders tab
                           Navigator.pushNamedAndRemoveUntil(
                             context,
-                            '/home',
+                            '/trackorder',
                                 (route) => false,
                             arguments: {'tab': 2}, // orders tab index
                           );
@@ -230,15 +239,25 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
 
                     SizedBox(height: 12),
 
+                    // Cancel Order
+                    SizedBox(
+                      width:  double.infinity,
+                      height: 52,
+                      child: _buildCancelOrder(),
+                    ),
+
                     // Need help
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => MessageMain()));
+                      },
                       child: RichText(
                         text: TextSpan(
                           text:  'Need help? ',
                           style: TextStyle(color: Colors.grey),
                           children: [
                             TextSpan(
+
                               text:  'Contact Support',
                               style: TextStyle(
                                 color:      Colors.blue,
@@ -298,4 +317,75 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
       ],
     );
   }
+
+  Widget _buildCancelOrder() => SizedBox(
+    width: double.infinity,
+    height: 52,
+    child: ElevatedButton.icon(
+      onPressed: () async {
+        final confirm = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Cancel Order"),
+            content: const Text("Are you sure you want to cancel this order?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text("No", style: TextStyle(color: Colors.grey)),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text("Yes, Cancel", style: TextStyle(color: Colors.redAccent)),
+              ),
+            ],
+          ),
+        );
+
+        if (confirm == true) {
+          final storage = TokenStorage();
+          final token = await storage.readToken();
+          final userId = await storage.readUserId();
+
+          if (token == null || userId == null) return;
+
+          await Provider.of<OrderController>(context, listen: false)
+              .cancelOrder(userId, token, widget.orderId);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: const [
+                  Icon(Icons.check_circle, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text("Order cancelled successfully"),
+                ],
+              ),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              duration: Duration(seconds: 2),
+            ),
+          );
+
+          // Navigate back to orders tab after cancellation
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/divicenav',
+                (route) => false,
+            arguments: {'tab': 2}, // orders tab index
+         );
+        }
+      },
+
+      icon: const Icon(Icons.cancel_outlined, color: Colors.white),
+      label: const Text(
+        "Cancel Order",
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.redAccent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
+    ),
+  );
 }

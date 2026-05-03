@@ -135,7 +135,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
 
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.fromLTRB(16, 8, 16, 24),
+        padding: EdgeInsets.only(left: 16, right: 16, bottom: 20),
         child: ElevatedButton(
           onPressed: _goToReview,
           style: ElevatedButton.styleFrom(
@@ -163,52 +163,57 @@ class _PaymentScreenState extends State<PaymentScreen> {
     final steps = ['Address', 'Payment', 'Review'];
     const current = 1; // Payment = index 1
 
-    return Row(
-      children: List.generate(steps.length, (i) {
-        final isActive  = i <= current;
-        final isCurrent = i == current;
+    return Padding(
+      padding:  EdgeInsets.only(
+        left: 50,
+      ),
+      child: Row(
+        children: List.generate(steps.length, (i) {
+          final isActive  = i <= current;
+          final isCurrent = i == current;
 
-        return Expanded(
-          child: Row(
-            children: [
-              Column(
-                children: [
-                  Container(
-                    width: 12, height: 12,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isActive ? Colors.blue : Colors.grey.shade300,
+          return Expanded(
+            child: Row(
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      width: 12, height: 12,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isActive ? Colors.blue : Colors.grey.shade300,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    steps[i],
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: isCurrent
-                          ? Colors.blue
-                          : Colors.grey,
-                      fontWeight: isCurrent
-                          ? FontWeight.bold
-                          : FontWeight.normal,
+                    SizedBox(height: 4),
+                    Text(
+                      steps[i],
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: isCurrent
+                            ? Colors.blue
+                            : Colors.grey,
+                        fontWeight: isCurrent
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              if (i < steps.length - 1)
-                Expanded(
-                  child: Container(
-                    height: 1.5,
-                    margin: EdgeInsets.only(bottom: 16),
-                    color: i < current
-                        ? Colors.blue
-                        : Colors.grey.shade300,
-                  ),
+                  ],
                 ),
-            ],
-          ),
-        );
-      }),
+                if (i < steps.length - 1)
+                  Expanded(
+                    child: Container(
+                      height: 1.5,
+                      margin: EdgeInsets.only(bottom: 16),
+                      color: i < current
+                          ? Colors.blue
+                          : Colors.grey.shade300,
+                    ),
+                  ),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
 

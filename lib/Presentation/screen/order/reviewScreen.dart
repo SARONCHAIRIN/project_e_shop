@@ -60,7 +60,6 @@ class _ReviewScreenState extends State<ReviewScreen> {
     final orderController = context.read<OrderController>();
     final cartController  = context.read<CartController>();
 
-    //  ប្រើ checkout() ដែលមានក្នុង controller
     final success = await orderController.checkout(
       widget.userId,
       widget.token,
@@ -73,7 +72,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
     if (!success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:         Text('Failed to place order. Please try again.'),
+          content:Text('Failed to place order. Please try again.'),
           backgroundColor: Colors.red,
         ),
       );
@@ -89,6 +88,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
       MaterialPageRoute(
         builder: (_) => OrderSuccessScreen(
           paymentMethod: widget.paymentMethod,
+          orderId: 0, // You can pass the actual order ID if available
         ),
       ),
           (route) => route.isFirst,
@@ -130,6 +130,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
             // ── Order Items ──
             _buildSectionTitle('Items Ordered'),
             SizedBox(height: 12),
+
             if (cart != null)
               ...cart.items.map((item) => _buildItemCard(item)),
 
@@ -255,53 +256,58 @@ class _ReviewScreenState extends State<ReviewScreen> {
     final steps   = ['Address', 'Payment', 'Review'];
     const current = 2;
 
-    return Row(
-      children: List.generate(steps.length, (i) {
-        final isActive  = i <= current;
-        final isCurrent = i == current;
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 50,
+      ),
+      child: Row(
+        children: List.generate(steps.length, (i) {
+          final isActive  = i <= current;
+          final isCurrent = i == current;
 
-        return Expanded(
-          child: Row(
-            children: [
-              Column(
-                children: [
-                  Container(
-                    width:  12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isActive
+          return Expanded(
+            child: Row(
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      width:  12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isActive
+                            ? Colors.blue
+                            : Colors.grey.shade300,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      steps[i],
+                      style: TextStyle(
+                        fontSize:   10,
+                        color:      isCurrent ? Colors.blue : Colors.grey,
+                        fontWeight: isCurrent
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+                if (i < steps.length - 1)
+                  Expanded(
+                    child: Container(
+                      height: 1.5,
+                      margin: EdgeInsets.only(bottom: 16),
+                      color: i < current
                           ? Colors.blue
                           : Colors.grey.shade300,
                     ),
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    steps[i],
-                    style: TextStyle(
-                      fontSize:   10,
-                      color:      isCurrent ? Colors.blue : Colors.grey,
-                      fontWeight: isCurrent
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-              if (i < steps.length - 1)
-                Expanded(
-                  child: Container(
-                    height: 1.5,
-                    margin: EdgeInsets.only(bottom: 16),
-                    color: i < current
-                        ? Colors.blue
-                        : Colors.grey.shade300,
-                  ),
-                ),
-            ],
-          ),
-        );
-      }),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
 
@@ -330,7 +336,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
               item.image ?? '',
               width:  70,
               height: 70,
-              fit:    BoxFit.cover,
+              fit:    BoxFit.fill,
               errorBuilder: (_, __, ___) => Container(
                 width:  70,
                 height: 70,

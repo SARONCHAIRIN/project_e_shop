@@ -70,12 +70,12 @@ class _AddAddressPageState extends State<AddAddressPage> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Address saved!'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('Address saved!'),
+      //     backgroundColor: Colors.green,
+      //   ),
+      // );
 
       Navigator.push(
         context,
