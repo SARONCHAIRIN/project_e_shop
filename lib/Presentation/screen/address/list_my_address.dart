@@ -2,7 +2,6 @@ import 'package:e_shop/Presentation/screen/address/add_address_page.dart';
 import 'package:e_shop/data/models/address/address_model.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/material.dart';
-
 import '../../../core/storage/token_storage.dart';
 
 class AddressListPage extends StatefulWidget {

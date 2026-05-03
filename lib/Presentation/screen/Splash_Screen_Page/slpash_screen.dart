@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../../data/repositories/user_auth_repository.dart';
-import '../auth/login/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   final User_AuthRepository authRepository;
@@ -29,25 +28,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // Check if user has a token
     final token = await TokenStorage().readToken();
-
-    // if (token != null) {
-    //   // Token exists → go to HomePage
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (_) => DivicesNav(authRepository: widget.authRepository),
-    //     ),
-    //   );
-    // }
-    // else {
-    //   // No token → go to LoginScreen
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (_) => LoginScreen(authRepository: widget.authRepository),
-    //     ),
-    //   );
-    // }
 
     Navigator.pushReplacement(
         context,

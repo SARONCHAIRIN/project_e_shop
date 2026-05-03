@@ -1,24 +1,3 @@
-// import 'package:flutter/material.dart';
-//
-// class SubcategoryTile extends StatelessWidget {
-//   final String name;
-//   final String description;
-//   const SubcategoryTile({
-//     required this.name,
-//     super.key,
-//     required this.description,
-//
-//
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ListTile(
-//       title: Text(name),
-//       subtitle: Text(description),
-//     );
-//   }
-// }
 
 import 'package:flutter/material.dart';
 

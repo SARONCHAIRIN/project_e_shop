@@ -81,17 +81,6 @@ class MyApp extends StatelessWidget {
         if (settings.name == '/home') {
 
           final args = settings.arguments as Map?;
-
-          // return MaterialPageRoute(
-
-            // builder: (_) => HomePage(
-            //
-            //   tab: args?['tab'] ?? 0,
-            //
-            // ),
-
-          // );
-
         }
 
         if (settings.name == '/homemainppage') {
@@ -99,13 +88,9 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(
 
             builder: (_) => HomeMainPage(authRepository: authRepository),
-
           );
-
         }
-
         return null;
-
       },
 
       title: 'E-Shop',

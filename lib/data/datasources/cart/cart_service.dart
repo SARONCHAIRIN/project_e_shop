@@ -1,4 +1,3 @@
-// data/datasources/cart/cart_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -20,22 +19,6 @@ class CartService {
     throw Exception("Failed to fetch cart");
   }
 
-  // POST add item
-  // Future<void> addItem(int userId,  int quantity, int productId,String token) async {
-  //   final response = await http.post(
-  //     Uri.parse("$baseUrl/user/$userId/items"),
-  //     headers: {
-  //       // 'accept ': 'application/json',
-  //       "Authorization": "Bearer $token",
-  //       "Content-Type": "application/json"},
-  //     body: jsonEncode({
-  //       "quantity": quantity,
-  //       "product_id": productId,
-  //
-  //     }),
-  //   );
-  //   if (response.statusCode != 201) throw Exception("Failed to add item");
-  // }
 
   Future<void> addItem(int userId, int productId, int quantity, String token) async {
     final response = await http.post(

@@ -1,9 +1,9 @@
 import 'package:e_shop/Presentation/screen/address/add_address_page.dart';
 import 'package:e_shop/Presentation/screen/order/checkoutStepIndicator_page.dart';
 import 'package:e_shop/Presentation/screen/order/paymentScreen.dart';
+import 'package:e_shop/Presentation/screen/order/reviewScreen.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
-import 'package:e_shop/data/repositories/auth/auth_repository.dart';
 import 'package:flutter/material.dart';
 
 
@@ -48,7 +48,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
           token: widget.token,
           addressId: widget.addressId,
       ),
-      ReviewPage(),
+      ReviewScreen(userId: widget.userId,
+          token: widget.token,
+          addressId: widget.addressId,
+          paymentMethod: "Credit Card"
+      ),
     ];
   }
   void nextStep() {
@@ -140,26 +144,5 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ],
       ),
     );
-  }
-}
-
-class AddressPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Address Page"));
-  }
-}
-class PaymentPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blue,
-        body: Center(child: Text("Payment Page")));
-  }
-}
-class ReviewPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Review Page"));
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../domains/entities/sub_category.dart';
 import '../../domains/usecases/get_all_sub_category.dart';
 

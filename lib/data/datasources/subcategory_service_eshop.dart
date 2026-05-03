@@ -18,6 +18,7 @@ class ApiService {
     if (response.statusCode == 200) {
       print("status : ${response.statusCode}");
       print("API Data : ${response.body}");
+
       // If the server returns a 200 OK response, parse the JSON
       var jsonResponse = jsonDecode(response.body);
       SubcategoryApiResponse apiResponse = SubcategoryApiResponse.fromJson(jsonResponse);

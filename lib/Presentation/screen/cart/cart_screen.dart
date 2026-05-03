@@ -315,53 +315,7 @@ class CartScreen extends StatelessWidget {
             userId: userId,
             token: token,
             addressId: 0,
-
-
-
-          )));
-        },
-
-
-        // async {
-        //   final orderController = context.read<OrderController>();
-        //
-        //
-        //
-        //   //  CALL CHECKOUT FIRST
-        //   bool success = await orderController.checkout(
-        //     userId,
-        //     token,
-        //     22, //  address_id (change later)
-        //     "COD",
-        //   );
-        //
-        //   if (success) {
-        //     //  FETCH ORDER AFTER CHECKOUT
-        //     await orderController.fetchOrders(userId, token);
-        //
-        //
-        //     //  NAVIGATE
-        //     // Navigator.push(
-        //     //   context,
-        //     //   MaterialPageRoute(
-        //     //     builder: (_) => OrderScreen(
-        //     //       userId: userId,
-        //     //       token: token,
-        //     //     ),
-        //     //   ),
-        //     // );
-        //
-        //     Navigator.push(context, MaterialPageRoute(builder: (_) => CheckoutStepIndicator()));
-        //
-        //     //when checkout is successful, clear the cart
-        //     cartController.clearCart();
-        //   } else {
-        //     ScaffoldMessenger.of(context).showSnackBar(
-        //       SnackBar(content: Text("Checkout failed - please try again")),
-        //     );
-        //   }
-        // },
-
+          )));},
           style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blueAccent,
           padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 13),

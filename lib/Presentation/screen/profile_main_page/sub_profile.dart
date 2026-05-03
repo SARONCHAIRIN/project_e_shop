@@ -1,13 +1,9 @@
 
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
-import 'package:e_shop/Presentation/screen/address/add_address_page.dart';
 import 'package:e_shop/Presentation/screen/address/list_my_address.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/profile_image_picker.dart';
-import 'package:e_shop/Presentation/screen/profile_main_page/profile_main.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/setting_page.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/datasources/adress/adress_service.dart';
@@ -15,10 +11,7 @@ import 'package:e_shop/data/models/user/get_user_model.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-
 import '../../../data/datasources/user/get_user_Id_service.dart';
 
 class Profilepage extends StatefulWidget {
@@ -595,7 +588,6 @@ class _ProfilepageState extends State<Profilepage> {
                     ],
                   ),
                   child: Column(
-                    // crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
 
@@ -721,10 +713,6 @@ class _ProfilepageState extends State<Profilepage> {
                                 MaterialPageRoute(builder: (_) => DivicesNav(authRepository: widget.authRepository)),
                                     (route) => false,
                               );
-
-                             /* ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content:Text('Logout Successfully')),
-                              );*/
                             },
                             icon: Icon(
                               Icons.arrow_forward_ios,
@@ -735,8 +723,6 @@ class _ProfilepageState extends State<Profilepage> {
                           ),
                         ],
                       ),
-
-
                     ],
                   ),
                 ),
@@ -744,7 +730,6 @@ class _ProfilepageState extends State<Profilepage> {
             ),
           ),
           SizedBox(height: 100,),
-
         ],
       ),
     ),

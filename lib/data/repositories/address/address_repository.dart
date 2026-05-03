@@ -1,7 +1,5 @@
 import 'package:e_shop/data/datasources/adress/adress_service.dart';
-import 'package:e_shop/data/datasources/user/get_user_Id_service.dart';
 import 'package:e_shop/data/models/address/address_model.dart';
-import 'package:http/http.dart';
 
 class AddressRepository {
 
