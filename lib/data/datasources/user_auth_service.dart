@@ -21,13 +21,21 @@ class AuthService {
     required String email,
     required String password,
     required String fullName,
-  }) {
+  }) async{
     return client.post(ApiConstants.register, {
       'username': username,
       'email': email,
       'password': password,
-      'fullName': fullName,
+      'full_name': fullName,
     });
+
+
+
+
+
+
   }
+
+
 
 }

@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+import 'package:e_shop/core/constants/api_constants.dart';
+import 'package:e_shop/core/network/api_client.dart';
+import 'package:http/http.dart' as http;
+
 import '../../core/storage/token_storage.dart';
 import '../datasources/user_auth_service.dart';
 import '../models/user_model.dart';
@@ -13,18 +19,30 @@ class User_AuthRepository {
   });
 
   // LOGIN
-  Future<UserModel> login(String username, String password) async {
+  Future<UserModel> login(
+      String username,
+      String password
+      ) async {
     try {
       final res = await service.login(username, password);
       final user = UserModel.fromJson(res, loginUsername: username);
 
       if (user.token.isEmpty) throw Exception('No token returned from API');
 
+
       // Save user info
       await storage.writeToken(user.token);
       await storage.writeUserId(user.id);
       await storage.writeUsername(user.username);
       await storage.writeUserEmail(user.email);
+      await storage.writePassword(password); // Save password for auto re-login
+
+      //  Save refresh_token
+      if (user.refreshToken != null && user.refreshToken!.isNotEmpty) {
+        await storage.writeRefreshToken(user.refreshToken!);
+        print('Refresh token saved during login: ${user.refreshToken}');
+      }
+
 
       print("Login saved user: ${user.username}, token: ${user.token}");
       return user;
@@ -39,7 +57,8 @@ class User_AuthRepository {
     required String email,
     required String password,
     required String fullName,
-  }) async {
+  }) async
+  {
     try {
       // Call register API
       final res = await service.register(
@@ -62,8 +81,14 @@ class User_AuthRepository {
 
       if (user.fullName != null) await storage.saveFullName(user.fullName!);
 
-      print('Saved fullName : ${user.fullName}');
 
+      //  Save refresh_token
+      if (user.refreshToken != null && user.refreshToken!.isNotEmpty) {
+        await storage.writeRefreshToken(user.refreshToken!);
+        print('Refresh token saved during registration: ${user.refreshToken}');
+      }
+
+      print('Saved fullName : ${user.fullName}');
 
       // Return user directly instead of calling login
       return user;
@@ -73,12 +98,66 @@ class User_AuthRepository {
       rethrow;
     }
   }
+// AUTO RE-LOGIN
+  Future<bool> autoReLogin() async {
+    final username = await storage.readUsername();
+    final password = await storage.readPassword(); // save when login
+    print('Re-login username: $username');
+    print('Re-login password: $password');
+    if (username == null || password == null) return false;
+
+    try {
+      await login(username, password);
+      print('Auto re-login success ');
+      return true;
+    } catch (e) {
+      print('Auto re-login failed: $e');
+      return false;
+    }
+  }
+
+// AUTHENTICATED GET
+  Future<http.Response?> authenticatedGet(String endpoint) async {
+    var token = await storage.readToken();
+    final url = Uri.parse('${ApiConstants.BASE_URL}$endpoint');
+    print('GET: $url');
+
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+
+
+    if (response.statusCode == 401) {
+      print('401 → auto re-login...');
+      final success = await autoReLogin();
+
+      if (success) {
+        token = await storage.readToken();
+        response = await http.get(
+          url,
+          headers: {'Authorization': 'Bearer $token'},
+        );
+        print('Retry: ${response.statusCode}');
+      } else {
+        await logout();
+        return null;
+      }
+    }
+
+    return response;
+  }
 
   // LOGOUT
   Future<void> logout() async {
     await storage.deleteToken();
     await storage.deleteUsername();
     await storage.deleteUserImage();
+    await storage.deleteRefreshToken();
+    await storage.deletePassword();
+    await storage.deleteUserId();
+    print('User logged out, all data cleared');
   }
 
   // CHECK STORED DATA

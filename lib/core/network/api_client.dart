@@ -35,11 +35,15 @@ class ApiClient {
   Future<Map<String, dynamic>> post(
       String url, Map<String, dynamic> body,
       {Map<String, String>? headers}) async {
+    print('POST URL: $url');
+    print('POST BODY: ${jsonEncode(body)}');
     final res = await _client.post(
       Uri.parse(url),
       headers: {'content-type': 'application/json', ...?headers},
       body: jsonEncode(body),
     );
+    print('RESPONSE STATUS: ${res.statusCode}');
+    print('RESPONSE BODY: ${res.body}');
 
     final decoded = jsonDecode(res.body.isNotEmpty ? res.body : '{}');
 

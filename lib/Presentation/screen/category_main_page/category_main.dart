@@ -35,6 +35,10 @@ class _CategoryMainState extends State<CategoryMain> {
         // if(!showTextField) setState(() => showTextField = true);
       }
     });
+    //category page show in console
+    print('|=================================================|');
+    print('|              Category Page Loads                |');
+    print('|=================================================|');
   }
   @override
   Widget build(BuildContext context) {

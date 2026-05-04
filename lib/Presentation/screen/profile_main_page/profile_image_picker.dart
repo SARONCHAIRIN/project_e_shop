@@ -57,11 +57,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    fetchUser();
     _loadUser();
     _loadSavedImage();
     _initController();
     _loadUserData();
-    fetchUser();
+
+    print('full name: ${user?.fullName}, email: ${user?.email}');
 
   }
   void _initController() {
@@ -70,7 +72,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     controller = PutUserController(repo);
   }
 
-
   Future<void> fetchUser() async {
     final token = await TokenStorage().getToken();
     final userId = await TokenStorage().getUserId();
@@ -78,6 +79,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (token != null && userId != null) {
       final result = await GetUserIdService().getUserById(userId, token);
 
+      //  save image URL in storage
+      if (result?.image != null && result!.image!.isNotEmpty) {
+        await TokenStorage().writeUserImage(result.image!);
+        setState(() => _uploadedImageUrl = result.image);
+        print('Image saved : ${result.image}');
+      }
       setState(() {
         user = result;
         // fill controllers with API data
@@ -89,12 +96,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() => _isloading = false);
     }
   }
+
+
   Future<void> _loadUserData() async {
     setState(() => _isLoading = true);
     final token = await TokenStorage().getToken();
     final userId = await TokenStorage().getUserId();
     if (token != null && userId != null) {
       final result = await GetUserIdService().getUserById(userId, token);
+
       setState(() {
         user = result;
         nameController.text = user?.fullName ?? '';
@@ -131,32 +141,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // Future<void> _pickImage(ImageSource source) async {
+  //   try {
+  //     final XFile? pickedFile = await _picker.pickImage(
+  //         source: source,
+  //         imageQuality: 70,
+  //         maxWidth: 1024,
+  //         maxHeight: 1024,
+  //     );
+  //     if (pickedFile != null) {
+  //       setState(() {
+  //         _image = File(pickedFile.path);
+  //         _uploadedImageUrl = null;
+  //       });
+  //       await _uploadImage();
+  //     }
+  //   } catch (e) {
+  //     // _showSnackBar("Error picking image: $e", isError: true);
+  //   }
+  // }
+
+
   Future<void> _pickImage(ImageSource source) async {
-    try {
-      final XFile? pickedFile = await _picker.pickImage(
-          source: source,
-          imageQuality: 70,
-          maxWidth: 1024,
-          maxHeight: 1024,
-      );
-      if (pickedFile != null) {
-        setState(() {
-          _image = File(pickedFile.path);
-          _uploadedImageUrl = null;
-        });
-      }
-    } catch (e) {
-      // _showSnackBar("Error picking image: $e", isError: true);
-    }
+    final XFile? picked = await _picker.pickImage(
+      source: source,
+      imageQuality: 70,
+    );
+
+    if (picked == null) return;
+
+    setState(() {
+      _image = File(picked.path);
+    });
+
+    await _uploadImage(); // upload immediately
   }
-
-
   //========upload image===
   Future<void> _uploadImage() async {
-    // if (_image == null) {
-    //   _showSnackBar('Please select an image first', isError: true);
-    //   return;
-    // }
+
 
     setState(() => _isUploading = true);
 
@@ -178,7 +200,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       request.headers['Accept'] = 'application/json';
 
       request.files.add(await http.MultipartFile.fromPath(
-          'file',
+          'image',
           _image!.path));
 
       final response = await request.send();
@@ -189,7 +211,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(responseBody.body);
         if (data['data'] != null && data['data']['image'] != null) {
-          _uploadedImageUrl = data['data']['image'];
+          setState(() {
+            _uploadedImageUrl = data['data']['image'];
+            // _image = null;
+          });
+          // _uploadedImageUrl = data['data']['image'];
 
           final storage = TokenStorage();
           await storage.writeUserImage(_uploadedImageUrl!);
@@ -505,7 +531,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       return ClipOval(
         child: CachedNetworkImage(
-          imageUrl: _uploadedImageUrl!,
+          imageUrl: "${_uploadedImageUrl!}?v=${DateTime.now().millisecondsSinceEpoch}",
           width: 140,
           height: 140,
           fit: BoxFit.cover,
@@ -940,26 +966,47 @@ Widget _buildUpdateusername() => Padding(
          // save image
          if (!_isUploading) await _uploadImage();
 
+
          // save user info
          final storage = TokenStorage();
          int? userId = await storage.readUserId(); // get saved user ID
 
+         final savedPassword = await storage.readPassword();
+
+
+         print('UPDATE userId: $userId');
+         print('UPDATE email: ${emailController.text}');
+         print('UPDATE fullName: ${nameController.text}');
+         print('UPDATE password: ${passwordController.text}');
+
          if (userId != null && userId > 0) {
+           final password = passwordController.text.isNotEmpty
+               ? passwordController.text
+               : savedPassword ?? '';
 
            final userData = PutUserModel(
              email: emailController.text,
-             password: passwordController.text,
              fullName: nameController.text,
              phoneNumber: "",
              birthdate: "",
+             password  : password,
+
            );
+           print('PutUserModel: ${userData}');
 
            bool success = await controller.updateUser(userId, userData);
+           print('UPDATE SUCCESS: $success');
+
 
            if (success) {
-             _showSnackBar("Update success");
+             if (passwordController.text.isNotEmpty) {
+               await storage.writePassword(passwordController.text);
+             }
+             await fetchUser(); //  reload data when update
+
            } else {
-             _showSnackBar("Update failed", isError: true);
+             print('Failed to update user'); //
+
            }
 
          } else {

@@ -1,4 +1,5 @@
 import 'package:e_shop/Presentation/screen/address/add_address_page.dart';
+import 'package:e_shop/Presentation/screen/order/paymentScreen.dart';
 import 'package:e_shop/data/models/address/address_model.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,6 @@ class AddressListPage extends StatefulWidget {
 class _AddressListPageState extends State<AddressListPage> {
   List<AddressModel> list = [];
   bool loading = true;
-
   @override
   void initState() {
     super.initState();
@@ -50,6 +50,8 @@ class _AddressListPageState extends State<AddressListPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Deleted successfully ")),
       );
+
+      await loadData();
 
       // load(); //  refresh list
     } catch (e) {
@@ -94,6 +96,10 @@ class _AddressListPageState extends State<AddressListPage> {
     });
   }
 
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,6 +107,10 @@ class _AddressListPageState extends State<AddressListPage> {
       appBar: AppBar(backgroundColor: Colors.white,
         title: Text("My Address",),
       actions:[
+
+        IconButton(onPressed: () => loadData(),
+            icon:Icon(Icons.refresh,size: 27,color: Colors.grey,)),
+
         IconButton(onPressed: () => goToAdd(),
           icon:Icon(Icons.add,size: 30,color: Colors.red,)),
       ],
@@ -112,9 +122,9 @@ class _AddressListPageState extends State<AddressListPage> {
         itemBuilder: (context, index) {
           final item = list[index];
 
-        return   Padding(
+        return  Padding(
 
-          padding: const EdgeInsets.all(8.0),
+          padding:   const EdgeInsets.all(8.0),
           child: Container(
               margin: const EdgeInsets.only(bottom: 16),
               padding: const EdgeInsets.all(16),
@@ -135,6 +145,7 @@ class _AddressListPageState extends State<AddressListPage> {
                   /// TOP ROW
                   Row(
                     children: [
+
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
@@ -151,7 +162,7 @@ class _AddressListPageState extends State<AddressListPage> {
                         children: [
                           Text(
                             // title,
-                              'title',
+                              'Any Address',
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
 
@@ -159,14 +170,24 @@ class _AddressListPageState extends State<AddressListPage> {
                             Container(
                               margin: const EdgeInsets.only(top: 4),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 2),
+                                  horizontal: 8,
+                                  vertical: 2
+                              ),
                               decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color: Colors.grey.shade50,
                                 borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.blue,
+                                    blurRadius: 2,
+                                    spreadRadius: 1,
+                                    blurStyle: BlurStyle.inner,
+                                  )
+                                ],
                               ),
                               child: const Text(
                                 "DEFAULT",
-                                style: TextStyle(color: Colors.blue, fontSize: 12),
+                                style: TextStyle(color: Colors.redAccent, fontSize: 12),
                               ),
                             )
                         ],
@@ -183,7 +204,9 @@ class _AddressListPageState extends State<AddressListPage> {
 
                       IconButton(
                         onPressed:(){
-                         // deleteAddress(item.id)
+                          if (item.id != null) {
+                            deleteAddress(item.id!);
+                          }
                         },
                         icon: const Icon(Icons.delete, color: Colors.red),
                       ),
@@ -263,7 +286,7 @@ class _AddressListPageState extends State<AddressListPage> {
                     Center(
                       child: OutlinedButton(
                         onPressed:(){
-                          // onSetDefault,
+                          // onSetDefault
                         },
                         child: const Text("SET AS DEFAULT"),
                       ),
@@ -274,16 +297,9 @@ class _AddressListPageState extends State<AddressListPage> {
         );
         },
       ),
-
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: ,
-      //   child: Icon(Icons.add),
-      // ),
     );
   }
 
-
-  //cart clean address
 
   Widget addressCard({
     required String title,

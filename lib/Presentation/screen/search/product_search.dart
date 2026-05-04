@@ -217,7 +217,10 @@ class _SearchProductpageState extends State<SearchProductpage> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => ProductDetailScreen(product: product)));
+                    builder: (_) => ProductDetailScreen(
+                        product: product,
+
+                    )));
           },
           child: Container(
             decoration: BoxDecoration(

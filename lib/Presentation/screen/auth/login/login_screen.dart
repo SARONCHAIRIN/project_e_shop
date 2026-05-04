@@ -62,11 +62,24 @@ class _LoginScreenState extends State<LoginScreen> {
       // -------------------
       if (user.token.isNotEmpty) {
         await storage.writeToken(user.token);
+
         final tokenRead = await storage.readToken();
         print('Token saved & read back: $tokenRead');
       } else {
         print('Token is empty, not saving.');
       }
+
+      //======================
+      //refresh token
+      //======================
+      if (user.refreshToken != null && user.refreshToken!.isNotEmpty) {
+        await storage.writeRefreshToken(user.refreshToken!);
+        final refreshTokenRead = await storage.readRefreshToken();
+        print('Refresh Token saved & read back: $refreshTokenRead');
+      } else {
+        print('Refresh Token is empty or null, not saving.');
+      }
+
 
       // -------------------
       // Save username
