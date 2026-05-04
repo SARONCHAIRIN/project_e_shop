@@ -5,8 +5,6 @@ import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../order/paymentScreen.dart';
-
 class AddAddressPage extends StatefulWidget {
   final AddressRepository repo;
   final TokenStorage storage;

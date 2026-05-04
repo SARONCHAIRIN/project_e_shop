@@ -49,4 +49,21 @@ class ApiService {
       throw Exception('Failed to load products');
     }
   }
+
+
+  Future<List<SubcategoryData>> fetchSubcategoriesByCategoryName(String categoryName) async {
+    final allSubcategories = await fetchSubcategories();
+    print("CATEGORY: ${categoryName}");
+
+    if (categoryName == 'All') {
+      return allSubcategories; //  show all
+    }
+
+
+
+    return allSubcategories.where((sub) =>
+    sub.categoryName.trim().toLowerCase() ==
+        categoryName.trim().toLowerCase()
+    ).toList();
+  }
 }

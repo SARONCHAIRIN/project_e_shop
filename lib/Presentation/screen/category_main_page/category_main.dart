@@ -21,6 +21,9 @@ class _CategoryMainState extends State<CategoryMain> {
   bool showBars = true;
   bool showTextField = true;
 
+  List<String> categories = ['All','Laptop','Electronics', 'Drone', 'shose','Clothing', 'Books', 'Home', 'Toys', 'Sports', 'Beauty'];
+  String selectedCategory = 'All';
+
   @override
   void initState() {
     super.initState();
@@ -56,18 +59,55 @@ class _CategoryMainState extends State<CategoryMain> {
             authRepository: widget.authRepository,
           ),
 
-          // Your other slivers...
+
+
           SliverToBoxAdapter(
             child: Column(
               children: [
                 const SizedBox(height: 10),
+
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Row(
+                    children: categories.map((category) {
+                      final isSelected = selectedCategory == category;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text(category),
+
+                          selected: isSelected, // important
+
+                          selectedColor: Colors.blueAccent,
+                          backgroundColor: Colors.white,
+
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+
+                          onSelected: (value) {
+                            setState(() {
+                              selectedCategory = category; //  change selected
+                            });
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+
                 const SizedBox(height: 20),
               ],
             ),
           ),
 
           // Your grid
-          const SubcategoryWithProduct(),
+           SubcategoryWithProduct(
+            categoryName: selectedCategory,
+          ),
         ],
       ),
     );
