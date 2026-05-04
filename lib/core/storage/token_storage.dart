@@ -1,3 +1,4 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenStorage {
@@ -62,6 +63,78 @@ class TokenStorage {
     final token = await readToken();
     return token != null && token.isNotEmpty;
   }
+
+
+  //  encrypted storage for sensitive data
+  final _secureStorage = const FlutterSecureStorage();
+
+  // PASSWORD — secure
+  Future<void> writePassword(String password) async {
+    await _secureStorage.write(key: 'password', value: password);
+    print('Password saved securely ');
+  }
+
+  Future<String?> readPassword() async {
+    return await _secureStorage.read(key: 'password');
+  }
+
+  Future<void> deletePassword() async {
+    await _secureStorage.delete(key: 'password');
+  }
+
+  // TOKEN — secure ផងដែរ (optional upgrade)
+  Future<void> writeTokenSecure(String token) async {
+    await _secureStorage.write(key: 'auth_token', value: token);
+  }
+
+  Future<String?> readTokenSecure() async {
+    return await _secureStorage.read(key: 'auth_token');
+  }
+
+  //refresh token=======
+  Future<void> saveRefreshToken(String refreshToken) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('refresh_token', refreshToken);
+      print(' Refresh token saved: $refreshToken');
+    } catch (e) {
+      print(' Error saving refresh token: $e');
+    }
+  }
+
+  Future<void> writeRefreshToken(String? refreshToken) async {
+    if (refreshToken == null || refreshToken.isEmpty) {
+      print("Refresh token not saved because it is null");
+      return;
+    }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("refresh_token", refreshToken);
+    print("Refresh token saved: $refreshToken");
+    saveRefreshToken(refreshToken);
+  }
+
+  Future<String?> readRefreshToken() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final refreshToken = prefs.getString('refresh_token');
+      print(' Refresh token read: $refreshToken');
+      return refreshToken;
+    } catch (e) {
+      print(' Error reading refresh token: $e');
+      return null;
+    }
+  }
+
+    Future<void> deleteRefreshToken() async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('refresh_token');
+        print(' Refresh token deleted');
+      } catch (e) {
+        print(' Error deleting refresh token: $e');
+      }
+    }
+
 
 
 

@@ -19,6 +19,10 @@ class _CartMainState extends State<CartMain> {
   void initState() {
     super.initState();
     _loadUserData();
+    // Cart page show in console
+    print('|=================================================|');
+    print('|              Cart Page Loads                    |');
+    print('|=================================================|');
   }
 
   Future<void> _loadUserData() async {

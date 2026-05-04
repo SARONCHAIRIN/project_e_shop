@@ -1,3 +1,4 @@
+import 'package:e_shop/Presentation/screen/address/add_address_checkout.dart';
 import 'package:e_shop/Presentation/screen/address/add_address_page.dart';
 import 'package:e_shop/Presentation/screen/order/checkoutStepIndicator_page.dart';
 import 'package:e_shop/Presentation/screen/order/paymentScreen.dart';
@@ -39,7 +40,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   void initState() {
     super.initState();
     pages = [
-      AddAddressPage(
+      AddAddressCheckout(
         storage: widget.storage,
         repo: widget.repo,
       ),

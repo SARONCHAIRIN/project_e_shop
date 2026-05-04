@@ -46,6 +46,12 @@ class _HomeMainPageState extends State<HomeMainPage> {
         // if(!showTextField) setState(() => showTextField = true);
       }
     });
+
+
+    //Home page show in console
+    print('|=================================================|');
+    print('|              HomeMainPage loaded                |');
+    print('|=================================================|');
   }
 
 

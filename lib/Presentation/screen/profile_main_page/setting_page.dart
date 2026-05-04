@@ -155,7 +155,7 @@ class _SettingPageState extends State<SettingPage> {
                     final email = await tokenStorage.readUserEmail();
 
                     if (token != null && username != null && email != null) {
-                      Navigator.push(
+                     await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProfileScreen(
@@ -167,6 +167,7 @@ class _SettingPageState extends State<SettingPage> {
                               )
                           )
                       );
+
                     }
                   } catch (e) {
                     print("Error: $e");

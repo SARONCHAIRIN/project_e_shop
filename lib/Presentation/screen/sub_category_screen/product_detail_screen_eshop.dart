@@ -1,5 +1,8 @@
 
+import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/cart/cart_screen.dart';
+import 'package:e_shop/data/repositories/auth/auth_repository.dart';
+import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +13,7 @@ import '../../controllers/cart/cart_controller.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
+
 
 
   const ProductDetailScreen({
@@ -57,9 +61,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
-    // final cartController = Provider.of<CartController>(context, listen: false);
-
-    // final cartRepo = CartRepository(CartService());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -655,11 +656,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         final String? token = await storage.readToken();
 
         if (userId == null || token == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Please log in to add items")),
-          );
+          // push to login screen
+          Navigator.pushNamed(context, LoginScreen.routeName);
           return;
         }
+
 
         final int productId = product.id; // assume product.id is int
         final cartController = Provider.of<CartController>(context, listen: false);
@@ -673,10 +674,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
         Navigator.push(context, MaterialPageRoute(builder: (context) => CartScreen(userId: userId, token: token)));
       } catch (e) {
-        // // Exception handling
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text("Failed to add item: ${e.toString()}")),
-        // );
+
       } finally {
         // Stop loader
         final cartController = Provider.of<CartController>(context, listen: false);

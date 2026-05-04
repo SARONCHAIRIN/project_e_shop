@@ -21,6 +21,15 @@ class _ProfileMainState extends State<ProfileMain> {
   final service = AddressService();
   // late final repo = AddressRepository(service,);
   final storage = TokenStorage();
+
+  @override
+  void initState() {
+    super.initState();
+      // Profile page show in console
+    print('|=================================================|');
+    print('|              Profile Page Loads                 |');
+    print('|=================================================|');
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

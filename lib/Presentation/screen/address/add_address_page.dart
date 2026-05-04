@@ -70,23 +70,20 @@ class _AddAddressPageState extends State<AddAddressPage> {
 
       if (!mounted) return;
 
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text('Address saved!'),
-      //     backgroundColor: Colors.green,
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (_) =>
+      //     //     PaymentScreen(
+      //     //   userId:    userId,
+      //     //   token:     token,
+      //     //   addressId: savedAddress.id!,
+      //     // ),
+      //
       //   ),
       // );
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => PaymentScreen(
-            userId:    userId,
-            token:     token,
-            addressId: savedAddress.id!, // ← id=6 ពី API
-          ),
-        ),
-      );
+      //push addresslistpage
+        Navigator.pop(context, savedAddress);
 
     } catch (e) {
       debugPrint('Error: $e');
@@ -105,6 +102,38 @@ class _AddAddressPageState extends State<AddAddressPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+       title: Text(
+         'Add New Address',
+         style: TextStyle(
+           color: Colors.black,
+           fontSize: 20,
+           fontWeight: FontWeight.w600,
+         ),
+       ),
+       centerTitle: true,
+       actions: [
+         SizedBox(width: 40), // Placeholder for spacing
+       ],
+       shape: Border(
+         bottom: BorderSide(color: Colors.grey.shade200, width: 1),
+       ),
+       toolbarHeight: 60,
+       titleSpacing: 0,
+       automaticallyImplyLeading: false,
+       leadingWidth: 40,
+       titleTextStyle: TextStyle(
+         color: Colors.black,
+         fontSize: 20,
+         fontWeight: FontWeight.w600,
+       ),
+      ),
       backgroundColor: Colors.grey.shade50,
       body: SingleChildScrollView(
         child: Padding(
@@ -118,7 +147,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                 thickness: 1,
                 color: Colors.grey.shade200,
               ),
-              SizedBox(height: 5,),
+              SizedBox(height: 10,),
 
               //new Address
               Padding(
@@ -134,7 +163,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 1,),
+              SizedBox(height: 10,),
 
               _buildaddressMap(),
               SizedBox(height: 20,),
@@ -186,6 +215,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
 
               //build save address
               _BuildSaveAddress(),
+              SizedBox(height: 50,),
 
             ],
           ),

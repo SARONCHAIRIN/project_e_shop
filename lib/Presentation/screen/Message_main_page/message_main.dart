@@ -67,6 +67,16 @@ class _MessageMainState extends State<MessageMain> {
     );
   }
 
+   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // Message page show in console
+    print('|=================================================|');
+    print('|              MessageMain loaded                |');
+    print('|=================================================|');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

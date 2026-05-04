@@ -1,4 +1,5 @@
 import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
+import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/home_main_page/home_main_page.dart';
 import 'package:e_shop/Presentation/screen/order/trackOrder.dart';
 import 'package:e_shop/data/datasources/order/order_service.dart';
@@ -102,6 +103,13 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(
 
             builder: (_) => DivicesNav(authRepository: authRepository),
+          );
+        }
+        if (settings.name == '/login') {
+
+          return MaterialPageRoute(
+
+            builder: (_) => LoginScreen(authRepository: authRepository),
           );
         }
         return null;

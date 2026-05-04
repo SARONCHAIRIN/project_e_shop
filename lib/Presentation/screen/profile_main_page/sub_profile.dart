@@ -1,8 +1,10 @@
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
 import 'package:e_shop/Presentation/screen/address/list_my_address.dart';
+import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/profile_image_picker.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/setting_page.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
@@ -11,6 +13,7 @@ import 'package:e_shop/data/models/user/get_user_model.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../../../data/datasources/user/get_user_Id_service.dart';
 
@@ -52,18 +55,13 @@ class _ProfilepageState extends State<Profilepage> {
   @override
   void initState() {
     super.initState();
+    fetchUser();
     _loadUser();
     _loadSavedImage();
-    fetchUser();
   }
 
 
 
-  // void _showSnackBar(String message, {bool isError = false}) {
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(content: Text(message), backgroundColor: isError ? Colors.red : Colors.green),
-  //   );
-  // }
 
   Future<void> _loadUser() async {
     try {
@@ -97,29 +95,80 @@ class _ProfilepageState extends State<Profilepage> {
     }
   }
 
-  //get user
+
   Future<void> fetchUser() async {
     print("fetch start");
 
-    final token = await TokenStorage().getToken();
-    final userId = await TokenStorage().getUserId();
+    try {
+      final userId = await TokenStorage().getUserId();
+      print("user ID $userId");
 
-    print("token $token");
-    print("user ID $userId");
+      if (userId == null) {
+        print('No userId');
+        setState(() => _isloadinged = false);
+        return;
+      }
 
-    final result = await GetUserIdService().getUserById(userId!, token!);
+      //  use authenticatedGet — auto refresh token when 401
+      final response = await widget.authRepository
+          .authenticatedGet('/user/$userId/user');
 
-    print("API RESULT: $result"); //  MUST SHOW
+      print("API RESULT: $response");
 
-    setState(() {
-      user = result;
-      _isloadinged = false;
-    });
+      // null refresh fail → back to login
+      if (response == null) {
+        if (!mounted) return;
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (_) => LoginScreen(authRepository: widget.authRepository),
+          ),
+              (route) => false,
+        );
+        return;
+      }
+
+      if (response.statusCode == 200) {
+        // final data = jsonDecode(response.body);
+        final body = response.body;
+        print('RESPONSE BODY: $body'); //
+        final data = jsonDecode(body);
+        print('PARSED DATA: $data');
+
+        final userData = data['data'];
+        print('USER DATA: $userData');
+
+        // save image URL when fetch
+        if (userData['image'] != null && userData['image'].toString().isNotEmpty) {
+          await TokenStorage().writeUserImage(userData['image']);
+          if (mounted) setState(() => _uploadedImageUrl = userData['image']);
+        }
+
+        if(mounted){
+          setState(() {
+            user = GetUserModel.fromJson(userData);
+            _isloadinged = false;
+          });
+        }
+
+        print('User email: ${user?.email}');
+        print('User name: ${user?.username}');
+      } else {
+        print('Failed: ${response.statusCode} - ${response.body}');
+        setState(() => _isloadinged = false);
+      }
+
+    } catch (e) {
+      print('fetchUser error: $e');
+      setState(() => _isloadinged = false);
+    }
   }
 
+  // load saved image from storage
   Future<void> _loadSavedImage() async {
     final storage = TokenStorage();
     final savedImage = await storage.readUserImage();
+
     if (savedImage != null) {
       setState(() {
         _uploadedImageUrl = savedImage;
@@ -137,17 +186,65 @@ class _ProfilepageState extends State<Profilepage> {
         maxWidth: 1024,
         maxHeight: 1024,
       );
+
       if (pickedFile != null) {
         setState(() {
           _image = File(pickedFile.path);
-          _uploadedImageUrl = null;
+          _isUploading = true;
         });
+
+        // 👉 CALL UPLOAD API
+        final imageUrl = await _uploadImage(File(pickedFile.path));
+
+        if (imageUrl != null) {
+          await TokenStorage().writeUserImage(imageUrl);
+
+          setState(() {
+            _uploadedImageUrl = imageUrl;
+            _image = null; // use network image after upload
+          });
+        }
       }
     } catch (e) {
-      // _showSnackBar("Error picking image: $e", isError: true);
+      print("Error picking image: $e");
+    } finally {
+      setState(() {
+        _isUploading = false;
+      });
     }
   }
 
+  Future<String?> _uploadImage(File imageFile) async {
+    try {
+      final token = await TokenStorage().getToken();
+      final userId = await TokenStorage().getUserId();
+
+      var request = http.MultipartRequest(
+        'PUT',
+        Uri.parse('YOUR_API_URL/user/$userId'),
+      );
+
+      request.headers['Authorization'] = 'Bearer $token';
+
+      request.files.add(
+        await http.MultipartFile.fromPath('image', imageFile.path),
+      );
+
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        final resBody = await response.stream.bytesToString();
+        final data = jsonDecode(resBody);
+
+        return data['data']['image']; //  new image URL
+      } else {
+        print("Upload failed: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Upload error: $e");
+    }
+    return null;
+  }
 
 
 
@@ -226,19 +323,21 @@ class _ProfilepageState extends State<Profilepage> {
                         print('all data : ${tokenStorage.getAllUserInfo()}');
 
                         if (token != null && username != null && email != null) {
-                          Navigator.push(
+                          await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                // AllUsersPage(token:token)
                                 ProfileScreen(
-                                  // userId: userId,
                                   username: username,
                                   token: token,
                                   email: email,
                                 )
                             ),
                           );
+
+                          // back reload data
+                          await _loadSavedImage();
+                          await fetchUser();
                         }
                       } catch (e) {
                         print("Error: $e");
@@ -614,7 +713,7 @@ class _ProfilepageState extends State<Profilepage> {
                           SizedBox(width: 30,),
 
                           Expanded(
-                            child: Text('Order History',
+                            child: Text('Settings',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
@@ -753,7 +852,7 @@ class _ProfilepageState extends State<Profilepage> {
 
           ClipOval(
             child: CachedNetworkImage(
-              imageUrl: _uploadedImageUrl!,
+              imageUrl: "${_uploadedImageUrl!}?v=${DateTime.now().millisecondsSinceEpoch}",
               width: 140,
               height: 140,
               fit: BoxFit.cover,
