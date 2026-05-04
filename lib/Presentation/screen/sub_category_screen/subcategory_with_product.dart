@@ -5,7 +5,12 @@ import '../../../data/datasources/sub_with_product/sub_product_service.dart';
 import '../../../data/models/subcategory_model_eshop.dart';
 
 class SubcategoryWithProduct extends StatefulWidget {
-  const SubcategoryWithProduct({super.key});
+  final String categoryName;
+
+  const SubcategoryWithProduct({
+    super.key,
+    required this.categoryName,
+  });
 
   @override
   State<SubcategoryWithProduct> createState() => _SubcategoryWithProductState();
@@ -19,14 +24,37 @@ bool ispressed = false;
   @override
   void initState() {
     super.initState();
+    _loadData(); // load data for the initial category
     _futureSubcategories = apiService.fetchSubcategories();
+  }
+
+  @override
+
+  void didUpdateWidget(SubcategoryWithProduct oldWidget) {
+
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.categoryName != widget.categoryName) {
+      _loadData(); // reload when category changes
+      setState(() {
+      });
+    }
+  }
+  void _loadData() {
+    _futureSubcategories =
+        apiService.fetchSubcategoriesByCategoryName(widget.categoryName);
   }
 
   Future<void> _refresh() async {
     setState(() {
-      _futureSubcategories = apiService.fetchSubcategories();
+      _loadData();
     });
   }
+  // Future<void> _refresh() async {
+  //   setState(() {
+  //     _futureSubcategories = apiService.fetchSubcategories();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

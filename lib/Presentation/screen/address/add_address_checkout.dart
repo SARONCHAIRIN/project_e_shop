@@ -4,7 +4,6 @@ import 'package:e_shop/data/models/address/address_model.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import '../order/paymentScreen.dart';
 
 class AddAddressCheckout extends StatefulWidget {
