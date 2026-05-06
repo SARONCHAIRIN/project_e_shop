@@ -53,6 +53,7 @@ class _CategoryMainState extends State<CategoryMain> {
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
+
           // Your app bar - will scroll away
           SliverMainAppBar(
             showBars: showBars,
@@ -61,6 +62,7 @@ class _CategoryMainState extends State<CategoryMain> {
 
 
 
+          // Category filter - will scroll away
           SliverToBoxAdapter(
             child: Column(
               children: [
@@ -80,7 +82,7 @@ class _CategoryMainState extends State<CategoryMain> {
 
                           selected: isSelected, // important
 
-                          selectedColor: Colors.blueAccent,
+                          selectedColor: Colors.blueAccent.shade200,
                           backgroundColor: Colors.white,
 
                           labelStyle: TextStyle(

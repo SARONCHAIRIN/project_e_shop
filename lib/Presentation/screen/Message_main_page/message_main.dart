@@ -73,7 +73,7 @@ class _MessageMainState extends State<MessageMain> {
     super.initState();
     // Message page show in console
     print('|=================================================|');
-    print('|              MessageMain loaded                |');
+    print('|              MessageMain loaded                 |');
     print('|=================================================|');
   }
 
@@ -91,17 +91,6 @@ class _MessageMainState extends State<MessageMain> {
         elevation: 0,
       ),
 
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 110, right: 15),
-          child: FloatingActionButton(
-
-
-            onPressed: () => openSupportMenu(context),
-
-            child: const Icon(Icons.support_agent),
-
-          ),
-        ),
 
       body: Padding(
         padding: const EdgeInsets.all(20),

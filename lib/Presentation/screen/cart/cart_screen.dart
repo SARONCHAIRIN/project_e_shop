@@ -4,6 +4,7 @@ import 'package:e_shop/data/datasources/adress/adress_service.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/cart/cart_controller.dart';
 
@@ -22,7 +23,6 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = context.watch<CartController>();
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -54,14 +54,23 @@ class CartScreen extends StatelessWidget {
               child: Center(child: SpinKitCircle(color: Colors.blue,)),
             )
           else if (cartController.cart == null || cartController.cart!.items.isEmpty)
-            const SliverFillRemaining(
+             SliverFillRemaining(
               child: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                         SizedBox(height: 200,),
-                        Icon(Icons.shopping_cart_outlined, size: 80, color: Colors.blueAccent,),
+                        Center(
+                          child: Lottie.asset(
+                            'assets/animations/empty.json',
+                            width: 200,
+                            height: 200,
+                            repeat: true,
+                            animate: true,
+                          ),
+                        ),
                         SizedBox(height: 20,),
+
                       Text("Cart is empty",
                         style: TextStyle(
                           color: Colors.blueAccent,

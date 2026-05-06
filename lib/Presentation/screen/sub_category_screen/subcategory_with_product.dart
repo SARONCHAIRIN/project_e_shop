@@ -1,6 +1,7 @@
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_screen_eshop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 import '../../../data/datasources/sub_with_product/sub_product_service.dart';
 import '../../../data/models/subcategory_model_eshop.dart';
 
@@ -50,42 +51,141 @@ bool ispressed = false;
       _loadData();
     });
   }
-  // Future<void> _refresh() async {
-  //   setState(() {
-  //     _futureSubcategories = apiService.fetchSubcategories();
-  //   });
-  // }
+
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<SubcategoryData>>(
       future: _futureSubcategories,
       builder: (context, snapshot) {
+
         // store
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SliverFillRemaining(
+          return  SliverFillRemaining(
             child: Center(
-              child: SpinKitFadingCircle(color: Colors.blueAccent),
+              child: SpinKitFadingCircle(color: Colors.black,size: 40,),
             ),
           );
         }
 
         // error
         else if (snapshot.hasError) {
-          return SliverFillRemaining(
-            child: Center(child: Text('error: ${snapshot.error}')),
-          );
-        }
+      return SliverFillRemaining(
+        hasScrollBody: false,
+
+        child: MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          removeBottom: true,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 70,
+                    right: 70,
+                    top: 10
+                ),
+                child: Lottie.asset(
+                  'assets/animations/Error_404.json',
+                  repeat: true,
+                  animate: true,
+                ),
+              ),
+
+              SizedBox(height: 10),
+
+              Text(
+                "Something went wrong",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              SizedBox(height: 5),
+
+              TextButton(onPressed: (){
+                _refresh();
+              },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.shade200,
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          blurStyle: BlurStyle.outer,
+
+                        ),
+                      ],
+                    ),
+                    child: Text("Please try again",
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: 18
+                    ),),
+                  ),
+              ),
+              SizedBox(height: 150,),
+            ],
+          ),
+        ),
+      );
+    }
 
         // no data
         else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const SliverFillRemaining(
-            child: Center(child: Text('no subcategory',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),)),
+          return  SliverFillRemaining(
+            hasScrollBody: false,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 70,
+                      right: 70,
+                      top: 10
+                  ),
+                  child: Lottie.asset(
+                    'assets/animations/empty.json',
+                    repeat: true,
+                    animate: true,
+                  ),
+                ),
+
+
+                SizedBox(height: 10),
+
+                Text(
+
+                  "No products found",
+
+                  style: TextStyle(
+
+                    fontSize: 18,
+
+                    fontWeight: FontWeight.w600,
+
+                  ),
+
+                ),
+
+                SizedBox(height: 6),
+
+                Text(
+
+                  "Try a different keyword",
+
+                  style: TextStyle(color: Colors.grey),
+
+                ),
+
+                SizedBox(height: 20,)
+              ],
+            ),
+
           );
         }
 
@@ -111,7 +211,7 @@ bool ispressed = false;
                     setState(() {
                       ispressed = false;
                     });
-                    //push sub_producct screen
+                    //push sub_product screen
                     print('clicked subcategory: ${sub.name} (id: ${sub.id})');
                     Navigator.push(
                       context,
@@ -187,13 +287,13 @@ bool ispressed = false;
                                 child: sub.image == null || sub.image!.isEmpty
                                     ? Image.asset(
                                   'assets/images/default_image.png',
-                                  fit: BoxFit.fill,
+                                  // fit: BoxFit.fill,
                                   width: double.infinity,
                                 )
                                     : Image.network(
                                   sub.image!,
                                   width: double.infinity,
-                                  fit: BoxFit.fill,
+                                  // fit: BoxFit.fill,
                                   errorBuilder: (context, error, stackTrace) {
                                     return Image.asset(
                                       'assets/images/default_image.png',

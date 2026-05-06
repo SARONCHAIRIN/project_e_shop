@@ -9,8 +9,15 @@ class SeeAllCategory extends StatefulWidget {
 }
 
 class _SeeAllCategoryState extends State<SeeAllCategory> {
+
+
+  List<String> categories = ['All','Laptop','Electronics', 'Drone', 'shose','Clothing', 'Books', 'Home', 'Toys', 'Sports', 'Beauty'];
+  String selectedCategory = 'All';
+
   @override
+
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
 
@@ -22,20 +29,59 @@ class _SeeAllCategoryState extends State<SeeAllCategory> {
       backgroundColor: Colors.white,
       body: CustomScrollView(
         // controller: _scrollController,
+        // physics: PageScrollPhysics(),
         slivers: [
-          // Your other slivers...
+
+          // choice chip category
           SliverToBoxAdapter(
             child: Column(
               children: [
+                const SizedBox(height: 110),
 
-                SizedBox(height: 20,),
-                const SizedBox(height: 1),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Row(
+                    children: categories.map((category) {
+                      final isSelected = selectedCategory == category;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text(category),
+
+                          selected: isSelected, // important
+
+                          selectedColor: Colors.blueAccent.shade200,
+                          backgroundColor: Colors.white,
+
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+
+                          onSelected: (value) {
+                            setState(() {
+                              selectedCategory = category; //  change selected
+                            });
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
               ],
             ),
           ),
 
+
           // Your grid
-          // const SubcategoryWithProduct(),
+           SubcategoryWithProduct(
+             categoryName: selectedCategory,
+
+          ),
         ],
       ),
     );

@@ -32,6 +32,9 @@ class _HomeMainPageState extends State<HomeMainPage> {
   bool showTextField = true;
   bool _isAnimationLoaded = false;
 
+  List<String> categories = ['All','Laptop','Electronics', 'Drone', 'shose','Clothing', 'Books', 'Home', 'Toys', 'Sports', 'Beauty'];
+  String selectedCategory = 'All';
+
   @override
   void initState() {
     super.initState();
@@ -71,6 +74,8 @@ class _HomeMainPageState extends State<HomeMainPage> {
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.white,
         body: CustomScrollView(
+          // physics: PageScrollPhysics(),
+         physics:  ClampingScrollPhysics(),
           controller: _scrollController,
           slivers: [
             // Your app bar - will scroll away
@@ -82,32 +87,31 @@ class _HomeMainPageState extends State<HomeMainPage> {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
-
 
                   SizedBox(height: 10,),
 
                   //text Trending Categories
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      children: [
-                        Text('DiscountForYou',style: TextStyle(color: Colors.black,fontSize: 22,fontWeight: FontWeight.bold),),
-
-                        Expanded(child: SizedBox(width: 1,)),
-
-                        TextButton(
-                            onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SeeAllCategory()));
-                            },
-                            child: Text("See All",style: TextStyle(color: Colors.redAccent,fontSize: 15,fontStyle: FontStyle.italic),)
-                        ),
-                      ],
-
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 15),
+                  //   child: Row(
+                  //     children: [
+                  //       Text('DiscountForYou',style: TextStyle(color: Colors.black,fontSize: 22,fontWeight: FontWeight.bold),),
+                  //
+                  //       Expanded(child: SizedBox(width: 1,)),
+                  //
+                  //       TextButton(
+                  //           onPressed: (){
+                  //             Navigator.push(context, MaterialPageRoute(builder: (context) => SeeAllCategory()));
+                  //           },
+                  //           child: Text("See All",style: TextStyle(color: Colors.redAccent,fontSize: 15,fontStyle: FontStyle.italic),)
+                  //       ),
+                  //     ],
+                  //
+                  //   ),
+                  // ),
                   SizedBox(height: 4,),
 
+                  //carousel slider of home page
                   HomeCarouselSlider(),
                   const SizedBox(height: 20,),
 
@@ -141,8 +145,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
               child: Column(
                 children: [
 
-                  SizedBox(height: 30,),
-
                   //trending categories
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -162,12 +164,50 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 15,),
+
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                    ),
+                    child: Row(
+                      children: categories.map((category) {
+                        final isSelected = selectedCategory == category;
+
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ChoiceChip(
+                            label: Text(category),
+
+                            selected: isSelected, // important
+
+                            selectedColor: Colors.blueAccent.shade200,
+                            backgroundColor: Colors.white,
+
+                            labelStyle: TextStyle(
+                              color: isSelected ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+
+                            onSelected: (value) {
+                              setState(() {
+                                selectedCategory = category; //  change selected
+                              });
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(height: 15,),
                 ],
               ),
             ),
 
-            // const SubcategoryWithProduct(),
+             SubcategoryWithProduct(
+              categoryName: selectedCategory,
+            ),
 
           ],
 
