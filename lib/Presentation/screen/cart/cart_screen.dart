@@ -8,7 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/cart/cart_controller.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   final int userId;
   final String token;
 
@@ -19,9 +19,30 @@ class CartScreen extends StatelessWidget {
   });
 
 
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+
+
 
   @override
+
+  void initState() {
+
+    super.initState();
+
+    Future.microtask(() {
+
+      context.read<CartController>().fetchCart();
+
+    });
+
+  }
+  @override
   Widget build(BuildContext context) {
+
     final cartController = context.watch<CartController>();
 
     return Scaffold(
@@ -53,33 +74,26 @@ class CartScreen extends StatelessWidget {
             const SliverFillRemaining(
               child: Center(child: SpinKitCircle(color: Colors.blue,)),
             )
-          else if (cartController.cart == null || cartController.cart!.items.isEmpty)
-             SliverFillRemaining(
-              child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                        SizedBox(height: 200,),
-                        Center(
-                          child: Lottie.asset(
-                            'assets/animations/empty.json',
-                            width: 200,
-                            height: 200,
-                            repeat: true,
-                            animate: true,
-                          ),
-                        ),
-                        SizedBox(height: 20,),
 
-                      Text("Cart is empty",
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),),
-                    ],
-                  )),
-            )
+          else if (cartController.hasError)
+              SliverFillRemaining(
+
+                child: _buildError(
+
+                  message: cartController.errorMessage,
+
+                  onRetry: () => cartController.fetchCart(),
+
+                ),
+
+              )
+
+          else if
+            (cartController.cart == null || cartController.cart!.items.isEmpty)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: _buildEmptyCart(),
+              )
           else
             SliverList(
               delegate: SliverChildBuilderDelegate(
@@ -320,7 +334,77 @@ class CartScreen extends StatelessWidget {
 
     );
   }
-  
+
+  Widget _buildError({
+    String message = "Something went wrong",
+    VoidCallback? onRetry,
+  }) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Lottie.asset(
+              'assets/animations/Error_404.json',
+              width: 220,
+              height: 220,
+              repeat: true,
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            ElevatedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh),
+              label: const Text("Retry"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyCart() => Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 200,),
+          Center(
+            child: Lottie.asset(
+              'assets/animations/empty.json',
+              width: 200,
+              height: 200,
+              repeat: true,
+              animate: true,
+            ),
+          ),
+          SizedBox(height: 20,),
+
+          Text("Cart is empty",
+            style: TextStyle(
+              color: Colors.blueAccent,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),),
+        ],
+      ));
+
   Widget _buildcheckoutButton(BuildContext context, CartController cartController) {
     return Padding(
       padding: const EdgeInsets.only(
@@ -336,8 +420,8 @@ class CartScreen extends StatelessWidget {
           Navigator.push(context, MaterialPageRoute(builder: (_) => CheckoutPage(
             repo: AddressRepository(AddressService()),
             storage: TokenStorage(),
-            userId: userId,
-            token: token,
+            userId: widget.userId,
+            token: widget.token,
             addressId: 0,
           )));},
           style: ElevatedButton.styleFrom(
