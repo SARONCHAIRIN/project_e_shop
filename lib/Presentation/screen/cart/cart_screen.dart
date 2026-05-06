@@ -431,6 +431,7 @@ class _CartScreenState extends State<CartScreen> {
             borderRadius: BorderRadius.circular(30),
           ),
         ),
+
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,

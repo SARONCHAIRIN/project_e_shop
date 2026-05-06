@@ -130,7 +130,6 @@ class CartController extends ChangeNotifier {
       notifyListeners();
     }
   }
-
   // =========================
   // CLEAR CART
   // =========================
