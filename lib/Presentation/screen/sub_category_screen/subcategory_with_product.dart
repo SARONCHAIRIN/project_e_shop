@@ -265,8 +265,8 @@ bool ispressed = false;
                     ),
                     child: Card(
                       color: Colors.white,
-                      elevation: 1,
-                      shadowColor: Colors.grey.shade100,
+                      elevation: 0.1,
+                      shadowColor: Colors.grey.shade50,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

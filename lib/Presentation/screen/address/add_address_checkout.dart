@@ -25,6 +25,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
   final addressline1controller = TextEditingController();
   final zipcodecontroller = TextEditingController();
   bool is_loading = false;
+  FocusNode zipcodeFocusNode = FocusNode();
 
 
 
@@ -339,6 +340,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                   ],
                 ),
                 child: TextFormField(
+                  // focusNode: zipcodeFocusNode,
                   controller: citycontroller,
                   style: TextStyle(
                     color: Colors.black,
@@ -401,6 +403,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                   ],
                 ),
                 child: TextFormField(
+                  focusNode: zipcodeFocusNode,
                   controller: zipcodecontroller,
                   style: TextStyle(
                     color: Colors.black,

@@ -163,8 +163,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         child: Text(
                           product.name,
                           style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -191,8 +191,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   Text('Available Option',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
                     // fontStyle: FontStyle.italic,
                   ),
                   ),
@@ -219,8 +219,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Text('Select Size',
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                             fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -283,8 +283,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Text('Select Colors',
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
                           ),),
                         const SizedBox(height: 15),
 
