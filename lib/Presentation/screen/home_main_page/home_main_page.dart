@@ -53,7 +53,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
 
     //Home page show in console
     print('|=================================================|');
-    print('|              HomeMainPage loaded                |');
+    print('|             HomeMainPage  loaded                |');
     print('|=================================================|');
   }
 

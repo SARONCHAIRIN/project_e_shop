@@ -28,8 +28,6 @@ class _SeeAllCategoryState extends State<SeeAllCategory> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       body: CustomScrollView(
-        // controller: _scrollController,
-        // physics: PageScrollPhysics(),
         slivers: [
 
           // choice chip category

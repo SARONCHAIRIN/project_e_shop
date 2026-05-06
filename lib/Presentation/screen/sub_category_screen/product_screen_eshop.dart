@@ -75,8 +75,6 @@ class _ProductScreen_subState extends State<ProductScreen_sub> {
                 },
                 child: Stack(
                   children:[
-
-
                     Container(
                     decoration: BoxDecoration(
                       color: Colors.white,

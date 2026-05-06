@@ -69,6 +69,7 @@ class _CategoryMainState extends State<CategoryMain> {
                 const SizedBox(height: 10),
 
                 SingleChildScrollView(
+
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Row(
