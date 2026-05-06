@@ -12,6 +12,9 @@ class CartController extends ChangeNotifier {
   bool isLoading = false;
   CartModel? cart;
 
+  bool hasError = false;
+  String errorMessage = '';
+
   // =========================
   // FETCH CART
   // =========================
@@ -32,6 +35,14 @@ class CartController extends ChangeNotifier {
       cart = await repository.getCart(userId, token);
     } catch (e) {
       debugPrint(" Fetch cart error: $e");
+
+      hasError = true;
+
+      errorMessage = e.toString().contains('Socket')
+
+          ? "No internet connection"
+
+          : "Server error. Please try again";
     } finally {
       isLoading = false;
       notifyListeners();
@@ -65,33 +76,6 @@ class CartController extends ChangeNotifier {
     }
   }
 
-  // =========================
-  // UPDATE ITEM
-  // =========================
-  // Future<void> updateItem(int cartItemId, int quantity) async {
-  //   final storage = TokenStorage();
-  //   final token = await storage.readToken();
-  //   final userId = await storage.readUserId();
-  //   if(quantity < 1 ) return;
-  //
-  //   if (token == null || userId == null) {
-  //     debugPrint(" Token or userId is null");
-  //     return;
-  //   }
-  //
-  //   try {
-  //     isLoading = true;
-  //     notifyListeners();
-  //
-  //     await repository.updateItem(userId, cartItemId, quantity, token);
-  //     await fetchCart();
-  //   } catch (e) {
-  //     debugPrint(" Update item error: $e");
-  //   } finally {
-  //     isLoading = false;
-  //     notifyListeners();
-  //   }
-  // }
 
   Future<void> updateItem(int cartItemId, int quantity) async {
     final storage = TokenStorage();

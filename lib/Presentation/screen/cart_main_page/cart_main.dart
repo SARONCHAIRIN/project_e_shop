@@ -41,19 +41,24 @@ class _CartMainState extends State<CartMain> {
 
   @override
   Widget build(BuildContext context) {
+
     if (userId == null || token == null) {
       // Wait for userId/token to load
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(
+            child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: CartScreen(
-        userId: userId!,   //  non-nullable now
-        token: token!,     //  non-nullable now
-      ),
+      body:
+
+        CartScreen(
+          userId: userId!,   //  non-nullable now
+          token: token!,     //
+          // non-nullable now
+        ),
     );
   }
 }
