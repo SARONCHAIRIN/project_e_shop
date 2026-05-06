@@ -68,52 +68,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
         title: Text(product.name),
         backgroundColor: Colors.white,
-        actions: [
-          // Cart icon with badge
-          // Stack(
-          //   children: [
-          //     IconButton(
-          //       icon: const Icon(Icons.shopping_cart),
-          //       onPressed: () {
-          //         Navigator.push(
-          //           context,
-          //           MaterialPageRoute(builder: (_) =>  CartScreen1( userId: userId.toString(), // Add userId parameter)),
-          //         );
-          //       },
-          //     ),
-          //     // Consumer<CartController>(
-          //     //   builder: (context, controller, child) {
-          //     //     if (controller.totalItems > 0) {
-          //     //       return Positioned(
-          //     //         right: 8,
-          //     //         top: 8,
-          //     //         child: Container(
-          //     //           padding: const EdgeInsets.all(2),
-          //     //           decoration: const BoxDecoration(
-          //     //             color: Colors.red,
-          //     //             shape: BoxShape.circle,
-          //     //           ),
-          //     //           constraints: const BoxConstraints(
-          //     //             minWidth: 16,
-          //     //             minHeight: 16,
-          //     //           ),
-          //     //           child: Text(
-          //     //             '${controller.totalItems}',
-          //     //             style: const TextStyle(
-          //     //               color: Colors.white,
-          //     //               fontSize: 10,
-          //     //             ),
-          //     //             textAlign: TextAlign.center,
-          //     //           ),
-          //     //         ),
-          //     //       );
-          //     //     }
-          //     //     return const SizedBox.shrink();
-          //     //   },
-          //     // ),
-          //   ],
-          // ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -121,41 +75,78 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           children: [
 
             // Product Image
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child:
-              product.mainImage == null || product.mainImage.isEmpty
-                  ? Image.asset(
-                'assets/images/default_image.png',
-                fit: BoxFit.fill,
-                width: double.infinity,
-                height: 350,
-              )
-                  : Image.network(
-                product.mainImage,
-                width: double.infinity,
-                height: 350,
-                fit: BoxFit.fill,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                    'assets/images/default_image.png',
-                    fit: BoxFit.fill,
-                    height: 300,
-                  );
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    height: 300,
-                    color: Colors.grey[200],
-                    child: const Center(
-                      child: CircularProgressIndicator(),
+            Stack(
+              children: [
+                Positioned(
+                  child: Container(
+                    height: 450,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      // shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.cyanAccent.withOpacity(0.1),
+
+                          Colors.white.withOpacity(0.1),
+                          Colors.blue.withOpacity(0.1),
+
+                          Colors.white.withOpacity(0.1),
+                          Colors.pink.withOpacity(0.1),
+                          Colors.white.withOpacity(0.1),
+
+                          Colors.blue.withOpacity(0.1),
+                          Colors.white.withOpacity(0.1),
+
+                          Colors.cyanAccent.withOpacity(0.1),
+
+                        ],
+                        begin: Alignment.centerRight,
+                        end: Alignment.centerLeft,
+                      ),
                     ),
-                  );
-                },
+                  ),
+                ),
+
+                //image of product
+                Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                    left: 20,
+                    right: 20,
+                  ),
+                  child:
+                  product.mainImage == null || product.mainImage.isEmpty
+                      ? Image.asset(
+                    'assets/images/default_image.png',
+                    height: 350,)
+                      : Image.network(
+                    product.mainImage,
+                    height: 350,
+                    fit: BoxFit.fill,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/images/default_image.png',
+                        height: 300,
+                      );
+                    },
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        height: 300,
+                        color: Colors.grey[200],
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
+
+              ],
             ),
-            const SizedBox(height: 16),
+
 
             // Product Info
             Padding(
@@ -171,8 +162,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       Expanded(
                         child: Text(
                           product.name,
-                          // maxLines: 3,
-                          // overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -190,7 +179,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ? "\$${selectedSku!.price.toStringAsFixed(2)}"
                         : "\$${product.lowestPrice.toStringAsFixed(2)}",
                     style: const TextStyle(
-                      fontSize: 22,
+                      fontSize: 29,
                       fontWeight: FontWeight.bold,
                       color: Colors.green,
                     ),
@@ -485,7 +474,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
-                                color: pressed1 ?Colors.grey.withOpacity(0.5): Colors.blue.withOpacity(0.5),
+                                color: pressed1 ?Colors.blue.withOpacity(0.5): Colors.grey.withOpacity(0.5),
                                 blurRadius: 5,
                                 offset: const Offset(0, 2),
                                 blurStyle: BlurStyle.outer,
@@ -572,7 +561,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
-                                color: pressed2 ?Colors.grey.withOpacity(0.5): Colors.blue.withOpacity(0.5),
+                                color: pressed2 ?Colors.blue.withOpacity(0.5): Colors.grey.withOpacity(0.5),
                                 blurRadius: 5,
                                 offset: const Offset(0, 2),
                                 blurStyle: BlurStyle.outer,

@@ -12,7 +12,7 @@
 
 
     <application
-        android:label="e_shop"
+        android:label="E Shop"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

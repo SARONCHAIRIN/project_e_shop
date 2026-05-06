@@ -2,6 +2,7 @@ import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
 import 'package:e_shop/Presentation/screen/Message_main_page/message_main.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:e_shop/Presentation/controllers/order/order_controller.dart';
 
@@ -59,223 +60,243 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+      body: Stack(
 
-              Spacer(),
+        children: [
 
-              // ── Animated Check Icon ──
-              ScaleTransition(
-                scale: _scaleAnimation,
-                child: Container(
-                  width:  120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.blue,
-                    boxShadow: [
-                      BoxShadow(
-                        color:       Colors.blue.withOpacity(0.3),
-                        blurRadius:  20,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.check_rounded,
-                    color: Colors.white,
-                    size:  64,
+          SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                Spacer(),
+
+                // ── Animated Check Icon ──
+                ScaleTransition(
+                  scale: _scaleAnimation,
+                  child: Container(
+                    width:  120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue,
+                      boxShadow: [
+                        BoxShadow(
+                          color:       Colors.blue.withOpacity(0.3),
+                          blurRadius:  20,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.check_rounded,
+                      color: Colors.white,
+                      size:  64,
+                    ),
                   ),
                 ),
-              ),
 
-              SizedBox(height: 32),
+                SizedBox(height: 32),
 
-              // ── Title ──
-              FadeTransition(
-                opacity: _fadeAnimation,
-                child: Column(
-                  children: [
-                    Text(
-                      'Order Confirmed!',
-                      style: TextStyle(
-                        fontSize:   28,
-                        fontWeight: FontWeight.bold,
-                        color:      Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    Text(
-                      'Thank you for your purchase.\nWe are getting it ready for shipment.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color:    Colors.grey[600],
-                        height:   1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 40),
-
-              // ── Order Info Card ──
-              FadeTransition(
-                opacity: _fadeAnimation,
-                child: Container(
-                  width:   double.infinity,
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color:        Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
+                // ── Title ──
+                FadeTransition(
+                  opacity: _fadeAnimation,
                   child: Column(
                     children: [
-                      _buildInfoRow(
-                        icon:  Icons.receipt_long_outlined,
-                        label: 'Status',
-                        value: 'PENDING',
-                        valueColor: Colors.orange,
+                      Text(
+                        'Order Confirmed!',
+                        style: TextStyle(
+                          fontSize:   28,
+                          fontWeight: FontWeight.bold,
+                          color:      Colors.black,
+                        ),
                       ),
-                      Divider(height: 24),
-                      _buildInfoRow(
-                        icon:  Icons.local_shipping_outlined,
-                        label: 'Delivery',
-                        value: 'Processing',
-                      ),
-                      Divider(height: 24),
-                      _buildInfoRow(
-                        icon:  Icons.payment_outlined,
-                        label: 'Payment',
-                        value: 'Confirmed',
-                        valueColor: Colors.green,
+                      SizedBox(height: 12),
+                      Text(
+                        'Thank you for your purchase.\nWe are getting it ready for shipment.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color:    Colors.grey[600],
+                          height:   1.5,
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
 
-              Spacer(),
+                SizedBox(height: 40),
 
-              // ── Buttons ──
-              FadeTransition(
-                opacity: _fadeAnimation,
-                child: Column(
-                  children: [
-
-                    // Track My Order
-                    SizedBox(
-                      width:  double.infinity,
-                      height: 52,
-                      child:
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          // Navigate to orders tab
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            '/trackorder',
-                                (route) => false,
-                            arguments: {'tab': 2}, // orders tab index
-                          );
-                        },
-                        icon:  Icon(Icons.list_alt_outlined,
-                            color: Colors.white),
-                        label: Text(
-                          'Track My Order',
-                          style: TextStyle(
-                            fontSize:   16,
-                            fontWeight: FontWeight.bold,
-                            color:      Colors.white,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                      ),
+                // ── Order Info Card ──
+                FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Container(
+                    width:   double.infinity,
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color:        Colors.grey.shade50,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey.shade200),
                     ),
-
-                    SizedBox(height: 12),
-
-                    // Continue Shopping
-                    SizedBox(
-                      width:  double.infinity,
-                      height: 52,
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            '/homemainppage',
-                                (route) => false,
-
-                          );
-                        },
-                        icon:  Icon(Icons.shopping_bag_outlined,
-                            color: Colors.blue),
-                        label: Text(
-                          'Continue Shopping',
-                          style: TextStyle(
-                            fontSize:   16,
-                            fontWeight: FontWeight.bold,
-                            color:      Colors.blue,
-                          ),
+                    child: Column(
+                      children: [
+                        _buildInfoRow(
+                          icon:  Icons.receipt_long_outlined,
+                          label: 'Status',
+                          value: 'PENDING',
+                          valueColor: Colors.orange,
                         ),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: Colors.blue, width: 1.5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+                        Divider(height: 24),
+                        _buildInfoRow(
+                          icon:  Icons.local_shipping_outlined,
+                          label: 'Delivery',
+                          value: 'Processing',
                         ),
-                      ),
-                    ),
-
-                    SizedBox(height: 12),
-
-                    // Cancel Order
-                    SizedBox(
-                      width:  double.infinity,
-                      height: 52,
-                      child: _buildCancelOrder(),
-                    ),
-
-                    // Need help
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => MessageMain()));
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          text:  'Need help? ',
-                          style: TextStyle(color: Colors.grey),
-                          children: [
-                            TextSpan(
-
-                              text:  'Contact Support',
-                              style: TextStyle(
-                                color:      Colors.blue,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
+                        Divider(height: 24),
+                        _buildInfoRow(
+                          icon:  Icons.payment_outlined,
+                          label: 'Payment',
+                          value: 'Confirmed',
+                          valueColor: Colors.green,
                         ),
-                      ),
+                      ],
                     ),
-
-                    SizedBox(height: 16),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+
+                Spacer(),
+
+                // ── Buttons ──
+                FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Column(
+                    children: [
+
+                      // Track My Order
+                      SizedBox(
+                        width:  double.infinity,
+                        height: 52,
+                        child:
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            // Navigate to orders tab
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/trackorder',
+                                  (route) => false,
+                              arguments: {'tab': 2}, // orders tab index
+                            );
+                          },
+                          icon:  Icon(Icons.list_alt_outlined,
+                              color: Colors.white),
+                          label: Text(
+                            'Track My Order',
+                            style: TextStyle(
+                              fontSize:   16,
+                              fontWeight: FontWeight.bold,
+                              color:      Colors.white,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 12),
+
+                      // Continue Shopping
+                      SizedBox(
+                        width:  double.infinity,
+                        height: 52,
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/homemainppage',
+                                  (route) => false,
+
+                            );
+                          },
+                          icon:  Icon(Icons.shopping_bag_outlined,
+                              color: Colors.blue),
+                          label: Text(
+                            'Continue Shopping',
+                            style: TextStyle(
+                              fontSize:   16,
+                              fontWeight: FontWeight.bold,
+                              color:      Colors.blue,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: Colors.blue, width: 1.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 12),
+
+                      // Cancel Order
+                      SizedBox(
+                        width:  double.infinity,
+                        height: 52,
+                        child: _buildCancelOrder(),
+                      ),
+
+                      // Need help
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => MessageMain()));
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                            text:  'Need help? ',
+                            style: TextStyle(color: Colors.grey),
+                            children: [
+                              TextSpan(
+
+                                text:  'Contact Support',
+                                style: TextStyle(
+                                  color:      Colors.blue,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+
+          // ======order success=======
+          Positioned(
+            top: 1,
+              child: Center(
+            child: Lottie.asset(
+              'assets/animations/success_animetion.json',
+              height: MediaQuery.of(context).size.height * 0.6,
+              width: MediaQuery.of(context).size.height * 0.5,
+              fit: BoxFit.fill,
+              repeat: false,
+
+            ),
+          )),
+        ],
       ),
     );
   }
