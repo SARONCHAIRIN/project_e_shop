@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../data/models/product_model_eshop.dart';
@@ -145,10 +146,10 @@ class _SearchProductpageState extends State<SearchProductpage> {
 
         Row(
           children: [
-            Icon(Icons.content_paste_search, size: 25, color: Colors.black,),
+            Icon(Icons.content_paste_search, size: 22, color: Colors.black,),
             const Text(
               " Trending Search",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -176,6 +177,7 @@ class _SearchProductpageState extends State<SearchProductpage> {
 
   /// GridView with shimmer effect
   Widget _buildProductGrid() {
+
     if (isLoading && products.isEmpty) {
       return GridView.builder(
         padding: const EdgeInsets.all(10),
@@ -239,7 +241,7 @@ class _SearchProductpageState extends State<SearchProductpage> {
                     const BorderRadius.vertical(top: Radius.circular(15)),
                     child: Image.network(
                       product.mainImage ?? "",
-                      fit: BoxFit.fill,
+                      // fit: BoxFit.fill,
                       errorBuilder: (_, __, ___) => const Icon(Icons.image),
                     ),
                   ),
@@ -319,8 +321,7 @@ class _SearchProductpageState extends State<SearchProductpage> {
 
 
             ///  HISTORY (ALWAYS SHOW)
-            if (history.isNotEmpty)
-              _buildRecentSearchHistory(),
+            if (history.isNotEmpty)_buildRecentSearchHistory(),
 
 
             /// MAIN CONTENT
@@ -347,6 +348,14 @@ class _SearchProductpageState extends State<SearchProductpage> {
           children: [
             const Icon(Icons.search_off, size: 50, color: Colors.grey),
             const SizedBox(height: 10),
+            Lottie.asset(
+              'assets/animations/empty.json',
+              width: 150,
+              height: 150,
+              repeat: true,
+            ),
+             const SizedBox(height: 10
+            ),
             Text(
               "No products found",
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
@@ -362,10 +371,10 @@ class _SearchProductpageState extends State<SearchProductpage> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Icon(Icons.history,size: 25,color: Colors.black,),
+                Icon(Icons.history,size: 22,color: Colors.black,),
                 const Text(
                   " Recent Search History",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
                 Expanded(child: SizedBox(width: 1,)),
 
@@ -373,7 +382,13 @@ class _SearchProductpageState extends State<SearchProductpage> {
                   onPressed: () {
                     setState(() => history.clear());
                   },
-                  child: const Text("Clear"),
+                  child: const Text("Clear",
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      // fontSize: 15,
+                      fontStyle: FontStyle.italic,
+                    )
+                  ),
                 )
 
               ],

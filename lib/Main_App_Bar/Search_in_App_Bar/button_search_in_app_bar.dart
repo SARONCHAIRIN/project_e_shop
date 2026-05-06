@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' hide SearchController;
 class ButtonInAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final bool showBars;
+  FocusNode searchFocusNode = FocusNode();
 
    ButtonInAppBar({
     super.key,
@@ -42,6 +43,7 @@ class ButtonInAppBar extends StatelessWidget
               Navigator.push(context, MaterialPageRoute(builder: (context) => SearchProductpage()));
             },
 
+            focusNode: searchFocusNode,
             cursorColor: Colors.grey,
             style: const TextStyle(
               color: Colors.black,

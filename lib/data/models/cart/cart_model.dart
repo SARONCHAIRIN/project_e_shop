@@ -2,7 +2,7 @@ import 'cart_item_model.dart';
 
 class CartModel {
   final int id;
-  final int totalPrice;
+  final double totalPrice;
   final int totalItems;
   final List<CartItem> items;
 
@@ -19,10 +19,10 @@ class CartModel {
           ? (json['id'] is double ? (json['id'] as double).toInt() : json['id'])
           : 0,
       totalPrice: json['total_price'] != null
-          ? (json['total_price'] is double
-          ? (json['total_price'] as double).toInt()
-          : json['total_price'])
-          : 0,
+          ? (json['total_price'] is num
+              ? (json['total_price'] as num).toDouble()
+              : double.tryParse(json['total_price'].toString()) ?? 0.0)
+          : 0.0,
       totalItems: json['total_items'] != null
           ? (json['total_items'] is double
           ? (json['total_items'] as double).toInt()
