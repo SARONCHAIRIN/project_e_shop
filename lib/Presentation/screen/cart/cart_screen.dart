@@ -97,8 +97,8 @@ class _CartScreenState extends State<CartScreen> {
           //         onRetry: () => cartController.fetchCart(),
           //
           //       ),
-
-              // )
+          //
+          //     )
           else
             SliverList(
               delegate: SliverChildBuilderDelegate(
@@ -171,7 +171,7 @@ class _CartScreenState extends State<CartScreen> {
                                    item.image,
                                    width: 70,
                                    height: 70,
-                                   fit: BoxFit.cover,
+                                   // fit: BoxFit.f,
                                  ),
                                ),
 

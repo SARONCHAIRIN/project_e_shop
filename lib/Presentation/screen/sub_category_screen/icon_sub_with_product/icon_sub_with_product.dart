@@ -137,109 +137,188 @@ class _IconSubWithProductState extends State<IconSubWithProduct> {
         final subcategories = snapshot.data!;
 
         return SliverToBoxAdapter(
-          child: SizedBox(
-            height: 135,
-            child: CarouselSlider(
-              options: CarouselOptions(
-                height: 200,
-                viewportFraction: 0.4,
-                enlargeCenterPage: true,
-                enableInfiniteScroll: true,
-                autoPlay: true,
-              ),
-              items: subcategories.map((sub) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ProductScreen_sub(
-                          subcategoryId: sub.id ?? 0,
-                          subcategoryName: sub.name ?? "No Name",
-                        ),
+          child: Column(
+            children: [
+
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 12),
+
+                padding: const EdgeInsets.symmetric(vertical: 15),
+
+                decoration: BoxDecoration(
+
+                  borderRadius: BorderRadius.circular(25),
+
+                  // BACKGROUND GRADIENT
+                  gradient: LinearGradient(
+
+                    colors: [
+
+                      Color(0xffFF8A00),
+
+                      Color(0xffFF6A00),
+
+                      Color(0xffFF4D6D),
+
+                    ],
+
+                    begin: Alignment.topLeft,
+
+                    end: Alignment.bottomRight,
+
+                  ),
+
+                  //image background
+                  image: DecorationImage(image: AssetImage('assets/images/background_product.png',),
+                  fit: BoxFit.fill),
+
+                  // SHADOW
+                  boxShadow: [
+
+                    BoxShadow(
+
+                      color: Colors.orange.withOpacity(0.25),
+
+                      blurRadius: 20,
+
+                      offset: const Offset(0, 8),
+
+                    ),
+
+                  ],
+
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+
+                    //new user
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 15,
                       ),
-                    );
-                  },
-                    child: Stack(
-                      alignment: Alignment.center,
+                      child: Text(
+                        'New user exclusive',style:TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      ),
+                    ),
+
+
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 15,
+                      ),
+                      child: Row(
                       children: [
-
-                        //  BACKGROUND GLOW (gradient shadow)
-                        Positioned(
-                          bottom:-40,
-                          child: Container(
-                            height: 90,
-                            width: 90,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.white.withOpacity(0.1),
-                                  Colors.blue.withOpacity(0.1),
-                                  Colors.white.withOpacity(0.3),
-                                ],
-                                begin: Alignment.center,
-                                end: Alignment.topCenter,
-                              ),
-                            ),
-                          ),
+                        Icon(
+                          Icons.discount_outlined,
+                          size: 20,
+                          color: Colors.white,
                         ),
-
-                        // MAIN CONTENT
-                        Container(
-                          margin:  EdgeInsets.only(top: 5),
-                          width: 140,
-                          color: Colors.transparent,
-                          child: Column(
-                            children: [
-
-                              // IMAGE
-                              Container(
-                                height: 95,
-                                width: 95,
-                                decoration:  BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.white.withOpacity(0.1),
-                                      Colors.blue.withOpacity(0.1),
-                                      Colors.white.withOpacity(0.1),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade50,
-                                      blurRadius: 0.1,
-                                      spreadRadius: 5,
-                                      blurStyle: BlurStyle.inner,
-                                    ),
-                                  ],
-                                ),
-                                child: (sub.image?.isEmpty ?? true)
-                                    ? Image.asset('assets/images/default_image.png', fit: BoxFit.fill)
-                                    : Image.network(sub.image!, ),
-
-                              ),
-
-                              const SizedBox(height: 5),
-
-                              Text(
-                                sub.name ?? "No Name",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
+                        SizedBox(width: 10,),
+                        Text('\$4 off Shipping Discount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500
+                        ),
                         ),
                       ],
                     ),
-                );
-              }).toList(),
-            ),
+                    ),
+                    SizedBox(height: 10,),
+                    //product
+                    SizedBox(
+                    height: 120,
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+                        height: 200,
+                        viewportFraction: 0.4,
+                        enlargeCenterPage: true,
+                        enableInfiniteScroll: true,
+                        autoPlay: true,
+                      ),
+                      items: subcategories.map((sub) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ProductScreen_sub(
+                                  subcategoryId: sub.id ?? 0,
+                                  subcategoryName: sub.name ?? "No Name",
+                                ),
+                              ),
+                            );
+                          },
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+
+                                Container(
+                                  margin:  EdgeInsets.only(top: 5),
+                                  // width: 150,
+                                  color: Colors.transparent,
+
+                                  child: Column(
+                                    children: [
+
+                                      // IMAGE
+                                      Container(
+
+                                        padding: EdgeInsets.only(right: 5),
+                                        height: 80,
+                                        width: 90,
+                                        decoration:  BoxDecoration(
+                                          // shape: BoxShape.circle,
+                                          borderRadius: BorderRadius.circular(15),
+                                          // boxShadow: [
+                                          //   BoxShadow(
+                                          //     color: Colors.white,
+                                          //     blurRadius: 1,
+                                          //     spreadRadius: 1,
+                                          //     blurStyle: BlurStyle.outer,
+                                          //   ),
+                                          // ],
+                                        ),
+                                        child: (sub.image?.isEmpty ?? true)
+                                            ? Image.asset('assets/images/default_image.png', fit: BoxFit.fill)
+                                            : Image.network(sub.image!, ),
+
+                                      ),
+
+                                      const SizedBox(height: 10),
+
+                                      Text(
+                                        sub.name ?? "No Name",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: Colors.white,fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                        );
+                      }).toList(),
+                    ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 20,),
+            ],
           ),
         );
+
+
       },
     );
   }
