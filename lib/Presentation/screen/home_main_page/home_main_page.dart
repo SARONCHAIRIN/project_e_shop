@@ -115,12 +115,11 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
                 ],
               ),
             ),
 
-            const IconSubWithProduct(),
+             IconSubWithProduct(),
 
             SliverToBoxAdapter(
               child: Column(
@@ -145,7 +144,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 15,),
 
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -193,8 +191,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
             SliverToBoxAdapter(
               child: SizedBox(height: 100,),
             ),
-
-
 
           ],
         ),
