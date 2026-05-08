@@ -68,18 +68,6 @@ class _AddAddressPageState extends State<AddAddressPage> {
 
       if (!mounted) return;
 
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (_) =>
-      //     //     PaymentScreen(
-      //     //   userId:    userId,
-      //     //   token:     token,
-      //     //   addressId: savedAddress.id!,
-      //     // ),
-      //
-      //   ),
-      // );
       //push addresslistpage
         Navigator.pop(context, savedAddress);
 
@@ -100,6 +88,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -156,7 +145,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   'New Address',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -227,7 +216,6 @@ class _AddAddressPageState extends State<AddAddressPage> {
       Navigator.push(context, MaterialPageRoute(builder: (_) => MapScreen()));
     },
     child: Container(
-
       width: double.infinity,
       height: 450,
       decoration: BoxDecoration(
@@ -238,7 +226,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
           BoxShadow(
             blurRadius: 1,
             blurStyle: BlurStyle.outer,
-            color: Colors.blue.shade200,
+            color: Colors.grey.shade100
           ),
         ],
       ),
@@ -250,7 +238,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
    padding: const EdgeInsets.all(8.0),
    child: Container(
      width: double.infinity,
-     height: 60,
+     height: 50,
      decoration: BoxDecoration(
 
        borderRadius: BorderRadius.circular(10),
@@ -259,7 +247,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
          BoxShadow(
            blurRadius: 1,
            blurStyle: BlurStyle.outer,
-           color: Colors.blue.shade200,
+           color: Colors.grey.shade200,
          ),
        ],
      ),
@@ -273,7 +261,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
         hintText : '123 Precision Way',
          hintStyle: TextStyle(
            color: Colors.grey,
-           fontSize: 19,
+           fontSize: 16,
            fontWeight: FontWeight.w500,
          ),
 
@@ -284,7 +272,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
        ),
        style: TextStyle(
          color: Colors.black,
-         fontSize: 20,
+         fontSize: 16,
          fontWeight: FontWeight.w400,
        ),
      ),
@@ -295,7 +283,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
    padding: const EdgeInsets.all(8.0),
    child: Container(
      width: double.infinity,
-     height: 60,
+     height: 50,
      decoration: BoxDecoration(
 
        borderRadius: BorderRadius.circular(10),
@@ -304,7 +292,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
          BoxShadow(
            blurRadius: 1,
            blurStyle: BlurStyle.outer,
-           color: Colors.blue.shade200,
+           color: Colors.grey.shade200,
          ),
        ],
      ),
@@ -312,7 +300,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
        controller: countrycontroller,
        style: TextStyle(
          color: Colors.black,
-         fontSize: 20,
+         fontSize: 16,
          fontWeight: FontWeight.w400,
        ),
 
@@ -320,7 +308,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
         hintText : 'Cambodia',
          hintStyle: TextStyle(
            color: Colors.grey,
-           fontSize: 19,
+           fontSize: 16,
            fontWeight: FontWeight.w500,
          ),
 
@@ -361,7 +349,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
              //text  field
              Container(
                width: double.infinity,
-               height: 60,
+               height: 50,
                decoration: BoxDecoration(
 
                  borderRadius: BorderRadius.circular(10),
@@ -370,7 +358,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                    BoxShadow(
                      blurRadius: 1,
                      blurStyle: BlurStyle.outer,
-                     color: Colors.blue.shade200,
+                     color: Colors.grey.shade200,
                    ),
                  ],
                ),
@@ -378,14 +366,14 @@ class _AddAddressPageState extends State<AddAddressPage> {
                  controller: citycontroller,
                  style: TextStyle(
                    color: Colors.black,
-                   fontSize: 20,
+                   fontSize: 16,
                    fontWeight: FontWeight.w400,
                  ),
                  decoration: InputDecoration(
                   hintText : 'PHNOM PENH',
                    hintStyle: TextStyle(
                      color: Colors.grey,
-                     fontSize: 19,
+                     fontSize: 14,
                      fontWeight: FontWeight.w500,
                    ),
 
@@ -423,7 +411,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
 
              Container(
                width: double.infinity,
-               height: 60,
+               height: 50,
                decoration: BoxDecoration(
 
                  borderRadius: BorderRadius.circular(10),
@@ -432,7 +420,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                    BoxShadow(
                      blurRadius: 1,
                      blurStyle: BlurStyle.outer,
-                     color: Colors.blue.shade200,
+                     color: Colors.grey.shade200,
                    ),
                  ],
                ),
@@ -448,7 +436,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
              hintText : '10110',
              hintStyle: TextStyle(
              color: Colors.grey,
-             fontSize: 19,
+             fontSize: 16,
              fontWeight: FontWeight.w500,
              ),
 

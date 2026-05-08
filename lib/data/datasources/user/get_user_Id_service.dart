@@ -23,8 +23,8 @@ class GetUserIdService {
       //  IMPORTANT
       final data = body['data'];
 
-      print('DATA FROM API: $data');           // ✅
-      print('fullName in data: ${data['fullName']}'); // ✅
+      print('DATA FROM API: $data');           //
+      print('fullName in data: ${data['fullName']}'); //
       return GetUserModel.fromJson(data);
     } catch (e) {
       print("ERROR: $e");

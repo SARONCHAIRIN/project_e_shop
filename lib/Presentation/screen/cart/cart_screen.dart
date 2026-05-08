@@ -46,7 +46,9 @@ class _CartScreenState extends State<CartScreen> {
     final cartController = context.watch<CartController>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade50,
+
+
       body: CustomScrollView(
         slivers: [
 
@@ -85,18 +87,18 @@ class _CartScreenState extends State<CartScreen> {
               )
 
             // Show error if there's an error
-          else if (cartController.hasError)
-              SliverFillRemaining(
+          // else if (cartController.hasError)
+          //     SliverFillRemaining(
+          //
+          //       child: _buildError(
+          //
+          //         // message: cartController.errorMessage,
+          //
+          //         onRetry: () => cartController.fetchCart(),
+          //
+          //       ),
 
-                child: _buildError(
-
-                  message: cartController.errorMessage,
-
-                  onRetry: () => cartController.fetchCart(),
-
-                ),
-
-              )
+              // )
           else
             SliverList(
               delegate: SliverChildBuilderDelegate(
@@ -159,16 +161,17 @@ class _CartScreenState extends State<CartScreen> {
                              shape: RoundedRectangleBorder(
                                borderRadius: BorderRadius.circular(12),
                              ),
-                             elevation: 0.1,
+                             elevation: 0.001,
 
                              child: ListTile(
                                leading: ClipRRect(
+
                                  borderRadius: BorderRadius.circular(8),
                                  child: Image.network(
                                    item.image,
                                    width: 70,
                                    height: 70,
-                                   fit: BoxFit.fill,
+                                   fit: BoxFit.cover,
                                  ),
                                ),
 
@@ -182,15 +185,17 @@ class _CartScreenState extends State<CartScreen> {
                                  ),
                                ),
 
-                               subtitle: Text(" Qty: ${item.quantity} \n \$${item.totalPrice.toStringAsFixed(2)}"),
+                               subtitle: Text(" Qty: ${item.quantity} "
+                                   "\n \$${item.totalPrice.toStringAsFixed(2)}"),
 
                                trailing: Container(
+                                 height: 35,
                                  decoration: BoxDecoration(
                                    color: Colors.white,
                                    borderRadius: BorderRadius.circular(20),
                                    boxShadow: [
                                      BoxShadow(
-                                       color: Colors.blueAccent.withOpacity(0.5),
+                                       color: Colors.grey.withOpacity(0.5),
                                        spreadRadius: 1,
                                        blurRadius: 1,
                                        blurStyle: BlurStyle.outer,
@@ -243,25 +248,25 @@ class _CartScreenState extends State<CartScreen> {
 
           SliverToBoxAdapter(
             child:    Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding:  EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               child: Container(
                 width: double.infinity,
-                height: 150,
+                height: 130,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.4),
-                        spreadRadius: 2,
-                        blurRadius: 2,
+                        color: Colors.grey.shade100,
+                        spreadRadius: 1,
+                        blurRadius: 1,
                         blurStyle: BlurStyle.outer,
                         offset: const Offset(0, 1), // changes position of shadow
                       ),
                     ],
                 ),
                 padding: const EdgeInsets.only(
-                  top: 5,
+                  top: 10,
                   left: 20,
                   right: 20,
                   bottom: 10,
@@ -274,12 +279,12 @@ class _CartScreenState extends State<CartScreen> {
                       children: [
                         Text(
                           'Subtotal',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500,color: Colors.grey),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.grey),
                         ),
 
                         Text(
                           "\$${cartController.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                         ),
                       ],
                     ),
@@ -289,12 +294,12 @@ class _CartScreenState extends State<CartScreen> {
                       children: [
                         Text(
                           'Shipping',
-                          style: const TextStyle(fontSize: 18,color: Colors.grey, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 16,color: Colors.grey, fontWeight: FontWeight.w500),
                         ),
 
                         Text(
                           "FREE",
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.greenAccent),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.greenAccent),
                         ),
                       ],
                     ),
@@ -310,12 +315,12 @@ class _CartScreenState extends State<CartScreen> {
                       children: [
                         Text(
                           'Total',
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                         ),
 
                         Text(
                           "\$${cartController.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.blueAccent),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700,color: Colors.blueAccent),
                         ),
                       ],
                     ),
@@ -327,6 +332,7 @@ class _CartScreenState extends State<CartScreen> {
 
 
            SliverToBoxAdapter(
+
             child: _buildcheckoutButton(context, cartController),
           ),
           SliverToBoxAdapter(
@@ -429,7 +435,7 @@ class _CartScreenState extends State<CartScreen> {
           )));},
           style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blueAccent,
-          padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 13),
+          padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 11),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),

@@ -84,7 +84,7 @@ class _MessageMainState extends State<MessageMain> {
       appBar: AppBar(
         title: const Text(
           "Support Center",
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -114,7 +114,7 @@ class _MessageMainState extends State<MessageMain> {
 
               "How can we help you?",
 
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
 
             ),
 
@@ -122,7 +122,7 @@ class _MessageMainState extends State<MessageMain> {
 
             const Text(
 
-              "Contact our support team via Telegram or WhatsApp",
+              "Contact our support team via Telegram",
 
               textAlign: TextAlign.center,
 
@@ -143,32 +143,21 @@ class _MessageMainState extends State<MessageMain> {
               onTap: openTelegram,
 
             ),
-
-            ListTile(
-
-              leading: const Icon(Icons.chat, color: Colors.green),
-
-              title: const Text("Chat on WhatsApp"),
-
-              trailing: const Icon(Icons.arrow_forward_ios),
-
-              onTap: openWhatsAppWithMessage,
-
-            ),
             SizedBox(height: 20,),
+
 
             SizedBox(
               width: double.infinity,
-              height: 50,
+              height: 40,
               child: ElevatedButton.icon(
                 onPressed: _openTelegram,
-                icon: const Icon(Icons.telegram,size: 30,),
+                icon: const Icon(Icons.telegram,size: 25,color: Colors.white,),
                 label: const Text(
                   "Contact via Telegram",
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18,color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.blueAccent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

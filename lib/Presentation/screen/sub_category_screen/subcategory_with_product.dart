@@ -1,6 +1,7 @@
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_screen_eshop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:lottie/lottie.dart';
 import '../../../data/datasources/sub_with_product/sub_product_service.dart';
 import '../../../data/models/subcategory_model_eshop.dart';
@@ -193,27 +194,24 @@ bool ispressed = false;
         // have data show grid
         final subcategories = snapshot.data!;
 
+
         return SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          sliver: SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5,
-              childAspectRatio: 0.57,
-            ),
-            delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                final sub = subcategories[index];
-                return GestureDetector(
+          sliver: SliverMasonryGrid.count(
+            crossAxisCount: 2,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childCount: subcategories.length,
+            itemBuilder: (context, index) {
+              final sub = subcategories[index];
 
+              return Padding(
+                padding: EdgeInsets.only(
+                  top: index % 2 == 0 ? 0 : 30,
+                  bottom: index % 2 == 0 ? 20 : 0,
+                ),
+                child: GestureDetector(
                   onTap: () {
-
-                    setState(() {
-                      ispressed = false;
-                    });
-                    //push sub_product screen
-                    print('clicked subcategory: ${sub.name} (id: ${sub.id})');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -225,181 +223,97 @@ bool ispressed = false;
                     );
                   },
 
-                  onTapDown: (_) {
-                      setState(() {
-                        ispressed = true;
-                    });
-                  },
-
-                  onTapCancel: () {
-                    // Reset the scale effect if the tap is canceled
-                    setState(() {
-                      ispressed = false;
-                    });
-                  },
-
-                  onTapUp: (_) {
-                    // Reset the scale effect after the tap is released
-                    setState(() {
-                      ispressed = false;
-                    });
-                  },
-
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 150),
-                    curve: Curves.easeInOut,
-                    transform: Matrix4.identity()
-                      ..scale(ispressed ? 0.90 : 1.0), //  Zoom effect
-                    width: 200,
-                    height: 100,
+                  child: Container(
                     decoration: BoxDecoration(
-                      color: ispressed ? Colors.grey.shade50 : Colors.white,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                      color: Colors.white,
-                      blurRadius: ispressed ? 5 : 10,
-                      offset: Offset(0, ispressed ? 2 : 6),
+                          color: Colors.grey.shade100,
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
-                    child: Card(
-                      color: Colors.white,
-                      elevation: 0.1,
-                      shadowColor: Colors.grey.shade50,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 15,
-                          left: 5,
-                          right: 5,
-                          bottom: 10,
-                        ),
-                        child: Column(
-                          children: [
 
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(8),
-                                ),
-                                child: sub.image == null || sub.image!.isEmpty
-                                    ? Image.asset(
-                                  'assets/images/default_image.png',
-                                  // fit: BoxFit.fill,
-                                  width: double.infinity,
-                                )
-                                    : Image.network(
-                                  sub.image!,
-                                  width: double.infinity,
-                                  // fit: BoxFit.fill,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Image.asset(
-                                      'assets/images/default_image.png',
-                                      fit: BoxFit.cover,
-                                    );
-                                  },
-                                  loadingBuilder: (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Container(
-                                      color: Colors.grey[200],
-                                      child: const Center(
-                                        child: CircularProgressIndicator(strokeWidth: 2),
-                                      ),
-                                    );
-                                  },
-                                ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          /// IMAGE
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: SizedBox(
+                              height: index % 1 == 0 ? 130 : 150,
+                              width: double.infinity,
+                              child: Image.network(
+                                sub.image ?? '',
+                                // fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) {
+                                  return Image.asset(
+                                    'assets/images/default_image.png',
+                                    // fit: BoxFit.,
+                                  );
+                                },
                               ),
                             ),
-                            SizedBox(height: 10,),
+                          ),
 
-                            const Divider(
-                              color: Colors.blue,
-                              height: 1,
-                              thickness: 0.3,
+                          const SizedBox(height: 5),
+
+                          /// NAME
+                          Text(
+                            sub.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
                             ),
+                          ),
 
+                          const SizedBox(height: 8),
 
-                            // text
-                            Padding(
-                              padding: const EdgeInsets.all(1),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                          /// DESCRIPTION
+                          Text(
+                            sub.description,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
 
-                                  //name
-                                  Center(
-                                    child: Text(
-                                      sub.name,
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
+                          const SizedBox(height: 10),
 
-                                  const SizedBox(height: 10),
-
-                                  // description
-                                  Text(
-                                    sub.description,
-                                    maxLines: 2,
-                                    style: const TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 15),
-
-                                  // category name
-                                  Container(
-                                    width: 90,
-                                    height: 25,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: Colors.transparent,
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.lightBlueAccent,
-                                          blurStyle: BlurStyle.outer,
-                                          blurRadius: 1.5,
-                                          spreadRadius: 0.1,
-                                        ),
-                                      ],
-                                    ),
-                                    child: Text(
-                                      sub.categoryName,
-                                      style: const TextStyle(
-                                        color: Colors.redAccent,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                          /// CATEGORY
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.blue.shade50,
+                            ),
+                            child: Text(
+                              sub.categoryName,
+                              style: const TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                );
-              },
-              childCount: subcategories.length,
-            ),
+                ),
+              );
+            },
           ),
         );
-      },
+
+        },
     );
   }
 }

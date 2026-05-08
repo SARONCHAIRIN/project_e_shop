@@ -110,7 +110,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               'Select Payment Method',
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w700,
               ),
             ),
             SizedBox(height: 12),
@@ -142,7 +142,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             backgroundColor: Colors.blue,
             minimumSize: Size(double.infinity, 52),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(25),
             ),
           ),
           child: Text(

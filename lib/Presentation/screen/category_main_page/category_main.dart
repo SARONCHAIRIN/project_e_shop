@@ -49,7 +49,7 @@ class _CategoryMainState extends State<CategoryMain> {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade50,
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [

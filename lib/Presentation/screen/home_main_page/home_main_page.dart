@@ -72,7 +72,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
         Scaffold(
         extendBody: true,
         extendBodyBehindAppBar: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey.shade50,
         body: CustomScrollView(
           // physics: PageScrollPhysics(),
          physics:  ClampingScrollPhysics(),
@@ -90,25 +90,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
 
                   SizedBox(height: 10,),
 
-                  //text Trending Categories
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  //   child: Row(
-                  //     children: [
-                  //       Text('DiscountForYou',style: TextStyle(color: Colors.black,fontSize: 22,fontWeight: FontWeight.bold),),
-                  //
-                  //       Expanded(child: SizedBox(width: 1,)),
-                  //
-                  //       TextButton(
-                  //           onPressed: (){
-                  //             Navigator.push(context, MaterialPageRoute(builder: (context) => SeeAllCategory()));
-                  //           },
-                  //           child: Text("See All",style: TextStyle(color: Colors.redAccent,fontSize: 15,fontStyle: FontStyle.italic),)
-                  //       ),
-                  //     ],
-                  //
-                  //   ),
-                  // ),
                   SizedBox(height: 4,),
 
                   //carousel slider of home page
@@ -121,7 +102,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                     //text category see all
                     child: Row(
                       children: [
-                        Text('Trending Categories',style: TextStyle(color: Colors.black,fontSize: 22,fontWeight: FontWeight.w600),),
+                        Text('Trending Categories',style: TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.w600),),
 
                         Expanded(child: SizedBox(width: 1,)),
 
@@ -151,7 +132,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                     //text category see all
                     child: Row(
                       children: [
-                        Text(' Popular Products',style: TextStyle(color: Colors.black,fontSize: 22,fontWeight: FontWeight.w600),),
+                        Text(' Popular Products',style: TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.w600),),
 
                         Expanded(child: SizedBox(width: 1,)),
 
@@ -209,8 +190,13 @@ class _HomeMainPageState extends State<HomeMainPage> {
               categoryName: selectedCategory,
             ),
 
-          ],
+            SliverToBoxAdapter(
+              child: SizedBox(height: 100,),
+            ),
 
+
+
+          ],
         ),
       ),
     ],
