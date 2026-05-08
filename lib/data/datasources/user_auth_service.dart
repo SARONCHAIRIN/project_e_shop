@@ -28,14 +28,5 @@ class AuthService {
       'password': password,
       'full_name': fullName,
     });
-
-
-
-
-
-
   }
-
-
-
 }

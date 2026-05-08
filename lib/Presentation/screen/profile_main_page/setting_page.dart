@@ -25,13 +25,14 @@ class _SettingPageState extends State<SettingPage> {
       backgroundColor: Colors.white,
 
       appBar: AppBar(
+        centerTitle: true,
         shadowColor: Colors.black,
         backgroundColor: Colors.white,
         title: Text('Setting',
         style: TextStyle(
           color: Colors.black,
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
 
         ),),
       ),

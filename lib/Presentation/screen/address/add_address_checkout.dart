@@ -48,9 +48,9 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
 
       if (userId == null || token == null) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Session expired. Please login again.')),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('Session expired. Please login again.')),
+        // );
         return;
       }
 
@@ -84,12 +84,12 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
     } catch (e) {
       debugPrint('Error: $e');
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+        // SnackBar(
+        //   content: Text('Failed: ${e.toString()}'),
+        //   backgroundColor: Colors.red,
+        // ),
+      // );
     } finally {
       if (mounted) setState(() => is_loading = false);
     }
@@ -122,7 +122,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                   'New Address',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -142,7 +142,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                   'ADDRESS LINE 1 ',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -162,7 +162,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                   'COUNTRY  ',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -215,7 +215,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
     padding: const EdgeInsets.all(8.0),
     child: Container(
       width: double.infinity,
-      height: 60,
+      height: 40,
       decoration: BoxDecoration(
 
         borderRadius: BorderRadius.circular(10),
@@ -224,7 +224,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
           BoxShadow(
             blurRadius: 1,
             blurStyle: BlurStyle.outer,
-            color: Colors.blue.shade200,
+            color: Colors.grey.shade200,
           ),
         ],
       ),
@@ -238,7 +238,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
           hintText : '123 Precision Way',
           hintStyle: TextStyle(
             color: Colors.grey,
-            fontSize: 19,
+            fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
 
@@ -249,7 +249,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
         ),
         style: TextStyle(
           color: Colors.black,
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: FontWeight.w400,
         ),
       ),
@@ -260,7 +260,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
     padding: const EdgeInsets.all(8.0),
     child: Container(
       width: double.infinity,
-      height: 60,
+      height: 40,
       decoration: BoxDecoration(
 
         borderRadius: BorderRadius.circular(10),
@@ -269,7 +269,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
           BoxShadow(
             blurRadius: 1,
             blurStyle: BlurStyle.outer,
-            color: Colors.blue.shade200,
+            color: Colors.grey.shade100,
           ),
         ],
       ),
@@ -277,7 +277,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
         controller: countrycontroller,
         style: TextStyle(
           color: Colors.black,
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: FontWeight.w400,
         ),
 
@@ -285,7 +285,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
           hintText : 'Cambodia',
           hintStyle: TextStyle(
             color: Colors.grey,
-            fontSize: 19,
+            fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
 
@@ -316,7 +316,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                   'CITY  ',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -326,7 +326,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
               //text  field
               Container(
                 width: double.infinity,
-                height: 60,
+                height: 40,
                 decoration: BoxDecoration(
 
                   borderRadius: BorderRadius.circular(10),
@@ -335,7 +335,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                     BoxShadow(
                       blurRadius: 1,
                       blurStyle: BlurStyle.outer,
-                      color: Colors.blue.shade200,
+                      color: Colors.grey.shade100,
                     ),
                   ],
                 ),
@@ -351,7 +351,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                     hintText : 'PHNOM PENH',
                     hintStyle: TextStyle(
                       color: Colors.grey,
-                      fontSize: 19,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
 
@@ -380,7 +380,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                   'ZIP CODE',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -389,7 +389,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
 
               Container(
                 width: double.infinity,
-                height: 60,
+                height: 40,
                 decoration: BoxDecoration(
 
                   borderRadius: BorderRadius.circular(10),
@@ -398,7 +398,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                     BoxShadow(
                       blurRadius: 1,
                       blurStyle: BlurStyle.outer,
-                      color: Colors.blue.shade200,
+                      color: Colors.grey.shade200,
                     ),
                   ],
                 ),
@@ -407,7 +407,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                   controller: zipcodecontroller,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 20,
+                    fontSize: 15,
                     fontWeight: FontWeight.w400,
                   ),
 
@@ -415,7 +415,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                     hintText : '10110',
                     hintStyle: TextStyle(
                       color: Colors.grey,
-                      fontSize: 19,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
 
@@ -476,7 +476,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                   Text(
                     "Save Address",
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: 18,
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
@@ -494,6 +494,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
       left: 20,
     ),
     child: SizedBox(
+
       width: double.infinity,
       height: 50,
       child: OutlinedButton(
@@ -501,7 +502,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
           submit();
         },
         style: OutlinedButton.styleFrom(
-          backgroundColor: Colors.blue.shade200,
+          backgroundColor: Colors.blueAccent,
           side: BorderSide(color: Colors.blue.shade200),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -512,7 +513,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
           "Save Address",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 17,
+            fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
         ),

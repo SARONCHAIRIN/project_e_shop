@@ -63,10 +63,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final product = widget.product;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
 
-        title: Text(product.name),
+        title: Text(product.name,style: TextStyle(fontSize: 18),),
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -74,41 +74,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // Product Image
-            Stack(
-              children: [
-                Positioned(
-                  child: Container(
-                    height: 450,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      // shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.cyanAccent.withOpacity(0.1),
-
-                          Colors.white.withOpacity(0.1),
-                          Colors.blue.withOpacity(0.1),
-
-                          Colors.white.withOpacity(0.1),
-                          Colors.pink.withOpacity(0.1),
-                          Colors.white.withOpacity(0.1),
-
-                          Colors.blue.withOpacity(0.1),
-                          Colors.white.withOpacity(0.1),
-
-                          Colors.cyanAccent.withOpacity(0.1),
-
-                        ],
-                        begin: Alignment.centerRight,
-                        end: Alignment.centerLeft,
-                      ),
-                    ),
-                  ),
-                ),
-
-                //image of product
-                Center(
+            //image of product
+            Center(
                 child: Padding(
                   padding: const EdgeInsets.only(
                     top: 20,
@@ -119,15 +86,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   product.mainImage == null || product.mainImage.isEmpty
                       ? Image.asset(
                     'assets/images/default_image.png',
-                    height: 350,)
+                  )
                       : Image.network(
                     product.mainImage,
                     height: 350,
-                    fit: BoxFit.fill,
+                    // fit: BoxFit.fill,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.asset(
                         'assets/images/default_image.png',
-                        height: 300,
                       );
                     },
                     loadingBuilder: (context, child, loadingProgress) {
@@ -143,10 +109,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
               ),
-
-              ],
-            ),
-
+            SizedBox(height: 10,),
 
             // Product Info
             Padding(
@@ -163,7 +126,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         child: Text(
                           product.name,
                           style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -179,7 +142,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ? "\$${selectedSku!.price.toStringAsFixed(2)}"
                         : "\$${product.lowestPrice.toStringAsFixed(2)}",
                     style: const TextStyle(
-                      fontSize: 29,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.green,
                     ),
@@ -191,7 +154,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   Text('Available Option',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500,
                     // fontStyle: FontStyle.italic,
                   ),
@@ -219,7 +182,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Text('Select Size',
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.w500,
                             fontStyle: FontStyle.italic,
                           ),
@@ -248,8 +211,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 transform: Matrix4.identity()
                                   ..scale(isAvailable ? 0.95 : 1.0),
 
-                                width: 47,
-                                height: 47,
+                                width: 45,
+                                height: 45,
                                 decoration: BoxDecoration(
                                   color: isAvailable ? Colors.blue : Colors.white,
                                   borderRadius: BorderRadius.circular(16),
@@ -266,7 +229,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     sizeOption[index],
                                     style: TextStyle(
                                       color: isAvailable ? Colors.white : Colors.black,
-                                      fontSize: 16,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -283,7 +246,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Text('Select Colors',
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ),),
                         const SizedBox(height: 15),
@@ -311,8 +274,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               padding: EdgeInsets.all(3),
                                transform: Matrix4.identity()
                                  ..scale(isselected ? 1.10 : 1.0),
-                              width: 45,
-                               height: 45,
+                              width: 40,
+                               height: 40,
                                decoration: BoxDecoration(
                                  shape: BoxShape.circle,
                                   color: colorOption[index],
@@ -348,7 +311,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     child: Text('Description',
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 20,
+                      fontSize: 17,
                       fontWeight: FontWeight.w600,
                     ),
                     ),
@@ -364,7 +327,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ? TextOverflow.visible
                     : TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: Colors.grey[600],
                     ),
                   ),
@@ -383,7 +346,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             :  'Show More...  ',
                         style: TextStyle(
                           color: Colors.blueAccent,
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -405,10 +368,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 2),
                     child:Row(
                        children: [
-                          Text('Availability: ',
+                          Text('Availability : ',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 20,
+                              fontSize: 17,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -425,7 +388,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey.shade400,
+                                  color: Colors.grey.shade200,
                                   blurRadius: 1,
                                   offset: const Offset(0, 1),
                                   blurStyle: BlurStyle.outer,
@@ -436,7 +399,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                              '${product.isActive ? "In Stock" : "Out of Stock"}',
                               style: TextStyle(
-                                color: Colors.redAccent,
+                                color: Colors.black,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -474,8 +437,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
-                                color: pressed1 ?Colors.blue.withOpacity(0.5): Colors.grey.withOpacity(0.5),
-                                blurRadius: 5,
+                                color: pressed1 ?Colors.blue.withOpacity(0.2): Colors.grey.withOpacity(0.2),
+                                blurRadius: 1,
                                 offset: const Offset(0, 2),
                                 blurStyle: BlurStyle.outer,
                               ),
@@ -493,8 +456,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.blue.withOpacity(0.5),
-                                        blurRadius: 5,
+                                        color: Colors.blue.withOpacity(0.1),
+                                        blurRadius: 1,
                                         offset: const Offset(0, 2),
                                       ),
                                     ],
@@ -561,8 +524,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
-                                color: pressed2 ?Colors.blue.withOpacity(0.5): Colors.grey.withOpacity(0.5),
-                                blurRadius: 5,
+                                color: pressed2 ?Colors.blue.withOpacity(0.2): Colors.grey.withOpacity(0.2),
+                                blurRadius: 1,
                                 offset: const Offset(0, 2),
                                 blurStyle: BlurStyle.outer,
                               ),

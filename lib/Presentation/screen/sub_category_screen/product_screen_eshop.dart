@@ -79,14 +79,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     color: Colors.lightBlueAccent,
-                      //     blurRadius: 3,
-                      //     blurStyle: BlurStyle.outer,
-                      //     spreadRadius: 0.5,
-                      //   ),
-                      // ],
+
                     ),
                     child: Card(
                       color: Colors.white,
@@ -164,7 +157,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub> {
                                        maxLines: 3,
                                        style: const TextStyle(
                                          fontSize: 15,
-                                         fontWeight: FontWeight.bold,
+                                         fontWeight: FontWeight.w700,
                                          overflow: TextOverflow.ellipsis,
 
                                        )),
