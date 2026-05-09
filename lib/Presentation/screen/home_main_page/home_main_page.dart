@@ -2,6 +2,7 @@ import 'package:e_shop/Presentation/screen/category_main_page/see_all_category.d
 import 'package:e_shop/Presentation/screen/home_main_page/page_carousel_slide/home_carousel_slider.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/icon_sub_with_product/icon_sub_with_product.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/subcategory_with_product.dart';
+import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -35,9 +36,13 @@ class _HomeMainPageState extends State<HomeMainPage> {
   List<String> categories = ['All','Laptop','Electronics', 'Drone', 'shose','Clothing', 'Books', 'Home', 'Toys', 'Sports', 'Beauty'];
   String selectedCategory = 'All';
 
+  int? userId;
+
   @override
   void initState() {
     super.initState();
+    _loadUserData();
+
 
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
@@ -57,6 +62,21 @@ class _HomeMainPageState extends State<HomeMainPage> {
     print('|=================================================|');
   }
 
+  Future<void> _loadUserData() async{
+    final id = await TokenStorage().readUserId();
+
+
+
+    print('userId in home page :  ${id}');
+
+    if(!mounted) return;
+
+    setState(() {
+      userId = id;
+    });
+
+
+  }
 
   @override
   void dispose() {
@@ -102,7 +122,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                     //text category see all
                     child: Row(
                       children: [
-                        Text('Trending Categories',style: TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.w600),),
+                        Text('Trending Categories',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.w500),),
 
                         Expanded(child: SizedBox(width: 1,)),
 
@@ -131,7 +151,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                     //text category see all
                     child: Row(
                       children: [
-                        Text(' Popular Products',style: TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.w600),),
+                        Text(' Popular Products',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.w500),),
 
                         Expanded(child: SizedBox(width: 1,)),
 

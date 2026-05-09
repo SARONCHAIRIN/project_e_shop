@@ -65,7 +65,6 @@ class _TrackOrderPageState extends State<TrackOrderPage> {
             _DestinationCard(),
             const SizedBox(height: 12),
 
-
             // _PackageContentsCard(),
             const SizedBox(height: 24),
             _ContactSupportButton(),

@@ -608,7 +608,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         final String? token = await storage.readToken();
 
         if (userId == null || token == null) {
-          // push to login screen
+          //  to login screen
+
           Navigator.pushNamed(context, LoginScreen.routeName);
           return;
         }

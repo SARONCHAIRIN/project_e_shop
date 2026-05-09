@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_shop/Presentation/controllers/user/put_user_controller.dart';
-import 'package:e_shop/Presentation/screen/profile_main_page/user/put_info_user.dart';
 import 'package:e_shop/data/datasources/user/get_user_Id_service.dart';
 import 'package:e_shop/data/datasources/user/put_user_service.dart';
 import 'package:e_shop/data/models/user/get_user_model.dart';
@@ -43,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
   String? full_name;
   GetUserModel? user;
-  bool _isloading = true;
+  // bool _isloading = true;
 
   // late ProfileUpdateController controller;
   late PutUserController controller;
@@ -55,12 +54,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    fetchUser();
-    _loadUser();
-    _loadSavedImage();
     _initController();
-    _loadUserData();
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      _initializeData();
+
+    });  }
+
+  Future<void> _initializeData() async {
+    await fetchUser();
+    await _loadUser();
+    await _loadSavedImage();
     print('full name: ${user?.fullName}, email: ${user?.email}');
 
   }
@@ -88,31 +93,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // fill controllers with API data
         nameController.text = user?.fullName ?? '';
         emailController.text = user?.email ?? '';
-        _isloading = false;
-      });
-    } else {
-      setState(() => _isloading = false);
-    }
-  }
-
-
-  Future<void> _loadUserData() async {
-    setState(() => _isLoading = true);
-    final token = await TokenStorage().getToken();
-    final userId = await TokenStorage().getUserId();
-    if (token != null && userId != null) {
-      final result = await GetUserIdService().getUserById(userId, token);
-
-      setState(() {
-        user = result;
-        nameController.text = user?.fullName ?? '';
-        emailController.text = user?.email ?? '';
         _isLoading = false;
       });
     } else {
       setState(() => _isLoading = false);
     }
   }
+
 
   Future<void> _loadSavedImage() async {
     final storage = TokenStorage();
@@ -154,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
 
     await _uploadImage(); // upload immediately
-  }
+    }
   //========upload image===
   Future<void> _uploadImage() async {
 
@@ -178,11 +165,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
       request.headers['Authorization'] = 'Bearer $token';
       request.headers['Accept'] = 'application/json';
 
-      request.files.add(await http.MultipartFile.fromPath(
-          'file',
-          _image!.path));
+      if (_image == null) {
+        _isUploading = false;
+        setState(() {
 
-      final response = await request.send();
+        });
+        _showSnackBar("No image selected", isError: true);
+        return;
+      }
+
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'file',
+          _image!.path,
+        ),
+      );
+
+
+
+      final response = await request.send().timeout(
+        Duration(seconds: 30),
+      );
       final responseBody = await http.Response.fromStream(response);
 
       setState(() => _isUploading = false);
@@ -192,23 +195,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (data['data'] != null && data['data']['image'] != null) {
           setState(() {
             _uploadedImageUrl = data['data']['image'];
-            // _image = null;
           });
-          // _uploadedImageUrl = data['data']['image'];
 
           final storage = TokenStorage();
           await storage.writeUserImage(_uploadedImageUrl!);
 
+          // Clear the local image after successful upload
+          setState(() {
+            _image = null;
+          });
+
+          _showSnackBar("Upload successful");
         }
-        // _showSnackBar("Upload successful");
       } else if (response.statusCode == 401) {
         _showSnackBar("Unauthorized: token invalid or expired", isError: true);
       } else {
         _showSnackBar("Upload failed: ${response.statusCode}", isError: true);
       }
-    } catch (e) {
+    } catch (e,stackTrace) {
       setState(() => _isUploading = false);
-      // _showSnackBar("Error: $e", isError: true);
+      print("UPLOAD ERROR: $e");
+      print(stackTrace);
+      _showSnackBar("Upload failed: ${e.toString()}", isError: true);
     }
   }
 
@@ -377,7 +385,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) return const Center(child: CircularProgressIndicator());
+    if (_isLoading) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: SpinKitCircle(color: Colors.grey, size: 30),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
@@ -789,12 +804,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,
               ),
-              hintText: "${user?.email.isNotEmpty == true ? user!.email : 'No data'}",
+              hintText: "Enter your email",
               hintStyle: TextStyle(
-                color: Colors.black,
+                color: Colors.grey,
                 fontSize: 15,
-                fontWeight: FontWeight.w500,
               ),
+            ),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
             ),
 
           ),
@@ -898,17 +917,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,
-
               ),
-              hintText: (
-                  user?.fullName != null && user!.fullName!.isNotEmpty)
-                  ? user!.fullName!
-                  : 'No data',
+              hintText: "Enter your full name",
               hintStyle: TextStyle(
                 color: Colors.grey,
                 fontSize: 16,
-                fontWeight: FontWeight.w500,
               ),
+            ),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
 
           ),
@@ -933,8 +952,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         ),
         onPressed: () async {
-          // save image
-          if (!_isUploading) await _uploadImage();
+          // save image only if there's a new image to upload
+          // if (!_isUploading && _image != null)
+            await _uploadImage();
 
 
           // save user info
