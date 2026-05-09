@@ -525,15 +525,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           // singin
                           TextButton(
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pushNamedAndRemoveUntil(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        SignupScreen(
-                                            authRepository: widget
-                                                .authRepository)),
+                                  SignupScreen.routeNameRegister,
+                                  (route) => false,
                               );
                             },
+
+
                             child: const Text("Don't have an account? Sign Up",
                               style: TextStyle(color: Colors.white,
                                   fontSize: 12,

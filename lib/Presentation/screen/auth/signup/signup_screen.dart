@@ -1,4 +1,5 @@
 import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
+import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/utils/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -6,6 +7,7 @@ import '../../../../data/repositories/user_auth_repository.dart';
 
 class SignupScreen extends StatefulWidget {
   final User_AuthRepository authRepository;
+  static const routeNameRegister = '/register';
 
   const SignupScreen({super.key, required this.authRepository});
 
@@ -323,6 +325,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               GestureDetector(
                                 onTap: (){
 
+
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 1),
@@ -401,7 +404,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
                               // singin
                               TextButton(
-                                onPressed: () => Navigator.pop(context),
+                                onPressed: (){
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                    LoginScreen.routeName,
+                                      (route) => false,
+                                  );
+                                },
                                 child: const Text(
                                   "Already have an account? Log in",
                                   style: TextStyle(

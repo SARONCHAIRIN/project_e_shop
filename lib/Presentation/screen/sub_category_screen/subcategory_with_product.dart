@@ -269,8 +269,8 @@ bool ispressed = false;
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
 
@@ -287,8 +287,9 @@ bool ispressed = false;
 
                           /// CATEGORY
                           Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5),
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
+                              horizontal: 16,
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
@@ -299,7 +300,7 @@ bool ispressed = false;
                               sub.categoryName,
                               style: const TextStyle(
                                 color: Colors.blue,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
@@ -312,7 +313,6 @@ bool ispressed = false;
             },
           ),
         );
-
         },
     );
   }

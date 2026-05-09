@@ -1,4 +1,5 @@
 
+import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_detail_screen_eshop.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -87,8 +88,8 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
         title: Text(
           widget.subcategoryName,
           style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            fontWeight: FontWeight.w800,
             fontStyle: FontStyle.italic,
           ),
         ),
@@ -224,7 +225,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                   stackTrace) {
                                                 return Image.asset(
                                                   'assets/images/default_image.png',
-                                                  fit: BoxFit.cover,
+                                                  fit: BoxFit.fill,
                                                 );
                                               },
                                               loadingBuilder: (context, child,
@@ -256,10 +257,10 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(product.name,
-                                              maxLines: 3,
+                                              maxLines: 2,
                                               style: const TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w700,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
                                                 overflow: TextOverflow.ellipsis,
                                               )),
                                         ),
@@ -291,92 +292,112 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                               ),
                                               Expanded(
                                                   child: SizedBox(width: 1)),
-                                              IconButton(
-                                                key: _productCartButtonKeys.putIfAbsent(
-                                                  product.id,
-                                                  () => GlobalKey(),
+
+                                              Container(
+                                                width: 30,
+                                                height: 30,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.blueAccent.shade100,
+                                                      spreadRadius: 1,
+                                                      blurStyle: BlurStyle.outer,
+                                                      blurRadius: 1,
+                                                    ),
+                                                  ],
                                                 ),
-                                                onPressed: () async {
-                                                  // Store references before async operation
-                                                  final storage = TokenStorage();
-                                                  final cartController = context.read<CartController>();
-                                                  final scaffoldMessenger = ScaffoldMessenger.of(context);
-                                                  
-                                                  try {
-                                                    // Verify token and userId exist
-                                                    final token = await storage.readToken();
-                                                    final userId = await storage.readUserId();
+                                                child: IconButton(
+                                                  key: _productCartButtonKeys.putIfAbsent(
+                                                    product.id,
+                                                    () => GlobalKey(),
+                                                  ),
+                                                  onPressed: () async {
+                                                    // Store references before async operation
+                                                    final storage = TokenStorage();
+                                                    final cartController = context.read<CartController>();
+                                                    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+                                                    try {
+                                                      // Verify token and userId exist
+                                                      final token = await storage.readToken();
+                                                      final userId = await storage.readUserId();
 
 
-                                                    if (token == null || token.isEmpty) {
+                                                      if (token == null || token.isEmpty) {
+                                                        
+                                                        if (mounted) {
+                                                          scaffoldMessenger.showSnackBar(
+                                                            const SnackBar(
+                                                              content: Text('Please login first'),
+                                                              duration: Duration(seconds: 2),
+                                                              backgroundColor: Colors.orange,
+                                                            ),
+                                                          );
+                                                        }
+                                                        if(mounted) {
+                                                          Navigator.pushNamed(context,LoginScreen.routeName);
+                                                        }
+                                                        return;
+                                                      }
+
+                                                      if (userId == null || userId <= 0) {
+                                                        if (mounted) {
+                                                          scaffoldMessenger.showSnackBar(
+                                                            const SnackBar(
+                                                              content: Text('User session invalid. Please login again'),
+                                                              duration: Duration(seconds: 2),
+                                                              backgroundColor: Colors.orange,
+                                                            ),
+                                                          );
+                                                        }
+                                                        return;
+                                                      }
+
+                                                      // Get product icon button position
+                                                      final GlobalKey iconKey = _productCartButtonKeys[product.id]!;
+                                                      final RenderBox? iconBox = iconKey.currentContext?.findRenderObject() as RenderBox?;
+
+                                                      if (iconBox == null) {
+                                                        debugPrint('Error: Could not find icon button render box');
+                                                        return;
+                                                      }
+
+                                                      final productPosition = iconBox.localToGlobal(Offset.zero);
+
+                                                      // Create flying animation
+                                                      if (mounted) {
+                                                        _createFlyingAnimation(
+                                                          productPosition,
+                                                          product.id,
+                                                        );
+                                                      }
+
+                                                      // Add to cart
+                                                      debugPrint('Adding product ${product.id} to cart for user $userId');
+
+                                                      await cartController.addItem(product.id, 1);
+
+                                                    } catch (e, stackTrace) {
+                                                      debugPrint('Error adding to cart: $e');
+                                                      debugPrint('Stack trace: $stackTrace');
+
                                                       if (mounted) {
                                                         scaffoldMessenger.showSnackBar(
-                                                          const SnackBar(
-                                                            content: Text('Please login first'),
-                                                            duration: Duration(seconds: 2),
-                                                            backgroundColor: Colors.orange,
+                                                          SnackBar(
+                                                            content: Text('Failed to add item. Please try again.'),
+                                                            duration: const Duration(seconds: 2),
+                                                            backgroundColor: Colors.red,
                                                           ),
                                                         );
                                                       }
-                                                      return;
                                                     }
-
-                                                    if (userId == null || userId <= 0) {
-                                                      if (mounted) {
-                                                        scaffoldMessenger.showSnackBar(
-                                                          const SnackBar(
-                                                            content: Text('User session invalid. Please login again'),
-                                                            duration: Duration(seconds: 2),
-                                                            backgroundColor: Colors.orange,
-                                                          ),
-                                                        );
-                                                      }
-                                                      return;
-                                                    }
-
-                                                    // Get product icon button position
-                                                    final GlobalKey iconKey = _productCartButtonKeys[product.id]!;
-                                                    final RenderBox? iconBox = iconKey.currentContext?.findRenderObject() as RenderBox?;
-                                                    
-                                                    if (iconBox == null) {
-                                                      debugPrint('Error: Could not find icon button render box');
-                                                      return;
-                                                    }
-
-                                                    final productPosition = iconBox.localToGlobal(Offset.zero);
-
-                                                    // Create flying animation
-                                                    if (mounted) {
-                                                      _createFlyingAnimation(
-                                                        productPosition,
-                                                        product.id,
-                                                      );
-                                                    }
-
-                                                    // Add to cart
-                                                    debugPrint('Adding product ${product.id} to cart for user $userId');
-                                                    
-                                                    await cartController.addItem(product.id, 1);
-
-                                                  } catch (e, stackTrace) {
-                                                    debugPrint('Error adding to cart: $e');
-                                                    debugPrint('Stack trace: $stackTrace');
-                                                    
-                                                    if (mounted) {
-                                                      scaffoldMessenger.showSnackBar(
-                                                        SnackBar(
-                                                          content: Text('Failed to add item. Please try again.'),
-                                                          duration: const Duration(seconds: 2),
-                                                          backgroundColor: Colors.red,
-                                                        ),
-                                                      );
-                                                    }
-                                                  }
-                                                },
-                                                icon: Icon(
-                                                  CupertinoIcons.cart,
-                                                  color: Colors.blue,
-                                                  size: 15,
+                                                  },
+                                                  icon: Icon(
+                                                    CupertinoIcons.cart,
+                                                    color: Colors.blue,
+                                                    size: 15,
+                                                  ),
                                                 ),
                                               ),
                                             ],

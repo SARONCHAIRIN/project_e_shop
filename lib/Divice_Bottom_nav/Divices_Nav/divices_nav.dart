@@ -3,6 +3,7 @@ import 'package:e_shop/Presentation/screen/Message_main_page/message_main.dart';
 import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/cart_main_page/cart_main.dart';
 import 'package:e_shop/Presentation/screen/home_main_page/home_main_page.dart';
+import 'package:e_shop/Presentation/screen/profile_main_page/device_profile_gate.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/profile_main.dart';
 import 'package:flutter/material.dart';
 import '../../Presentation/screen/category_main_page/category_main.dart';
@@ -31,7 +32,8 @@ class _DivicesNavState extends State<DivicesNav> {
       CategoryMain(authRepository: widget.authRepository),
       MessageMain(),
       CartMain(),
-      ProfileMain(authRepository: widget.authRepository),
+      // ProfileMain(authRepository: widget.authRepository),
+      DeviceProfileGate(repository: widget.authRepository),
     ]);
   }
 
@@ -42,19 +44,19 @@ class _DivicesNavState extends State<DivicesNav> {
 
   void _onTabTapped(int index) async {
     // Tabs that require login: Messages(2), Cart(3), Profile(4)
-    if (index >= 2) {
-      bool loggedIn = await _isLoggedIn();
-      if (!loggedIn) {
-        // redirect to login
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => LoginScreen(authRepository: widget.authRepository),
-          ),
-        );
-        return; // don't switch tab
-      }
-    }
+    // if (index >= 2) {
+    //   bool loggedIn = await _isLoggedIn();
+    //   if (!loggedIn) {
+    //     // redirect to login
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (_) => LoginScreen(authRepository: widget.authRepository),
+    //       ),
+    //     );
+    //     return; // don't switch tab
+    //   }
+    // }
     setState(() => _currentIndex = index);
   }
 
