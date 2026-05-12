@@ -71,7 +71,7 @@ bool ispressed = false;
 
         // error
         else if (snapshot.hasError) {
-      return SliverFillRemaining(
+          return SliverFillRemaining(
         hasScrollBody: false,
 
         child: MediaQuery.removePadding(
@@ -135,7 +135,7 @@ bool ispressed = false;
           ),
         ),
       );
-    }
+        }
 
         // no data
         else if (!snapshot.hasData || snapshot.data!.isEmpty) {

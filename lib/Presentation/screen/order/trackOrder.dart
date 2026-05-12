@@ -1,10 +1,6 @@
-import 'package:e_shop/Presentation/controllers/cart/cart_controller.dart';
-import 'package:e_shop/Presentation/screen/cart/cart_screen.dart';
+import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
 import 'package:e_shop/Presentation/screen/order/orderSuccessScreen.dart';
-import 'package:e_shop/Presentation/screen/sub_category_screen/product_detail_screen_eshop.dart';
-import 'package:e_shop/data/models/cart/cart_item_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 class TrackOrderPage extends StatefulWidget {
   const TrackOrderPage({super.key});
@@ -44,6 +40,10 @@ class _TrackOrderPageState extends State<TrackOrderPage> {
           IconButton(
             icon: const Icon(Icons.shopping_bag_outlined, color: Colors.black),
             onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(context,
+              DivicesNav.routeName,
+                  (route) => false,
+              );
 
             },
           ),
@@ -62,9 +62,6 @@ class _TrackOrderPageState extends State<TrackOrderPage> {
             const SizedBox(height: 12),
             _JourneyProgressCard(),
             const SizedBox(height: 12),
-            _DestinationCard(),
-            const SizedBox(height: 12),
-
             // _PackageContentsCard(),
             const SizedBox(height: 24),
             _ContactSupportButton(),
