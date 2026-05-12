@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:e_shop/Presentation/controllers/order/order_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderSuccessScreen extends StatefulWidget {
   final paymentMethod;
@@ -49,6 +50,24 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
     // Start animation
     _controller.forward();
   }
+
+
+  final String telegramUsername = "https://t.me/contact/1777776159:KLGkumcFEo4vzzuz";
+  final String username = "chairin312007";
+  Future<void> _openTelegram() async {
+    final Uri appUrl = Uri.parse("tg://resolve?domain=$username");
+    final Uri webUrl = Uri.parse("https://t.me/$username");
+
+    // Try open Telegram app
+    if (await canLaunchUrl(appUrl)) {
+      await launchUrl(appUrl);
+    }
+    // fallback to browser
+    else {
+      await launchUrl(webUrl, mode: LaunchMode.externalApplication);
+    }
+  }
+
 
   @override
   void dispose() {
@@ -254,7 +273,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                       // Need help
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => MessageMain()));
+                          _openTelegram();
                         },
                         child: RichText(
                           text: TextSpan(

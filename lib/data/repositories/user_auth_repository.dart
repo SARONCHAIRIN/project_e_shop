@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:e_shop/core/constants/api_constants.dart';
-import 'package:e_shop/core/network/api_client.dart';
 import 'package:http/http.dart' as http;
-
 import '../../core/storage/token_storage.dart';
 import '../datasources/user_auth_service.dart';
 import '../models/user_model.dart';
@@ -98,6 +94,8 @@ class User_AuthRepository {
       rethrow;
     }
   }
+
+
 // AUTO RE-LOGIN
   Future<bool> autoReLogin() async {
     final username = await storage.readUsername();

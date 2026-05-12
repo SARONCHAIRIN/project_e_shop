@@ -42,8 +42,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
   void initState() {
     super.initState();
     _loadUserData();
-
-
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
         if (showBars) setState(() => showBars = false);

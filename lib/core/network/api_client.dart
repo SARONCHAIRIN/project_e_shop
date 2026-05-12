@@ -1,4 +1,6 @@
 
+
+//network = communication api and internet
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -6,13 +8,15 @@ import '../storage/token_storage.dart';
 
 class ApiClient {
   final http.Client _client;
+
+  //constructor
   ApiClient([http.Client? client]) : _client = client ?? http.Client();
 
 
   //function get api
   Future<Map<String , dynamic >>  get(
       String url,
-  {Map<String , String>? headers }) async{
+      {Map<String , String>? headers }) async{
     final res = await _client.get(
       Uri.parse(url),
       headers: {'content-type': 'application/json', ...?headers},
@@ -33,7 +37,8 @@ class ApiClient {
 
   //function api  post
   Future<Map<String, dynamic>> post(
-      String url, Map<String, dynamic> body,
+      String url,
+      Map<String, dynamic> body,
       {Map<String, String>? headers}) async {
     print('POST URL: $url');
     print('POST BODY: ${jsonEncode(body)}');

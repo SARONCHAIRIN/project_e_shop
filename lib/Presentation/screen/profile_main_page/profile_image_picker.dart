@@ -154,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final token = await storage.readToken();
 
       if (userId == null || userId <= 0 || token == null || token.isEmpty) {
-        _showSnackBar('Please login first', isError: true);
+        // _showSnackBar('Please login first', isError: true);
         setState(() => _isUploading = false);
         return;
       }
@@ -170,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         setState(() {
 
         });
-        _showSnackBar("No image selected", isError: true);
+        // _showSnackBar("No image selected", isError: true);
         return;
       }
 

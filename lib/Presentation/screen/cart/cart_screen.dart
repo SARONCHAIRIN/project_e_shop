@@ -75,7 +75,7 @@ class _CartScreenState extends State<CartScreen> {
           // Show loading indicator while fetching cart
           if (cartController.isLoading)
             const SliverFillRemaining(
-              child: Center(child: SpinKitCircle(color: Colors.blue,)),
+              child: Center(child: SpinKitCircle(color: Colors.grey,size: 30,)),
             )
 
             // Show empty state if cart is empty
@@ -85,20 +85,6 @@ class _CartScreenState extends State<CartScreen> {
                 hasScrollBody: false,
                 child: _buildEmptyCart(),
               )
-
-            // Show error if there's an error
-          // else if (cartController.hasError)
-          //     SliverFillRemaining(
-          //
-          //       child: _buildError(
-          //
-          //         // message: cartController.errorMessage,
-          //
-          //         onRetry: () => cartController.fetchCart(),
-          //
-          //       ),
-          //
-          //     )
           else
             SliverList(
               delegate: SliverChildBuilderDelegate(

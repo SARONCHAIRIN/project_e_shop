@@ -31,16 +31,6 @@ class _MessageMainState extends State<MessageMain> {
     await launchUrl(url, mode: LaunchMode.externalApplication);
   }
 
-  Future<void> openWhatsAppWithMessage() async {
-    const phone = "85590901943";
-    const message = "Hello, I need support";
-
-    final Uri url = Uri.parse(
-      "https://wa.me/$phone?text=${Uri.encodeComponent(message)}",
-    );
-
-    await launchUrl(url, mode: LaunchMode.externalApplication);
-  }
 
   void openSupportMenu(BuildContext context) {
     showModalBottomSheet(
@@ -55,11 +45,6 @@ class _MessageMainState extends State<MessageMain> {
               leading: const Icon(Icons.telegram, color: Colors.blue),
               title: const Text("Telegram"),
               onTap: openTelegram,
-            ),
-            ListTile(
-              leading: const Icon(Icons.chat, color: Colors.green),
-              title: const Text("WhatsApp"),
-              onTap: openWhatsAppWithMessage,
             ),
           ],
         );

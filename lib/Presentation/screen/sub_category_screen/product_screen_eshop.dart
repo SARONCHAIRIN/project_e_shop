@@ -4,6 +4,8 @@ import 'package:e_shop/Presentation/screen/sub_category_screen/product_detail_sc
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shop/data/datasources/product_service_eshop.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 import '../../../data/datasources/sub_with_product/sub_product_service.dart';
 import '../../../data/models/product_model_eshop.dart';
 import 'package:provider/provider.dart';
@@ -151,12 +153,117 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
             future:
                 apiService.fetchProductsBySubcategoryId(widget.subcategoryId),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('No products found'));
+              /// ================= LOADING =================
+              if (snapshot.connectionState ==
+                  ConnectionState.waiting) {
+
+                return Center(
+                  child: const SizedBox(
+                    height: 300,
+
+                    child: SpinKitFadingCircle(
+                      color: Colors.black,
+                      size: 40,
+                    ),
+                  ),
+                );
+              }
+
+              /// ================= ERROR =================
+              if (snapshot.hasError) {
+
+                return Center(
+                  child: SizedBox(
+                    height: 350,
+
+                    child: Column(
+                      mainAxisAlignment:
+                      MainAxisAlignment.center,
+
+                      children: [
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 70,
+                          ),
+
+                          child: Lottie.asset(
+                            'assets/animations/Error_404.json',
+                            repeat: true,
+                            animate: true,
+                            height: 150,
+                            width: 150,
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        const Text(
+                          "Something went wrong",
+
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              /// ================= EMPTY =================
+              if (!snapshot.hasData ||
+                  snapshot.data!.isEmpty) {
+
+                return Center(
+                  child:
+                  SizedBox(
+                    height: 350,
+
+                    child: Column(
+                      mainAxisAlignment:
+                      MainAxisAlignment.center,
+
+                      children: [
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 70,
+                          ),
+
+                          child: Lottie.asset(
+                            'assets/animations/empty.json',
+                            repeat: true,
+                            animate: true,
+                            height: 140,
+                            width: 140,
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        const Text(
+                          "No products found",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        const SizedBox(height: 6),
+
+                        const Text(
+                          "Try a different keyword",
+
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               }
 
               final products = snapshot.data!;
@@ -178,7 +285,11 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              ProductDetailScreen(product: product),
+                              ProductDetailScreen(
+                                product: product,
+                                subcategoryId: widget.subcategoryId,
+                                subcategoryName: widget.subcategoryName,
+                              ),
                         ),
                       );
                     },
