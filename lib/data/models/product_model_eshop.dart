@@ -56,10 +56,10 @@ class Product {
 
     return Product(
       id: json['id'],
-      name: json['name'],
+      name: json['name']?.toString() ?? '',
       // sku: json['sku'],
       description: json['description'],
-      mainImage: json['main_image'],
+      mainImage: json['main_image']?.toString()?? "",
       isActive: json['is_active'],
       skus: skus,
       isFavorite:  json['is_favorite'] ?? false,

@@ -25,9 +25,43 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
   final addressline1controller = TextEditingController();
   final zipcodecontroller = TextEditingController();
   bool is_loading = false;
+  bool _isEditingMode = false;
+  int? _existingAddressId;
   FocusNode zipcodeFocusNode = FocusNode();
 
+  @override
+  void initState() {
+    super.initState();
+    _loadExistingAddress();
+  }
 
+  Future<void> _loadExistingAddress() async {
+    try {
+      final userId = await widget.storage.getUserId();
+      final token = await widget.storage.getToken();
+
+      if (userId == null || token == null) return;
+
+      // Fetch user's address
+      final address = await widget.repo.getAddressById(
+        userId: userId,
+        token: token,
+      );
+
+      if (address != null) {
+        setState(() {
+          _isEditingMode = true;
+          _existingAddressId = address.id;
+          citycontroller.text = address.city ?? '';
+          countrycontroller.text = address.country ?? '';
+          addressline1controller.text = address.addressline1 ?? '';
+          zipcodecontroller.text = address.zipcode ?? '';
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading address: $e');
+    }
+  }
 
   @override
   void dispose(){
@@ -35,6 +69,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
     countrycontroller.dispose();
     addressline1controller.dispose();
     zipcodecontroller.dispose();
+    zipcodeFocusNode.dispose();
     super.dispose();
   }
 
@@ -44,55 +79,91 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
 
     try {
       final userId = await widget.storage.getUserId();
-      final token  = await widget.storage.getToken();
+      final token = await widget.storage.getToken();
 
       if (userId == null || token == null) {
         if (!mounted) return;
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text('Session expired. Please login again.')),
-        // );
+        _showSnackBar('Session expired. Please login again.', isError: true);
+        return;
+      }
+
+      // Validate inputs
+      if (addressline1controller.text.isEmpty || 
+          countrycontroller.text.isEmpty ||
+          citycontroller.text.isEmpty ||
+          zipcodecontroller.text.isEmpty) {
+        if (!mounted) return;
+        _showSnackBar('Please fill all fields', isError: true);
+        setState(() => is_loading = false);
         return;
       }
 
       final address = AddressModel(
-        city:         citycontroller.text.trim(),
-        country:      countrycontroller.text.trim(),
+        id: _existingAddressId,
+        city: citycontroller.text.trim(),
+        country: countrycontroller.text.trim(),
         addressline1: addressline1controller.text.trim(),
-        zipcode:      zipcodecontroller.text.trim(),
-        isdefault:    true,
+        zipcode: zipcodecontroller.text.trim(),
+        isdefault: true,
       );
 
-      final savedAddress = await widget.repo.addAddress(
-        userId:  userId,
-        token:   token,
-        address: address,
-      );
+      late AddressModel savedAddress;
+
+      if (_isEditingMode && _existingAddressId != null) {
+        // Update existing address
+        await widget.repo.updateAddress(
+          userId: userId,
+          token: token,
+          addressId: _existingAddressId!,
+          address: address,
+        );
+        savedAddress = address;
+        // if (mounted) _showSnackBar('Address updated successfully', isError: false);
+      } else {
+        // Create new address
+        savedAddress = await widget.repo.addAddress(
+          userId: userId,
+          token: token,
+          address: address,
+        );
+        // if (mounted) _showSnackBar('Address saved successfully', isError: false);
+      }
 
       if (!mounted) return;
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => PaymentScreen(
-            userId:    userId,
-            token:     token,
-            addressId: savedAddress.id!,
-          ),
-        ),
-      );
+      // Navigate to payment screen
+      Future.delayed(Duration(milliseconds: 500), () {
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => PaymentScreen(
+                userId: userId,
+                token: token,
+                addressId: savedAddress.id!,
+              ),
+            ),
+          );
+        }
+      });
 
     } catch (e) {
       debugPrint('Error: $e');
       if (!mounted) return;
-      // ScaffoldMessenger.of(context).showSnackBar(
-        // SnackBar(
-        //   content: Text('Failed: ${e.toString()}'),
-        //   backgroundColor: Colors.red,
-        // ),
-      // );
+      _showSnackBar('Failed!!', isError: true);
     } finally {
       if (mounted) setState(() => is_loading = false);
     }
+  }
+
+  void _showSnackBar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : Colors.green,
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -101,8 +172,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
       backgroundColor: Colors.grey.shade50,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-          ),
+          padding: const EdgeInsets.symmetric(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -113,13 +183,11 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
               ),
               SizedBox(height: 10,),
 
-              //new Address
+              // Title - shows "Update Address" or "New Address" based on mode
               Padding(
-                padding: EdgeInsets.only(
-                  left: 5,
-                ),
+                padding: EdgeInsets.only(left: 5,),
                 child: Text(
-                  'New Address',
+                  _isEditingMode ? 'Update Address' : 'New Address',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
@@ -153,7 +221,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
               _buildAddressline1(),
               SizedBox(height: 20,),
 
-              //address line 1
+              // Country
               Padding(
                 padding: EdgeInsets.only(
                   left: 5,
@@ -168,8 +236,6 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                 ),
               ),
               SizedBox(height: 6,),
-
-              //build address li6ne1
               _buildcountry(),
               SizedBox(height: 20,),
 
@@ -177,7 +243,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
               _buildCityandZipcode(),
               SizedBox(height: 25,),
 
-              //build save address
+              // Save/Update Address Button
               _BuildSaveAddress(),
 
             ],
@@ -441,58 +507,48 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
         horizontal: 10
     ),
     child: Container(
-      child: is_loading
-          ? _buildaftersave()
-          : _buildbeforeSave(),
+      child: is_loading ? _buildLoadingButton() : _buildSaveButton(),
     ),
   );
 
-  //before save
-  Widget _buildaftersave() =>
-      Padding(
-        padding: const EdgeInsets.only(
-          left: 20,
-          right: 20,
+  // Loading state button
+  Widget _buildLoadingButton() => Padding(
+    padding: const EdgeInsets.only(left: 20, right: 20,),
+    child: SizedBox(
+      width: double.infinity,
+      height: 55,
+      child: OutlinedButton(
+        onPressed: null, // disabled during loading
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: Colors.blue.shade200),
+          backgroundColor: Colors.blue.shade100,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: EdgeInsets.symmetric(vertical: 10),
         ),
-        child: SizedBox(
-            width: double.infinity,
-            height: 55,
-            child: OutlinedButton(
-              onPressed: () {
-                submit();
-              },
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.blue.shade200),
-                backgroundColor: Colors.blue.shade100,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SpinKitCircle(color: Colors.blue, size: 30,),
+            SizedBox(width: 10,),
+            Text(
+              _isEditingMode ? "Updating..." : "Saving...",
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SpinKitCircle(color: Colors.blue,size: 30,),
-                  Text(
-                    "Save Address",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            )
+            ),
+          ],
         ),
-      );
-
-  //after save
-  Widget _buildbeforeSave() => Padding(
-    padding: const EdgeInsets.only(
-      right: 20,
-      left: 20,
+      ),
     ),
+  );
+
+  // Save/Update button
+  Widget _buildSaveButton() => Padding(
+    padding: const EdgeInsets.only(right: 20, left: 20,),
     child: SizedBox(
 
       width: double.infinity,
@@ -510,7 +566,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
           padding: EdgeInsets.symmetric(vertical: 16),
         ),
         child: Text(
-          "Save Address",
+          _isEditingMode ? "Update Address" : "Save Address",
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,

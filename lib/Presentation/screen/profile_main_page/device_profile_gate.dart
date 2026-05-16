@@ -1,135 +1,3 @@
-/*
-import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
-import 'package:e_shop/Presentation/screen/auth/signup/signup_screen.dart';
-import 'package:e_shop/Presentation/screen/profile_main_page/profile_main.dart';
-import 'package:e_shop/data/repositories/user_auth_repository.dart';
-import 'package:flutter/material.dart';
-
-import '../../../core/storage/token_storage.dart';
-
-
-class DeviceProfileGate extends StatefulWidget {
-  final User_AuthRepository repository;
-   DeviceProfileGate({
-     super.key,
-     required this.repository,
-   });
-
-  @override
-  State<DeviceProfileGate> createState() => _DeviceProfileGateState();
-}
-
-class _DeviceProfileGateState extends State<DeviceProfileGate> {
-
-  int? userId;
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    loadUser();
-  }
-
-  Future<void> loadUser() async {
-
-    final id = await TokenStorage().readUserId();
-
-    if (!mounted) return;
-
-    setState(() {
-      userId = id;
-      isLoading = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    if (isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
-    // NOT LOGIN
-    if (userId == null || userId == 0) {
-
-      return Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-
-                const Icon(
-                  Icons.person_outline,
-                  size: 100,
-                ),
-
-                const SizedBox(height: 20),
-
-                const Text(
-                  'You are not logged in',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                const Text(
-                  'Login or create account to continue',
-                  textAlign: TextAlign.center,
-                ),
-
-                const SizedBox(height: 30),
-
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        LoginScreen.routeName,
-                          (_) => false,
-                      );
-                    },
-                    child: const Text('Login'),
-                  ),
-                ),
-
-                const SizedBox(height: 15),
-
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        SignupScreen.routeNameRegister,
-                          (route) => false,
-                      );
-                    },
-                    child: const Text('Create Account'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    // LOGIN SUCCESS
-    return ProfileMain(authRepository: widget.repository);
-  }
-}*/
 
 
 import 'package:flutter/material.dart';
@@ -263,7 +131,11 @@ class _GuestProfilePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12)),
               elevation: 0,
             ),
-            onPressed: () => Navigator.pushNamed(context, '/login'),
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                context,
+              '/login',
+                (route) => false,
+            ),
             child: const Text('Sign in',
                 style: TextStyle(
                     color: Colors.white,
@@ -281,7 +153,7 @@ class _GuestProfilePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12)),
               side: BorderSide(color: Colors.grey[300]!),
             ),
-            onPressed: () => Navigator.pushNamed(context, '/register'),
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/register',(route) => false),
             child: const Text('Create account', style: TextStyle(fontSize: 15)),
           ),
         ),
