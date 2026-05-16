@@ -49,5 +49,36 @@ Future<List<AddressModel>> fecthAddressbyUserId({
         token ,
     );
     }
+
+    // Get user's default/first address
+    Future<AddressModel?> getAddressById({
+      required int userId,
+      required String token,
+    }) async {
+      try {
+        return await service.getAddressById(userId, token);
+      } catch (e) {
+        throw Exception('Failed to fetch address: $e');
+      }
+    }
+
+    // Update existing address
+    Future<void> updateAddress({
+      required int userId,
+      required String token,
+      required int addressId,
+      required AddressModel address,
+    }) async {
+      try {
+        await service.updateAddress(
+          addressId,
+          userId,
+          token,
+          address.toJson(),
+        );
+      } catch (e) {
+        throw Exception('Failed to update address: $e');
+      }
+    }
 }
 

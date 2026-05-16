@@ -12,7 +12,8 @@ class AddressService {
       int userId,
       String token,
       Map<String, dynamic> body,
-      ) async {
+      )
+  async {
     final url = Uri.parse("${AddressConstants.createaddress}/$userId");
 
     final response = await http.post(
@@ -112,6 +113,55 @@ class AddressService {
 
     } catch (e) {
       throw Exception('Error deleting address: $e');
+    }
+  }
+
+  // Get first/default address for user
+  Future<AddressModel?> getAddressById(int userId, String token) async {
+    try {
+      final addresses = await getAddressbyuserId(userId, token);
+      if (addresses.isNotEmpty) {
+        // Return the first address (or the default one if API supports it)
+        return addresses.first;
+      }
+      return null;
+    } catch (e) {
+      throw Exception('Error fetching address: $e');
+    }
+  }
+
+  // Update existing address
+  Future<AddressModel> updateAddress(
+    int addressId,
+    int userId,
+    String token,
+    Map<String, dynamic> body,
+  ) async {
+    final url = Uri.parse("${AddressConstants.updateAddress}/$addressId/user/$userId");
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(body),
+      );
+
+      print('UPDATE Response status: ${response.statusCode}');
+      print('UPDATE Response body: ${response.body}');
+
+      final decoded = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return AddressModel.fromJson(decoded['data']);
+      }
+
+      throw Exception(decoded['message'] ?? 'Failed to update address');
+    } catch (e) {
+      throw Exception('Error updating address: $e');
     }
   }
 }

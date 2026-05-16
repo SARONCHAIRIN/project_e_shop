@@ -136,7 +136,7 @@ class _CartMainState extends State<CartMain> {
                   borderRadius: BorderRadius.circular(12)),
               elevation: 0,
             ),
-            onPressed: () => Navigator.pushNamed(context, '/login'),
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/login',(route) => false),
             child: const Text('Sign in',
                 style: TextStyle(
                     color: Colors.white,
@@ -154,7 +154,7 @@ class _CartMainState extends State<CartMain> {
                   borderRadius: BorderRadius.circular(12)),
               side: BorderSide(color: Colors.grey[300]!),
             ),
-            onPressed: () => Navigator.pushNamed(context, '/register'),
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/register',(route) => false),
             child: const Text('Create account', style: TextStyle(fontSize: 15)),
           ),
         ),

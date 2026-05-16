@@ -193,7 +193,7 @@ class _ProfilepageState extends State<Profilepage> {
           _isUploading = true;
         });
 
-        // 👉 CALL UPLOAD API
+        //  CALL UPLOAD API
         final imageUrl = await _uploadImage(File(pickedFile.path));
 
         if (imageUrl != null) {

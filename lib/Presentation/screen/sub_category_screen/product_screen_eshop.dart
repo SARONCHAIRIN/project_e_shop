@@ -158,13 +158,9 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                   ConnectionState.waiting) {
 
                 return Center(
-                  child: const SizedBox(
-                    height: 300,
-
-                    child: SpinKitFadingCircle(
-                      color: Colors.black,
-                      size: 40,
-                    ),
+                  child: SpinKitFadingCircle(
+                    color: Colors.black,
+                    size: 40,
                   ),
                 );
               }
@@ -175,13 +171,10 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                 return Center(
                   child: SizedBox(
                     height: 350,
-
                     child: Column(
                       mainAxisAlignment:
                       MainAxisAlignment.center,
-
                       children: [
-
                         Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 70,
@@ -279,6 +272,8 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final product = products[index];
+                  final image = product.mainImage;
+
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -355,6 +350,8 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                             ),
                                     ),
                                   ),
+
+
                                   Padding(
                                     padding: EdgeInsets.symmetric(),
                                     child: Column(
