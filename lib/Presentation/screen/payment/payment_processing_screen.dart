@@ -1,10 +1,10 @@
+import 'package:e_shop/Presentation/screen/order/orderSuccessScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/repositories/order_repository.dart';
 import 'package:e_shop/data/repositories/payment_repository.dart';
 import 'bakong_qr_screen.dart';
-import 'payment_success_screen.dart';
 import 'payment_failed_screen.dart';
 
 /// Screen that handles creating orders for COD and Bakong and directs to the
@@ -58,7 +58,8 @@ class _PaymentProcessingScreenState extends State<PaymentProcessingScreen> {
 		if (!mounted) return;
 		Navigator.pushReplacement(
 		  context,
-		  MaterialPageRoute(builder: (_) => PaymentSuccessScreen(order: order)),
+		  // MaterialPageRoute(builder: (_) => PaymentSuccessScreen(order: order)),
+		  MaterialPageRoute(builder: (_) => OrderSuccessScreen(paymentMethod: widget.paymentMethod, orderId: order.id )),
 		);
 
 	  } else if (widget.paymentMethod.toUpperCase() == 'BAKONG') {
