@@ -60,6 +60,8 @@ dependencies:
   badges: ^3.1.2
   model_viewer_plus: ^1.9.3
   dio: ^5.3.0
+  qr_flutter: ^4.1.0
+  crypto: ^3.0.3
 
 
 

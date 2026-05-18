@@ -3,6 +3,7 @@ import 'package:e_shop/Presentation/screen/address/add_address_page.dart';
 import 'package:e_shop/Presentation/screen/order/checkoutStepIndicator_page.dart';
 import 'package:e_shop/Presentation/screen/order/paymentScreen.dart';
 import 'package:e_shop/Presentation/screen/order/reviewScreen.dart';
+import 'package:e_shop/Presentation/screen/payment/payment_method_screen.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/material.dart';
@@ -44,16 +45,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
         storage: widget.storage,
         repo: widget.repo,
       ),
-      PaymentScreen(
-          userId: widget.userId,
-          token: widget.token,
-          addressId: widget.addressId,
+      // PaymentScreen(userId: widget.userId, token: widget.token, addressId: widget.addressId),
+      PaymentMethodScreen(
+          // userId: widget.userId,
+          // token: widget.token,
+          // addressId: widget.addressId,
+        totalPrice: 0,
+        addressId: widget.addressId,
+        addressLine1: '',
+        city: '',
+        country: '',
+        zipCode: '',
+
       ),
-      ReviewScreen(userId: widget.userId,
-          token: widget.token,
-          addressId: widget.addressId,
-          paymentMethod: "Credit Card"
-      ),
+      // ReviewScreen(userId: widget.userId,
+      //     token: widget.token,
+      //     addressId: widget.addressId,
+      //     paymentMethod: "Credit Card"
+      // ),
     ];
   }
   void nextStep() {

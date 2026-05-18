@@ -1,4 +1,5 @@
 import 'package:e_shop/Presentation/screen/order/checkout_page.dart';
+import 'package:e_shop/Presentation/screen/payment/payment_method_screen.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/datasources/adress/adress_service.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
@@ -412,13 +413,19 @@ class _CartScreenState extends State<CartScreen> {
         onPressed: cartController.cart == null || cartController.cart!.items.isEmpty
             ? null
             : () async {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => CheckoutPage(
+          Navigator.push(context, MaterialPageRoute(
+              builder: (_) =>
+                  // PaymentMethodScreen(
+                      // totalPrice: 120, addressId: widget.a, addressLine1: addressLine1, city: city, country: country, zipCode: zipCode)
+                  CheckoutPage(
             repo: AddressRepository(AddressService()),
             storage: TokenStorage(),
             userId: widget.userId,
             token: widget.token,
             addressId: 0,
-          )));},
+          ),
+
+          ));},
           style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blueAccent,
           padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 11),

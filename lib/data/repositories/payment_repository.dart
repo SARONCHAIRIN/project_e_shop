@@ -1,19 +1,15 @@
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import '../datasources/payment_service.dart';
 import '../models/payment/bakong_payment_model.dart';
 
-/// PaymentRepository handles payment-related business logic and wraps PaymentService
 class PaymentRepository {
   final PaymentService _paymentService;
 
   PaymentRepository({PaymentService? paymentService})
       : _paymentService = paymentService ?? PaymentService();
 
-  /// Initiate Bakong payment and return QR/MD5 data
-  /// 
-  /// Wraps: PaymentService.initiateBakongPayment()
-  /// Handles: Error logging, retries on network failure
-  /// Returns: BakongPaymentModel with qr_string and md5
+  /// Initiate Bakong payment — returns BakongPaymentModel with qrString + md5
   Future<BakongPaymentModel> initiateBakongPayment({
     required int orderId,
     required String token,
@@ -26,36 +22,41 @@ class PaymentRepository {
           orderId: orderId,
           token: token,
         );
-        return BakongPaymentModel.fromJson(data);
+        final model = BakongPaymentModel.fromJson(data);
+
+        debugPrint('[PaymentRepository] Bakong Order created: #${model.orderId}');
+        debugPrint('[PaymentRepository] qrString empty: ${model.qrString.isEmpty}');
+        debugPrint('[PaymentRepository] md5 empty: ${model.md5.isEmpty}');
+
+        return model;
       } catch (e) {
         debugPrint('[PaymentRepository] Attempt $attempt failed: $e');
-        if (attempt == retries) {
-          rethrow;
-        }
-        await Future.delayed(Duration(seconds: attempt * 2)); // Exponential backoff
+        if (attempt == retries) rethrow;
+        await Future.delayed(Duration(seconds: attempt * 2));
       }
     }
     throw Exception('Failed to initiate Bakong payment after $retries attempts');
   }
 
-  /// Generate QR image from QR string and MD5
-  /// 
-  /// Wraps: PaymentService.generateQRImage()
-  /// Handles: Error logging, response parsing
-  /// Returns: Map with qr_image (base64) and qr_url
-  Future<BakongPaymentModel> generateQRImage({
+  /// Generate QR image — returns raw PNG bytes for Image.memory()
+  Future<Uint8List> generateQRImage({
     required String qr,
     required String md5,
     required String token,
   }) async {
+    if (qr.isEmpty || md5.isEmpty) {
+      throw Exception('Cannot generate QR: qr or md5 is empty');
+    }
+
     try {
       debugPrint('[PaymentRepository] generateQRImage');
-      final data = await _paymentService.generateQRImage(
+      final bytes = await _paymentService.generateQRImage(
         qr: qr,
         md5: md5,
         token: token,
       );
-      return BakongPaymentModel.fromJson(data);
+      debugPrint('[PaymentRepository] QR image bytes received: ${bytes.length}');
+      return bytes;
     } catch (e) {
       debugPrint('[PaymentRepository] Error generating QR: $e');
       rethrow;
@@ -63,10 +64,6 @@ class PaymentRepository {
   }
 
   /// Check transaction status by MD5
-  /// 
-  /// Wraps: PaymentService.checkTransaction()
-  /// Handles: Status parsing, error handling
-  /// Returns: Map with { status, transaction_id, amount }
   Future<Map<String, dynamic>> checkTransaction({
     required String md5,
     required String token,
@@ -77,11 +74,8 @@ class PaymentRepository {
         md5: md5,
         token: token,
       );
-      
-      // Parse status value
       final status = data['status'] as String? ?? 'PENDING';
       debugPrint('[PaymentRepository] Transaction status: $status');
-      
       return data;
     } catch (e) {
       debugPrint('[PaymentRepository] Error checking transaction: $e');
@@ -90,10 +84,6 @@ class PaymentRepository {
   }
 
   /// Verify payment after successful transaction
-  /// 
-  /// Wraps: PaymentService.verifyPayment()
-  /// Handles: Error logging, response validation
-  /// Returns: Map with verified order data
   Future<Map<String, dynamic>> verifyPayment({
     required int orderId,
     required String transactionId,
@@ -106,10 +96,8 @@ class PaymentRepository {
         transactionId: transactionId,
         token: token,
       );
-      
       final verified = data['payment_verified'] as bool? ?? false;
       debugPrint('[PaymentRepository] Payment verified: $verified');
-      
       return data;
     } catch (e) {
       debugPrint('[PaymentRepository] Error verifying payment: $e');
@@ -117,10 +105,7 @@ class PaymentRepository {
     }
   }
 
-  /// Retry-enabled transaction check with exponential backoff
-  /// 
-  /// Polls checkTransaction with retries and delays
-  /// Useful for waiting on delayed payment confirmations
+  /// Poll checkTransaction with linear backoff
   Future<Map<String, dynamic>> checkTransactionWithRetry({
     required String md5,
     required String token,
@@ -131,27 +116,23 @@ class PaymentRepository {
       try {
         final result = await checkTransaction(md5: md5, token: token);
         final status = result['status'] as String? ?? 'PENDING';
-        
+
         if (status == 'SUCCESS') {
           debugPrint('[PaymentRepository] Transaction successful on attempt $attempt');
           return result;
         }
-        
+
         if (attempt < maxRetries) {
-          final delay = initialDelay * attempt; // Linear delay: 5s, 10s, 15s...
-          debugPrint('[PaymentRepository] Retry $attempt: waiting ${delay}s before next check');
+          final delay = initialDelay * attempt;
+          debugPrint('[PaymentRepository] Retry $attempt: waiting ${delay}s');
           await Future.delayed(Duration(seconds: delay));
         }
       } catch (e) {
         debugPrint('[PaymentRepository] Retry $attempt failed: $e');
-        if (attempt == maxRetries) {
-          rethrow;
-        }
-        final delay = initialDelay * attempt;
-        await Future.delayed(Duration(seconds: delay));
+        if (attempt == maxRetries) rethrow;
+        await Future.delayed(Duration(seconds: initialDelay * attempt));
       }
     }
     throw Exception('Transaction check timeout after $maxRetries attempts');
   }
 }
-

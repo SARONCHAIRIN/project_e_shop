@@ -1,4 +1,5 @@
 import 'package:e_shop/Presentation/screen/map/map_screen.dart';
+import 'package:e_shop/Presentation/screen/payment/payment_method_screen.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/models/address/address_model.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
@@ -137,11 +138,15 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => PaymentScreen(
-                userId: userId,
-                token: token,
-                addressId: savedAddress.id!,
-              ),
+              builder: (_) =>
+              //     PaymentScreen(
+              //   userId: userId,
+              //   token: token,
+              //   addressId: savedAddress.id!,
+              // ),
+              PaymentMethodScreen(
+                  totalPrice: 10, addressId: savedAddress.id!,
+                  addressLine1: 'test', city: 'test', country: 'test', zipCode: 'test001')
             ),
           );
         }
@@ -176,6 +181,8 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
+
               Divider(
                 height: 1,
                 thickness: 1,

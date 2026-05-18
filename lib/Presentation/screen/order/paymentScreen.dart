@@ -72,17 +72,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
       }
     }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ReviewScreen(
-          userId:        widget.userId,
-          token:         widget.token,
-          addressId:     widget.addressId,
-          paymentMethod: _selectedMethod,
-        ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (_) => ReviewScreen(
+    //       userId:        widget.userId,
+    //       token:         widget.token,
+    //       addressId:     widget.addressId,
+    //       paymentMethod: _selectedMethod,
+    //     ),
+    //   ),
+    // );
   }
 
   @override
