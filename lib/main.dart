@@ -1,17 +1,12 @@
 import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
 import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/auth/signup/signup_screen.dart';
-import 'package:e_shop/Presentation/screen/home_main_page/home_main_page.dart';
-import 'package:e_shop/Presentation/screen/order/trackOrder.dart';
-import 'package:e_shop/data/datasources/order/order_service.dart';
-import 'package:e_shop/data/repositories/order/order_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 // Auth
 import 'Presentation/controllers/cart/cart_controller.dart';
-import 'Presentation/controllers/order/order_controller.dart';
 import 'core/network/api_client.dart';
 import 'core/storage/token_storage.dart';
 import 'data/datasources/cart/cart_service.dart';
@@ -44,9 +39,6 @@ void main() async {
   final cartService = CartService();
   final cartRepo = CartRepository(cartService);
 
-  //order repository will be initialized inside order controller
-  final orderservice = OrderService();
-  final orderRepo = OrderRepository(service: orderservice);
 
   runApp(
     MultiProvider(
@@ -55,7 +47,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CartController(repository: cartRepo,),),
 
         //order controller
-        ChangeNotifierProvider(create: (_) => OrderController(repository : orderRepo)),
       ],
       child: MyApp(
         authRepository: authRepository,
@@ -85,10 +76,10 @@ class MyApp extends StatelessWidget {
         if (settings.name == '/trackorder') {
 
           final args = settings.arguments as Map?;
-          return MaterialPageRoute(
-
-            builder: (_) => TrackOrderPage(),
-          );
+          // return MaterialPageRoute(
+          //
+          //   builder: (_) => TrackOrderPage(),
+          // );
         }
 
         if (settings.name == '/homemainppage') {
