@@ -456,7 +456,56 @@ lib/
     └── utils/
         └── payment_utils.dart
 ```
+## flow ux
 
+_Cart Screen
+↓
+payment_method_screen.dart
+↓
+User select payment method
+↓
+Create Order API
+POST /orders/user/{userId}/from-cart/bakong
+↓
+Save Order Data
+(orderId, amount, status=PENDING)
+↓
+bakong_qr_screen.dart
+↓
+Show KHQR Code
+↓
+User Scan & Pay
+(Bakong App)
+↓
+payment_processing_screen.dart
+↓
+Check Transaction API
+/checkTransaction
+↓
+IF SUCCESS
+↓
+verifyPayment()
+↓
+Update Order Status = PAID
+↓
+payment_success_screen.dart
+↓
+Push Replacement
+order_history_screen.dart
+↓
+Load User Orders
+GET /orders/user/{userId}
+↓
+Show Order List
+(order_card.dart)
+↓
+Tap Order
+↓
+order_detail_screen.dart
+↓
+Track Order
+↓
+order_tracking_screen.dart
 ---
 
 ## ✅ TASK BREAKDOWN (15 Tasks)

@@ -1,595 +1,352 @@
-import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
-import 'package:e_shop/Presentation/screen/order/orderSuccessScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../data/models/order/order_model.dart';
+import '../../../data/repositories/order_repository.dart';
+
 class TrackOrderPage extends StatefulWidget {
-  const TrackOrderPage({super.key});
+  final int orderId;
+  final int userId;
+  final String token;
+
+  const TrackOrderPage({
+    super.key,
+    required this.orderId,
+    required this.userId,
+    required this.token,
+  });
 
   @override
   State<TrackOrderPage> createState() => _TrackOrderPageState();
 }
 
-class _TrackOrderPageState extends State<TrackOrderPage> {
+class _TrackOrderPageState extends State<TrackOrderPage>
+    with SingleTickerProviderStateMixin {
+  final OrderRepository _repo = OrderRepository();
 
+  OrderModel? _order;
+  bool _loading = true;
+  String? _error;
+
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..forward();
+
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final res = await _repo.getOrderDetail(
+        orderId: widget.orderId,
+        token: widget.token,
+      );
+
+      setState(() {
+        _order = res;
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _loading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F8),
+      backgroundColor: const Color(0xFFF6F7FB),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF5F5F8),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const OrderSuccessScreen(
-            paymentMethod: '',
-            orderId: 0,
-    ))),),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
         title: const Text(
-          'Track Order',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_bag_outlined, color: Colors.black),
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context,
-              DivicesNav.routeName,
-                  (route) => false,
-              );
-
-            },
-          ),
-        ],
-      ),
-      body:  SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _OrderStatusHeader(),
-            const SizedBox(height: 12),
-            _EstimatedArrivalCard(),
-            const SizedBox(height: 12),
-            _CarrierInfoCard(),
-            const SizedBox(height: 12),
-            _JourneyProgressCard(),
-            const SizedBox(height: 12),
-            // _PackageContentsCard(),
-            const SizedBox(height: 24),
-            _ContactSupportButton(),
-            const SizedBox(height: 24),
-          ],
+          "Track Order",
+          style: TextStyle(fontWeight: FontWeight.w600),
         ),
       ),
-    );
-  }
-}
-
-// ── Order Status Header ──────────────────────────────────────────────────────
-
-class _OrderStatusHeader extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'ORDER STATUS',
-            style: TextStyle(
-              fontSize: 10,
-              letterSpacing: 1.2,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: const [
-              Text(
-                '#ORD-772910',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                'Placed Oct 22, 2023',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-              ),
-            ],
-          ),
-        ],
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : _error != null
+          ? _errorView()
+          : FadeTransition(
+        opacity: _controller,
+        child: _buildBody(),
       ),
     );
   }
-}
 
-// ── Estimated Arrival Card ───────────────────────────────────────────────────
+  // ───────────────────────── BODY
+  Widget _buildBody() {
+    final order = _order!;
+    final status = order.status?.name ?? "PENDING";
 
-class _EstimatedArrivalCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return _Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
-            'ESTIMATED ARRIVAL',
-            style: TextStyle(
-              fontSize: 10,
-              letterSpacing: 1.2,
-              color: Color(0xFF3B6D11),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 6),
-          Text(
-            'Oct 26, 2023',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: Colors.black,
-            ),
-          ),
-          SizedBox(height: 2),
-          Text(
-            'By 8:00 PM',
-            style: TextStyle(fontSize: 13, color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Carrier Info Card ────────────────────────────────────────────────────────
-
-class _CarrierInfoCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return _Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'CARRIER INFORMATION',
-            style: TextStyle(
-              fontSize: 10,
-              letterSpacing: 1.2,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE6F1FB),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(
-                  Icons.local_shipping_outlined,
-                  color: Color(0xFF185FA5),
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Indigo Logistics',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 2),
-                  Text(
-                    'IN-99201-XT',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF185FA5),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Journey Progress Card ────────────────────────────────────────────────────
-
-class _JourneyProgressCard extends StatelessWidget {
-  final List<_JourneyStep> steps = const [
-    _JourneyStep(
-      icon: Icons.check_circle_outline,
-      title: 'Order Placed',
-      subtitle: 'Your order has been confirmed.',
-      time: 'Oct 22, 10:45 AM',
-      isCompleted: true,
-    ),
-    _JourneyStep(
-      icon: Icons.inventory_2_outlined,
-      title: 'Shipped',
-      subtitle: 'Carrier has picked up your package.',
-      time: 'Oct 23, 02:15 PM',
-      isCompleted: true,
-    ),
-    _JourneyStep(
-      icon: Icons.delivery_dining_outlined,
-      title: 'Out for Delivery',
-      subtitle: 'Package is with the local courier.',
-      time: 'Expected Today',
-      isCompleted: true,
-      isHighlightTime: true,
-    ),
-    _JourneyStep(
-      icon: Icons.check_circle_outline,
-      title: 'Delivered',
-      subtitle: 'Signature required upon arrival.',
-      time: '',
-      isCompleted: false,
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return _Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'JOURNEY PROGRESS',
-            style: TextStyle(
-              fontSize: 10,
-              letterSpacing: 1.2,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 16),
-          ...List.generate(steps.length, (i) {
-            return _JourneyStepRow(
-              step: steps[i],
-              isLast: i == steps.length - 1,
-            );
-          }),
-        ],
-      ),
-    );
-  }
-}
-
-class _JourneyStep {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final String time;
-  final bool isCompleted;
-  final bool isHighlightTime;
-
-  const _JourneyStep({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.time,
-    required this.isCompleted,
-    this.isHighlightTime = false,
-  });
-}
-
-class _JourneyStepRow extends StatelessWidget {
-  final _JourneyStep step;
-  final bool isLast;
-
-  const _JourneyStepRow({required this.step, required this.isLast});
-
-  @override
-  Widget build(BuildContext context) {
-    const activeColor = Color(0xFF3B30C4);
-    const inactiveColor = Color(0xFFD3D1C7);
-
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(
-            width: 34,
-            child: Column(
-              children: [
-                Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: step.isCompleted ? activeColor : Colors.white,
-                    border: step.isCompleted
-                        ? null
-                        : Border.all(color: inactiveColor),
-                  ),
-                  child: Icon(
-                    step.icon,
-                    size: 18,
-                    color: step.isCompleted ? Colors.white : inactiveColor,
-                  ),
-                ),
-                if (!isLast)
-                  Expanded(
-                    child: Container(
-                      width: 2,
-                      color: step.isCompleted ? activeColor : inactiveColor,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: isLast ? 0 : 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 6),
-                  Text(
-                    step.title,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: step.isCompleted ? Colors.black : Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    step.subtitle,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: step.isCompleted
-                          ? Colors.grey[600]
-                          : Colors.grey[400],
-                    ),
-                  ),
-                  if (step.time.isNotEmpty) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      step.time,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: const Color(0xFF185FA5),
-                        fontWeight: step.isHighlightTime
-                            ? FontWeight.w600
-                            : FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Destination Card ─────────────────────────────────────────────────────────
-
-class _DestinationCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return _Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'DESTINATION',
-            style: TextStyle(
-              fontSize: 10,
-              letterSpacing: 1.2,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 12),
-          // Row(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: [
-          //     Container(
-          //       width: 40,
-          //       height: 40,
-          //       decoration: BoxDecoration(
-          //         color: const Color(0xFFF1EFE8),
-          //         borderRadius: BorderRadius.circular(8),
-          //       ),
-          //       child: const Icon(
-          //         Icons.location_on_outlined,
-          //         color: Colors.grey,
-          //         size: 20,
-          //       ),
-          //     ),
-          //     const SizedBox(width: 12),
-          //     const Expanded(
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Text(
-          //             'Jonathan Sterling',
-          //             style: TextStyle(
-          //               fontSize: 14,
-          //               fontWeight: FontWeight.w600,
-          //               color: Colors.black,
-          //             ),
-          //           ),
-          //           SizedBox(height: 4),
-          //           Text(
-          //             '482 Cobalt Avenue, Suite 12\nIndigo District, NY 10012\nUnited States',
-          //             style: TextStyle(
-          //               fontSize: 12,
-          //               color: Colors.grey,
-          //               height: 1.6,
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ],
-          // ),
-        ],
-      ),
-    );
-  }
-}
-
-
-class _PackageItem extends StatelessWidget {
-  final Color imageColor;
-  final IconData icon;
-  final String name;
-  final String variant;
-  final String price;
-
-  const _PackageItem({
-    required this.imageColor,
-    required this.icon,
-    required this.name,
-    required this.variant,
-    required this.price,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
+    return ListView(
+      padding: const EdgeInsets.all(16),
       children: [
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: imageColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Icon(icon, color: Colors.grey[600], size: 28),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 3),
-              Text(
-                variant,
-                style: const TextStyle(fontSize: 11, color: Colors.grey),
-              ),
-            ],
-          ),
-        ),
-        Text(
-          price,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF185FA5),
-          ),
-        ),
+        _orderHeader(order),
+        const SizedBox(height: 12),
+        _statusBadge(status),
+        const SizedBox(height: 16),
+        _progressTimeline(status),
+        const SizedBox(height: 16),
+        _orderItems(order),
+        const SizedBox(height: 20),
+        _supportButton(),
       ],
     );
   }
-}
 
-// ── Contact Support Button ───────────────────────────────────────────────────
-
-class _ContactSupportButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: TextButton.icon(
-        onPressed: () {
-          _openTelegram();
-        },
-        icon: const Icon(
-          Icons.chat_bubble_outline,
-          size: 16,
-          color: Color(0xFF185FA5),
-        ),
-        label: const Text(
-          'CONTACT SUPPORT',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.2,
-            color: Color(0xFF185FA5),
+  // ───────────────────────── HEADER (REAL APP STYLE)
+  Widget _orderHeader(OrderModel order) {
+    return _card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "#${order.orderNumber}",
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-        ),
+          const SizedBox(height: 6),
+          Text(
+            "Total: \$${order.total.toStringAsFixed(2)}",
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 13,
+            ),
+          ),
+        ],
       ),
     );
   }
-}
 
-final String username = "chairin312007";
+  // ───────────────────────── STATUS BADGE (ANIMATED LOOK)
+  Widget _statusBadge(String status) {
+    final isActive = status != "CANCELLED";
 
-Future<void> _openTelegram() async {
-  final Uri appUrl = Uri.parse("tg://resolve?domain=$username");
-  final Uri webUrl = Uri.parse("https://t.me/$username");
-
-  // Try open Telegram app
-  if (await canLaunchUrl(appUrl)) {
-    await launchUrl(appUrl);
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isActive ? const Color(0xFFEFF6FF) : const Color(0xFFFFF1F2),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.local_shipping,
+            color: isActive ? Colors.blue : Colors.red,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            status.toUpperCase(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: isActive ? Colors.blue : Colors.red,
+            ),
+          ),
+        ],
+      ),
+    );
   }
-  // fallback to browser
-  else {
-    await launchUrl(webUrl, mode: LaunchMode.externalApplication);
+
+  // ───────────────────────── REAL ANIMATED TIMELINE (LIKE SHOPEE)
+  Widget _progressTimeline(String status) {
+    final steps = ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED"];
+    final current = steps.indexOf(status);
+
+    return _card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(steps.length, (i) {
+          final done = i <= current;
+
+          return AnimatedContainer(
+            duration: Duration(milliseconds: 300 + (i * 100)),
+            margin: const EdgeInsets.only(bottom: 14),
+            child: Row(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: done ? Colors.green : Colors.white,
+                    border: Border.all(
+                      color: done ? Colors.green : Colors.grey.shade300,
+                    ),
+                  ),
+                  child: Icon(
+                    done ? Icons.check : Icons.circle_outlined,
+                    size: 16,
+                    color: done ? Colors.white : Colors.grey,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      steps[i],
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: done ? Colors.black : Colors.grey,
+                      ),
+                    ),
+                    Text(
+                      done ? "Completed" : "Pending",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
+    );
   }
-}
 
-// ── Shared Card Widget ───────────────────────────────────────────────────────
+  // ───────────────────────── ITEMS (MODERN PRODUCT STYLE)
+  Widget _orderItems(OrderModel order) {
+    final items = order.items ?? [];
 
-class _Card extends StatelessWidget {
-  final Widget child;
+    if (items.isEmpty) {
+      return _card(
+        child: const Text(
+          "No items found",
+          style: TextStyle(color: Colors.grey),
+        ),
+      );
+    }
 
-  const _Card({required this.child});
+    return _card(
+      child: Column(
+        children: items.map((item) {
+          final sku = item.productSku;
 
-  @override
-  Widget build(BuildContext context) {
+          return Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            child: Row(
+              children: [
+                Hero(
+                  tag: sku.id,
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey.shade200,
+
+                    ),
+                    child: Icon(Icons.picture_as_pdf_outlined,size: 30,color: Colors.grey,),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    sku.description,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Text(
+                  "\$${item.unitPrice}",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+  // ───────────────────────── SUPPORT BUTTON (MODERN CTA)
+  Widget _supportButton() {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF2563EB),
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        onPressed: _openTelegram,
+        icon: const Icon(Icons.chat),
+        label: const Text("Chat Support"),
+      ),
+    );
+  }
+
+  Future<void> _openTelegram() async {
+    final url = Uri.parse("https://t.me/your_support");
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  }
+
+  // ───────────────────────── CARD DESIGN (MODERN SHADOW)
+  Widget _card({required Widget child}) {
     return Container(
-      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.black12, width: 0.5),
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          )
+        ],
       ),
       child: child,
     );
   }
-}
 
+  // ───────────────────────── ERROR UI (MODERN)
+  Widget _errorView() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 60, color: Colors.red),
+          const SizedBox(height: 10),
+          Text(_error ?? "Error"),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: _load,
+            child: const Text("Retry"),
+          )
+        ],
+      ),
+    );
+  }
+}

@@ -127,3 +127,76 @@ class ProductSkuModel {
     };
   }
 }
+
+// class OrderItemModel {
+//   final int? id;
+//   final int? productId;
+//   final String? name;
+//   final double? price;
+//   final int? quantity;
+//   final String? image;
+//
+//   /// Optional description shown in OrderItemCard
+//   final String? description;
+//
+//   const OrderItemModel({
+//     this.id,
+//     this.productId,
+//     this.name,
+//     this.price,
+//     this.quantity,
+//     this.image,
+//     this.description,
+//   });
+//
+//   factory OrderItemModel.fromJson(Map<String, dynamic> json) {
+//     return OrderItemModel(
+//       id: (json['id'] as num?)?.toInt(),
+//       productId: (json['product_id'] ?? json['productId'] as num?)?.toInt(),
+//       name: json['name'] as String?,
+//       price: (json['price'] as num?)?.toDouble(),
+//       quantity: (json['quantity'] as num?)?.toInt(),
+//       image: json['image'] as String?,
+//       description: json['description'] as String?,
+//     );
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     return {
+//       if (id != null) 'id': id,
+//       if (productId != null) 'product_id': productId,
+//       if (name != null) 'name': name,
+//       if (price != null) 'price': price,
+//       if (quantity != null) 'quantity': quantity,
+//       if (image != null) 'image': image,
+//       if (description != null) 'description': description,
+//     };
+//   }
+//
+//   /// Convenience: total for this line item
+//   double get lineTotal => (price ?? 0.0) * (quantity ?? 1);
+//
+//   OrderItemModel copyWith({
+//     int? id,
+//     int? productId,
+//     String? name,
+//     double? price,
+//     int? quantity,
+//     String? image,
+//     String? description,
+//   }) {
+//     return OrderItemModel(
+//       id: id ?? this.id,
+//       productId: productId ?? this.productId,
+//       name: name ?? this.name,
+//       price: price ?? this.price,
+//       quantity: quantity ?? this.quantity,
+//       image: image ?? this.image,
+//       description: description ?? this.description,
+//     );
+//   }
+//
+//   @override
+//   String toString() =>
+//       'OrderItemModel(productId: $productId, name: $name, price: $price, qty: $quantity)';
+// }
