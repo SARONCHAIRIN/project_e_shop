@@ -24,7 +24,7 @@ class PaymentSuccessScreen extends StatelessWidget {
 		  	const SizedBox(height: 8),
 		  	Text('Status: $statusText', style: const TextStyle(fontSize: 16)),
 		  	const SizedBox(height: 8),
-		  	Text('Total: \$${order.totalAmount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, color: Colors.green)),
+		  	Text('Total: \$${order.totalAmount!.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, color: Colors.green)),
 		  	const SizedBox(height: 20),
 		  	ElevatedButton(
 		  	  onPressed: () {

@@ -62,36 +62,71 @@ class OrderRepository {
     }
   }
 
-  /// Get paginated list of orders for a user
-  /// 
-  /// Wraps: OrderService.getOrders()
-  /// Handles: Error logging, pagination parsing, response validation
-  /// Returns: List<OrderModel> and pagination info
-  Future<({List<OrderModel> orders, Map<String, dynamic> pagination})> getOrders({
+  Future<({
+  List<OrderModel> orders,
+  Map<String, dynamic> pagination,
+  })> getOrders({
     required int userId,
     required String token,
     int page = 1,
     int limit = 10,
   }) async {
     try {
-      debugPrint('[OrderRepository] getOrders page=$page, limit=$limit');
-      final data = await _orderService.getOrders(
+      debugPrint(
+        '[OrderRepository] getOrders page=$page, limit=$limit',
+      );
+
+      final response = await _orderService.getOrders(
         userId: userId,
         token: token,
         page: page,
         limit: limit,
       );
 
-      final ordersList = (data['data'] as List<dynamic>? ?? [])
-          .map((e) => OrderModel.fromJson(e as Map<String, dynamic>))
-          .toList();
+      debugPrint(
+        '[OrderRepository] RAW RESPONSE: $response',
+      );
 
-      final pagination = data['pagination'] as Map<String, dynamic>? ?? {};
+      /// ==============================
+      /// GET CONTENT LIST
+      /// ==============================
+      final List<dynamic> contentList =
+          response['content'] as List<dynamic>? ?? [];
 
-      debugPrint('[OrderRepository] Fetched ${ordersList.length} orders');
-      return (orders: ordersList, pagination: pagination);
+      /// ==============================
+      /// CONVERT TO ORDER MODEL
+      /// ==============================
+      final List<OrderModel> orders =
+      contentList.map((item) {
+        final map = item as Map<String, dynamic>;
+
+        final orderData =
+            map['data'] as Map<String, dynamic>? ?? {};
+
+        return OrderModel.fromJson(orderData);
+      }).toList();
+
+      /// ==============================
+      /// PAGINATION
+      /// ==============================
+      final Map<String, dynamic> pagination = {
+        'page': page,
+        'limit': limit,
+        'total': orders.length,
+      };
+
+      debugPrint(
+        '[OrderRepository] Fetched ${orders.length} orders',
+      );
+
+      return (
+      orders: orders,
+      pagination: pagination,
+      );
     } catch (e) {
-      debugPrint('[OrderRepository] Error fetching orders: $e');
+      debugPrint(
+        '[OrderRepository] Error fetching orders: $e',
+      );
       rethrow;
     }
   }
@@ -112,7 +147,7 @@ class OrderRepository {
         token: token,
       );
       final order = OrderModel.fromJson(data);
-      debugPrint('[OrderRepository] Order detail fetched: #${order.id} (${order.items.length} items)');
+      debugPrint('[OrderRepository] Order detail fetched: #${order.id} (${order.items!.length} items)');
       return order;
     } catch (e) {
       debugPrint('[OrderRepository] Error fetching order detail: $e');
@@ -139,7 +174,7 @@ class OrderRepository {
       
       // Only allow cancellation of PENDING orders
       if (order.status != OrderStatus.pending) {
-        throw Exception('Cannot cancel order with status: ${order.status.value}');
+        throw Exception('Cannot cancel order with status: ${order.status!.value}');
       }
       
       final data = await _orderService.cancelOrder(

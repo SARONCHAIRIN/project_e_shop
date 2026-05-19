@@ -454,8 +454,23 @@ class _ProfilepageState extends State<Profilepage> {
                             ),
                           ),
 
-                          IconButton(onPressed: (){
+                          IconButton(
+                            onPressed: ()async{
 
+                              final storage = TokenStorage();
+                              final token = await storage.readToken();
+                              final userId = await storage.readUserId();
+                              if (token == null || userId == null) return;
+
+                              if (!mounted) return;
+                              Navigator.pushNamed(
+                                context,
+                                '/orderHistory',
+                                arguments: {
+                                  'userId': userId,
+                                  'token': token,
+                                },
+                              );
 
                           },
                             icon: Icon(

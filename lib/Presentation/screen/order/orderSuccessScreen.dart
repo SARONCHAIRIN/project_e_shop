@@ -92,390 +92,450 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
         ? widget.order!.status.toString().split('.').last.toUpperCase()
         : 'CONFIRMED';
     final totalAmount = hasOrder
-        ? '\$${widget.order!.totalAmount.toStringAsFixed(2)}'
+        ? '\$${widget.order!.totalAmount!.toStringAsFixed(2)}'
         : null;
     final displayOrderId =
     hasOrder ? widget.order!.id.toString() : widget.orderId.toString();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F7F4),
-      body: Stack(
-        children: [
-          // Lottie confetti — behind content
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: IgnorePointer(
-              child: Lottie.asset(
-                'assets/animations/success_animetion.json',
-                // height: MediaQuery.of(context).size.height * 0.25,
-                height: 400,
-                fit: BoxFit.fill,
-                repeat: false,
-              ),
-            ),
-          ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                // Lottie confetti — behind content
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: IgnorePointer(
+                    child: Lottie.asset(
+                      'assets/animations/success_animetion.json',
+                      // height: MediaQuery.of(context).size.height * 0.25,
+                      height: 400,
+                      fit: BoxFit.fill,
+                      repeat: false,
+                    ),
+                  ),
+                ),
 
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  const SizedBox(height: 16),
+                SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 16),
 
-                  // ── Top bar ──
-                  Row(
-                    children: [
-                      const Spacer(),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF32C787).withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                        // ── Top bar ──
+                        Row(
                           children: [
+                            const Spacer(),
                             Container(
-                              width: 7,
-                              height: 7,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xFF32C787),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF32C787).withOpacity(0.12),
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                            ),
-                            const SizedBox(width: 6),
-                            const Text(
-                              'Payment Verified',
-                              style: TextStyle(
-                                color: Color(0xFF32C787),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -0.1,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 7,
+                                    height: 7,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0xFF32C787),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  const Text(
+                                    'Payment Verified',
+                                    style: TextStyle(
+                                      color: Color(0xFF32C787),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: -0.1,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
 
-                  // Space for lottie
-                  // SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-                  SizedBox(height: 40,),
+                        // Space for lottie
+                        // SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+                        SizedBox(height: 40,),
 
-                  // ── Check icon ──
-                  ScaleTransition(
-                    scale: _scaleAnimation,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                            const Color(0xFF32C787).withOpacity(0.1),
-                          ),
-                        ),
-                        Container(
-                          width: 76,
-                          height: 76,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                            const Color(0xFF32C787).withOpacity(0.18),
-                          ),
-                        ),
-                        Container(
-                          width: 58,
-                          height: 58,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color(0xFF32C787),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0x4032C787),
-                                blurRadius: 16,
-                                offset: Offset(0, 4),
+                        // ── Check icon ──
+                        ScaleTransition(
+                          scale: _scaleAnimation,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color:
+                                  const Color(0xFF32C787).withOpacity(0.1),
+                                ),
+                              ),
+                              Container(
+                                width: 76,
+                                height: 76,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color:
+                                  const Color(0xFF32C787).withOpacity(0.18),
+                                ),
+                              ),
+                              Container(
+                                width: 58,
+                                height: 58,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xFF32C787),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0x4032C787),
+                                      blurRadius: 16,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(Icons.check_rounded,
+                                    color: Colors.white, size: 30),
                               ),
                             ],
                           ),
-                          child: const Icon(Icons.check_rounded,
-                              color: Colors.white, size: 30),
                         ),
-                      ],
-                    ),
-                  ),
 
-                  const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
-                  // ── Title ──
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Order Confirmed!',
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xFF1A1A2E),
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Thank you for your purchase.\nWe\'re getting it ready for shipment.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: const Color(0xFF8A8A9A),
-                            height: 1.6,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // ── Order Info Card ──
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.06),
-                              blurRadius: 20,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            // Order header strip
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 18, vertical: 14),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF1A1A2E),
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20)),
+                        // ── Title ──
+                        FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: Column(
+                            children: [
+                              const Text(
+                                'Order Confirmed!',
+                                style: TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.w800,
+                                  color: Color(0xFF1A1A2E),
+                                  letterSpacing: -0.5,
+                                ),
                               ),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.receipt_long_rounded,
-                                      color: Colors.white, size: 18),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'Order #$displayOrderId',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                      letterSpacing: -0.2,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    _formattedNow(),
-                                    style: const TextStyle(
-                                      color: Color(0xFF8A8AAA),
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Thank you for your purchase.\nWe\'re getting it ready for shipment.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: const Color(0xFF8A8A9A),
+                                  height: 1.6,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // ── Order Info Card ──
+                        SlideTransition(
+                          position: _slideAnimation,
+                          child: FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.06),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 4),
                                   ),
                                 ],
                               ),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.all(18),
                               child: Column(
                                 children: [
-                                  _buildInfoRow(
-                                    icon: Icons.receipt_long_outlined,
-                                    label: 'Status',
-                                    value: statusText,
-                                    valueColor: statusText == 'CONFIRMED' ||
-                                        statusText == 'SUCCESS'
-                                        ? const Color(0xFF32C787)
-                                        : const Color(0xFFFF9500),
-                                    valueBg: statusText == 'CONFIRMED' ||
-                                        statusText == 'SUCCESS'
-                                        ? const Color(0xFF32C787)
-                                        .withOpacity(0.1)
-                                        : const Color(0xFFFF9500)
-                                        .withOpacity(0.1),
-                                  ),
-                                  _buildDivider(),
-                                  _buildInfoRow(
-                                    icon: Icons.local_shipping_outlined,
-                                    label: 'Delivery',
-                                    value: 'Processing',
-                                    valueColor: const Color(0xFF0066FF),
-                                    valueBg: const Color(0xFF0066FF)
-                                        .withOpacity(0.08),
-                                  ),
-                                  _buildDivider(),
-                                  _buildInfoRow(
-                                    icon: Icons.payment_outlined,
-                                    label: 'Payment',
-
-                                    value: widget.paymentMethod?.toString() ??
-                                        'Confirmed',
-                                    valueColor: const Color(0xFF32C787),
-                                    valueBg: const Color(0xFF32C787)
-                                        .withOpacity(0.1),
-                                  ),
-                                  if (totalAmount != null) ...[
-                                    _buildDivider(),
-                                    _buildInfoRow(
-                                      icon: Icons.attach_money_rounded,
-                                      label: 'Total Amount',
-                                      value: totalAmount,
-                                      valueColor: const Color(0xFF1A1A2E),
-                                      valueBg: const Color(0xFFF0F0F5),
-                                      bold: true,
+                                  // Order header strip
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 18, vertical: 14),
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFF1A1A2E),
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20)),
                                     ),
-                                  ],
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.receipt_long_rounded,
+                                            color: Colors.white, size: 18),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'Order #$displayOrderId',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                            letterSpacing: -0.2,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          _formattedNow(),
+                                          style: const TextStyle(
+                                            color: Color(0xFF8A8AAA),
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.all(18),
+                                    child: Column(
+                                      children: [
+                                        _buildInfoRow(
+                                          icon: Icons.receipt_long_outlined,
+                                          label: 'Status',
+                                          value: statusText,
+                                          valueColor: statusText == 'CONFIRMED' ||
+                                              statusText == 'SUCCESS'
+                                              ? const Color(0xFF32C787)
+                                              : const Color(0xFFFF9500),
+                                          valueBg: statusText == 'CONFIRMED' ||
+                                              statusText == 'SUCCESS'
+                                              ? const Color(0xFF32C787)
+                                              .withOpacity(0.1)
+                                              : const Color(0xFFFF9500)
+                                              .withOpacity(0.1),
+                                        ),
+                                        _buildDivider(),
+                                        _buildInfoRow(
+                                          icon: Icons.local_shipping_outlined,
+                                          label: 'Delivery',
+                                          value: 'Processing',
+                                          valueColor: const Color(0xFF0066FF),
+                                          valueBg: const Color(0xFF0066FF)
+                                              .withOpacity(0.08),
+                                        ),
+                                        _buildDivider(),
+                                        _buildInfoRow(
+                                          icon: Icons.payment_outlined,
+                                          label: 'Payment',
+
+                                          value: widget.paymentMethod?.toString() ??
+                                              'Confirmed',
+                                          valueColor: const Color(0xFF32C787),
+                                          valueBg: const Color(0xFF32C787)
+                                              .withOpacity(0.1),
+                                        ),
+                                        if (totalAmount != null) ...[
+                                          _buildDivider(),
+                                          _buildInfoRow(
+                                            icon: Icons.attach_money_rounded,
+                                            label: 'Total Amount',
+                                            value: totalAmount,
+                                            valueColor: const Color(0xFF1A1A2E),
+                                            valueBg: const Color(0xFFF0F0F5),
+                                            bold: true,
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
 
-                  const Spacer(),
+                        // const Spacer(),
+                        const SizedBox(height: 20,),
 
-                  // ── Buttons ──
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: Column(
-                        children: [
-                          // Track My Order
-                          SizedBox(
-                            width: double.infinity,
-                            height: 52,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  '/trackorder',
-                                      (route) => false,
-                                  arguments: {'tab': 2},
-                                );
-                              },
-                              icon: const Icon(Icons.local_shipping_outlined,
-                                  color: Colors.white, size: 20),
-                              label: const Text(
-                                'Track My Order',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                  letterSpacing: -0.2,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF1A1A2E),
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                              ),
-                            ),
-                          ),
+                        // ── Buttons ──
+                        SlideTransition(
+                          position: _slideAnimation,
+                          child: FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: Column(
+                              children: [
+                                // Track My Order
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 52,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () async {
+                                      final storage = TokenStorage();
+                                      final token = await storage.readToken();
+                                      final userId = await storage.readUserId();
+                                      if (token == null || userId == null) return;
 
-                          const SizedBox(height: 10),
-
-                          // Continue Shopping
-                          SizedBox(
-                            width: double.infinity,
-                            height: 52,
-                            child: OutlinedButton.icon(
-                              onPressed: () {
-                                Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  '/homemainppage',
-                                      (route) => false,
-                                );
-                              },
-                              icon: const Icon(Icons.shopping_bag_outlined,
-                                  size: 20),
-                              label: const Text(
-                                'Continue Shopping',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: -0.2,
-                                ),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: const Color(0xFF1A1A2E),
-                                side: const BorderSide(
-                                    color: Color(0xFFE4E4EF), width: 1.5),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 10),
-
-                          // Cancel Order
-                          SizedBox(
-                            width: double.infinity,
-                            height: 52,
-                            child: _buildCancelOrder(),
-                          ),
-
-                          // Need help
-                          TextButton(
-                            onPressed: _openTelegram,
-                            child: RichText(
-                              text: const TextSpan(
-                                text: 'Need help? ',
-                                style: TextStyle(
-                                    color: Color(0xFF8A8A9A), fontSize: 13),
-                                children: [
-                                  TextSpan(
-                                    text: 'Contact Support',
-                                    style: TextStyle(
-                                      color: Color(0xFF0066FF),
-                                      fontWeight: FontWeight.w600,
+                                      if (!mounted) return;
+                                      Navigator.pushNamed(
+                                        context,
+                                        '/trackMyOrder',
+                                        arguments: {
+                                          'orderId' : widget.orderId,
+                                          'userId': userId,
+                                          'token': token,
+                                        },
+                                      );
+                                    },
+                                    icon: const Icon(Icons.local_shipping_outlined,
+                                        color: Colors.white, size: 20),
+                                    label: const Text(
+                                      'Track My Order',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF1A1A2E),
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                // Continue Shopping
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 52,
+                                  child: OutlinedButton.icon(
+                                    onPressed: () {
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        '/homemainppage',
+                                            (route) => false,
+                                      );
+                                    },
+                                    icon: const Icon(Icons.shopping_bag_outlined,
+                                        size: 20),
+                                    label: const Text(
+                                      'Continue Shopping',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: const Color(0xFF1A1A2E),
+                                      side: const BorderSide(
+                                          color: Color(0xFFE4E4EF), width: 1.5),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                // Continue Shopping
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 52,
+                                  child: OutlinedButton.icon(
+                                    onPressed: () async {
+                                      final storage = TokenStorage();
+                                      final token = await storage.readToken();
+                                      final userId = await storage.readUserId();
+                                      if (token == null || userId == null) return;
+
+                                      if (!mounted) return;
+                                      Navigator.pushNamed(
+                                        context,
+                                        '/orderHistory',
+                                        arguments: {
+                                          'userId': userId,
+                                          'token': token,
+                                        },
+                                      );
+                                    },
+                                    icon: const Icon(Icons.shopping_bag_outlined,
+                                        size: 20),
+                                    label: const Text(
+                                      'OrderHistory',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: const Color(0xFF1A1A2E),
+                                      side: const BorderSide(
+                                          color: Color(0xFFE4E4EF), width: 1.5),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                // Cancel Order
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 52,
+                                  child: _buildCancelOrder(),
+                                ),
+
+                                // Need help
+                                TextButton(
+                                  onPressed: _openTelegram,
+                                  child: RichText(
+                                    text: const TextSpan(
+                                      text: 'Need help? ',
+                                      style: TextStyle(
+                                          color: Color(0xFF8A8A9A), fontSize: 13),
+                                      children: [
+                                        TextSpan(
+                                          text: 'Contact Support',
+                                          style: TextStyle(
+                                            color: Color(0xFF0066FF),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 8),
+                              ],
                             ),
                           ),
-
-                          const SizedBox(height: 8),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

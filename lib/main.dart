@@ -1,6 +1,7 @@
 import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
 import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/auth/signup/signup_screen.dart';
+import 'package:e_shop/Presentation/screen/order/order_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -74,14 +75,6 @@ class MyApp extends StatelessWidget {
 
       onGenerateRoute: (settings) {
 
-        if (settings.name == '/trackorder') {
-
-          final args = settings.arguments as Map?;
-          return MaterialPageRoute(
-
-            builder: (_) => TrackOrderPage(),
-          );
-        }
 
         if (settings.name == '/homemainppage') {
 
@@ -108,6 +101,49 @@ class MyApp extends StatelessWidget {
 
         if(settings.name == '/register') {
           return MaterialPageRoute(builder: (_) => SignupScreen(authRepository: authRepository),
+          );
+        }
+
+
+        if (settings.name == '/orderHistory') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (_) => OrderHistoryScreen(
+              userId: args['userId'] as int,
+              token: args['token'] as String,
+            ),
+          );
+        }
+
+        if (settings.name == '/trackMyOrder') {
+          final args = settings.arguments as Map<String, dynamic>?;
+
+          if (args == null) {
+            return MaterialPageRoute(
+              builder: (_) => const Scaffold(
+                body: Center(child: Text('Missing route arguments')),
+              ),
+            );
+          }
+
+          final orderId = args['orderId'];
+          final userId = args['userId'];
+          final token = args['token'];
+
+          if (orderId == null || userId == null || token == null) {
+            return MaterialPageRoute(
+              builder: (_) => const Scaffold(
+                body: Center(child: Text('Invalid order data')),
+              ),
+            );
+          }
+
+          return MaterialPageRoute(
+            builder: (_) => TrackOrderPage(
+              orderId: orderId as int,
+              userId: userId as int,
+              token: token as String,
+            ),
           );
         }
         return null;
