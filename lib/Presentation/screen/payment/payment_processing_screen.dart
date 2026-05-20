@@ -85,6 +85,7 @@ class _PaymentProcessingScreenState extends State<PaymentProcessingScreen> {
 			  orderId: order.id,
 			  bakongQrString: bakong.qrString ?? '',
 			  bakongMd5: bakong.md5 ?? '',
+				paymentUrl: order.paymentUrl ?? '',
 			  orderRepository: widget.orderRepository,
 			  paymentRepository: widget.paymentRepository,
 			),

@@ -139,11 +139,6 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
             context,
             MaterialPageRoute(
               builder: (_) =>
-              //     PaymentScreen(
-              //   userId: userId,
-              //   token: token,
-              //   addressId: savedAddress.id!,
-              // ),
               PaymentMethodScreen(
                   totalPrice: 10, addressId: savedAddress.id!,
                   addressLine1: 'test', city: 'test', country: 'test', zipCode: 'test001')
@@ -250,13 +245,12 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
               _buildCityandZipcode(),
               SizedBox(height: 25,),
 
-              // Save/Update Address Button
-              _BuildSaveAddress(),
-
             ],
           ),
         ),
       ),
+      bottomNavigationBar:
+      _BuildSaveAddress(),
     );
   }
 
@@ -511,7 +505,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
 
   Widget _BuildSaveAddress() => Padding(
     padding: const EdgeInsets.symmetric(
-        horizontal: 10
+        horizontal: 15
     ),
     child: Container(
       child: is_loading ? _buildLoadingButton() : _buildSaveButton(),
@@ -519,66 +513,60 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
   );
 
   // Loading state button
-  Widget _buildLoadingButton() => Padding(
-    padding: const EdgeInsets.only(left: 20, right: 20,),
-    child: SizedBox(
-      width: double.infinity,
-      height: 55,
-      child: OutlinedButton(
-        onPressed: null, // disabled during loading
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(color: Colors.blue.shade200),
-          backgroundColor: Colors.blue.shade100,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: EdgeInsets.symmetric(vertical: 10),
+  Widget _buildLoadingButton() => SizedBox(
+    width: double.infinity,
+    height: 55,
+    child: OutlinedButton(
+      onPressed: null, // disabled during loading
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: Colors.blue.shade200),
+        backgroundColor: Colors.blue.shade100,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SpinKitCircle(color: Colors.blue, size: 30,),
-            SizedBox(width: 10,),
-            Text(
-              _isEditingMode ? "Updating..." : "Saving...",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
+        padding: EdgeInsets.symmetric(vertical: 10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SpinKitCircle(color: Colors.blue, size: 30,),
+          SizedBox(width: 10,),
+          Text(
+            _isEditingMode ? "Updating..." : "Saving...",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     ),
   );
 
   // Save/Update button
-  Widget _buildSaveButton() => Padding(
-    padding: const EdgeInsets.only(right: 20, left: 20,),
-    child: SizedBox(
+  Widget _buildSaveButton() => SizedBox(
 
-      width: double.infinity,
-      height: 50,
-      child: OutlinedButton(
-        onPressed: () {
-          submit();
-        },
-        style: OutlinedButton.styleFrom(
-          backgroundColor: Colors.blueAccent,
-          side: BorderSide(color: Colors.blue.shade200),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: EdgeInsets.symmetric(vertical: 16),
+    width: double.infinity,
+    height: 50,
+    child: OutlinedButton(
+      onPressed: () {
+        submit();
+      },
+      style: OutlinedButton.styleFrom(
+        backgroundColor: Colors.blueAccent,
+        side: BorderSide(color: Colors.blue.shade200),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
-        child: Text(
-          _isEditingMode ? "Update Address" : "Save Address",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+        padding: EdgeInsets.symmetric(vertical: 16),
+      ),
+      child: Text(
+        _isEditingMode ? "Update Address" : "Save Address",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
         ),
       ),
     ),

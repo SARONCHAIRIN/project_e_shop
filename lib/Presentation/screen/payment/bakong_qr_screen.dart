@@ -1,16 +1,19 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/repositories/order_repository.dart';
 import 'package:e_shop/data/repositories/payment_repository.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'payment_success_screen.dart';
 import 'payment_failed_screen.dart';
 
 class BakongQrScreen extends StatefulWidget {
 	final int orderId;
 	final String bakongQrString;
+	final String paymentUrl;
 	final String bakongMd5;
 	final OrderRepository orderRepository;
 	final PaymentRepository paymentRepository;
@@ -19,6 +22,7 @@ class BakongQrScreen extends StatefulWidget {
 		super.key,
 		required this.orderId,
 		required this.bakongQrString,
+		required this.paymentUrl,
 		required this.bakongMd5,
 		required this.orderRepository,
 		required this.paymentRepository,
@@ -117,6 +121,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
 		});
 	}
 
+/*
 	void _startPolling() {
 		_pollTimer?.cancel();
 		_pollTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
@@ -164,7 +169,101 @@ class _BakongQrScreenState extends State<BakongQrScreen>
 			}
 		});
 	}
+*/
 
+	void _startPolling() {
+		_pollTimer?.cancel();
+		int _retryCount = 0;
+		const maxRetries = 3;
+
+		_pollTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+			if (!mounted) return;
+
+			try {
+				final storage = TokenStorage();
+				final token = await storage.getToken();
+
+				final res = await widget.paymentRepository.checkTransaction(
+					md5: widget.bakongMd5,
+					token: token ?? '',
+				);
+
+				// reset retry count on success
+				_retryCount = 0;
+
+				final status = (res['status'] ?? 'PENDING').toString();
+
+				if (status.toUpperCase() == 'SUCCESS') {
+					timer.cancel();
+					_countdownTimer?.cancel();
+
+					final transactionId =
+					(res['transaction_id'] ?? res['transactionId'] ?? '').toString();
+
+					await widget.paymentRepository.verifyPayment(
+						orderId: widget.orderId,
+						transactionId: transactionId,
+						token: token ?? '',
+					);
+
+					final order = await widget.orderRepository.getOrderDetail(
+						orderId: widget.orderId,
+						token: token ?? '',
+					);
+
+					if (!mounted) return;
+					Navigator.pushReplacement(
+						context,
+						MaterialPageRoute(
+							builder: (_) => PaymentSuccessScreen(order: order),
+						),
+					);
+				}
+			} catch (e) {
+				_retryCount++;
+				debugPrint('[BakongQrScreen] Polling error ($_retryCount/$maxRetries): $e');
+
+				// Only cancel after too many consecutive failures
+				if (_retryCount >= maxRetries) {
+					debugPrint('[BakongQrScreen] Too many errors, pausing poll...');
+					timer.cancel();
+
+					// Restart polling after 10 seconds
+					await Future.delayed(const Duration(seconds: 10));
+					if (mounted) {
+						_retryCount = 0;
+						_startPolling();
+					}
+				}
+			}
+		});
+	}
+	//======push to bakong======
+
+	Future<void> _openBakongApp() async {
+		final url = widget.paymentUrl;
+
+		if (url.isEmpty) {
+			ScaffoldMessenger.of(context).showSnackBar(
+				const SnackBar(content: Text('Payment link not available')),
+			);
+			return;
+		}
+
+		final uri = Uri.parse(url);
+
+		if (await canLaunchUrl(uri)) {
+			await launchUrl(uri, mode: LaunchMode.externalApplication);
+		} else {
+			// Bakong not installed → open store
+			final storeUri = Uri.parse(
+				Platform.isAndroid
+						? 'https://play.google.com/store/apps/details?id=com.nbc.bakong_khqr'
+						: 'https://apps.apple.com/app/bakong/id1440527141',
+			);
+			await launchUrl(storeUri, mode: LaunchMode.externalApplication);
+		}
+	}
 	Future<void> _cancelOrder() async {
 		final confirmed = await _showCancelDialog();
 		if (!confirmed) return;
@@ -791,6 +890,53 @@ class _BakongQrScreenState extends State<BakongQrScreen>
 					),
 
 					const SizedBox(height: 16),
+
+					// Add this ABOVE the cancel button
+					SizedBox(
+						width: double.infinity,
+						height: 52,
+						child: ElevatedButton(
+							onPressed: _openBakongApp,
+							style: ElevatedButton.styleFrom(
+								backgroundColor: const Color(0xFF0066FF),
+								foregroundColor: Colors.white,
+								elevation: 0,
+								shape: RoundedRectangleBorder(
+									borderRadius: BorderRadius.circular(14),
+								),
+							),
+							child: Row(
+								mainAxisAlignment: MainAxisAlignment.center,
+								children: [
+									Container(
+										width: 24, height: 24,
+										decoration: const BoxDecoration(
+											shape: BoxShape.circle,
+											color: Colors.white24,
+										),
+										child: const Center(
+											child: Text('B',
+												style: TextStyle(
+													color: Colors.white,
+													fontSize: 13,
+													fontWeight: FontWeight.w800,
+												),
+											),
+										),
+									),
+									const SizedBox(width: 8),
+									const Text(
+										'Open Bakong to Pay',
+										style: TextStyle(
+											fontSize: 15,
+											fontWeight: FontWeight.w600,
+										),
+									),
+								],
+							),
+						),
+					),
+					const SizedBox(height: 10),
 				],
 			),
 		);

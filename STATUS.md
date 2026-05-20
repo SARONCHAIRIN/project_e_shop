@@ -23,14 +23,14 @@ Risk Level:         LOW 🟢
 
 ### Key Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Requirements Complete | 100% | 100% | ✅ Complete |
-| Design Complete | 0% | 60% | 🟡 In Progress |
-| Frontend Dev | 0% | 60% | 🟡 In Progress |
-| Backend Dev | 0% | 0% | 🔴 Not Started |
-| Testing | 0% | 0% | 🔴 Not Started |
-| **Overall** | **100%** | **35%** | **🟡 On Track** |
+| Metric                | Target   | Actual   | Status          |
+|-----------------------|----------|----------|-----------------|
+| Requirements Complete | 100%     | 100%     | ✅ Complete      |
+| Design Complete       | 0%       | 60%      | 🟡 In Progress  |
+| Frontend Dev          | 0%       | 60%      | 🟡 In Progress  |
+| Backend Dev           | 0%       | 0%       | 🔴 Not Started  |
+| Testing               | 0%       | 0%       | 🔴 Not Started  |
+| **Overall**           | **100%** | **35%**  | **🟡 On Track** |
 
 ---
 
