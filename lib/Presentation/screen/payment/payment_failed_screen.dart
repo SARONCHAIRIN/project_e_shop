@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PaymentFailedScreen extends StatefulWidget {
 	final String reason;
@@ -16,12 +17,14 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
 	late Animation<double> _scaleIn;
 	late Animation<Offset> _slideUp;
 
+	final String username = 'chairin312007';
 	@override
 	void initState() {
 		super.initState();
 		_controller = AnimationController(
 			vsync: this,
 			duration: const Duration(milliseconds: 700),
+
 		);
 
 		_fadeIn = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
@@ -41,6 +44,22 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
 		_controller.dispose();
 		super.dispose();
 	}
+
+	//to telegram
+	Future<void> _openTelegram() async {
+		final Uri appUrl = Uri.parse("tg://resolve?domain=$username");
+		final Uri webUrl = Uri.parse("https://t.me/$username");
+
+		// Try open Telegram app
+		if (await canLaunchUrl(appUrl)) {
+			await launchUrl(appUrl);
+		}
+		// fallback to browser
+		else {
+			await launchUrl(webUrl, mode: LaunchMode.externalApplication);
+		}
+	}
+
 
 	@override
 	Widget build(BuildContext context) {
@@ -156,16 +175,16 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
 												),
 											),
 											const SizedBox(height: 10),
-											Text(
-												widget.reason,
-												textAlign: TextAlign.center,
-												style: const TextStyle(
-													fontSize: 15,
-													color: Color(0xFF8A8A9A),
-													height: 1.5,
-													letterSpacing: -0.1,
-												),
-											),
+											// Text(
+											// 	widget.reason,
+											// 	textAlign: TextAlign.center,
+											// 	style: const TextStyle(
+											// 		fontSize: 15,
+											// 		color: Color(0xFF8A8A9A),
+											// 		height: 1.5,
+											// 		letterSpacing: -0.1,
+											// 	),
+											// ),
 										],
 									),
 								),
@@ -236,7 +255,9 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
 												width: double.infinity,
 												height: 54,
 												child: ElevatedButton(
-													onPressed: () {},
+													onPressed: () {
+
+													},
 													style: ElevatedButton.styleFrom(
 														backgroundColor: const Color(0xFF1A1A2E),
 														foregroundColor: Colors.white,
@@ -263,7 +284,9 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
 												width: double.infinity,
 												height: 54,
 												child: OutlinedButton(
-													onPressed: () => Navigator.pop(context),
+													onPressed: (){
+														Navigator.pushNamedAndRemoveUntil(context, '/divicenav',(route) => false);
+													},
 													style: OutlinedButton.styleFrom(
 														foregroundColor: const Color(0xFF1A1A2E),
 														side: const BorderSide(
@@ -275,7 +298,7 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
 														),
 													),
 													child: const Text(
-														'Back to Orders',
+														'Back to Homepage',
 														style: TextStyle(
 															fontSize: 16,
 															fontWeight: FontWeight.w500,
@@ -289,7 +312,9 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
 
 											// Help link
 											TextButton(
-												onPressed: () {},
+												onPressed: () {
+													_openTelegram();
+												},
 												child: const Text(
 													'Need help? Contact support',
 													style: TextStyle(

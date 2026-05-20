@@ -41,6 +41,7 @@ class OrderModel {
   // ── Bakong-specific ───────────────────────────────────────────
   final String? bakongQr;
   final String? bakongMd5;
+  final String? paymentUrl;
 
   // ── Financials ────────────────────────────────────────────────
   /// Primary total field (API v2 key: "total_amount")
@@ -54,6 +55,7 @@ class OrderModel {
 
   /// Lightweight item count returned on list endpoints (no full items)
   final int? itemsCount;
+
 
   // ── Address ───────────────────────────────────────────────────
   /// Full address object nested in the detail response
@@ -79,6 +81,7 @@ class OrderModel {
     this.verifiedAt,
     this.bakongQr,
     this.bakongMd5,
+    this.paymentUrl,
     this.totalAmount,
     this.totalPrice,
     this.items,
@@ -137,6 +140,7 @@ class OrderModel {
       // Bakong
       bakongQr: json['bakong_qr'] as String?,
       bakongMd5: json['bakong_md5'] as String?,
+      paymentUrl: json['payment_url'] as String?,
 
       // Financials — handle num → double safely
       totalAmount: (json['total_amount'] as num?)?.toDouble(),
@@ -174,6 +178,7 @@ class OrderModel {
       if (verifiedAt != null) 'verified_at': verifiedAt,
       if (bakongQr != null) 'bakong_qr': bakongQr,
       if (bakongMd5 != null) 'bakong_md5': bakongMd5,
+      if(paymentUrl != null) 'payment_rul' : paymentUrl,
       if (totalAmount != null) 'total_amount': totalAmount,
       if (totalPrice != null) 'total_price': totalPrice,
       if (items != null) 'items': items!.map((e) => e.toJson()).toList(),
