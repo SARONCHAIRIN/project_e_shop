@@ -198,10 +198,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
         unselectedLabelColor: Colors.grey[600],
         indicatorColor: const Color(0xFF1E88E5),
         indicatorWeight: 3,
-        labelStyle: const TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 13,
-        ),
+        labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
         unselectedLabelStyle: const TextStyle(
           fontWeight: FontWeight.w400,
           fontSize: 13,
@@ -306,10 +303,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
             _selectedStatusFilter != null
                 ? 'You have no orders with this status.'
                 : 'Start shopping to see your orders here.',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[500],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 28),
@@ -376,8 +370,10 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1E88E5),
                 foregroundColor: Colors.white,
-                padding:
-                const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 28,
+                  vertical: 14,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -421,14 +417,16 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
           ],
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new,
-              size: 18, color: Color(0xFF1A1A2E)),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            size: 18,
+            color: Color(0xFF1A1A2E),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh,
-                size: 22, color: Color(0xFF1A1A2E)),
+            icon: const Icon(Icons.refresh, size: 22, color: Color(0xFF1A1A2E)),
             onPressed: () => _loadOrders(refresh: true),
             tooltip: 'Refresh',
           ),
@@ -446,6 +444,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
 class _TabFilter {
   final String label;
   final OrderStatus? status;
+
   const _TabFilter({required this.label, required this.status});
 }
 
@@ -469,9 +468,10 @@ class _SkeletonOrderCardState extends State<_SkeletonOrderCard>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.4, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.4,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -509,10 +509,7 @@ class _SkeletonOrderCardState extends State<_SkeletonOrderCard>
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _skeletonBox(80, 14),
-                  _skeletonBox(60, 20),
-                ],
+                children: [_skeletonBox(80, 14), _skeletonBox(60, 20)],
               ),
             ],
           ),

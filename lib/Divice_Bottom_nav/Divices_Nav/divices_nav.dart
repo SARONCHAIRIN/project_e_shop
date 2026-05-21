@@ -1,10 +1,8 @@
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:e_shop/Presentation/screen/Message_main_page/message_main.dart';
-import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/cart_main_page/cart_main.dart';
 import 'package:e_shop/Presentation/screen/home_main_page/home_main_page.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/device_profile_gate.dart';
-import 'package:e_shop/Presentation/screen/profile_main_page/profile_main.dart';
 import 'package:flutter/material.dart';
 import '../../Presentation/screen/category_main_page/category_main.dart';
 import '../../core/storage/token_storage.dart';
@@ -12,7 +10,9 @@ import '../../data/repositories/user_auth_repository.dart';
 
 class DivicesNav extends StatefulWidget {
   final User_AuthRepository authRepository;
+
   const DivicesNav({super.key, required this.authRepository});
+
   static const routeName = '/divicenav';
 
   @override
@@ -106,7 +106,7 @@ class _DivicesNavState extends State<DivicesNav> {
               selectedColor: Colors.blueAccent,
             ),
             CrystalNavigationBarItem(
-              icon:Icons.person,
+              icon: Icons.person,
               selectedColor: Colors.blueAccent,
             ),
           ],

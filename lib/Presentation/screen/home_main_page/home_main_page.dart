@@ -1,26 +1,27 @@
 import 'package:e_shop/Presentation/screen/category_main_page/see_all_category.dart';
-import 'package:e_shop/Presentation/screen/home_main_page/page_carousel_slide/home_carousel_slider.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/icon_sub_with_product/icon_sub_with_product.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/subcategory_with_product.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../Main_App_Bar/App_Bar/sliver_main_app_bar.dart';
 import '../../../data/models/user_model.dart';
 
 class HomeMainPage extends StatefulWidget {
   final UserModel? user;
   final authRepository;
-  // final bool showBars;
 
+  // final bool showBars;
 
   const HomeMainPage({
     super.key,
-      this.user,
+    this.user,
     required this.authRepository,
-    // required this.showBars,
 
+    // required this.showBars,
   });
 
   @override
@@ -32,8 +33,21 @@ class _HomeMainPageState extends State<HomeMainPage> {
   bool showBars = true;
   bool showTextField = true;
   bool _isAnimationLoaded = false;
+  bool _isloading = true;
 
-  List<String> categories = ['All','Laptop','Electronics', 'Drone', 'shose','Clothing', 'Books', 'Home', 'Toys', 'Sports', 'Beauty'];
+  List<String> categories = [
+    'All',
+    'Laptop',
+    'Electronics',
+    'Drone',
+    'shose',
+    'Clothing',
+    'Books',
+    'Home',
+    'Toys',
+    'Sports',
+    'Beauty',
+  ];
   String selectedCategory = 'All';
 
   int? userId;
@@ -43,16 +57,16 @@ class _HomeMainPageState extends State<HomeMainPage> {
     super.initState();
     _loadUserData();
     _scrollController.addListener(() {
-      if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
         if (showBars) setState(() => showBars = false);
         // if(showTextField ) setState(() => showTextField = false);
-      }
-      else if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
+      } else if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
         if (!showBars) setState(() => showBars = true);
         // if(!showTextField) setState(() => showTextField = true);
       }
     });
-
 
     //Home page show in console
     print('|=================================================|');
@@ -60,20 +74,16 @@ class _HomeMainPageState extends State<HomeMainPage> {
     print('|=================================================|');
   }
 
-  Future<void> _loadUserData() async{
+  Future<void> _loadUserData() async {
     final id = await TokenStorage().readUserId();
-
-
 
     print('userId in home page :  ${id}');
 
-    if(!mounted) return;
+    if (!mounted) return;
 
     setState(() {
       userId = id;
     });
-
-
   }
 
   @override
@@ -81,141 +91,185 @@ class _HomeMainPageState extends State<HomeMainPage> {
     _scrollController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
-
-      children:[
-
+      children: [
         Scaffold(
-        extendBody: true,
-        extendBodyBehindAppBar: true,
-        backgroundColor: Colors.grey.shade50,
-        body: CustomScrollView(
-          // physics: PageScrollPhysics(),
-         physics:  ClampingScrollPhysics(),
-          controller: _scrollController,
-          slivers: [
-            // Your app bar - will scroll away
-            SliverMainAppBar(
-              showBars: showBars,
-              authRepository: widget.authRepository,
-            ),
+          extendBody: false,
+          extendBodyBehindAppBar: true,
+          backgroundColor: Colors.grey.shade50,
+          body: CustomScrollView(
 
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
+             // physics: PageScrollPhysics(),
+             physics: ClampingScrollPhysics(),
+             controller: _scrollController,
+             slivers: [
 
-                  SizedBox(height: 10,),
+               // Your app bar - will scroll away
+               SliverMainAppBar(
+                 showBars: showBars,
+                 authRepository: widget.authRepository,
+               ),
 
-                  SizedBox(height: 4,),
+               SliverToBoxAdapter(
+                 child: Column(
+                   children: [
+                     SizedBox(height: 10),
 
-                  //carousel slider of home page
-                  HomeCarouselSlider(),
-                  const SizedBox(height: 20,),
+                     SizedBox(height: 4),
 
-                  //Trending Categories
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    //text category see all
-                    child: Row(
-                      children: [
-                        Text('Trending Categories',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.w500),),
+                     //carousel slider of home page
+                     // HomeCarouselSlider(),
+                     // const SizedBox(height: 20,),
 
-                        Expanded(child: SizedBox(width: 1,)),
+                     //Trending Categories
+                     Padding(
+                       padding: const EdgeInsets.symmetric(horizontal: 10),
+                       //text category see all
+                       child: Row(
+                         children: [
+                           Text(
+                             'Trending Categories',
+                             style: TextStyle(
+                               color: Colors.black,
+                               fontSize: 16,
+                               fontWeight: FontWeight.w500,
+                             ),
+                           ),
 
-                        TextButton(
-                            onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SeeAllCategory()));
-                            },
-                            child: Text("See All",style: TextStyle(color: Colors.redAccent,fontSize: 15,fontStyle: FontStyle.italic),)
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                           Expanded(child: SizedBox(width: 1)),
 
-             IconSubWithProduct(),
+                           TextButton(
+                             onPressed: () {
+                               Navigator.push(
+                                 context,
+                                 MaterialPageRoute(
+                                   builder: (context) => SeeAllCategory(),
+                                 ),
+                               );
+                             },
+                             child: Text(
+                               "See All",
+                               style: TextStyle(
+                                 color: Colors.redAccent,
+                                 fontSize: 15,
+                                 fontStyle: FontStyle.italic,
+                               ),
+                             ),
+                           ),
+                         ],
+                       ),
+                     ),
+                   ],
+                 ),
+               ),
 
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
+               IconSubWithProduct(),
 
-                  //trending categories
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    //text category see all
-                    child: Row(
-                      children: [
-                        Text(' Popular Products',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.w500),),
+               SliverToBoxAdapter(
+                 child: Column(
+                   children: [
+                     //trending categories
+                     Padding(
+                       padding: const EdgeInsets.symmetric(horizontal: 10),
+                       //text category see all
+                       child: Row(
+                         children: [
+                           Text(
+                             ' Popular Products',
+                             style: TextStyle(
+                               color: Colors.black,
+                               fontSize: 16,
+                               fontWeight: FontWeight.w500,
+                             ),
+                           ),
 
-                        Expanded(child: SizedBox(width: 1,)),
+                           Expanded(child: SizedBox(width: 1)),
 
-                        TextButton(
-                            onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SeeAllCategory()));
-                            },
-                            child: Text("See All",style: TextStyle(color: Colors.redAccent,fontSize: 15,fontStyle: FontStyle.italic),)
-                        ),
-                      ],
-                    ),
-                  ),
+                           TextButton(
+                             onPressed: () {
+                               Navigator.push(
+                                 context,
+                                 MaterialPageRoute(
+                                   builder: (context) => SeeAllCategory(),
+                                 ),
+                               );
+                             },
+                             child: Text(
+                               "See All",
+                               style: TextStyle(
+                                 color: Colors.redAccent,
+                                 fontSize: 15,
+                                 fontStyle: FontStyle.italic,
+                               ),
+                             ),
+                           ),
+                         ],
+                       ),
+                     ),
 
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
-                    child: Row(
-                      children: categories.map((category) {
-                        final isSelected = selectedCategory == category;
+                     DefaultTabController(
+                       length: categories.length,
+                       child: Column(
+                         crossAxisAlignment: CrossAxisAlignment.start,
+                         children: [
+                           TabBar(
+                             isScrollable: true,
+                             tabAlignment: TabAlignment.start,
+                             labelColor: const Color(0xFF1E88E5),
+                             unselectedLabelColor: Colors.grey[600],
+                             indicatorColor: const Color(0xFF1E88E5),
+                             indicatorWeight: 3,
+                             labelStyle: const TextStyle(
+                               fontWeight: FontWeight.w600,
+                               fontSize: 13,
+                             ),
+                             unselectedLabelStyle: const TextStyle(
+                               fontWeight: FontWeight.w400,
+                               fontSize: 13,
+                             ),
+                             tabs: categories.map((category) {
+                               return Tab(
+                                 child: Padding(
+                                   padding: const EdgeInsets.symmetric(
+                                     horizontal: 14,
+                                   ),
+                                   child: Text(
+                                     category,
+                                     style: const TextStyle(
+                                       fontWeight: FontWeight.w600,
+                                     ),
+                                   ),
+                                 ),
+                               );
+                             }).toList(),
 
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: ChoiceChip(
-                            label: Text(category),
+                             onTap: (index) {
+                               setState(() {
+                                 selectedCategory = categories[index];
+                               });
+                             },
+                           ),
 
-                            selected: isSelected, // important
+                           const SizedBox(height: 16),
+                         ],
+                       ),
+                     ),
+                     SizedBox(height: 15),
+                   ],
+                 ),
+               ),
 
-                            selectedColor: Colors.blueAccent.shade200,
-                            backgroundColor: Colors.white,
+               SubcategoryWithProduct(categoryName: selectedCategory),
 
-                            labelStyle: TextStyle(
-                              color: isSelected ? Colors.white : Colors.black,
-                              fontWeight: FontWeight.w600,
-                            ),
-
-                            onSelected: (value) {
-                              setState(() {
-                                selectedCategory = category; //  change selected
-                              });
-                            },
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  SizedBox(height: 15,),
-                ],
-              ),
-            ),
-
-             SubcategoryWithProduct(
-              categoryName: selectedCategory,
-            ),
-
-            SliverToBoxAdapter(
-              child: SizedBox(height: 100,),
-            ),
-
-          ],
+               SliverToBoxAdapter(child: SizedBox(height: 100)),
+             ],
+           ),
         ),
-      ),
-    ],
+      ],
     );
-
   }
-}
 
+}

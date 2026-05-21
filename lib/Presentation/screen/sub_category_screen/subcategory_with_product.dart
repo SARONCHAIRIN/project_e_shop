@@ -3,16 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../data/datasources/sub_with_product/sub_product_service.dart';
 import '../../../data/models/subcategory_model_eshop.dart';
 
 class SubcategoryWithProduct extends StatefulWidget {
   final String categoryName;
 
-  const SubcategoryWithProduct({
-    super.key,
-    required this.categoryName,
-  });
+  const SubcategoryWithProduct({super.key, required this.categoryName});
 
   @override
   State<SubcategoryWithProduct> createState() => _SubcategoryWithProductState();
@@ -22,7 +20,8 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
   final ApiService apiService = ApiService();
   late Future<List<SubcategoryData>> _futureSubcategories;
 
-bool ispressed = false;
+  bool ispressed = false;
+
   @override
   void initState() {
     super.initState();
@@ -31,20 +30,19 @@ bool ispressed = false;
   }
 
   @override
-
   void didUpdateWidget(SubcategoryWithProduct oldWidget) {
-
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.categoryName != widget.categoryName) {
       _loadData(); // reload when category changes
-      setState(() {
-      });
+      setState(() {});
     }
   }
+
   void _loadData() {
-    _futureSubcategories =
-        apiService.fetchSubcategoriesByCategoryName(widget.categoryName);
+    _futureSubcategories = apiService.fetchSubcategoriesByCategoryName(
+      widget.categoryName,
+    );
   }
 
   Future<void> _refresh() async {
@@ -53,102 +51,89 @@ bool ispressed = false;
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<SubcategoryData>>(
       future: _futureSubcategories,
       builder: (context, snapshot) {
-
         // store
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return  SliverFillRemaining(
-            child: Center(
-              child: SpinKitFadingCircle(color: Colors.black,size: 40,),
-            ),
-          );
+          return _buildShimmerPopular();
         }
-
         // error
         else if (snapshot.hasError) {
           return SliverFillRemaining(
-        hasScrollBody: false,
+            hasScrollBody: false,
 
-        child: MediaQuery.removePadding(
-          context: context,
-          removeTop: true,
-          removeBottom: true,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 70,
-                    right: 70,
-                    top: 10
-                ),
-                child: Lottie.asset(
-                  'assets/animations/Error_404.json',
-                  repeat: true,
-                  animate: true,
-                ),
-              ),
-
-              SizedBox(height: 10),
-
-              Text(
-                "Something went wrong",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              SizedBox(height: 5),
-
-              TextButton(onPressed: (){
-                _refresh();
-              },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.blue.shade200,
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          blurStyle: BlurStyle.outer,
-
-                        ),
-                      ],
+            child: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              removeBottom: true,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 70,
+                      right: 70,
+                      top: 10,
                     ),
-                    child: Text("Please try again",
-                    style: TextStyle(
-                      color: Colors.redAccent,
-                      fontSize: 18
-                    ),),
+                    child: Lottie.asset(
+                      'assets/animations/Error_404.json',
+                      repeat: true,
+                      animate: true,
+                    ),
                   ),
-              ),
-              SizedBox(height: 150,),
-            ],
-          ),
-        ),
-      );
-        }
 
+                  SizedBox(height: 10),
+
+                  Text(
+                    "Something went wrong",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+
+                  SizedBox(height: 5),
+
+                  TextButton(
+                    onPressed: () {
+                      _refresh();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blue.shade200,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            blurStyle: BlurStyle.outer,
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        "Please try again",
+                        style: TextStyle(color: Colors.redAccent, fontSize: 18),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 150),
+                ],
+              ),
+            ),
+          );
+        }
         // no data
         else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return  SliverFillRemaining(
+          return SliverFillRemaining(
             hasScrollBody: false,
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 70,
-                      right: 70,
-                      top: 10
-                  ),
+                  padding: const EdgeInsets.only(left: 70, right: 70, top: 10),
                   child: Lottie.asset(
                     'assets/animations/empty.json',
                     repeat: true,
@@ -156,44 +141,30 @@ bool ispressed = false;
                   ),
                 ),
 
-
                 SizedBox(height: 10),
 
                 Text(
-
                   "No products found",
 
-                  style: TextStyle(
-
-                    fontSize: 18,
-
-                    fontWeight: FontWeight.w600,
-
-                  ),
-
-
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
 
                 SizedBox(height: 6),
 
                 Text(
-
                   "Try a different keyword",
 
                   style: TextStyle(color: Colors.grey),
-
                 ),
 
-                SizedBox(height: 20,)
+                SizedBox(height: 20),
               ],
             ),
-
           );
         }
 
         // have data show grid
         final subcategories = snapshot.data!;
-
 
         return SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -241,7 +212,6 @@ bool ispressed = false;
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
                           /// IMAGE
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
@@ -313,7 +283,90 @@ bool ispressed = false;
             },
           ),
         );
-        },
+      },
     );
   }
+
+  Widget _buildShimmerPopular() => SliverPadding(
+    padding: const EdgeInsets.symmetric(horizontal: 15),
+    sliver: SliverMasonryGrid.count(
+      crossAxisCount: 2,
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
+      childCount: 6,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.only(
+            top: index % 2 == 0 ? 0 : 30,
+            bottom: index % 2 == 0 ? 20 : 0,
+          ),
+
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade50,
+
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 260),
+
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 130,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    Container(
+                      height: 16,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    Container(
+                      height: 12,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Container(
+                      height: 12,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    ),
+  );
 }

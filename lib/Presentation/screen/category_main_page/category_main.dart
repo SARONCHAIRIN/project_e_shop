@@ -62,50 +62,64 @@ class _CategoryMainState extends State<CategoryMain> {
 
 
 
-          // Category filter - will scroll away
           SliverToBoxAdapter(
             child: Column(
               children: [
-                const SizedBox(height: 10),
+                SizedBox(height: 10,),
 
-                SingleChildScrollView(
 
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    children: categories.map((category) {
-                      final isSelected = selectedCategory == category;
-
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ChoiceChip(
-                          label: Text(category),
-
-                          selected: isSelected, // important
-
-                          selectedColor: Colors.blueAccent.shade200,
-                          backgroundColor: Colors.white,
-
-                          labelStyle: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w600,
-                          ),
-
-                          onSelected: (value) {
-                            setState(() {
-                              selectedCategory = category; //  change selected
-                            });
-                          },
+                DefaultTabController(
+                  length: categories.length,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TabBar(
+                        isScrollable: true,
+                        tabAlignment: TabAlignment.start,
+                        labelColor: const Color(0xFF1E88E5),
+                        unselectedLabelColor: Colors.grey[600],
+                        indicatorColor: const Color(0xFF1E88E5),
+                        indicatorWeight: 3,
+                        labelStyle: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
                         ),
-                      );
-                    }).toList(),
+                        unselectedLabelStyle: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                        ),
+                        tabs: categories.map((category) {
+                          return Tab(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 14),
+                              child: Text(
+                                category,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+
+                        onTap: (index) {
+                          setState(() {
+                            selectedCategory = categories[index];
+                          });
+                        },
+                      ),
+
+                      const SizedBox(height: 16),
+
+                    ],
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 10,),
               ],
             ),
           ),
+
 
           // Your grid
            SubcategoryWithProduct(
