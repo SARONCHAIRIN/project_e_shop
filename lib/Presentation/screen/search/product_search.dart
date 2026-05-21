@@ -37,7 +37,6 @@ class _SearchProductpageState extends State<SearchProductpage> {
 
   Timer? _debounce;
 
-
   @override
   void initState() {
     super.initState();
@@ -56,7 +55,8 @@ class _SearchProductpageState extends State<SearchProductpage> {
     _debounce?.cancel();
     super.dispose();
   }
-//============HISTORY MANAGEMENT WITH SHARED PREFERENCES================
+
+  //============HISTORY MANAGEMENT WITH SHARED PREFERENCES================
 
   //save history
   void saveHistory() async {
@@ -91,7 +91,7 @@ class _SearchProductpageState extends State<SearchProductpage> {
             history.removeLast();
           }
           saveHistory();
-            showDiscover = false;
+          showDiscover = false;
         });
       } else {
         setState(() {
@@ -107,7 +107,8 @@ class _SearchProductpageState extends State<SearchProductpage> {
     setState(() => isLoading = true);
 
     final url = Uri.parse(
-        "https://e-shop-1-m034.onrender.com/api/v1/products/search?keyword=$keyword");
+      "https://e-shop-1-m034.onrender.com/api/v1/products/search?keyword=$keyword",
+    );
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -143,10 +144,9 @@ class _SearchProductpageState extends State<SearchProductpage> {
     return ListView(
       padding: const EdgeInsets.all(15),
       children: [
-
         Row(
           children: [
-            Icon(Icons.content_paste_search, size: 22, color: Colors.black,),
+            Icon(Icons.content_paste_search, size: 22, color: Colors.black),
             const Text(
               " Trending Search",
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
@@ -158,17 +158,14 @@ class _SearchProductpageState extends State<SearchProductpage> {
         Wrap(
           spacing: 20,
           children: trending
-              .map((e) =>
-              ActionChip(
-                avatar: Icon(
-                  Icons.search,
-                  size: 22,
-                  color: Colors.grey,
+              .map(
+                (e) => ActionChip(
+                  avatar: Icon(Icons.search, size: 22, color: Colors.grey),
+                  backgroundColor: Colors.white,
+                  label: Text(e),
+                  onPressed: () => selectKeyword(e),
                 ),
-                backgroundColor: Colors.white,
-                label: Text(e),
-                onPressed: () => selectKeyword(e),
-              ))
+              )
               .toList(),
         ),
       ],
@@ -177,7 +174,6 @@ class _SearchProductpageState extends State<SearchProductpage> {
 
   /// GridView with shimmer effect
   Widget _buildProductGrid() {
-
     if (isLoading && products.isEmpty) {
       return GridView.builder(
         padding: const EdgeInsets.all(10),
@@ -188,17 +184,16 @@ class _SearchProductpageState extends State<SearchProductpage> {
           crossAxisSpacing: 10,
           childAspectRatio: 0.75,
         ),
-        itemBuilder: (_, __) =>
-            Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
+        itemBuilder: (_, __) => Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
             ),
+          ),
+        ),
       );
     }
 
@@ -217,12 +212,11 @@ class _SearchProductpageState extends State<SearchProductpage> {
         return GestureDetector(
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => ProductDetailScreen(
-                        product: product,
-
-                    )));
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProductDetailScreen(product: product),
+              ),
+            );
           },
           child: Container(
             decoration: BoxDecoration(
@@ -237,8 +231,9 @@ class _SearchProductpageState extends State<SearchProductpage> {
               children: [
                 Expanded(
                   child: ClipRRect(
-                    borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(15)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(15),
+                    ),
                     child: Image.network(
                       product.mainImage ?? "",
                       // fit: BoxFit.fill,
@@ -261,11 +256,13 @@ class _SearchProductpageState extends State<SearchProductpage> {
                       Text(
                         "\$${product.lowestPrice ?? 0}",
                         style: const TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold),
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -275,29 +272,28 @@ class _SearchProductpageState extends State<SearchProductpage> {
   }
 
   /// Search TextField
-  Widget _buildSearchField() =>
-      PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-          child: TextField(
-            controller: searchController,
-            focusNode: searchFocus,
-            onChanged: onSearchChanged,
-            cursorColor: Colors.grey,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              hintText: "Search product...",
-              prefixIcon: const Icon(Icons.search, color: Colors.grey),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25),
-                borderSide: BorderSide(),
-              ),
-            ),
+  Widget _buildSearchField() => PreferredSize(
+    preferredSize: const Size.fromHeight(60),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      child: TextField(
+        controller: searchController,
+        focusNode: searchFocus,
+        onChanged: onSearchChanged,
+        cursorColor: Colors.grey,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          hintText: "Search product...",
+          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: BorderSide(),
           ),
         ),
-      );
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -318,122 +314,163 @@ class _SearchProductpageState extends State<SearchProductpage> {
         },
         child: Column(
           children: [
-
-
             ///  HISTORY (ALWAYS SHOW)
-            if (history.isNotEmpty)_buildRecentSearchHistory(),
-
+            if (history.isNotEmpty) _buildRecentSearchHistory(),
 
             /// MAIN CONTENT
             Expanded(
               child: isLoading
-                  ? const Center(child: SpinKitCircle(color: Colors.blue))
-
+                  ? _buildLoadingShimmerScreen()
                   : searchController.text.isEmpty
                   ? _buildDiscover()
-
                   : products.isEmpty
                   ? _searchNotfound()
                   : _buildProductGrid(),
             ),
           ],
         ),
-      ),);
+      ),
+    );
   }
 
-  Widget _searchNotfound() =>
-      Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+  Widget _searchNotfound() => Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(Icons.search_off, size: 50, color: Colors.grey),
+        const SizedBox(height: 10),
+        Lottie.asset(
+          'assets/animations/empty.json',
+          width: 150,
+          height: 150,
+          repeat: true,
+        ),
+        const SizedBox(height: 10),
+        Text(
+          "No products found",
+          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildRecentSearchHistory() => Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
           children: [
-            const Icon(Icons.search_off, size: 50, color: Colors.grey),
-            const SizedBox(height: 10),
-            Lottie.asset(
-              'assets/animations/empty.json',
-              width: 150,
-              height: 150,
-              repeat: true,
+            Icon(Icons.history, size: 22, color: Colors.black),
+            const Text(
+              " Recent Search History",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
-             const SizedBox(height: 10
-            ),
-            Text(
-              "No products found",
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            Expanded(child: SizedBox(width: 1)),
+
+            TextButton(
+              onPressed: () {
+                setState(() => history.clear());
+              },
+              child: const Text(
+                "Clear",
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  // fontSize: 15,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
             ),
           ],
         ),
-      );
+      ),
 
-  Widget _buildRecentSearchHistory() =>
-      Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                Icon(Icons.history,size: 22,color: Colors.black,),
-                const Text(
-                  " Recent Search History",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                Expanded(child: SizedBox(width: 1,)),
-
-                TextButton(
-                  onPressed: () {
-                    setState(() => history.clear());
-                  },
-                  child: const Text("Clear",
-                    style: TextStyle(
-                      color: Colors.redAccent,
-                      // fontSize: 15,
-                      fontStyle: FontStyle.italic,
-                    )
+      //recent search history
+      Container(
+        height: 60,
+        padding: const EdgeInsets.symmetric(),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 1)],
+        ),
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: history
+              .map(
+                (e) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: ActionChip(
+                    backgroundColor: Colors.white,
+                    pressElevation: 1,
+                    avatar: Icon(Icons.search, size: 22, color: Colors.grey),
+                    label: Text(
+                      e,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    onPressed: () => selectKeyword(e),
                   ),
-                )
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    ],
+  );
 
+  Widget _buildLoadingShimmerScreen() {
+    return GridView.builder(
+      padding: const EdgeInsets.all(10),
+      itemCount: 6,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 0.75,
+      ),
+      itemBuilder: (_, __) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              children: [
+                // IMAGE SHIMMER
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(15),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // TEXT SHIMMER
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(height: 12, width: 120, color: Colors.white),
+                      const SizedBox(height: 8),
+                      Container(height: 12, width: 70, color: Colors.white),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-
-          //recent search history
-              Container(
-              height: 60,
-              padding: const EdgeInsets.symmetric(
-
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(color: Colors.black12, blurRadius: 1),
-                ],
-              ),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: history.map((e) =>
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: ActionChip(
-                        backgroundColor: Colors.white,
-                        pressElevation: 1,
-                        avatar: Icon(
-                          Icons.search,
-                          size: 22,
-                          color: Colors.grey,
-                        ),
-                        label: Text(
-                          e,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        onPressed: () => selectKeyword(e),
-                      ),
-                    )).toList(),
-              ),
-            ),
-        ],
-      );
+        );
+      },
+    );
+  }
 }

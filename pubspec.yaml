@@ -101,13 +101,13 @@ icons_launcher:
       enable: true
 
   # add logo app flutter launcher_icons:
-#  flutter_launcher_icons:
-#
-#    android: true
-#
-#    ios: true
-#
-#    image_path: "assets/images/logo.png"
+  #  flutter_launcher_icons:
+  #
+  #    android: true
+  #
+  #    ios: true
+  #
+  #    image_path: "assets/images/logo.png"
 
   # To add assets to your application, add an assets section, like this:
   # assets:

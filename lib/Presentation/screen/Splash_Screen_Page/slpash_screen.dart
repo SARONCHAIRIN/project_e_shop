@@ -7,6 +7,7 @@ import '../../../data/repositories/user_auth_repository.dart';
 
 class SplashScreen extends StatefulWidget {
   final User_AuthRepository authRepository;
+
   const SplashScreen({super.key, required this.authRepository});
 
   @override
@@ -30,8 +31,10 @@ class _SplashScreenState extends State<SplashScreen> {
     final token = await TokenStorage().readToken();
 
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => DivicesNav(authRepository: widget.authRepository),),
+      context,
+      MaterialPageRoute(
+        builder: (_) => DivicesNav(authRepository: widget.authRepository),
+      ),
     );
   }
 
@@ -72,7 +75,11 @@ class _SplashScreenState extends State<SplashScreen> {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Icon(Icons.error_outline, size: 50, color: Colors.red),
+                            Icon(
+                              Icons.error_outline,
+                              size: 50,
+                              color: Colors.red,
+                            ),
                             SizedBox(height: 10),
                             Text(
                               'Failed to load animation',
@@ -118,10 +125,7 @@ class _SplashScreenState extends State<SplashScreen> {
               padding: EdgeInsets.only(bottom: 20),
               child: Text(
                 'Version 1.0.0',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
             ),
           ],

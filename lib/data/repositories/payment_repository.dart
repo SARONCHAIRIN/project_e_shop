@@ -7,7 +7,7 @@ class PaymentRepository {
   final PaymentService _paymentService;
 
   PaymentRepository({PaymentService? paymentService})
-      : _paymentService = paymentService ?? PaymentService();
+    : _paymentService = paymentService ?? PaymentService();
 
   /// Initiate Bakong payment — returns BakongPaymentModel with qrString + md5
   Future<BakongPaymentModel> initiateBakongPayment({
@@ -17,15 +17,21 @@ class PaymentRepository {
   }) async {
     for (int attempt = 1; attempt <= retries; attempt++) {
       try {
-        debugPrint('[PaymentRepository] initiateBakongPayment attempt $attempt/$retries');
+        debugPrint(
+          '[PaymentRepository] initiateBakongPayment attempt $attempt/$retries',
+        );
         final data = await _paymentService.initiateBakongPayment(
           orderId: orderId,
           token: token,
         );
         final model = BakongPaymentModel.fromJson(data);
 
-        debugPrint('[PaymentRepository] Bakong Order created: #${model.orderId}');
-        debugPrint('[PaymentRepository] qrString empty: ${model.qrString.isEmpty}');
+        debugPrint(
+          '[PaymentRepository] Bakong Order created: #${model.orderId}',
+        );
+        debugPrint(
+          '[PaymentRepository] qrString empty: ${model.qrString.isEmpty}',
+        );
         debugPrint('[PaymentRepository] md5 empty: ${model.md5.isEmpty}');
 
         return model;
@@ -35,7 +41,9 @@ class PaymentRepository {
         await Future.delayed(Duration(seconds: attempt * 2));
       }
     }
-    throw Exception('Failed to initiate Bakong payment after $retries attempts');
+    throw Exception(
+      'Failed to initiate Bakong payment after $retries attempts',
+    );
   }
 
   /// Generate QR image — returns raw PNG bytes for Image.memory()
@@ -55,7 +63,9 @@ class PaymentRepository {
         md5: md5,
         token: token,
       );
-      debugPrint('[PaymentRepository] QR image bytes received: ${bytes.length}');
+      debugPrint(
+        '[PaymentRepository] QR image bytes received: ${bytes.length}',
+      );
       return bytes;
     } catch (e) {
       debugPrint('[PaymentRepository] Error generating QR: $e');
@@ -118,7 +128,9 @@ class PaymentRepository {
         final status = result['status'] as String? ?? 'PENDING';
 
         if (status == 'SUCCESS') {
-          debugPrint('[PaymentRepository] Transaction successful on attempt $attempt');
+          debugPrint(
+            '[PaymentRepository] Transaction successful on attempt $attempt',
+          );
           return result;
         }
 

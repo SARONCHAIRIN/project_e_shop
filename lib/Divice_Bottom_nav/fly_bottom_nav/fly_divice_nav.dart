@@ -1,24 +1,15 @@
-
 import 'package:e_shop/Presentation/screen/Message_main_page/message_main.dart';
 import 'package:e_shop/Presentation/screen/cart_main_page/cart_main.dart';
-import 'package:e_shop/Presentation/screen/category_main_page/category_main.dart';
-import 'package:e_shop/Presentation/screen/home_main_page/home_main_page.dart';
-import 'package:e_shop/Presentation/screen/profile_main_page/profile_main.dart';
-import 'package:e_shop/core/network/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
-
 import 'curved_navigation_bar.dart';
 
 class FlyDiviceNav extends StatefulWidget {
   const FlyDiviceNav({super.key});
 
-
   @override
   State<FlyDiviceNav> createState() => _DivicePageState();
-
 }
 
 class _DivicePageState extends State<FlyDiviceNav> {
@@ -33,17 +24,17 @@ class _DivicePageState extends State<FlyDiviceNav> {
     super.initState();
 
     _scrollController.addListener(() {
-      if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
         if (showBars) setState(() => showBars = false);
         // if(showTextField ) setState(() => showTextField = false);
-      }
-      else if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
+      } else if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
         if (!showBars) setState(() => showBars = true);
         // if(!showTextField) setState(() => showTextField = true);
       }
     });
   }
-
 
   @override
   void dispose() {
@@ -57,13 +48,12 @@ class _DivicePageState extends State<FlyDiviceNav> {
     // CategoryMain(),
     MessageMain(),
     CartMain(),
-    // ProfileMain(),
 
+    // ProfileMain(),
   ];
 
   @override
   Widget build(BuildContext context) {
-
     // List<PersistentTabConfig> _tabs() => [
     //   PersistentTabConfig(
     //     screen: HomeMainPage(),
@@ -103,47 +93,85 @@ class _DivicePageState extends State<FlyDiviceNav> {
     // ];
 
     final items = const [
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.home_outlined, size: 25, color: Colors.blueAccent),
+
+          SizedBox(height: 3),
+          Text(
+            "Home",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+            ),
+          ),
+        ],
+      ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.category_outlined, color: Colors.blueAccent, size: 25),
+          SizedBox(height: 3),
+          Text(
+            "Categry",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.message_outlined, color: Colors.blueAccent, size: 25),
+          SizedBox(height: 3),
+          Text(
+            "Message",
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.shopping_cart_outlined,
+            color: Colors.blueAccent,
+            size: 25,
+          ),
+          SizedBox(height: 3),
+          Text(
+            " Cart ",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
 
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.home_outlined,size: 25,color: Colors.blueAccent,),
-
+          Icon(Icons.person_outline, color: Colors.blueAccent, size: 25),
           SizedBox(height: 3),
-          Text("Home", style: TextStyle(fontSize: 14,fontWeight:FontWeight.bold, color: Colors.blue)),
-        ],
-      ),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.category_outlined, color: Colors.blueAccent,size: 25,),
-          SizedBox(height: 3),
-          Text("Categry", style: TextStyle(fontSize: 14, color: Colors.blueAccent,fontWeight: FontWeight.bold)),
-        ],
-      ),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.message_outlined, color: Colors.blueAccent,size: 25,),
-          SizedBox(height: 3),
-          Text("Message", style: TextStyle(fontSize: 12, color: Colors.blueAccent,fontWeight: FontWeight.bold)),
-        ],
-      ),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.shopping_cart_outlined, color: Colors.blueAccent,size: 25,),
-          SizedBox(height: 3),
-          Text(" Cart ", style: TextStyle(fontSize: 14, color: Colors.blueAccent,fontWeight:FontWeight.bold)),
-        ],
-      ),
-
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.person_outline, color: Colors.blueAccent,size: 25,),
-          SizedBox(height: 3),
-          Text("Profile", style: TextStyle(fontSize: 12, color: Colors.blueAccent,fontWeight: FontWeight.bold)),
+          Text(
+            "Profile",
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     ];
@@ -172,11 +200,18 @@ class _DivicePageState extends State<FlyDiviceNav> {
                 statusBarIconBrightness: Brightness.dark,
               ),
 
-
               // forceMaterialTransparency: true,
-              leading: Icon(Icons.person,size: 25,color: Colors.blue,),
-              title: Center(child: Text("E-SHOP",
-                style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold,fontSize: 35),),),
+              leading: Icon(Icons.person, size: 25, color: Colors.blue),
+              title: Center(
+                child: Text(
+                  "E-SHOP",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 35,
+                  ),
+                ),
+              ),
 
               actions: [
                 Icon(Icons.notifications, color: Colors.blue),
@@ -196,23 +231,24 @@ class _DivicePageState extends State<FlyDiviceNav> {
                     child: Opacity(
                       opacity: showBars ? 1 : 0,
                       child: TextField(
-
                         decoration: InputDecoration(
                           labelText: "Search",
                           labelStyle: TextStyle(
                             color: Colors.blue,
                             fontSize: 25,
-                            fontWeight:FontWeight.bold,
+                            fontWeight: FontWeight.bold,
                           ),
-                          prefixIcon: Icon(Icons.search,size: 30,color: Colors.blue,),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            size: 30,
+                            color: Colors.blue,
+                          ),
                           fillColor: Colors.blue.shade50,
-                          filled: true ,
+                          filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                             borderSide: BorderSide(),
-
                           ),
-
                         ),
                       ),
                     ),
@@ -240,33 +276,25 @@ class _DivicePageState extends State<FlyDiviceNav> {
         //   ),
         // ),
 
-
         // body: pages[index],
         body: Container(
           color: Colors.transparent,
-          child: IndexedStack(
-            index: index,
-            children: pages,
-          ),
+          child: IndexedStack(index: index, children: pages),
         ),
       ),
 
       bottomNavigationBar: AnimatedSlide(
-
         duration: Duration(milliseconds: 250),
-        offset: showBars ? Offset(0,0) : Offset(0,1),
+        offset: showBars ? Offset(0, 0) : Offset(0, 1),
         child: AnimatedOpacity(
-
           duration: Duration(milliseconds: 250),
 
           opacity: showBars ? 1 : 0,
           child: Container(
             decoration: const BoxDecoration(
               // color: Colors.,
-
             ),
             child: CurvedNavigationBar(
-
               index: index,
               backgroundColor: Colors.white,
               color: Colors.deepOrange.shade50,
@@ -279,9 +307,6 @@ class _DivicePageState extends State<FlyDiviceNav> {
           ),
         ),
       ),
-
-
     );
   }
-
 }

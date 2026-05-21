@@ -8,10 +8,10 @@ class OrderRepository {
   final OrderService _orderService;
 
   OrderRepository({OrderService? orderService})
-      : _orderService = orderService ?? OrderService();
+    : _orderService = orderService ?? OrderService();
 
   /// Create an order with Cash on Delivery (COD) payment
-  /// 
+  ///
   /// Wraps: OrderService.createCODOrder()
   /// Handles: Error logging, response parsing, validation
   /// Returns: OrderModel with order details
@@ -37,7 +37,7 @@ class OrderRepository {
   }
 
   /// Create an order with Bakong QR payment
-  /// 
+  ///
   /// Wraps: OrderService.createBakongOrder()
   /// Handles: Error logging, response parsing, validation
   /// Returns: OrderModel with QR data (bakong_qr, bakong_md5)
@@ -62,19 +62,15 @@ class OrderRepository {
     }
   }
 
-  Future<({
-  List<OrderModel> orders,
-  Map<String, dynamic> pagination,
-  })> getOrders({
+  Future<({List<OrderModel> orders, Map<String, dynamic> pagination})>
+  getOrders({
     required int userId,
     required String token,
     int page = 1,
     int limit = 10,
   }) async {
     try {
-      debugPrint(
-        '[OrderRepository] getOrders page=$page, limit=$limit',
-      );
+      debugPrint('[OrderRepository] getOrders page=$page, limit=$limit');
 
       final response = await _orderService.getOrders(
         userId: userId,
@@ -83,9 +79,7 @@ class OrderRepository {
         limit: limit,
       );
 
-      debugPrint(
-        '[OrderRepository] RAW RESPONSE: $response',
-      );
+      debugPrint('[OrderRepository] RAW RESPONSE: $response');
 
       /// ==============================
       /// GET CONTENT LIST
@@ -96,12 +90,10 @@ class OrderRepository {
       /// ==============================
       /// CONVERT TO ORDER MODEL
       /// ==============================
-      final List<OrderModel> orders =
-      contentList.map((item) {
+      final List<OrderModel> orders = contentList.map((item) {
         final map = item as Map<String, dynamic>;
 
-        final orderData =
-            map['data'] as Map<String, dynamic>? ?? {};
+        final orderData = map['data'] as Map<String, dynamic>? ?? {};
 
         return OrderModel.fromJson(orderData);
       }).toList();
@@ -115,24 +107,17 @@ class OrderRepository {
         'total': orders.length,
       };
 
-      debugPrint(
-        '[OrderRepository] Fetched ${orders.length} orders',
-      );
+      debugPrint('[OrderRepository] Fetched ${orders.length} orders');
 
-      return (
-      orders: orders,
-      pagination: pagination,
-      );
+      return (orders: orders, pagination: pagination);
     } catch (e) {
-      debugPrint(
-        '[OrderRepository] Error fetching orders: $e',
-      );
+      debugPrint('[OrderRepository] Error fetching orders: $e');
       rethrow;
     }
   }
 
   /// Get detailed information about a specific order
-  /// 
+  ///
   /// Wraps: OrderService.getOrderDetail()
   /// Handles: Error logging, response parsing, nested object creation
   /// Returns: OrderModel with full details (items, address, payment info)
@@ -147,7 +132,9 @@ class OrderRepository {
         token: token,
       );
       final order = OrderModel.fromJson(data);
-      debugPrint('[OrderRepository] Order detail fetched: #${order.id} (${order.items!.length} items)');
+      debugPrint(
+        '[OrderRepository] Order detail fetched: #${order.id} (${order.items!.length} items)',
+      );
       return order;
     } catch (e) {
       debugPrint('[OrderRepository] Error fetching order detail: $e');
@@ -156,7 +143,7 @@ class OrderRepository {
   }
 
   /// Cancel an order (only if status is PENDING)
-  /// 
+  ///
   /// Wraps: OrderService.cancelOrder()
   /// Handles: Error logging, status validation, response parsing
   /// Precondition: Order status must be PENDING
@@ -168,21 +155,23 @@ class OrderRepository {
   }) async {
     try {
       debugPrint('[OrderRepository] Attempting to cancel order $orderId');
-      
+
       // Fetch current order to check status
       final order = await getOrderDetail(orderId: orderId, token: token);
-      
+
       // Only allow cancellation of PENDING orders
       if (order.status != OrderStatus.pending) {
-        throw Exception('Cannot cancel order with status: ${order.status!.value}');
+        throw Exception(
+          'Cannot cancel order with status: ${order.status!.value}',
+        );
       }
-      
+
       final data = await _orderService.cancelOrder(
         orderId: orderId,
         userId: userId,
         token: token,
       );
-      
+
       final cancelledOrder = OrderModel.fromJson(data);
       debugPrint('[OrderRepository] Order #$orderId cancelled successfully');
       return cancelledOrder;
@@ -193,7 +182,7 @@ class OrderRepository {
   }
 
   /// Update the status of an order (admin/system use)
-  /// 
+  ///
   /// Wraps: OrderService.updateOrderStatus()
   /// Handles: Error logging, status validation, response parsing
   /// Valid statuses: PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED
@@ -205,9 +194,17 @@ class OrderRepository {
   }) async {
     try {
       // Validate status enum
-      final validStatuses = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+      final validStatuses = [
+        'PENDING',
+        'PROCESSING',
+        'SHIPPED',
+        'DELIVERED',
+        'CANCELLED',
+      ];
       if (!validStatuses.contains(status.toUpperCase())) {
-        throw Exception('Invalid status: $status. Must be one of: $validStatuses');
+        throw Exception(
+          'Invalid status: $status. Must be one of: $validStatuses',
+        );
       }
 
       debugPrint('[OrderRepository] updateOrderStatus #$orderId → $status');
@@ -216,7 +213,7 @@ class OrderRepository {
         status: status,
         token: token,
       );
-      
+
       final updatedOrder = OrderModel.fromJson(data);
       debugPrint('[OrderRepository] Order #$orderId status updated to $status');
       return updatedOrder;
@@ -227,7 +224,7 @@ class OrderRepository {
   }
 
   /// Load all orders for a user with automatic pagination
-  /// 
+  ///
   /// Retrieves all pages of orders sequentially
   /// Handles pagination internally
   /// Returns: Complete list of all user orders
@@ -259,10 +256,14 @@ class OrderRepository {
         hasMore = (currentPage * limit) < total;
         page++;
 
-        debugPrint('[OrderRepository] Loaded page $currentPage (${allOrders.length}/$total orders)');
+        debugPrint(
+          '[OrderRepository] Loaded page $currentPage (${allOrders.length}/$total orders)',
+        );
       }
 
-      debugPrint('[OrderRepository] loadAllOrders complete: ${allOrders.length} total orders');
+      debugPrint(
+        '[OrderRepository] loadAllOrders complete: ${allOrders.length} total orders',
+      );
       return allOrders;
     } catch (e) {
       debugPrint('[OrderRepository] Error loading all orders: $e');
@@ -270,6 +271,3 @@ class OrderRepository {
     }
   }
 }
-
-
-
