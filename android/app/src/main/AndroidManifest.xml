@@ -50,15 +50,21 @@
 
          In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
     <queries>
-        <!-- For launching Bakong app via bakong:// deep link -->
+
+        <!-- Bakong deep link -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="bakong" />
         </intent>
+
+        <!-- Process text apps -->
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT" />
-            <package android:name="com.nbc.bakong_khqr" />
             <data android:mimeType="text/plain" />
         </intent>
+
+        <!-- Specific app package (CORRECT WAY) -->
+        <package android:name="com.nbc.bakong_khqr" />
+
     </queries>
 </manifest>
