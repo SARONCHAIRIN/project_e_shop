@@ -1,3 +1,4 @@
+import 'package:e_shop/core/widgets/animation_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../widgets/order/order_card.dart';
@@ -177,8 +178,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
   void _navigateToDetail(OrderModel order) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => OrderDetailScreen(
+      FadeSlideRoute(
+        page: OrderDetailScreen(
           orderId: order.id,
           userId: widget.userId,
           token: widget.token,

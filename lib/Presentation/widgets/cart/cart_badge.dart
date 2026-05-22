@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CartBadge extends StatelessWidget {
-
   final int count;
 
   const CartBadge({super.key, required this.count});
 
   @override
   Widget build(BuildContext context) {
-
     return Stack(
       children: [
-
         const Icon(Icons.shopping_cart),
 
         if (count > 0)
@@ -26,9 +23,7 @@ class CartBadge extends StatelessWidget {
               ),
               child: Text(
                 count.toString(),
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10),
+                style: const TextStyle(color: Colors.white, fontSize: 10),
               ),
             ),
           ),

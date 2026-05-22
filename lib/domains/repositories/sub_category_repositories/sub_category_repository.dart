@@ -1,4 +1,3 @@
-
 import '../../entities/sub_category.dart';
 
 abstract class SubCategoryRepository {

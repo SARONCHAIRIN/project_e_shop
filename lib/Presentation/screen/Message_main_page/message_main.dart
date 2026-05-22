@@ -9,7 +9,8 @@ class MessageMain extends StatefulWidget {
 }
 
 class _MessageMainState extends State<MessageMain> {
-  final String telegramUsername = "https://t.me/contact/1777776159:KLGkumcFEo4vzzuz";
+  final String telegramUsername =
+      "https://t.me/contact/1777776159:KLGkumcFEo4vzzuz";
   final String username = "chairin312007";
 
   Future<void> _openTelegram() async {
@@ -31,7 +32,6 @@ class _MessageMainState extends State<MessageMain> {
     await launchUrl(url, mode: LaunchMode.externalApplication);
   }
 
-
   void openSupportMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -52,7 +52,7 @@ class _MessageMainState extends State<MessageMain> {
     );
   }
 
-   @override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -76,7 +76,6 @@ class _MessageMainState extends State<MessageMain> {
         elevation: 0,
       ),
 
-
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -96,29 +95,24 @@ class _MessageMainState extends State<MessageMain> {
             ),
             const SizedBox(height: 30),
             const Text(
-
               "How can we help you?",
 
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-
             ),
 
             const SizedBox(height: 10),
 
             const Text(
-
               "Contact our support team via Telegram",
 
               textAlign: TextAlign.center,
 
               style: TextStyle(color: Colors.grey),
-
             ),
 
             const SizedBox(height: 30),
 
             ListTile(
-
               leading: const Icon(Icons.telegram, color: Colors.blue),
 
               title: const Text("Chat on Telegram"),
@@ -126,20 +120,18 @@ class _MessageMainState extends State<MessageMain> {
               trailing: const Icon(Icons.arrow_forward_ios),
 
               onTap: openTelegram,
-
             ),
-            SizedBox(height: 20,),
-
+            SizedBox(height: 20),
 
             SizedBox(
               width: double.infinity,
               height: 40,
               child: ElevatedButton.icon(
                 onPressed: _openTelegram,
-                icon: const Icon(Icons.telegram,size: 25,color: Colors.white,),
+                icon: const Icon(Icons.telegram, size: 25, color: Colors.white),
                 label: const Text(
                   "Contact via Telegram",
-                  style: TextStyle(fontSize: 18,color: Colors.white),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,

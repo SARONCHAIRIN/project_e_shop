@@ -21,7 +21,6 @@ class ProductService {
     }
   }
 
-
   // Search products by name (API)
   Future<List<Product>> searchProducts(String query) async {
     final response = await http.get(
@@ -34,7 +33,9 @@ class ProductService {
 
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
-      ProductApiResponse apiResponse = ProductApiResponse.fromJson(jsonResponse);
+      ProductApiResponse apiResponse = ProductApiResponse.fromJson(
+        jsonResponse,
+      );
       return apiResponse.content.map((item) => item.data).toList();
     } else {
       throw Exception('Failed to search products.');
@@ -44,7 +45,6 @@ class ProductService {
   // Fetch products by category name (subcategory name)
   Future<List<Product>> fetchProductsByCategory(String categoryName) async {
     final allProducts = await fetchAllProducts();
-
 
     return allProducts.where((product) {
       return product.name.contains(categoryName) ||
@@ -74,7 +74,8 @@ class ProductService {
       return products;
     } else {
       throw Exception(
-          'Failed to load products. Status code: ${response.statusCode}');
+        'Failed to load products. Status code: ${response.statusCode}',
+      );
     }
   }
 
@@ -84,13 +85,11 @@ class ProductService {
     required int productId,
     required bool isFavorite,
     required String token,
-  })
-  async {
-    final url = Uri.parse('https://e-shop-1-m034.onrender.com/api/v1/users/$userId/favorite');
-    final body = {
-      'product_id': productId,
-      'is_favorite': isFavorite,
-    };
+  }) async {
+    final url = Uri.parse(
+      'https://e-shop-1-m034.onrender.com/api/v1/users/$userId/favorite',
+    );
+    final body = {'product_id': productId, 'is_favorite': isFavorite};
     print('POST body: $body');
     print('Headers: Authorization=Bearer $token');
 
@@ -103,13 +102,11 @@ class ProductService {
 
       body: jsonEncode(body),
     );
-// Print server response for debug
+    // Print server response for debug
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
     if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception('Failed to update favorite');
     }
   }
-
 }
-

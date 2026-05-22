@@ -1,26 +1,21 @@
-
-
 import 'dart:convert';
 import 'package:e_shop/core/constants/address/adress_constants.dart';
-import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:http/http.dart' as http;
 import '../../models/address/address_model.dart';
 
 class AddressService {
-
   Future<AddressModel> createAddress(
-      int userId,
-      String token,
-      Map<String, dynamic> body,
-      )
-  async {
+    int userId,
+    String token,
+    Map<String, dynamic> body,
+  ) async {
     final url = Uri.parse("${AddressConstants.createaddress}/$userId");
 
     final response = await http.post(
       url,
       headers: {
-        'accept':        'application/json',
-        'Content-Type':  'application/json',
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode(body),
@@ -38,19 +33,20 @@ class AddressService {
     throw Exception(decoded['message'] ?? 'Failed to create address');
   }
 
-    //get address by userId
-  Future<List<AddressModel>> getAddressbyuserId(int userId , String token)
-  async{
-
+  //get address by userId
+  Future<List<AddressModel>> getAddressbyuserId(
+    int userId,
+    String token,
+  ) async {
     final url = Uri.parse("${AddressConstants.getaddressbyuserId}/$userId");
 
-    try{
-      final response = await  http.get(
-          url,
-          headers: {
-            'accept' : 'Application/json',
-            "Authorization" : 'Bearer $token',
-          }
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'accept': 'Application/json',
+          "Authorization": 'Bearer $token',
+        },
       );
 
       print("STATUS: ${response.statusCode}");
@@ -79,13 +75,10 @@ class AddressService {
       }
 
       return [];
-
-
-    }catch(e){
+    } catch (e) {
       throw Exception("error $e");
     }
   }
-
 
   Future<void> deleteAddress(int id, int userId, String token) async {
     final url = Uri.parse("${AddressConstants.deleteAddress}/$id/user/$userId");
@@ -110,7 +103,6 @@ class AddressService {
 
       // Any other status = failure
       throw Exception('Failed to delete address: ${response.statusCode}');
-
     } catch (e) {
       throw Exception('Error deleting address: $e');
     }
@@ -137,7 +129,9 @@ class AddressService {
     String token,
     Map<String, dynamic> body,
   ) async {
-    final url = Uri.parse("${AddressConstants.updateAddress}/$addressId/user/$userId");
+    final url = Uri.parse(
+      "${AddressConstants.updateAddress}/$addressId/user/$userId",
+    );
 
     try {
       final response = await http.put(

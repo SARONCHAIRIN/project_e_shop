@@ -21,19 +21,23 @@ class ApiService {
 
       // If the server returns a 200 OK response, parse the JSON
       var jsonResponse = jsonDecode(response.body);
-      SubcategoryApiResponse apiResponse = SubcategoryApiResponse.fromJson(jsonResponse);
+      SubcategoryApiResponse apiResponse = SubcategoryApiResponse.fromJson(
+        jsonResponse,
+      );
 
       // Extract the list of SubcategoryData from the content
-      List<SubcategoryData> subcategories =
-      apiResponse.content.map((item) => item.data).toList();
+      List<SubcategoryData> subcategories = apiResponse.content
+          .map((item) => item.data)
+          .toList();
 
       return subcategories;
     } else {
       // If the server returns an error response, throw an exception.
-      throw Exception('Failed to load subcategories. Status code: ${response.statusCode}');
+      throw Exception(
+        'Failed to load subcategories. Status code: ${response.statusCode}',
+      );
     }
   }
-
 
   // Optional: Fetch a single subcategory by ID
   Future<SubcategoryData> fetchSubcategoryById(int id) async {
@@ -50,7 +54,9 @@ class ApiService {
       // Assuming the API returns a similar structure for single item
       return SubcategoryData.fromJson(jsonResponse['data']);
     } else {
-      throw Exception('Failed to load subcategory. Status code: ${response.statusCode}');
+      throw Exception(
+        'Failed to load subcategory. Status code: ${response.statusCode}',
+      );
     }
   }
 }

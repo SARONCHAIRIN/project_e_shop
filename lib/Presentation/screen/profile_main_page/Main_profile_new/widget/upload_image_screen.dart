@@ -16,7 +16,9 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile == null) return; // ប្រើ cancel
 
-    var uri = Uri.parse('https://e-shop-1-m034.onrener.com/api/v1/user/$userId/iamge');
+    var uri = Uri.parse(
+      'https://e-shop-1-m034.onrener.com/api/v1/user/$userId/iamge',
+    );
     var request = http.MultipartRequest('POST', uri);
     request.headers['Authorization'] = 'Bearer $token';
 
@@ -46,7 +48,10 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            await uploadUserImage('1', '<YOUR_TOKEN_HERE>'); // ប្ដូរ ID និង Token
+            await uploadUserImage(
+              '1',
+              '<YOUR_TOKEN_HERE>',
+            ); // ប្ដូរ ID និង Token
           },
           child: Text('Choose and Upload'),
         ),

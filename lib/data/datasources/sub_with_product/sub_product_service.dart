@@ -42,16 +42,15 @@ class ApiService {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       List content = jsonResponse['content'];
-      return content
-          .map((item) => Product.fromJson(item['data']))
-          .toList();
+      return content.map((item) => Product.fromJson(item['data'])).toList();
     } else {
       throw Exception('Failed to load products');
     }
   }
 
-
-  Future<List<SubcategoryData>> fetchSubcategoriesByCategoryName(String categoryName) async {
+  Future<List<SubcategoryData>> fetchSubcategoriesByCategoryName(
+    String categoryName,
+  ) async {
     final allSubcategories = await fetchSubcategories();
     print("CATEGORY: ${categoryName}");
 
@@ -59,11 +58,12 @@ class ApiService {
       return allSubcategories; //  show all
     }
 
-
-
-    return allSubcategories.where((sub) =>
-    sub.categoryName.trim().toLowerCase() ==
-        categoryName.trim().toLowerCase()
-    ).toList();
+    return allSubcategories
+        .where(
+          (sub) =>
+              sub.categoryName.trim().toLowerCase() ==
+              categoryName.trim().toLowerCase(),
+        )
+        .toList();
   }
 }

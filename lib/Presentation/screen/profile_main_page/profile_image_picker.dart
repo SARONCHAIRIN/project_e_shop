@@ -42,6 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
   String? full_name;
   GetUserModel? user;
+
   // bool _isloading = true;
 
   // late ProfileUpdateController controller;
@@ -50,25 +51,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
 
-
   @override
   void initState() {
     super.initState();
     _initController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       _initializeData();
-
-    });  }
+    });
+  }
 
   Future<void> _initializeData() async {
     await fetchUser();
     await _loadUser();
     await _loadSavedImage();
     print('full name: ${user?.fullName}, email: ${user?.email}');
-
   }
+
   void _initController() {
     final userService = PutUserService();
     final repo = PutUserRepo(userService);
@@ -100,7 +99,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-
   Future<void> _loadSavedImage() async {
     final storage = TokenStorage();
     final savedImage = await storage.readUserImage();
@@ -117,16 +115,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       username = await storage.readUsername();
       email = await storage.readUserEmail();
-
-
     } catch (e) {
       print("Error loading user: $e");
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
-
-
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? picked = await _picker.pickImage(
@@ -141,11 +135,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
 
     await _uploadImage(); // upload immediately
-    }
+  }
+
   //========upload image===
   Future<void> _uploadImage() async {
-
-
     setState(() => _isUploading = true);
 
     try {
@@ -159,7 +152,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return;
       }
 
-      final uri = Uri.parse("https://e-shop-1-m034.onrender.com/api/v1/user/$userId/image");
+      final uri = Uri.parse(
+        "https://e-shop-1-m034.onrender.com/api/v1/user/$userId/image",
+      );
       final request = http.MultipartRequest("POST", uri);
 
       request.headers['Authorization'] = 'Bearer $token';
@@ -167,25 +162,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       if (_image == null) {
         _isUploading = false;
-        setState(() {
-
-        });
+        setState(() {});
         // _showSnackBar("No image selected", isError: true);
         return;
       }
 
       request.files.add(
-        await http.MultipartFile.fromPath(
-          'file',
-          _image!.path,
-        ),
+        await http.MultipartFile.fromPath('file', _image!.path),
       );
 
-
-
-      final response = await request.send().timeout(
-        Duration(seconds: 30),
-      );
+      final response = await request.send().timeout(Duration(seconds: 30));
       final responseBody = await http.Response.fromStream(response);
 
       setState(() => _isUploading = false);
@@ -212,7 +198,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } else {
         _showSnackBar("Upload failed: ${response.statusCode}", isError: true);
       }
-    } catch (e,stackTrace) {
+    } catch (e, stackTrace) {
       setState(() => _isUploading = false);
       print("UPLOAD ERROR: $e");
       print(stackTrace);
@@ -220,13 +206,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-// Decode userId from JWT token
+  // Decode userId from JWT token
   int extractUserIdFromToken(String token) {
     try {
       String cleanToken = token.replaceFirst('Bearer ', '');
       List<String> parts = cleanToken.split('.');
       if (parts.length == 3) {
-        String payloadStr = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
+        String payloadStr = utf8.decode(
+          base64Url.decode(base64Url.normalize(parts[1])),
+        );
         Map<String, dynamic> payload = json.decode(payloadStr);
         print("Token payload: $payload");
 
@@ -248,67 +236,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return 0;
   }
 
-  void _removeImage() async{
-
+  void _removeImage() async {
     final confirm = await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Confirm Remove',style: TextStyle(color: Colors.blue,fontSize: 20),),
-            icon: Icon(CupertinoIcons.delete,size: 30,color: Colors.red,),
-            contentTextStyle: TextStyle(
-              color: Colors.blue,
-              fontSize: 15,
-            ),
-            content: Text('Are you sure you  want to remove image? '),
-            actions: [
-
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-
-                    BoxShadow(
-                      blurStyle: BlurStyle.outer,
-                      blurRadius: 0.5,
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
-                child: TextButton(
-                  onPressed:()=>Navigator.pop(context,false),
-                  child: Text('Cancel',
-                    style: TextStyle(
-                      color: Colors.blue,
-                    ),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            'Confirm Remove',
+            style: TextStyle(color: Colors.blue, fontSize: 20),
+          ),
+          icon: Icon(CupertinoIcons.delete, size: 30, color: Colors.red),
+          contentTextStyle: TextStyle(color: Colors.blue, fontSize: 15),
+          content: Text('Are you sure you  want to remove image? '),
+          actions: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    blurStyle: BlurStyle.outer,
+                    blurRadius: 0.5,
+                    color: Colors.blue,
                   ),
-                ),
+                ],
               ),
-
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-
-                    BoxShadow(
-                      blurStyle: BlurStyle.outer,
-                      blurRadius: 0.5,
-                      color: Colors.red,
-                    ),
-                  ],
-                ),
-                child: TextButton(
-                  onPressed: ()=> Navigator.pop(context,true),
-                  child: Text('Remove',style: TextStyle(color: Colors.red,),),
-                ),
+              child: TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text('Cancel', style: TextStyle(color: Colors.blue)),
               ),
-            ],
-          );
+            ),
 
-        }
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    blurStyle: BlurStyle.outer,
+                    blurRadius: 0.5,
+                    color: Colors.red,
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text('Remove', style: TextStyle(color: Colors.red)),
+              ),
+            ),
+          ],
+        );
+      },
     );
 
-    if(confirm != true) return;
+    if (confirm != true) return;
 
     setState(() {
       _image = null;
@@ -319,17 +298,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _showSnackBar(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: isError ? Colors.red : Colors.green),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : Colors.green,
+      ),
     );
   }
 
   ImageProvider? _getImageProvider() {
     if (_image != null) return FileImage(_image!);
     if (_uploadedImageUrl != null) return NetworkImage(_uploadedImageUrl!);
-    if (widget.currentImageUrl != null) return NetworkImage(widget.currentImageUrl!);
+    if (widget.currentImageUrl != null)
+      return NetworkImage(widget.currentImageUrl!);
     return null;
   }
-
 
   // pick from gallery
   Future<void> _pickFromGallery() async {
@@ -350,7 +332,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     }
   }
-
 
   // show dialog
   void _showImagePickerDialog() {
@@ -388,9 +369,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_isLoading) {
       return const Scaffold(
         backgroundColor: Colors.white,
-        body: Center(
-          child: SpinKitCircle(color: Colors.grey, size: 30),
-        ),
+        body: Center(child: SpinKitCircle(color: Colors.grey, size: 30)),
       );
     }
 
@@ -403,24 +382,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: const Text('Profile'),
         actions: [
           IconButton(
-            onPressed: (){
+            onPressed: () {
               _removeImage();
             },
-            icon:  Icon(Icons.delete_outline,size: 25,color: Colors.red,),),
+            icon: Icon(Icons.delete_outline, size: 25, color: Colors.red),
+          ),
         ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-
             // image profile for user
             Stack(
               children: [
-
                 GestureDetector(
-
-                  onTap:  _showImagePickerDialog,
+                  onTap: _showImagePickerDialog,
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -435,7 +412,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     child: CircleAvatar(
                       radius: 70,
-                      backgroundColor: Colors.grey.shade50, // optional background
+                      backgroundColor: Colors.grey.shade50,
+                      // optional background
                       child: _buildProfileImage(),
                     ),
                   ),
@@ -446,7 +424,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   right: 1,
                   child: Container(
                     width: 40,
-                    height: 40 ,
+                    height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.blue.shade50,
@@ -459,45 +437,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     child: IconButton(
-                      onPressed: _isUploading ? null : () =>  _pickImage(ImageSource.camera),
-                      icon: Icon(Icons.camera_alt,size: 26,color: Colors.blue,),
+                      onPressed: _isUploading
+                          ? null
+                          : () => _pickImage(ImageSource.camera),
+                      icon: Icon(
+                        Icons.camera_alt,
+                        size: 26,
+                        color: Colors.blue,
+                      ),
                     ),
                   ),
                 ),
-
               ],
             ),
             const SizedBox(height: 10),
 
             //username
-            Text(username ??
-                widget.username, style:
-            const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+            Text(
+              username ?? widget.username,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            ),
-            SizedBox(height: 10,),
+            SizedBox(height: 10),
 
             //email
             Text(
               user?.email ?? 'user@gmail.com',
-              style:
-              const TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 10),
 
             _buildUpdateusername(),
-            SizedBox(height: 5,),
+            SizedBox(height: 5),
 
             _buildupdateFullname(),
-            SizedBox(height: 5,),
+            SizedBox(height: 5),
 
             _buildUpdateEmail(),
-            SizedBox(height: 5,),
+            SizedBox(height: 5),
 
             _buildUpdatePassword(),
-            SizedBox(height: 5,),
+            SizedBox(height: 5),
 
             // _updateUser(),
           ],
@@ -509,23 +488,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   //build image to up load
-  Widget _buildProfileImage()  {
-
+  Widget _buildProfileImage() {
     if (_image != null) {
       return ClipOval(
-        child: Image.file(
-          _image!,
-          width: 140,
-          height: 140,
-          fit: BoxFit.cover,
-        ),
+        child: Image.file(_image!, width: 140, height: 140, fit: BoxFit.cover),
       );
-    }
-    else if (_uploadedImageUrl != null) {
-
+    } else if (_uploadedImageUrl != null) {
       return ClipOval(
         child: CachedNetworkImage(
-          imageUrl: "${_uploadedImageUrl!}?v=${DateTime.now().millisecondsSinceEpoch}",
+          imageUrl:
+              "${_uploadedImageUrl!}?v=${DateTime.now().millisecondsSinceEpoch}",
           width: 140,
           height: 140,
           fit: BoxFit.cover,
@@ -535,14 +507,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: Colors.blue,
             child: const Center(child: CircularProgressIndicator()),
           ),
-          errorWidget: (context, url, error) => const Icon(Icons.person, size: 70,),
+          errorWidget: (context, url, error) =>
+              const Icon(Icons.person, size: 70),
         ),
       );
     } else {
-      return const Icon(Icons.person, size: 70,color: Colors.grey,);
+      return const Icon(Icons.person, size: 70, color: Colors.grey);
     }
   }
-
 
   //user name
   Widget _buildUpdateusername() => Padding(
@@ -550,17 +522,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
-
         //text usename
-        Text('User Name',
+        Text(
+          'User Name',
           style: TextStyle(
             color: Colors.grey,
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(height: 5,),
+        SizedBox(height: 5),
 
         Container(
           width: double.infinity,
@@ -579,16 +550,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: Row(
             children: [
-
-              SizedBox(width: 20,),
+              SizedBox(width: 20),
 
               //icon
-              Icon(Icons.person_outline,
-                size: 25,
-                color: Colors.grey,
-              ),
+              Icon(Icons.person_outline, size: 25, color: Colors.grey),
 
-              SizedBox(width: 20,),
+              SizedBox(width: 20),
 
               Text(
                 username ?? widget.username,
@@ -605,23 +572,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ),
   );
 
-//Email Address
+  //Email Address
   Widget _buildUpdateEmail() => Padding(
     padding: const EdgeInsets.all(8.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
-
         //text email
-        Text('Email Address',
+        Text(
+          'Email Address',
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(height: 5,),
+        SizedBox(height: 5),
 
         //email user
         Container(
@@ -641,23 +607,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: TextFormField(
             controller: emailController,
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.email_outlined,),
+              prefixIcon: Icon(Icons.email_outlined),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,
               ),
               hintText: "Enter your email",
-              hintStyle: TextStyle(
-                color: Colors.grey,
-                fontSize: 15,
-              ),
+              hintStyle: TextStyle(color: Colors.grey, fontSize: 15),
             ),
             style: TextStyle(
               color: Colors.black,
               fontSize: 15,
               fontWeight: FontWeight.w500,
             ),
-
           ),
         ),
       ],
@@ -670,16 +632,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         //text email
-        Text('Password',
+        Text(
+          'Password',
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(height: 5,),
+        SizedBox(height: 5),
 
         //email user
         Container(
@@ -699,11 +661,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: TextFormField(
             controller: passwordController,
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.email_outlined,),
+              prefixIcon: Icon(Icons.email_outlined),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,
-
               ),
               // labelText: "${user?.password == true ? user!.password : 'No data'}",
               hintText: "Enter new password",
@@ -713,29 +674,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-
           ),
         ),
       ],
     ),
   );
 
-//full name
+  //full name
   Widget _buildupdateFullname() => Padding(
     padding: const EdgeInsets.all(8.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         // text full name
-        Text( 'Full Name',
+        Text(
+          'Full Name',
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(height: 5,),
+        SizedBox(height: 5),
 
         //update password
         Container(
@@ -761,17 +721,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 borderSide: BorderSide.none,
               ),
               hintText: "Enter your full name",
-              hintStyle: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-              ),
+              hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
             ),
             style: TextStyle(
               color: Colors.black,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
-
           ),
         ),
       ],
@@ -780,31 +736,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   //build EvelationButton
   Widget _buildSaveChangeButton() => Padding(
-    padding: const EdgeInsets.only(
-      bottom: 15,
-      left: 15,
-      right: 15,
-    ),
+    padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
     child: SizedBox(
       width: double.infinity,
       height: 50,
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue.shade50,
-
-        ),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade50),
         onPressed: () async {
           // save image only if there's a new image to upload
           // if (!_isUploading && _image != null)
-            await _uploadImage();
-
+          await _uploadImage();
 
           // save user info
           final storage = TokenStorage();
           int? userId = await storage.readUserId(); // get saved user ID
 
           final savedPassword = await storage.readPassword();
-
 
           print('UPDATE userId: $userId');
           print('UPDATE email: ${emailController.text}');
@@ -821,31 +768,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fullName: nameController.text,
               phoneNumber: "",
               birthdate: "",
-              password  : password,
-
+              password: password,
             );
             print('PutUserModel: ${userData}');
 
             bool success = await controller.updateUser(userId, userData);
             print('UPDATE SUCCESS: $success');
 
-
             if (success) {
               if (passwordController.text.isNotEmpty) {
                 await storage.writePassword(passwordController.text);
               }
               await fetchUser(); //  reload data when update
-
             } else {
               print('Failed to update user'); //
-
             }
-
           } else {
             _showSnackBar("Not login", isError: true);
           }
         },
-        child: Text("Save Change",
+        child: Text(
+          "Save Change",
           style: TextStyle(
             color: Colors.blueAccent,
             fontSize: 20,
@@ -855,5 +798,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     ),
   );
-
 }

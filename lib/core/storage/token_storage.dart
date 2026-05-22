@@ -27,7 +27,7 @@ class TokenStorage {
     }
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("token", token);
-    await prefs.setString(_tokenKey, token);  // use consistent key
+    await prefs.setString(_tokenKey, token); // use consistent key
 
     print("Token saved: $token");
     saveToken(token);
@@ -63,7 +63,6 @@ class TokenStorage {
     final token = await readToken();
     return token != null && token.isNotEmpty;
   }
-
 
   //  encrypted storage for sensitive data
   final _secureStorage = const FlutterSecureStorage();
@@ -125,18 +124,15 @@ class TokenStorage {
     }
   }
 
-    Future<void> deleteRefreshToken() async {
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.remove('refresh_token');
-        print(' Refresh token deleted');
-      } catch (e) {
-        print(' Error deleting refresh token: $e');
-      }
+  Future<void> deleteRefreshToken() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('refresh_token');
+      print(' Refresh token deleted');
+    } catch (e) {
+      print(' Error deleting refresh token: $e');
     }
-
-
-
+  }
 
   // ========== USERNAME METHODS ==========
   Future<void> saveUsername(String username) async {
@@ -192,7 +188,6 @@ class TokenStorage {
     await prefs.remove('user_image');
   }
 
-
   // ========== USER EMAIL METHODS ==========
   Future<void> saveUserEmail(String email) async {
     try {
@@ -218,8 +213,6 @@ class TokenStorage {
       return null;
     }
   }
-
-
 
   // ========== USER ID METHODS ==========
   Future<void> saveUserId(int userId) async {
@@ -277,8 +270,7 @@ class TokenStorage {
     required String email,
     required int userId,
     required String fullName,
-  })
-  async {
+  }) async {
     await saveToken(token);
     await saveUsername(username);
     await saveUserEmail(email);
@@ -297,7 +289,7 @@ class TokenStorage {
       'username': await readUsername(),
       'email': await readUserEmail(),
       'userId': await readUserId(),
-      'full_name' : await readFullName(),
+      'full_name': await readFullName(),
     };
   }
 }

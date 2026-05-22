@@ -1,5 +1,3 @@
-
-
 //network = communication api and internet
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -12,11 +10,11 @@ class ApiClient {
   //constructor
   ApiClient([http.Client? client]) : _client = client ?? http.Client();
 
-
   //function get api
-  Future<Map<String , dynamic >>  get(
-      String url,
-      {Map<String , String>? headers }) async{
+  Future<Map<String, dynamic>> get(
+    String url, {
+    Map<String, String>? headers,
+  }) async {
     final res = await _client.get(
       Uri.parse(url),
       headers: {'content-type': 'application/json', ...?headers},
@@ -37,9 +35,10 @@ class ApiClient {
 
   //function api  post
   Future<Map<String, dynamic>> post(
-      String url,
-      Map<String, dynamic> body,
-      {Map<String, String>? headers}) async {
+    String url,
+    Map<String, dynamic> body, {
+    Map<String, String>? headers,
+  }) async {
     print('POST URL: $url');
     print('POST BODY: ${jsonEncode(body)}');
     final res = await _client.post(
@@ -57,13 +56,11 @@ class ApiClient {
           ? decoded['message'].toString()
           : 'HTTP ${res.statusCode}';
 
-
       throw Exception(message);
     }
 
     return decoded as Map<String, dynamic>;
   }
-
 
   //header
   static Future<Map<String, String>> headers() async {

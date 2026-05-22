@@ -27,7 +27,6 @@ class _HomeCarouselSliderState extends State<HomeCarouselSlider> {
       'title': 'Free Shipping',
       'subtitle': 'On orders over \$2999',
     },
-
   ];
 
   @override

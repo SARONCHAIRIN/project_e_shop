@@ -1,4 +1,5 @@
 import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
+import 'package:e_shop/Presentation/controllers/payment/payment_controller.dart';
 import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/auth/signup/signup_screen.dart';
 import 'package:e_shop/Presentation/screen/order/order_history_screen.dart';
@@ -37,16 +38,19 @@ void main() async {
     service: authService,
     storage: tokenStorage,
   );
-// Initialize Cart Service & Repository
+  // Initialize Cart Service & Repository
   final cartService = CartService();
   final cartRepo = CartRepository(cartService);
-
 
   runApp(
     MultiProvider(
       providers: [
         //cart controller
-        ChangeNotifierProvider(create: (_) => CartController(repository: cartRepo,),),
+        ChangeNotifierProvider(
+          create: (_) => CartController(repository: cartRepo),
+        ),
+
+        ChangeNotifierProvider(create: (_) => PaymentController()),
 
         //order controller
       ],
@@ -74,36 +78,28 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       onGenerateRoute: (settings) {
-
-
         if (settings.name == '/homemainppage') {
-
           return MaterialPageRoute(
-
             builder: (_) => DivicesNav(authRepository: authRepository),
           );
         }
 
         if (settings.name == '/divicenav') {
-
           return MaterialPageRoute(
-
             builder: (_) => DivicesNav(authRepository: authRepository),
           );
         }
         if (settings.name == '/login') {
-
           return MaterialPageRoute(
-
             builder: (_) => LoginScreen(authRepository: authRepository),
           );
         }
 
-        if(settings.name == '/register') {
-          return MaterialPageRoute(builder: (_) => SignupScreen(authRepository: authRepository),
+        if (settings.name == '/register') {
+          return MaterialPageRoute(
+            builder: (_) => SignupScreen(authRepository: authRepository),
           );
         }
-
 
         if (settings.name == '/orderHistory') {
           final args = settings.arguments as Map<String, dynamic>;

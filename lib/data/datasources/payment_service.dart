@@ -16,9 +16,7 @@ class PaymentService {
     try {
       final response = await _dio.post(
         '$_baseUrl/orders/$orderId/bakong/initiate',
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
@@ -26,7 +24,9 @@ class PaymentService {
         debugPrint('[PaymentService] initiateBakongPayment success: $data');
         return data;
       }
-      throw Exception('Failed to initiate Bakong payment: ${response.statusCode}');
+      throw Exception(
+        'Failed to initiate Bakong payment: ${response.statusCode}',
+      );
     } on DioException catch (e) {
       debugPrint('[PaymentService] DioException: ${e.message}');
       throw _handleError(e);
@@ -49,7 +49,9 @@ class PaymentService {
 
     try {
       final payload = {'qr': qr, 'md5': md5};
-      debugPrint('[PaymentService] generateQRImage request payload keys: ${payload.keys}');
+      debugPrint(
+        '[PaymentService] generateQRImage request payload keys: ${payload.keys}',
+      );
 
       final response = await _dio.post(
         '$_baseUrl/bakong/get-qr-image',
@@ -65,7 +67,9 @@ class PaymentService {
 
       if (response.statusCode == 200) {
         final bytes = Uint8List.fromList(response.data as List<int>);
-        debugPrint('[PaymentService] generateQRImage success, bytes: ${bytes.length}');
+        debugPrint(
+          '[PaymentService] generateQRImage success, bytes: ${bytes.length}',
+        );
         return bytes;
       }
 
@@ -88,12 +92,12 @@ class PaymentService {
       final response = await _dio.post(
         '$_baseUrl/bakong/check-transaction',
         data: {'md5': md5},
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
-      debugPrint('[PaymentService] checkTransaction status: ${response.statusCode}');
+      debugPrint(
+        '[PaymentService] checkTransaction status: ${response.statusCode}',
+      );
       debugPrint('[PaymentService] checkTransaction raw: ${response.data}');
 
       if (response.statusCode == 200) {
@@ -105,13 +109,17 @@ class PaymentService {
 
           // ✅ data: { status: ... }
           if (inner is Map<String, dynamic>) {
-            debugPrint('[PaymentService] checkTransaction status: ${inner['status']}');
+            debugPrint(
+              '[PaymentService] checkTransaction status: ${inner['status']}',
+            );
             return inner;
           }
 
           // ✅ data: null = still pending, don't crash
           if (inner == null) {
-            debugPrint('[PaymentService] checkTransaction: data=null → PENDING');
+            debugPrint(
+              '[PaymentService] checkTransaction: data=null → PENDING',
+            );
             return {'status': 'PENDING'};
           }
         }
@@ -122,7 +130,9 @@ class PaymentService {
 
       throw Exception('Failed to check transaction: ${response.statusCode}');
     } on DioException catch (e) {
-      debugPrint('[PaymentService] checkTransaction DioException: ${e.message}');
+      debugPrint(
+        '[PaymentService] checkTransaction DioException: ${e.message}',
+      );
       throw _handleError(e);
     } catch (e) {
       debugPrint('[PaymentService] checkTransaction Error: $e');
@@ -140,9 +150,7 @@ class PaymentService {
       final response = await _dio.post(
         '$_baseUrl/orders/$orderId/bakong/verify',
         queryParameters: {'transactionId': transactionId},
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {

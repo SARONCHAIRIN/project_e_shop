@@ -9,7 +9,7 @@ class OrderService {
   OrderService({Dio? dio}) : _dio = dio ?? Dio();
 
   /// Create an order with Cash on Delivery (COD) payment
-  /// 
+  ///
   /// POST /api/v1/orders/user/{userId}/from-cart
   /// Body: { address_id, payment_method: "COD" }
   /// Returns: { id, user_id, address_id, payment_method, status, total_price, created_at }
@@ -21,18 +21,15 @@ class OrderService {
     try {
       final response = await _dio.post(
         '$_baseUrl/orders/user/$userId/from-cart',
-        data: {
-          'address_id': addressId,
-          'payment_method': 'COD',
-        },
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        data: {'address_id': addressId, 'payment_method': 'COD'},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 201) {
         final data = response.data['data'] as Map<String, dynamic>;
-        debugPrint('[OrderService] createCODOrder success: Order #${data['id']}');
+        debugPrint(
+          '[OrderService] createCODOrder success: Order #${data['id']}',
+        );
         return data;
       }
       throw Exception('Failed to create COD order: ${response.statusCode}');
@@ -46,7 +43,7 @@ class OrderService {
   }
 
   /// Create an order with Bakong QR payment
-  /// 
+  ///
   /// POST /api/v1/orders/user/{userId}/from-cart/bakong
   /// Body: { address_id, payment_method: "BAKONG" }
   /// Returns: { id, user_id, address_id, payment_method, status, total_price, bakong_qr, bakong_md5, created_at }
@@ -58,18 +55,15 @@ class OrderService {
     try {
       final response = await _dio.post(
         '$_baseUrl/orders/user/$userId/from-cart/bakong',
-        data: {
-          'address_id': addressId,
-          'payment_method': 'BAKONG',
-        },
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        data: {'address_id': addressId, 'payment_method': 'BAKONG'},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 201) {
         final data = response.data['data'] as Map<String, dynamic>;
-        debugPrint('[OrderService] createBakongOrder success: Order #${data['id']}');
+        debugPrint(
+          '[OrderService] createBakongOrder success: Order #${data['id']}',
+        );
         return data;
       }
       throw Exception('Failed to create Bakong order: ${response.statusCode}');
@@ -83,7 +77,7 @@ class OrderService {
   }
 
   /// Get all orders for a user with pagination
-  /// 
+  ///
   /// GET /api/v1/orders/user/{userId}?page={page}&limit={limit}
   /// Returns: { data: [...], pagination: { page, limit, total } }
   Future<Map<String, dynamic>> getOrders({
@@ -96,14 +90,14 @@ class OrderService {
       final response = await _dio.get(
         '$_baseUrl/orders/user/$userId',
         queryParameters: {'page': page, 'limit': limit},
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
-        debugPrint('[OrderService] getOrders success: ${data['data']?.length ?? 0} orders');
+        debugPrint(
+          '[OrderService] getOrders success: ${data['data']?.length ?? 0} orders',
+        );
         return data;
       }
       throw Exception('Failed to fetch orders: ${response.statusCode}');
@@ -117,7 +111,7 @@ class OrderService {
   }
 
   /// Get detailed information about a specific order
-  /// 
+  ///
   /// GET /api/v1/orders/{id}
   /// Returns: { id, status, payment_method, total_price, address, items, created_at }
   Future<Map<String, dynamic>> getOrderDetail({
@@ -127,14 +121,14 @@ class OrderService {
     try {
       final response = await _dio.get(
         '$_baseUrl/orders/$orderId',
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
         final data = response.data['data'] as Map<String, dynamic>;
-        debugPrint('[OrderService] getOrderDetail success: Order #${data['id']}');
+        debugPrint(
+          '[OrderService] getOrderDetail success: Order #${data['id']}',
+        );
         return data;
       }
       throw Exception('Failed to fetch order detail: ${response.statusCode}');
@@ -148,7 +142,7 @@ class OrderService {
   }
 
   /// Cancel an order (only if status is PENDING)
-  /// 
+  ///
   /// POST /api/v1/orders/{id}/user/{userId}/cancel
   /// Returns: { id, status, cancelled_at }
   Future<Map<String, dynamic>> cancelOrder({
@@ -159,14 +153,14 @@ class OrderService {
     try {
       final response = await _dio.post(
         '$_baseUrl/orders/$orderId/user/$userId/cancel',
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
         final data = response.data['data'] as Map<String, dynamic>;
-        debugPrint('[OrderService] cancelOrder success: Order #${data['id']} cancelled');
+        debugPrint(
+          '[OrderService] cancelOrder success: Order #${data['id']} cancelled',
+        );
         return data;
       }
       throw Exception('Failed to cancel order: ${response.statusCode}');
@@ -180,7 +174,7 @@ class OrderService {
   }
 
   /// Update the status of an order (admin/system use)
-  /// 
+  ///
   /// PATCH /api/v1/orders/{id}/status?status={status}
   /// Returns: { id, status, updated_at }
   Future<Map<String, dynamic>> updateOrderStatus({
@@ -192,14 +186,14 @@ class OrderService {
       final response = await _dio.patch(
         '$_baseUrl/orders/$orderId/status',
         queryParameters: {'status': status},
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {
         final data = response.data['data'] as Map<String, dynamic>;
-        debugPrint('[OrderService] updateOrderStatus success: Order #${data['id']} → $status');
+        debugPrint(
+          '[OrderService] updateOrderStatus success: Order #${data['id']} → $status',
+        );
         return data;
       }
       throw Exception('Failed to update order status: ${response.statusCode}');
@@ -215,7 +209,7 @@ class OrderService {
   /// Helper to handle Dio exceptions
   Exception _handleError(DioException e) {
     String message = 'Network error';
-    
+
     if (e.type == DioExceptionType.connectionTimeout) {
       message = 'Connection timeout';
     } else if (e.type == DioExceptionType.receiveTimeout) {
@@ -223,8 +217,7 @@ class OrderService {
     } else if (e.response != null) {
       message = 'Error ${e.response?.statusCode}: ${e.response?.statusMessage}';
     }
-    
+
     return Exception(message);
   }
 }
-

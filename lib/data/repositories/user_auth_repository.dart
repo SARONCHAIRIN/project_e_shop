@@ -9,22 +9,15 @@ class User_AuthRepository {
   final AuthService service;
   final TokenStorage storage;
 
-  User_AuthRepository({
-    required this.service,
-    required this.storage,
-  });
+  User_AuthRepository({required this.service, required this.storage});
 
   // LOGIN
-  Future<UserModel> login(
-      String username,
-      String password
-      ) async {
+  Future<UserModel> login(String username, String password) async {
     try {
       final res = await service.login(username, password);
       final user = UserModel.fromJson(res, loginUsername: username);
 
       if (user.token.isEmpty) throw Exception('No token returned from API');
-
 
       // Save user info
       await storage.writeToken(user.token);
@@ -39,7 +32,6 @@ class User_AuthRepository {
         print('Refresh token saved during login: ${user.refreshToken}');
       }
 
-
       print("Login saved user: ${user.username}, token: ${user.token}");
       return user;
     } catch (e) {
@@ -53,8 +45,7 @@ class User_AuthRepository {
     required String email,
     required String password,
     required String fullName,
-  }) async
-  {
+  }) async {
     try {
       // Call register API
       final res = await service.register(
@@ -77,7 +68,6 @@ class User_AuthRepository {
 
       if (user.fullName != null) await storage.saveFullName(user.fullName!);
 
-
       //  Save refresh_token
       if (user.refreshToken != null && user.refreshToken!.isNotEmpty) {
         await storage.writeRefreshToken(user.refreshToken!);
@@ -88,15 +78,13 @@ class User_AuthRepository {
 
       // Return user directly instead of calling login
       return user;
-
     } catch (e) {
       print("REGISTER ERROR: $e");
       rethrow;
     }
   }
 
-
-// AUTO RE-LOGIN
+  // AUTO RE-LOGIN
   Future<bool> autoReLogin() async {
     final username = await storage.readUsername();
     final password = await storage.readPassword(); // save when login
@@ -114,7 +102,7 @@ class User_AuthRepository {
     }
   }
 
-// AUTHENTICATED GET
+  // AUTHENTICATED GET
   Future<http.Response?> authenticatedGet(String endpoint) async {
     var token = await storage.readToken();
     final url = Uri.parse('${ApiConstants.BASE_URL}$endpoint');
@@ -124,8 +112,6 @@ class User_AuthRepository {
       url,
       headers: {'Authorization': 'Bearer $token'},
     );
-
-
 
     if (response.statusCode == 401) {
       print('401 → auto re-login...');
@@ -163,7 +149,9 @@ class User_AuthRepository {
     try {
       final allData = await storage.getAllUserInfo();
       developer.log("========== STORED DATA ==========");
-      developer.log("Token: ${allData['token']?.toString().substring(0, 20)}...");
+      developer.log(
+        "Token: ${allData['token']?.toString().substring(0, 20)}...",
+      );
       developer.log("Username: ${allData['username']}");
       developer.log("Email: ${allData['email']}");
       developer.log("UserId: ${allData['userId']}");
@@ -180,5 +168,6 @@ class User_AuthRepository {
   }
 
   Future<int?> getCurrentUserId() async => await storage.readUserId();
+
   Future<String?> getCurrentUsername() async => await storage.readUsername();
 }

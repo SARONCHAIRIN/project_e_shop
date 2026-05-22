@@ -1,5 +1,4 @@
 import 'package:e_shop/Presentation/screen/order/checkout_page.dart';
-import 'package:e_shop/Presentation/screen/payment/payment_method_screen.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/datasources/adress/adress_service.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
@@ -13,50 +12,34 @@ class CartScreen extends StatefulWidget {
   final int userId;
   final String token;
 
-  const CartScreen({
-    super.key,
-    required this.userId,
-    required this.token,
-  });
-
+  const CartScreen({super.key, required this.userId, required this.token});
 
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-
-
-
   @override
-
   void initState() {
-
     super.initState();
 
     Future.microtask(() {
-
       context.read<CartController>().fetchCart();
-
     });
-
   }
+
   @override
   Widget build(BuildContext context) {
-
     final cartController = context.watch<CartController>();
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
 
-
       body: CustomScrollView(
         slivers: [
-
           SliverAppBar(
             backgroundColor: Colors.white,
             centerTitle: true,
-
 
             title: const Text("Cart"),
             actions: [
@@ -67,190 +50,194 @@ class _CartScreenState extends State<CartScreen> {
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.delete_forever,color: Colors.redAccent,),
+                icon: const Icon(Icons.delete_forever, color: Colors.redAccent),
                 onPressed: () => cartController.clearCart(),
-              )
+              ),
             ],
           ),
 
           // Show loading indicator while fetching cart
           if (cartController.isLoading)
             const SliverFillRemaining(
-              child: Center(child: SpinKitCircle(color: Colors.grey,size: 30,)),
+              child: Center(child: SpinKitCircle(color: Colors.grey, size: 30)),
             )
-
-            // Show empty state if cart is empty
-          else if
-            (cartController.cart == null || cartController.cart!.items.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: _buildEmptyCart(),
-              )
+          // Show empty state if cart is empty
+          else if (cartController.cart == null ||
+              cartController.cart!.items.isEmpty)
+            SliverFillRemaining(hasScrollBody: false, child: _buildEmptyCart())
           else
             SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  final item = cartController.cart!.items[index];
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final item = cartController.cart!.items[index];
 
-                  return Column(
-                    children: [
-                       Padding(
-                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                         child:
-                         Dismissible(
-                           key: Key(item.id.toString()),
-                           direction: DismissDirection.endToStart,
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      child: Dismissible(
+                        key: Key(item.id.toString()),
+                        direction: DismissDirection.endToStart,
 
-                           onDismissed: (direction) {
-                             cartController.deleteItem(item.id);
-                           },
+                        onDismissed: (direction) {
+                          cartController.deleteItem(item.id);
+                        },
 
-                           background: LayoutBuilder(
-                             builder: (context, constraints) {
-                               return Container(
-                                 margin: const EdgeInsets.symmetric(vertical: 6),
-                                 decoration: BoxDecoration(
-                                   color: Colors.redAccent,
-                                   borderRadius: BorderRadius.circular(12),
-                                 ),
-                                 child: Stack(
-                                   children: [
-                                     //  Slide animation icon
-                                     AnimatedPositioned(
-                                       duration: const Duration(milliseconds: 300),
-                                       curve: Curves.easeOut,
-                                       right: 20,
-                                       top: 0,
-                                       bottom: 0,
-                                       child: Row(
-                                         children: const [
-                                           Icon(Icons.delete, color: Colors.white),
-                                           SizedBox(width: 8),
-                                           Text(
-                                             "Delete",
-                                             style: TextStyle(
-                                               color: Colors.white,
-                                               fontWeight: FontWeight.bold,
-                                             ),
-                                           ),
-                                         ],
-                                       ),
-                                     ),
-                                   ],
-                                 ),
-                               );
-                             },
-                           ),
+                        background: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.redAccent,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Stack(
+                                children: [
+                                  //  Slide animation icon
+                                  AnimatedPositioned(
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeOut,
+                                    right: 20,
+                                    top: 0,
+                                    bottom: 0,
+                                    child: Row(
+                                      children: const [
+                                        Icon(Icons.delete, color: Colors.white),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          "Delete",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
 
-                           child: Card(
-                             margin: const EdgeInsets.symmetric(vertical: 6),
-                             color: Colors.white,
-                             shape: RoundedRectangleBorder(
-                               borderRadius: BorderRadius.circular(12),
-                             ),
-                             elevation: 0.001,
+                        child: Card(
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 0.001,
 
-                             child: ListTile(
-                               leading: ClipRRect(
+                          child: ListTile(
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                item.image,
+                                width: 70,
+                                height: 70,
+                                // fit: BoxFit.f,
+                              ),
+                            ),
 
-                                 borderRadius: BorderRadius.circular(8),
-                                 child: Image.network(
-                                   item.image,
-                                   width: 70,
-                                   height: 70,
-                                   // fit: BoxFit.f,
-                                 ),
-                               ),
+                            title: Text(
+                              item.name,
+                              maxLines: 1,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
 
-                               title: Text(
-                                 item.name,
-                                 maxLines: 1,
-                                 style: const TextStyle(
-                                   fontSize: 16,
-                                   fontWeight: FontWeight.w500,
-                                   fontStyle: FontStyle.italic,
-                                 ),
-                               ),
+                            subtitle: Text(
+                              " Qty: ${item.quantity} "
+                              "\n \$${item.totalPrice.toStringAsFixed(2)}",
+                            ),
 
-                               subtitle: Text(" Qty: ${item.quantity} "
-                                   "\n \$${item.totalPrice.toStringAsFixed(2)}"),
+                            trailing: Container(
+                              height: 35,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 1,
+                                    blurStyle: BlurStyle.outer,
+                                    offset: const Offset(
+                                      0,
+                                      1,
+                                    ), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.remove,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: item.quantity > 1
+                                        ? () => cartController.updateItem(
+                                            item.id,
+                                            item.quantity - 1,
+                                          )
+                                        : null,
+                                  ),
 
-                               trailing: Container(
-                                 height: 35,
-                                 decoration: BoxDecoration(
-                                   color: Colors.white,
-                                   borderRadius: BorderRadius.circular(20),
-                                   boxShadow: [
-                                     BoxShadow(
-                                       color: Colors.grey.withOpacity(0.5),
-                                       spreadRadius: 1,
-                                       blurRadius: 1,
-                                       blurStyle: BlurStyle.outer,
-                                       offset: const Offset(0, 1), // changes position of shadow
-                                     ),
-                                   ],
-                                 ),
-                                 child: Row(
-                                   mainAxisSize: MainAxisSize.min,
-                                   children: [
-                                     IconButton(
-                                       icon: const Icon(Icons.remove, color: Colors.black,),
-                                       onPressed: item.quantity > 1
-                                           ? () => cartController.updateItem(
-                                         item.id,
-                                         item.quantity - 1,
-                                       )
-                                           : null,
-                                     ),
+                                  Text(
+                                    '${item.quantity}',
+                                    style: const TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 16,
+                                    ),
+                                  ),
 
-                                     Text(
-                                       '${item.quantity}',
-                                       style: const TextStyle(
-                                         color: Colors.blue,
-                                         fontSize: 16,
-                                       ),
-                                     ),
-
-                                     IconButton(
-                                       icon: const Icon(Icons.add,color: Colors.black,),
-                                       onPressed: () => cartController.updateItem(
-                                         item.id,
-                                         item.quantity + 1,
-                                       ),
-                                     ),
-                                   ],
-                                 ),
-                               ),
-                             ),
-                           ),
-                         ),
-                       ),
-                    ],
-                  );
-                },
-                childCount: cartController.cart?.items.length ?? 0,
-              ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.add,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () => cartController.updateItem(
+                                      item.id,
+                                      item.quantity + 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }, childCount: cartController.cart?.items.length ?? 0),
             ),
 
-
           SliverToBoxAdapter(
-            child:    Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               child: Container(
                 width: double.infinity,
                 height: 130,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade100,
-                        spreadRadius: 1,
-                        blurRadius: 1,
-                        blurStyle: BlurStyle.outer,
-                        offset: const Offset(0, 1), // changes position of shadow
-                      ),
-                    ],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade100,
+                      spreadRadius: 1,
+                      blurRadius: 1,
+                      blurStyle: BlurStyle.outer,
+                      offset: const Offset(0, 1), // changes position of shadow
+                    ),
+                  ],
                 ),
                 padding: const EdgeInsets.only(
                   top: 10,
@@ -266,12 +253,19 @@ class _CartScreenState extends State<CartScreen> {
                       children: [
                         Text(
                           'Subtotal',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.grey),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
                         ),
 
                         Text(
                           "\$${cartController.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
                     ),
@@ -281,12 +275,20 @@ class _CartScreenState extends State<CartScreen> {
                       children: [
                         Text(
                           'Shipping',
-                          style: const TextStyle(fontSize: 16,color: Colors.grey, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
 
                         Text(
                           "FREE",
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500,color: Colors.greenAccent),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.greenAccent,
+                          ),
                         ),
                       ],
                     ),
@@ -302,12 +304,19 @@ class _CartScreenState extends State<CartScreen> {
                       children: [
                         Text(
                           'Total',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
 
                         Text(
                           "\$${cartController.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700,color: Colors.blueAccent),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.blueAccent,
+                          ),
                         ),
                       ],
                     ),
@@ -317,17 +326,12 @@ class _CartScreenState extends State<CartScreen> {
             ),
           ),
 
-
-           SliverToBoxAdapter(
-
+          SliverToBoxAdapter(
             child: _buildcheckoutButton(context, cartController),
           ),
-          SliverToBoxAdapter(
-            child: SizedBox(height: 100,),
-          ),
+          SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
-
     );
   }
 
@@ -353,10 +357,7 @@ class _CartScreenState extends State<CartScreen> {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 20),
@@ -377,56 +378,61 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _buildEmptyCart() => Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(height: 200,),
-          Center(
-            child: Lottie.asset(
-              'assets/animations/empty.json',
-              width: 200,
-              height: 200,
-              repeat: true,
-              animate: true,
-            ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(height: 200),
+        Center(
+          child: Lottie.asset(
+            'assets/animations/empty.json',
+            width: 200,
+            height: 200,
+            repeat: true,
+            animate: true,
           ),
-          SizedBox(height: 20,),
+        ),
+        SizedBox(height: 20),
 
-          Text("Cart is empty",
-            style: TextStyle(
-              color: Colors.blueAccent,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),),
-        ],
-      ));
+        Text(
+          "Cart is empty",
+          style: TextStyle(
+            color: Colors.blueAccent,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    ),
+  );
 
-  Widget _buildcheckoutButton(BuildContext context, CartController cartController) {
+  Widget _buildcheckoutButton(
+    BuildContext context,
+    CartController cartController,
+  ) {
     return Padding(
-      padding: const EdgeInsets.only(
-        bottom: 130,
-        left: 20,
-        right: 20,
-      ),
-      child:
-      ElevatedButton(
-        onPressed: cartController.cart == null || cartController.cart!.items.isEmpty
+      padding: const EdgeInsets.only(bottom: 130, left: 20, right: 20),
+      child: ElevatedButton(
+        onPressed:
+            cartController.cart == null || cartController.cart!.items.isEmpty
             ? null
             : () async {
-          Navigator.push(context, MaterialPageRoute(
-              builder: (_) =>
-                  // PaymentMethodScreen(
-                      // totalPrice: 120, addressId: widget.a, addressLine1: addressLine1, city: city, country: country, zipCode: zipCode)
-                  CheckoutPage(
-            repo: AddressRepository(AddressService()),
-            storage: TokenStorage(),
-            userId: widget.userId,
-            token: widget.token,
-            addressId: 0,
-          ),
-
-          ));},
-          style: ElevatedButton.styleFrom(
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        // PaymentMethodScreen(
+                        // totalPrice: 120, addressId: widget.a, addressLine1: addressLine1, city: city, country: country, zipCode: zipCode)
+                        CheckoutPage(
+                          repo: AddressRepository(AddressService()),
+                          storage: TokenStorage(),
+                          userId: widget.userId,
+                          token: widget.token,
+                          addressId: 0,
+                        ),
+                  ),
+                );
+              },
+        style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blueAccent,
           padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 11),
           shape: RoundedRectangleBorder(
@@ -441,14 +447,14 @@ class _CartScreenState extends State<CartScreen> {
             const Text(
               "Proceed to Checkout",
               overflow: TextOverflow.visible,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.white),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
-            SizedBox(width: 5,),
-            Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-              size: 22,
-            ),
+            SizedBox(width: 5),
+            Icon(Icons.arrow_forward, color: Colors.white, size: 22),
           ],
         ),
       ),

@@ -3,11 +3,8 @@ import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:flutter/material.dart';
 
 class Profile1 extends StatefulWidget {
-  final  authRepository ; // Add this
-  const Profile1({
-    super.key,
-    required this.authRepository,
-  });
+  final authRepository; // Add this
+  const Profile1({super.key, required this.authRepository});
 
   @override
   State<Profile1> createState() => _Profile1State();
@@ -84,15 +81,14 @@ class _Profile1State extends State<Profile1> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        child: Column(
-          children: [
-            // _buildMainProfile(),
-
-            UploadImageScreen(),
-          //
-          ],
-        ),
-      ),
+              child: Column(
+                children: [
+                  // _buildMainProfile(),
+                  UploadImageScreen(),
+                  //
+                ],
+              ),
+            ),
     );
   }
 
@@ -101,8 +97,6 @@ class _Profile1State extends State<Profile1> {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       child: Column(
         children: [
-
-
           Row(
             children: [
               const SizedBox(width: 15),
@@ -116,11 +110,7 @@ class _Profile1State extends State<Profile1> {
                   color: Colors.blue,
                 ),
                 child: const Center(
-                  child: Icon(
-                    Icons.person,
-                    size: 50,
-                    color: Colors.white,
-                  ),
+                  child: Icon(Icons.person, size: 50, color: Colors.white),
                 ),
               ),
 

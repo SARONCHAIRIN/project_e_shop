@@ -4,10 +4,7 @@ import '../../../../data/models/subcategory_model_eshop.dart';
 class SubcategoryDetailScreen extends StatelessWidget {
   final SubcategoryData subcategory;
 
-  const SubcategoryDetailScreen({
-    super.key,
-    required this.subcategory,
-  });
+  const SubcategoryDetailScreen({super.key, required this.subcategory});
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +18,6 @@ class SubcategoryDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-
             //  image
             Container(
               width: double.infinity,
@@ -34,7 +29,11 @@ class SubcategoryDetailScreen extends StatelessWidget {
                   return Container(
                     color: Colors.grey[300],
                     child: const Center(
-                      child: Icon(Icons.broken_image, size: 80, color: Colors.grey),
+                      child: Icon(
+                        Icons.broken_image,
+                        size: 80,
+                        color: Colors.grey,
+                      ),
                     ),
                   );
                 },
@@ -49,7 +48,10 @@ class SubcategoryDetailScreen extends StatelessWidget {
                 children: [
                   // Category chip
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.blue[50],
                       borderRadius: BorderRadius.circular(20),
@@ -80,10 +82,7 @@ class SubcategoryDetailScreen extends StatelessWidget {
                   // ID
                   Text(
                     'ID: ${subcategory.id}',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
 
                   const SizedBox(height: 24),
@@ -91,10 +90,7 @@ class SubcategoryDetailScreen extends StatelessWidget {
                   // Description label
                   const Text(
                     'Description',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 8),
@@ -102,10 +98,7 @@ class SubcategoryDetailScreen extends StatelessWidget {
                   // Description content
                   Text(
                     subcategory.description,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      height: 1.5,
-                    ),
+                    style: const TextStyle(fontSize: 16, height: 1.5),
                   ),
                 ],
               ),

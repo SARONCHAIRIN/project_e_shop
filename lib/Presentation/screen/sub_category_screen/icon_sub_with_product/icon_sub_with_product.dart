@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_screen_eshop.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../data/datasources/sub_with_product/sub_product_service.dart';
