@@ -1,10 +1,18 @@
 import 'package:e_shop/Presentation/screen/cart/cart_screen.dart';
+import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import '../../../Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
 import '../../../core/storage/token_storage.dart';
+import '../auth/login/login_screen.dart';
 
 class CartMain extends StatefulWidget {
-  const CartMain({super.key});
+  final User_AuthRepository repository;
+
+  const CartMain({
+    super.key,
+    required this.repository,
+  });
 
   @override
   State<CartMain> createState() => _CartMainState();
@@ -14,6 +22,7 @@ class _CartMainState extends State<CartMain> {
   int? userId;
   String? username;
   String? token;
+  final reposotory = User_AuthRepository;
 
   @override
   void initState() {
@@ -37,6 +46,17 @@ class _CartMainState extends State<CartMain> {
       username = user_name;
       token = usertoken;
     });
+  }
+
+  void _showLoginSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => LoginBottomSheet(authRepository: widget.repository),
+    );
   }
 
   @override
@@ -136,38 +156,16 @@ class _CartMainState extends State<CartMain> {
               ),
               elevation: 0,
             ),
-            onPressed: () => Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/login',
-              (route) => false,
-            ),
+            onPressed: () => _showLoginSheet(context),
+
             child: const Text(
-              'Sign in',
+              'Sign in/ Register',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
             ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              side: BorderSide(color: Colors.grey[300]!),
-            ),
-            onPressed: () => Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/register',
-              (route) => false,
-            ),
-            child: const Text('Create account', style: TextStyle(fontSize: 15)),
           ),
         ),
       ],

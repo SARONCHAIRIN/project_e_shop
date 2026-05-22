@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_screen_eshop.dart';
+import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
@@ -7,7 +8,8 @@ import '../../../../data/datasources/sub_with_product/sub_product_service.dart';
 import '../../../../data/models/subcategory_model_eshop.dart';
 
 class IconSubWithProduct extends StatefulWidget {
-  const IconSubWithProduct({super.key});
+  final User_AuthRepository repository;
+  const IconSubWithProduct({super.key,required this.repository});
 
   @override
   State<IconSubWithProduct> createState() => _IconSubWithProductState();
@@ -210,6 +212,7 @@ class _IconSubWithProductState extends State<IconSubWithProduct> {
                                   builder: (_) => ProductScreen_sub(
                                     subcategoryId: sub.id ?? 0,
                                     subcategoryName: sub.name ?? "No Name",
+                                    repository: widget.repository,
                                   ),
                                 ),
                               );

@@ -44,53 +44,14 @@ class _DivicePageState extends State<FlyDiviceNav> {
 
   // List of pages
   final pages = [
-    // HomeMainPage(),
-    // CategoryMain(),
     MessageMain(),
-    CartMain(),
+    // CartMain(),
 
     // ProfileMain(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    // List<PersistentTabConfig> _tabs() => [
-    //   PersistentTabConfig(
-    //     screen: HomeMainPage(),
-    //     item: ItemConfig(
-    //       icon: Icon(Icons.home, color: Colors.grey),
-    //       activeForegroundColor: Colors.blue.shade300,
-    //     ),
-    //   ),
-    //   PersistentTabConfig(
-    //     screen: CategoryMain(),
-    //     item: ItemConfig(
-    //       icon: Icon(Icons.category, color: Colors.white),
-    //       activeForegroundColor: Colors.white,
-    //     ),
-    //   ),
-    //   PersistentTabConfig(
-    //     screen: CartMain(),
-    //     item: ItemConfig(
-    //       icon: Icon(Icons.shopping_cart, color: Colors.white),
-    //       activeForegroundColor: Colors.white,
-    //     ),
-    //   ),
-    //   PersistentTabConfig(
-    //     screen: ProfileMain(),
-    //     item: ItemConfig(
-    //       icon: Icon(Icons.add_box_outlined, color: Colors.white),
-    //       activeForegroundColor: Colors.white,
-    //     ),
-    //   ),
-    //   // PersistentTabConfig(
-    //   //   screen: Favorite(),
-    //   //   item: ItemConfig(
-    //   //     icon: Icon(Icons.person, color: Colors.white),
-    //   //     activeForegroundColor: Colors.white,
-    //   //   ),
-    //   // ),
-    // ];
 
     final items = const [
       Column(
@@ -258,25 +219,6 @@ class _DivicePageState extends State<FlyDiviceNav> {
             ),
           ];
         },
-        // body: PersistentTabView(
-        //   tabs: _tabs(),
-        //   navBarBuilder: (navBarConfig) => Style2BottomNavBar(
-        //     navBarConfig: navBarConfig,
-        //     navBarDecoration: NavBarDecoration(
-        //       color: Colors.white,
-        //       borderRadius: BorderRadius.circular(5),
-        //       boxShadow: [
-        //         BoxShadow(
-        //           color: Colors.grey.shade100,
-        //           offset: Offset(0.5, 0.2),
-        //           blurRadius: 1,
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
-
-        // body: pages[index],
         body: Container(
           color: Colors.transparent,
           child: IndexedStack(index: index, children: pages),

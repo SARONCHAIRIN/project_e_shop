@@ -10,8 +10,13 @@ import '../../data/repositories/user_auth_repository.dart';
 
 class DivicesNav extends StatefulWidget {
   final User_AuthRepository authRepository;
+  final int initialIndex;
 
-  const DivicesNav({super.key, required this.authRepository});
+  const DivicesNav({
+    super.key,
+    required this.authRepository,
+    this.initialIndex=0,
+  });
 
   static const routeName = '/divicenav';
 
@@ -20,18 +25,20 @@ class DivicesNav extends StatefulWidget {
 }
 
 class _DivicesNavState extends State<DivicesNav> {
-  int _currentIndex = 0;
+  late int _currentIndex = 0;
 
   final List<Widget> _screens = [];
 
   @override
   void initState() {
     super.initState();
+    _currentIndex = widget.initialIndex;
     _screens.addAll([
       HomeMainPage(authRepository: widget.authRepository),
       CategoryMain(authRepository: widget.authRepository),
       MessageMain(),
-      CartMain(),
+      CartMain(repository:  widget.authRepository
+        ,),
       // ProfileMain(authRepository: widget.authRepository),
       DeviceProfileGate(repository: widget.authRepository),
     ]);

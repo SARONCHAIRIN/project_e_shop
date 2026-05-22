@@ -1,5 +1,6 @@
 import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_detail_screen_eshop.dart';
+import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shop/data/datasources/product_service_eshop.dart';
@@ -16,11 +17,13 @@ import '../cart/cart_screen.dart';
 class ProductScreen_sub extends StatefulWidget {
   final int subcategoryId;
   final String subcategoryName;
+  final User_AuthRepository repository;
 
   ProductScreen_sub({
     super.key,
     required this.subcategoryId,
     required this.subcategoryName,
+    required this.repository,
   });
 
   @override
@@ -77,6 +80,17 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
       });
       controller.dispose();
     });
+  }
+
+  void _showLoginSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => LoginBottomSheet(authRepository: widget.repository),
+    );
   }
 
   @override
@@ -263,6 +277,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                             product: product,
                             subcategoryId: widget.subcategoryId,
                             subcategoryName: widget.subcategoryName,
+                            repository: widget.repository,
                           ),
                         ),
                       );
@@ -411,6 +426,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                         () => GlobalKey(),
                                                       ),
                                                   onPressed: () async {
+
                                                     // Store references before async operation
                                                     final storage =
                                                         TokenStorage();
@@ -424,6 +440,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                           context,
                                                         );
 
+
                                                     try {
                                                       // Verify token and userId exist
                                                       final token =
@@ -432,6 +449,10 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                       final userId =
                                                           await storage
                                                               .readUserId();
+
+                                                      if(userId == null || token == null){
+                                                        _showLoginSheet(context);
+                                                      }
 
                                                       if (token == null ||
                                                           token.isEmpty) {
@@ -445,7 +466,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                                   duration:
                                                                       Duration(
                                                                         seconds:
-                                                                            2,
+                                                                            1,
                                                                       ),
                                                                   backgroundColor:
                                                                       Colors
@@ -453,13 +474,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                                 ),
                                                               );
                                                         }
-                                                        if (mounted) {
-                                                          Navigator.pushNamed(
-                                                            context,
-                                                            LoginScreen
-                                                                .routeName,
-                                                          );
-                                                        }
+                                                        if (mounted) {}
                                                         return;
                                                       }
 
@@ -475,7 +490,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                                   duration:
                                                                       Duration(
                                                                         seconds:
-                                                                            2,
+                                                                            1,
                                                                       ),
                                                                   backgroundColor:
                                                                       Colors
@@ -532,22 +547,6 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                       debugPrint(
                                                         'Stack trace: $stackTrace',
                                                       );
-
-                                                      if (mounted) {
-                                                        scaffoldMessenger.showSnackBar(
-                                                          SnackBar(
-                                                            content: Text(
-                                                              'Failed to add item. Please try again.',
-                                                            ),
-                                                            duration:
-                                                                const Duration(
-                                                                  seconds: 2,
-                                                                ),
-                                                            backgroundColor:
-                                                                Colors.red,
-                                                          ),
-                                                        );
-                                                      }
                                                     }
                                                   },
                                                   icon: Icon(

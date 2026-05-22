@@ -1,3 +1,4 @@
+import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/profile_main.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
@@ -31,24 +32,48 @@ class _DeviceProfileGateState extends State<DeviceProfileGate> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     if (userId == null || userId == 0) {
-      return const _GuestProfilePage();
+      return  _GuestProfilePage(repository: widget.repository);
     }
     return ProfileMain(authRepository: widget.repository);
   }
 }
 
 // ─── Guest state ───────────────────────────────────────────────
-class _GuestProfilePage extends StatelessWidget {
-  const _GuestProfilePage();
+class _GuestProfilePage extends StatefulWidget {
+  final User_AuthRepository repository;
+
+  const _GuestProfilePage({required this.repository});
 
   @override
+  State<_GuestProfilePage> createState() => _GuestProfilePageState();
+}
+
+class _GuestProfilePageState extends State<_GuestProfilePage> {
+
+  void _showLoginSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) =>LoginBottomSheet(authRepository: widget.repository),
+    );
+  }
+  @override
   Widget build(BuildContext context) {
+
+
+
+
     return Scaffold(
       // backgroundColor: const Color(0xFFF5F5F5),
       backgroundColor: Colors.grey.shade100,
@@ -71,6 +96,7 @@ class _GuestProfilePage extends StatelessWidget {
         ),
       ),
     );
+
   }
 
   Widget _TopBar() => Padding(
@@ -87,7 +113,8 @@ class _GuestProfilePage extends StatelessWidget {
     ),
   );
 
-  Widget _GuestHero(BuildContext context) => Container(
+  Widget _GuestHero(BuildContext context) =>
+      Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
       color: Colors.white,
@@ -121,24 +148,20 @@ class _GuestProfilePage extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 13, color: Colors.grey[500], height: 1.5),
         ),
-        const SizedBox(height: 28),
+         SizedBox(height: 28),
         SizedBox(
           width: double.infinity,
           height: 50,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1A1A2E),
+              backgroundColor:  Color(0xFF1A1A2E),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
               elevation: 0,
             ),
-            onPressed: () => Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/login',
-              (route) => false,
-            ),
-            child: const Text(
+            onPressed: () => _showLoginSheet(context),
+            child:  Text(
               'Sign in',
               style: TextStyle(
                 color: Colors.white,
@@ -159,10 +182,9 @@ class _GuestProfilePage extends StatelessWidget {
               ),
               side: BorderSide(color: Colors.grey[300]!),
             ),
-            onPressed: () => Navigator.pushNamedAndRemoveUntil(
+            onPressed: () => Navigator.pushNamed(
               context,
               '/register',
-              (route) => false,
             ),
             child: const Text('Create account', style: TextStyle(fontSize: 15)),
           ),

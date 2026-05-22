@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +11,8 @@ import '../../../data/models/product_model_eshop.dart';
 import '../sub_category_screen/product_detail_screen_eshop.dart';
 
 class SearchProductpage extends StatefulWidget {
-  const SearchProductpage({super.key});
+  final User_AuthRepository  repository;
+  const SearchProductpage({super.key, required this.repository});
 
   @override
   State<SearchProductpage> createState() => _SearchProductpageState();
@@ -217,7 +219,7 @@ class _SearchProductpageState extends State<SearchProductpage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => ProductDetailScreen(product: product),
+                builder: (_) => ProductDetailScreen(product: product,repository: widget.repository,),
               ),
             );
           },

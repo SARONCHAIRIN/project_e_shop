@@ -1,6 +1,7 @@
 import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/cart/cart_screen.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_in_Product_detail.dart';
+import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +13,15 @@ class ProductDetailScreen extends StatefulWidget {
   final Product product;
   final int? subcategoryId;
   final String? subcategoryName;
+  final User_AuthRepository repository;
 
   const ProductDetailScreen({
     super.key,
     required this.product,
     this.subcategoryId,
     this.subcategoryName,
+    required this.repository,
+
   });
 
   @override
@@ -52,6 +56,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       selectedSku = widget.product.skus.last;
     }
   }
+
+  void _showLoginSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => LoginBottomSheet(authRepository: widget.repository),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -651,6 +667,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     child: ProductInProductDetail(
                       subcategoryId: widget.subcategoryId!,
                       subcategoryName: widget.subcategoryName!,
+                      repository: widget.repository,
                     ),
                   ),
 
@@ -676,7 +693,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         if (userId == null || token == null) {
           //  to login screen
 
-          Navigator.pushNamed(context, LoginScreen.routeName);
+          _showLoginSheet(context);
           return;
         }
 
