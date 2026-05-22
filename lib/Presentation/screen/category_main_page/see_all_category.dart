@@ -1,8 +1,10 @@
 import 'package:e_shop/Presentation/screen/sub_category_screen/subcategory_with_product.dart';
+import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/material.dart';
 
 class SeeAllCategory extends StatefulWidget {
-  const SeeAllCategory({super.key});
+  final User_AuthRepository repository;
+  const SeeAllCategory({super.key, required this.repository});
 
   @override
   State<SeeAllCategory> createState() => _SeeAllCategoryState();
@@ -101,7 +103,7 @@ class _SeeAllCategoryState extends State<SeeAllCategory> {
           ),
 
           // Your grid
-          SubcategoryWithProduct(categoryName: selectedCategory),
+          SubcategoryWithProduct(categoryName: selectedCategory,repository: widget.repository,),
         ],
       ),
     );

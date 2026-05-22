@@ -126,7 +126,7 @@ class _CategoryMainState extends State<CategoryMain> {
           ),
 
           // Your grid
-          SubcategoryWithProduct(categoryName: selectedCategory),
+          SubcategoryWithProduct(categoryName: selectedCategory,repository: widget.authRepository,),
         ],
       ),
     );

@@ -90,6 +90,46 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
 
+          Positioned(
+            top: 60,
+            left: 25,
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => DivicesNav(
+                        authRepository: widget.authRepository,
+                        initialIndex: 4, //  4 = profile tab (adjust to your tab index)
+                      ),
+                    ),
+                        (route) => false,
+                  );                },
+                child: Container(
+                  alignment: Alignment.center,
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.transparent,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white,
+                        blurStyle: BlurStyle.outer,
+                        spreadRadius: 2,
+                        blurRadius: 3,
+                      ),
+                    ],
+                  ),
+                  child:  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Icon(Icons.arrow_back_ios, size: 25, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+
+
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
@@ -357,48 +397,6 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                               SizedBox(height: 5),
 
-                              //login with facebook
-                              GestureDetector(
-                                onTap: () {},
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 1),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                    ),
-                                    width: double.infinity,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: Colors.white,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(width: 10),
-                                        Image.asset(
-                                          'assets/images/logo_facebook.png',
-                                          fit: BoxFit.fill,
-                                          width: 40,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          'Login With FaceBook',
-                                          style: TextStyle(
-                                            color: Colors.blueAccent,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Expanded(child: SizedBox(width: 1)),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 10),
-
                               //login with google
                               GestureDetector(
                                 onTap: () {},
@@ -444,10 +442,15 @@ class _SignupScreenState extends State<SignupScreen> {
                               // singin
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamedAndRemoveUntil(
+                                  Navigator.pushAndRemoveUntil(
                                     context,
-                                    LoginScreen.routeName,
-                                    (route) => false,
+                                    MaterialPageRoute(
+                                      builder: (_) => DivicesNav(
+                                        authRepository: widget.authRepository,
+                                        initialIndex: 4, //  4 = profile tab (adjust to your tab index)
+                                      ),
+                                    ),
+                                        (route) => false,
                                   );
                                 },
                                 child: const Text(

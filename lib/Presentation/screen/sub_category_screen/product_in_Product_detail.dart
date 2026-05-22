@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_detail_screen_eshop.dart';
+import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shop/data/datasources/product_service_eshop.dart';
@@ -12,11 +13,13 @@ import '../../../data/models/product_model_eshop.dart';
 class ProductInProductDetail extends StatefulWidget {
   final int subcategoryId;
   final String subcategoryName;
+  final User_AuthRepository repository;
 
   const ProductInProductDetail({
     super.key,
     required this.subcategoryId,
     required this.subcategoryName,
+    required this.repository,
   });
 
   @override
@@ -164,6 +167,7 @@ class _ProductInProductDetailState extends State<ProductInProductDetail> {
                         subcategoryId: widget.subcategoryId,
 
                         subcategoryName: widget.subcategoryName,
+                        repository: widget.repository,
                       ),
                     ),
                   );

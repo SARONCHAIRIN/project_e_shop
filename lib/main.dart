@@ -3,6 +3,7 @@ import 'package:e_shop/Presentation/controllers/payment/payment_controller.dart'
 import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/auth/signup/signup_screen.dart';
 import 'package:e_shop/Presentation/screen/order/order_history_screen.dart';
+import 'package:e_shop/Presentation/screen/profile_main_page/device_profile_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -89,11 +90,11 @@ class MyApp extends StatelessWidget {
             builder: (_) => DivicesNav(authRepository: authRepository),
           );
         }
-        if (settings.name == '/login') {
-          return MaterialPageRoute(
-            builder: (_) => LoginScreen(authRepository: authRepository),
-          );
-        }
+        // if (settings.name == '/login') {
+        //   return MaterialPageRoute(
+        //     builder: (_) => LoginScreen(authRepository: authRepository),
+        //   );
+        // }
 
         if (settings.name == '/register') {
           return MaterialPageRoute(
@@ -109,6 +110,10 @@ class MyApp extends StatelessWidget {
               token: args['token'] as String,
             ),
           );
+        }
+
+        if(settings.name == '/deviceProfile') {
+          return MaterialPageRoute(builder: (_) => DeviceProfileGate(repository: authRepository));
         }
 
         if (settings.name == '/trackMyOrder') {

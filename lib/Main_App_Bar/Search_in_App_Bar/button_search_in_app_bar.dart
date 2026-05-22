@@ -1,12 +1,14 @@
 import 'package:e_shop/Presentation/screen/search/product_search.dart';
+import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide SearchController;
 
 class ButtonInAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBars;
   FocusNode searchFocusNode = FocusNode();
+  final User_AuthRepository repository;
 
-  ButtonInAppBar({super.key, required this.showBars});
+  ButtonInAppBar({super.key, required this.showBars,required this.repository});
 
   @override
   Size get preferredSize => const Size.fromHeight(45);
@@ -33,7 +35,7 @@ class ButtonInAppBar extends StatelessWidget implements PreferredSizeWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SearchProductpage(),
+                        builder: (context) => SearchProductpage(repository: repository,),
                       ),
                     );
                   },

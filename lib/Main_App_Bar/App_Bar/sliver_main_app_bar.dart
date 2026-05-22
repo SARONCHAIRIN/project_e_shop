@@ -56,7 +56,7 @@ class _SliverMainAppBarState extends State<SliverMainAppBar> {
         statusBarIconBrightness: Brightness.light,
       ),
 
-      bottom: ButtonInAppBar(showBars: widget.showBars),
+      bottom: ButtonInAppBar(showBars: widget.showBars,repository: widget.authRepository,),
     );
   }
 }

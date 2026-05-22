@@ -1,4 +1,5 @@
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_screen_eshop.dart';
+import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:lottie/lottie.dart';
@@ -8,8 +9,9 @@ import '../../../data/models/subcategory_model_eshop.dart';
 
 class SubcategoryWithProduct extends StatefulWidget {
   final String categoryName;
+  final User_AuthRepository repository;
 
-  const SubcategoryWithProduct({super.key, required this.categoryName});
+  const SubcategoryWithProduct({super.key, required this.categoryName,required this.repository});
 
   @override
   State<SubcategoryWithProduct> createState() => _SubcategoryWithProductState();
@@ -187,6 +189,7 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
                       MaterialPageRoute(
                         builder: (context) => ProductScreen_sub(
                           subcategoryId: sub.id,
+                          repository: widget.repository,
                           subcategoryName: sub.name,
                         ),
                       ),

@@ -139,7 +139,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SeeAllCategory(),
+                                  builder: (context) => SeeAllCategory(repository: widget.authRepository,),
                                 ),
                               );
                             },
@@ -159,7 +159,9 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 ),
               ),
 
-              IconSubWithProduct(),
+              IconSubWithProduct(
+                repository: widget.authRepository,
+              ),
 
               SliverToBoxAdapter(
                 child: Column(
@@ -186,7 +188,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SeeAllCategory(),
+                                  builder: (context) => SeeAllCategory(repository: widget.authRepository,),
                                 ),
                               );
                             },
@@ -255,7 +257,7 @@ class _HomeMainPageState extends State<HomeMainPage> {
                 ),
               ),
 
-              SubcategoryWithProduct(categoryName: selectedCategory),
+              SubcategoryWithProduct(categoryName: selectedCategory,repository: widget.authRepository,),
 
               SliverToBoxAdapter(child: SizedBox(height: 100)),
             ],
