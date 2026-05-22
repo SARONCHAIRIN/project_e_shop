@@ -3,9 +3,9 @@ import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/datasources/adress/adress_service.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../controllers/cart/cart_controller.dart';
 
 class CartScreen extends StatefulWidget {
@@ -58,9 +58,7 @@ class _CartScreenState extends State<CartScreen> {
 
           // Show loading indicator while fetching cart
           if (cartController.isLoading)
-            const SliverFillRemaining(
-              child: Center(child: SpinKitCircle(color: Colors.grey, size: 30)),
-            )
+            SliverFillRemaining(child: _buildCartShimmer())
           // Show empty state if cart is empty
           else if (cartController.cart == null ||
               cartController.cart!.items.isEmpty)
@@ -460,4 +458,124 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
+}
+
+Widget _buildCartShimmer() {
+  return Shimmer.fromColors(
+    baseColor: Colors.grey.shade300,
+    highlightColor: Colors.grey.shade100,
+    child: SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          // Product Card Shimmer
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              children: [
+                // Image
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+
+                const SizedBox(width: 16),
+
+                // Title + Price
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      shimmerBox(width: 150, height: 18),
+                      const SizedBox(height: 10),
+                      shimmerBox(width: 80, height: 14),
+                      const SizedBox(height: 10),
+                      shimmerBox(width: 100, height: 18),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(width: 10),
+
+                // Qty Button
+                Container(
+                  width: 110,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          const SizedBox(height: 20),
+
+          // Summary Card
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                buildRowShimmer(),
+                const SizedBox(height: 20),
+                buildRowShimmer(),
+                const SizedBox(height: 20),
+                Divider(color: Colors.grey.shade300),
+                const SizedBox(height: 20),
+                buildRowShimmer(),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 30),
+
+          // Checkout Button
+          Container(
+            height: 60,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(40),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget buildRowShimmer() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      shimmerBox(width: 100, height: 16),
+      shimmerBox(width: 80, height: 16),
+    ],
+  );
+}
+
+Widget shimmerBox({required double width, required double height}) {
+  return Container(
+    width: width,
+    height: height,
+    decoration: BoxDecoration(
+      color: Colors.grey.shade300,
+      borderRadius: BorderRadius.circular(10),
+    ),
+  );
 }

@@ -90,46 +90,6 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
 
-          Positioned(
-            top: 60,
-            left: 25,
-              child: GestureDetector(
-                onTap: (){
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => DivicesNav(
-                        authRepository: widget.authRepository,
-                        initialIndex: 4, //  4 = profile tab (adjust to your tab index)
-                      ),
-                    ),
-                        (route) => false,
-                  );                },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.transparent,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white,
-                        blurStyle: BlurStyle.outer,
-                        spreadRadius: 2,
-                        blurRadius: 3,
-                      ),
-                    ],
-                  ),
-                  child:  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Icon(Icons.arrow_back_ios, size: 25, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-
-
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
@@ -472,7 +432,47 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ),
           ),
+
+          Positioned(
+            top: 50,
+            left: 25,
+            child: GestureDetector(
+              onTap: (){
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => DivicesNav(
+                      authRepository: widget.authRepository,
+                      initialIndex: 4, //  4 = profile tab (adjust to your tab index)
+                    ),
+                  ),
+                      (route) => false,
+                );                },
+              child: Container(
+                alignment: Alignment.center,
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.transparent,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white,
+                      blurStyle: BlurStyle.outer,
+                      spreadRadius: 2,
+                      blurRadius: 3,
+                    ),
+                  ],
+                ),
+                child:  Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Icon(Icons.arrow_back_ios, size: 25, color: Colors.white),
+                ),
+              ),
+            ),
+          ),
         ],
+
       ),
     );
   }
