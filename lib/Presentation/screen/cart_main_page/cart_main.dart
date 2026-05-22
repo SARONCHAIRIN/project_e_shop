@@ -2,17 +2,13 @@ import 'package:e_shop/Presentation/screen/cart/cart_screen.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../../../Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
 import '../../../core/storage/token_storage.dart';
 import '../auth/login/login_screen.dart';
 
 class CartMain extends StatefulWidget {
   final User_AuthRepository repository;
 
-  const CartMain({
-    super.key,
-    required this.repository,
-  });
+  const CartMain({super.key, required this.repository});
 
   @override
   State<CartMain> createState() => _CartMainState();

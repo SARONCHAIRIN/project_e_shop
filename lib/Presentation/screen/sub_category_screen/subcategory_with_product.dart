@@ -11,7 +11,11 @@ class SubcategoryWithProduct extends StatefulWidget {
   final String categoryName;
   final User_AuthRepository repository;
 
-  const SubcategoryWithProduct({super.key, required this.categoryName,required this.repository});
+  const SubcategoryWithProduct({
+    super.key,
+    required this.categoryName,
+    required this.repository,
+  });
 
   @override
   State<SubcategoryWithProduct> createState() => _SubcategoryWithProductState();
@@ -196,95 +200,117 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
                     );
                   },
 
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade100,
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
+                  child: Stack(
+                    children: [
+                      ///main contain
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade100,
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
 
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /// IMAGE
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: SizedBox(
-                              height: index % 1 == 0 ? 130 : 150,
-                              width: double.infinity,
-                              child: Image.network(
-                                sub.image ?? '',
-                                // fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) {
-                                  return Image.asset(
-                                    'assets/images/default_image.png',
-                                    // fit: BoxFit.,
-                                  );
-                                },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 15),
+
+                              /// IMAGE
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: SizedBox(
+                                  height: index % 1 == 0 ? 130 : 150,
+                                  width: double.infinity,
+                                  child: Image.network(
+                                    sub.image ?? '',
+                                    // fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) {
+                                      return Image.asset(
+                                        'assets/images/default_image.png',
+                                        // fit: BoxFit.,
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
 
-                          const SizedBox(height: 5),
+                              const SizedBox(height: 5),
 
-                          /// NAME
-                          Text(
-                            sub.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-
-                          const SizedBox(height: 8),
-
-                          /// DESCRIPTION
-                          Text(
-                            sub.description,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-
-                          const SizedBox(height: 10),
-
-                          /// CATEGORY
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 5),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.blue.shade50,
-                            ),
-                            child: Text(
-                              sub.categoryName,
-                              style: const TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500,
+                              /// NAME
+                              Text(
+                                sub.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
+
+                              const SizedBox(height: 8),
+
+                              /// DESCRIPTION
+                              Text(
+                                sub.description,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+
+                              const SizedBox(height: 10),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+
+                      /// CATEGORY
+                      Positioned(
+                        top: 5,
+                        left: 4,
+
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.blue.withOpacity(0.2),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blue,
+                                blurRadius: 1,
+                                blurStyle: BlurStyle.outer,
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            sub.categoryName,
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );
             },
           ),
         );
+
+        // return _buildShimmerPopular();
       },
     );
   }
@@ -303,68 +329,78 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
             bottom: index % 2 == 0 ? 20 : 0,
           ),
 
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey.shade300,
-            highlightColor: Colors.grey.shade50,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Column(
+              children: [
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade50,
 
-            child: Container(
-              constraints: const BoxConstraints(minHeight: 260),
+                  child: Container(
+                    // margin: EdgeInsets.only(bottom: 30),
+                    constraints: const BoxConstraints(minHeight: 200),
 
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 130,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade400,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
                     ),
 
-                    const SizedBox(height: 12),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
 
-                    Container(
-                      height: 16,
-                      width: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade400,
-                        borderRadius: BorderRadius.circular(4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 12,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade400,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-
-                    const SizedBox(height: 10),
-
-                    Container(
-                      height: 12,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade400,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    Container(
-                      height: 12,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade400,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+
+                const SizedBox(height: 8),
+
+                Padding(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: Container(
+                    height: 15,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                Container(
+                  height: 10,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                SizedBox(height: 5),
+
+                Container(
+                  height: 10,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                SizedBox(height: 5),
+              ],
             ),
           ),
         );

@@ -4,8 +4,9 @@ import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shop/data/datasources/product_service_eshop.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../data/datasources/sub_with_product/sub_product_service.dart';
 import '../../../data/models/product_model_eshop.dart';
 import 'package:provider/provider.dart';
@@ -167,9 +168,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
             builder: (context, snapshot) {
               /// ================= LOADING =================
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: SpinKitFadingCircle(color: Colors.black, size: 40),
-                );
+                return _buildShimmerPopular();
               }
 
               /// ================= ERROR =================
@@ -426,7 +425,6 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                         () => GlobalKey(),
                                                       ),
                                                   onPressed: () async {
-
                                                     // Store references before async operation
                                                     final storage =
                                                         TokenStorage();
@@ -440,7 +438,6 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                           context,
                                                         );
 
-
                                                     try {
                                                       // Verify token and userId exist
                                                       final token =
@@ -450,8 +447,11 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                           await storage
                                                               .readUserId();
 
-                                                      if(userId == null || token == null){
-                                                        _showLoginSheet(context);
+                                                      if (userId == null ||
+                                                          token == null) {
+                                                        _showLoginSheet(
+                                                          context,
+                                                        );
                                                       }
 
                                                       if (token == null ||
@@ -580,6 +580,148 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
       ),
     );
   }
+
+  Widget _buildShimmerPopular() => CustomScrollView(
+    slivers: [
+      SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        sliver: SliverMasonryGrid.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          childCount: 6,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(
+                top: index % 1 == 0 ? 0 : 30,
+                bottom: index % 1 == 0 ? 20 : 0,
+              ),
+
+              child: Column(
+                children: [
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade50,
+
+                    child: Container(
+                      constraints: const BoxConstraints(minHeight: 200),
+
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 130,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            Container(
+                              height: 16,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            Container(
+                              height: 12,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            Container(
+                              height: 12,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Container(
+                    height: 10,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  Container(
+                    height: 10,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 10,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+
+                        Expanded(child: SizedBox(width: 5)),
+
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey.shade300,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    ],
+  );
 }
 
 // Flying cart animation widget
