@@ -32,13 +32,13 @@ class _MapScreenState extends State<MapScreen> {
       "point": LatLng(11.5801, 104.9002),
       "color": Colors.red,
       "title": "Phnom Penh Marker 1",
-      "description": "Some info about Marker 1"
+      "description": "Some info about Marker 1",
     },
     {
       "point": LatLng(11.5610, 104.9166),
       "color": Colors.blue,
       "title": "Phnom Penh Marker 2",
-      "description": "Some info about Marker 2"
+      "description": "Some info about Marker 2",
     },
   ];
 
@@ -60,7 +60,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _showMarkerInfo(String title, String description) {
-    if(!mounted) return;
+    if (!mounted) return;
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -70,7 +70,7 @@ class _MapScreenState extends State<MapScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text("Close"),
-          )
+          ),
         ],
       ),
     );
@@ -88,7 +88,7 @@ class _MapScreenState extends State<MapScreen> {
               // Mapbox Tile Layer
               TileLayer(
                 urlTemplate:
-                "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+                    "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
                 additionalOptions: {
                   "accessToken": tokenMap,
                   "id": mapStyles[currentStyle]!,

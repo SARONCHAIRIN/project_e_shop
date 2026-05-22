@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../../data/models/cart/cart_model.dart';
@@ -39,9 +38,7 @@ class CartController extends ChangeNotifier {
       hasError = true;
 
       errorMessage = e.toString().contains('Socket')
-
           ? "No internet connection"
-
           : "Server error. Please try again";
     } finally {
       isLoading = false;
@@ -75,7 +72,6 @@ class CartController extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 
   Future<void> updateItem(int cartItemId, int quantity) async {
     final storage = TokenStorage();
@@ -130,6 +126,7 @@ class CartController extends ChangeNotifier {
       notifyListeners();
     }
   }
+
   // =========================
   // CLEAR CART
   // =========================

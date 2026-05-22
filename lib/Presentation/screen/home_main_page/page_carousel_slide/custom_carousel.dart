@@ -133,7 +133,7 @@ class _CustomCarouselState extends State<CustomCarousel> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 slides.length,
-                    (index) => Container(
+                (index) => Container(
                   width: 8,
                   height: 8,
                   margin: const EdgeInsets.symmetric(horizontal: 4),

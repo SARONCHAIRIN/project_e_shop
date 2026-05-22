@@ -1,10 +1,8 @@
-
 import 'package:e_shop/data/models/user/put_user_model.dart';
 import 'package:e_shop/data/repositories/user/put_user_repo.dart';
 import 'package:flutter/material.dart';
 
 class ProfileUpdateController {
-
   final PutUserRepo repository;
 
   ProfileUpdateController(this.repository);
@@ -15,9 +13,7 @@ class ProfileUpdateController {
   final phoneController = TextEditingController();
   final birthController = TextEditingController();
 
-
   Future<void> updateProfile(int userId) async {
-
     PutUserModel user = PutUserModel(
       email: emailController.text,
       password: passwordController.text,
@@ -34,6 +30,4 @@ class ProfileUpdateController {
       print("Update failed");
     }
   }
-
-
 }

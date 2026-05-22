@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,22 +15,17 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../../../data/datasources/user/get_user_Id_service.dart';
-import '../payment/payment_method_screen.dart';
 
 class Profilepage extends StatefulWidget {
-
   final authRepository;
-  const Profilepage({
-    super.key,
-    required this.authRepository,
-  });
+
+  const Profilepage({super.key, required this.authRepository});
 
   @override
   State<Profilepage> createState() => _ProfilepageState();
 }
 
 class _ProfilepageState extends State<Profilepage> {
-
   String? username;
   String? email;
   bool _isLoading = true;
@@ -43,15 +37,14 @@ class _ProfilepageState extends State<Profilepage> {
   bool _isUploading = false;
   final ImagePicker _picker = ImagePicker();
 
-
   //======call address==========
 
   final serviceaddress = AddressService();
   final getAddressid = GetUserIdService();
-  late final repoaddress  = AddressRepository(serviceaddress);
+  late final repoaddress = AddressRepository(serviceaddress);
   final storage = TokenStorage();
-  //==========================
 
+  //==========================
 
   @override
   void initState() {
@@ -60,9 +53,6 @@ class _ProfilepageState extends State<Profilepage> {
     _loadUser();
     _loadSavedImage();
   }
-
-
-
 
   Future<void> _loadUser() async {
     try {
@@ -75,7 +65,9 @@ class _ProfilepageState extends State<Profilepage> {
       final storedEmail = await storage.readUserEmail();
 
       // fallback: if email is empty, use username
-      final emailToShow = (storedEmail?.isNotEmpty == true) ? storedEmail : name;
+      final emailToShow = (storedEmail?.isNotEmpty == true)
+          ? storedEmail
+          : name;
 
       if (mounted) {
         setState(() {
@@ -96,7 +88,6 @@ class _ProfilepageState extends State<Profilepage> {
     }
   }
 
-
   Future<void> fetchUser() async {
     print("fetch start");
 
@@ -111,8 +102,9 @@ class _ProfilepageState extends State<Profilepage> {
       }
 
       //  use authenticatedGet — auto refresh token when 401
-      final response = await widget.authRepository
-          .authenticatedGet('/user/$userId/user');
+      final response = await widget.authRepository.authenticatedGet(
+        '/user/$userId/user',
+      );
 
       print("API RESULT: $response");
 
@@ -124,7 +116,7 @@ class _ProfilepageState extends State<Profilepage> {
           MaterialPageRoute(
             builder: (_) => LoginScreen(authRepository: widget.authRepository),
           ),
-              (route) => false,
+          (route) => false,
         );
         return;
       }
@@ -140,12 +132,13 @@ class _ProfilepageState extends State<Profilepage> {
         print('USER DATA: $userData');
 
         // save image URL when fetch
-        if (userData['image'] != null && userData['image'].toString().isNotEmpty) {
+        if (userData['image'] != null &&
+            userData['image'].toString().isNotEmpty) {
           await TokenStorage().writeUserImage(userData['image']);
           if (mounted) setState(() => _uploadedImageUrl = userData['image']);
         }
 
-        if(mounted){
+        if (mounted) {
           setState(() {
             user = GetUserModel.fromJson(userData);
             _isloadinged = false;
@@ -158,7 +151,6 @@ class _ProfilepageState extends State<Profilepage> {
         print('Failed: ${response.statusCode} - ${response.body}');
         setState(() => _isloadinged = false);
       }
-
     } catch (e) {
       print('fetchUser error: $e');
       setState(() => _isloadinged = false);
@@ -176,7 +168,6 @@ class _ProfilepageState extends State<Profilepage> {
       });
     }
   }
-
 
   //pick image to profile
   Future<void> _pickImage(ImageSource source) async {
@@ -247,30 +238,22 @@ class _ProfilepageState extends State<Profilepage> {
     return null;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body  : _buildBody(),
-      backgroundColor: Colors.grey.shade50,
-
-    );
+    return Scaffold(body: _buildBody(), backgroundColor: Colors.grey.shade50);
   }
-
 
   Widget _buildBody() => SingleChildScrollView(
     physics: AlwaysScrollableScrollPhysics(),
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Column(
         children: [
-          SizedBox(height: 80,),
+          SizedBox(height: 80),
 
           // Profile image
           Stack(
             children: [
-
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -285,7 +268,8 @@ class _ProfilepageState extends State<Profilepage> {
                 ),
                 child: CircleAvatar(
                   radius: 70,
-                  backgroundColor: Colors.grey.shade50, // optional background
+                  backgroundColor: Colors.grey.shade50,
+                  // optional background
                   child: _buildProfileImage(),
                 ),
               ),
@@ -296,7 +280,7 @@ class _ProfilepageState extends State<Profilepage> {
                 right: 1,
                 child: Container(
                   width: 40,
-                  height: 40 ,
+                  height: 40,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.blue.shade50,
@@ -311,9 +295,7 @@ class _ProfilepageState extends State<Profilepage> {
 
                   //icon edit
                   child: IconButton(
-
-                    onPressed: () async{
-
+                    onPressed: () async {
                       try {
                         final tokenStorage = TokenStorage();
                         final token = await tokenStorage.getToken();
@@ -323,16 +305,17 @@ class _ProfilepageState extends State<Profilepage> {
 
                         print('all data : ${tokenStorage.getAllUserInfo()}');
 
-                        if (token != null && username != null && email != null) {
+                        if (token != null &&
+                            username != null &&
+                            email != null) {
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    ProfileScreen(
-                                      username: username,
-                                      token: token,
-                                      email: email,
-                                    )
+                              builder: (context) => ProfileScreen(
+                                username: username,
+                                token: token,
+                                email: email,
+                              ),
                             ),
                           );
 
@@ -344,11 +327,10 @@ class _ProfilepageState extends State<Profilepage> {
                         print("Error: $e");
                       }
                     },
-                    icon: Icon(Icons.edit,size: 26,color: Colors.blue,),
+                    icon: Icon(Icons.edit, size: 26, color: Colors.blue),
                   ),
                 ),
               ),
-
             ],
           ),
           const SizedBox(width: 20),
@@ -373,22 +355,18 @@ class _ProfilepageState extends State<Profilepage> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(height: 10,),
-
+          SizedBox(height: 10),
 
           //ACTIVITY
           Padding(
-            padding: const EdgeInsets.only(
-              left: 14,
-              right: 14,
-            ),
+            padding: const EdgeInsets.only(left: 14, right: 14),
             child: Column(
               children: [
-
                 //text activity
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('ACTIVITY',
+                  child: Text(
+                    'ACTIVITY',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
@@ -396,14 +374,12 @@ class _ProfilepageState extends State<Profilepage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 5,),
+                SizedBox(height: 5),
 
                 // type of activity
                 Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12,
-                  ),
-                  width :double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  width: double.infinity,
                   height: 180,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -420,7 +396,6 @@ class _ProfilepageState extends State<Profilepage> {
                     // crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-
                       //row of order history
                       Row(
                         children: [
@@ -428,7 +403,7 @@ class _ProfilepageState extends State<Profilepage> {
                             width: 35,
                             height: 35,
                             decoration: BoxDecoration(
-                              borderRadius:BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(2),
                               color: Colors.blue.shade50,
                               boxShadow: [
                                 BoxShadow(
@@ -438,25 +413,28 @@ class _ProfilepageState extends State<Profilepage> {
                                 ),
                               ],
                             ),
-                            child: Icon(Icons.fax_rounded,size: 25,color: Colors.indigoAccent,),
+                            child: Icon(
+                              Icons.fax_rounded,
+                              size: 25,
+                              color: Colors.indigoAccent,
+                            ),
                           ),
 
-                          SizedBox(width: 30,),
+                          SizedBox(width: 30),
 
                           Expanded(
-                            child: Text('Order History',
+                            child: Text(
+                              'Order History',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
-
                               ),
                             ),
                           ),
 
                           IconButton(
-                            onPressed: ()async{
-
+                            onPressed: () async {
                               final storage = TokenStorage();
                               final token = await storage.readToken();
                               final userId = await storage.readUserId();
@@ -466,19 +444,14 @@ class _ProfilepageState extends State<Profilepage> {
                               Navigator.pushNamed(
                                 context,
                                 '/orderHistory',
-                                arguments: {
-                                  'userId': userId,
-                                  'token': token,
-                                },
+                                arguments: {'userId': userId, 'token': token},
                               );
-
-                          },
+                            },
                             icon: Icon(
                               Icons.arrow_forward_ios,
                               size: 20,
                               color: Colors.grey,
                             ),
-
                           ),
                         ],
                       ),
@@ -496,7 +469,7 @@ class _ProfilepageState extends State<Profilepage> {
                             width: 35,
                             height: 35,
                             decoration: BoxDecoration(
-                              borderRadius:BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(2),
                               color: Colors.blue.shade50,
                               boxShadow: [
                                 BoxShadow(
@@ -506,29 +479,38 @@ class _ProfilepageState extends State<Profilepage> {
                                 ),
                               ],
                             ),
-                            child: Icon(Icons.location_on_outlined,size: 25,color: Colors.indigoAccent,),
+                            child: Icon(
+                              Icons.location_on_outlined,
+                              size: 25,
+                              color: Colors.indigoAccent,
+                            ),
                           ),
 
-                          SizedBox(width: 30,),
+                          SizedBox(width: 30),
 
                           Expanded(
-                            child: Text('Saved Address',
+                            child: Text(
+                              'Saved Address',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
-
                               ),
                             ),
                           ),
 
-                          IconButton(onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => AddressListPage(
-                              repo: repoaddress,
-                              storage: storage,
-
-                            ),),);
-                          },
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => AddressListPage(
+                                    repo: repoaddress,
+                                    storage: storage,
+                                  ),
+                                ),
+                              );
+                            },
                             icon: Icon(
                               Icons.arrow_forward_ios,
                               size: 20,
@@ -551,7 +533,7 @@ class _ProfilepageState extends State<Profilepage> {
                             width: 35,
                             height: 35,
                             decoration: BoxDecoration(
-                              borderRadius:BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(2),
                               color: Colors.blue.shade50,
                               boxShadow: [
                                 BoxShadow(
@@ -561,31 +543,33 @@ class _ProfilepageState extends State<Profilepage> {
                                 ),
                               ],
                             ),
-                            child: Icon(Icons.payments_outlined,size: 25,color: Colors.indigoAccent,),
+                            child: Icon(
+                              Icons.payments_outlined,
+                              size: 25,
+                              color: Colors.indigoAccent,
+                            ),
                           ),
 
-                          SizedBox(width: 30,),
+                          SizedBox(width: 30),
 
                           Expanded(
-                            child: Text('Payment Methods',
+                            child: Text(
+                              'Payment Methods',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
-
                               ),
                             ),
                           ),
 
-                          IconButton(onPressed: (){
-
-                          },
+                          IconButton(
+                            onPressed: () {},
                             icon: Icon(
                               Icons.arrow_forward_ios,
                               size: 20,
                               color: Colors.grey,
                             ),
-
                           ),
                         ],
                       ),
@@ -595,22 +579,18 @@ class _ProfilepageState extends State<Profilepage> {
               ],
             ),
           ),
-          SizedBox(height: 20,),
-
+          SizedBox(height: 20),
 
           //ACCOUNT
           Padding(
-            padding: const EdgeInsets.only(
-              left: 14,
-              right: 14,
-            ),
+            padding: const EdgeInsets.only(left: 14, right: 14),
             child: Column(
               children: [
-
                 //text activity
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('ACCOUNT',
+                  child: Text(
+                    'ACCOUNT',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 15,
@@ -618,14 +598,12 @@ class _ProfilepageState extends State<Profilepage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 5,),
+                SizedBox(height: 5),
 
                 // type of activity
                 Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12,
-                  ),
-                  width :double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  width: double.infinity,
                   height: 110,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -641,7 +619,6 @@ class _ProfilepageState extends State<Profilepage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-
                       //row of setting
                       Row(
                         children: [
@@ -649,7 +626,7 @@ class _ProfilepageState extends State<Profilepage> {
                             width: 35,
                             height: 35,
                             decoration: BoxDecoration(
-                              borderRadius:BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(2),
                               color: Colors.grey.shade100,
                               boxShadow: [
                                 BoxShadow(
@@ -659,31 +636,42 @@ class _ProfilepageState extends State<Profilepage> {
                                 ),
                               ],
                             ),
-                            child: Icon(Icons.settings,size: 25,color: Colors.grey,),
+                            child: Icon(
+                              Icons.settings,
+                              size: 25,
+                              color: Colors.grey,
+                            ),
                           ),
 
-                          SizedBox(width: 30,),
+                          SizedBox(width: 30),
 
                           Expanded(
-                            child: Text('Settings',
+                            child: Text(
+                              'Settings',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
-
                               ),
                             ),
                           ),
 
-                          IconButton(onPressed: (){
-                            Navigator.push(context,MaterialPageRoute(builder: (context) => SettingPage(authRepository: widget.authRepository,)));
-                          },
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SettingPage(
+                                    authRepository: widget.authRepository,
+                                  ),
+                                ),
+                              );
+                            },
                             icon: Icon(
                               Icons.arrow_forward_ios,
                               size: 20,
                               color: Colors.grey,
                             ),
-
                           ),
                         ],
                       ),
@@ -694,7 +682,6 @@ class _ProfilepageState extends State<Profilepage> {
                         color: Colors.grey.shade300,
                       ),
 
-
                       //row of logout
                       Row(
                         children: [
@@ -702,7 +689,7 @@ class _ProfilepageState extends State<Profilepage> {
                             width: 35,
                             height: 35,
                             decoration: BoxDecoration(
-                              borderRadius:BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(2),
                               color: Colors.red.shade50,
                               boxShadow: [
                                 BoxShadow(
@@ -712,19 +699,22 @@ class _ProfilepageState extends State<Profilepage> {
                                 ),
                               ],
                             ),
-                            child: Icon(Icons.logout,size: 25,color: Colors.red,),
+                            child: Icon(
+                              Icons.logout,
+                              size: 25,
+                              color: Colors.red,
+                            ),
                           ),
 
-                          SizedBox(width: 30,),
-
+                          SizedBox(width: 30),
 
                           Expanded(
-                            child: Text('Logout',
+                            child: Text(
+                              'Logout',
                               style: TextStyle(
                                 color: Colors.redAccent,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
-
                               ),
                             ),
                           ),
@@ -733,36 +723,50 @@ class _ProfilepageState extends State<Profilepage> {
                             onPressed: () async {
                               final confirm = await showDialog(
                                 context: context,
-                                builder: (context){
+                                builder: (context) {
                                   return AlertDialog(
                                     title: Text('Confirm Logout'),
-                                    content: Text('Are you sure you want to logout?'),
-                                    icon: Icon(Icons.phonelink_lock_outlined,size: 30,color: Colors.blueAccent,),
+                                    content: Text(
+                                      'Are you sure you want to logout?',
+                                    ),
+                                    icon: Icon(
+                                      Icons.phonelink_lock_outlined,
+                                      size: 30,
+                                      color: Colors.blueAccent,
+                                    ),
 
                                     actions: [
                                       TextButton(
-                                        onPressed: () => Navigator.pop(context,false),
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
                                         child: const Text('Cancel'),
                                       ),
                                       TextButton(
-                                        onPressed: () => Navigator.pop(context,true),
-                                        child: const Text('Logout', style: TextStyle(color: Colors.red)),
+                                        onPressed: () =>
+                                            Navigator.pop(context, true),
+                                        child: const Text(
+                                          'Logout',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
                                       ),
                                     ],
                                   );
                                 },
                               );
 
-                              if(confirm != true) return;
+                              if (confirm != true) return;
 
-                              await widget.authRepository.logout
-                                ();
+                              await widget.authRepository.logout();
 
                               if (!mounted) return;
                               Navigator.pushAndRemoveUntil(
                                 context,
-                                MaterialPageRoute(builder: (_) => DivicesNav(authRepository: widget.authRepository)),
-                                    (route) => false,
+                                MaterialPageRoute(
+                                  builder: (_) => DivicesNav(
+                                    authRepository: widget.authRepository,
+                                  ),
+                                ),
+                                (route) => false,
                               );
                             },
                             icon: Icon(
@@ -770,7 +774,6 @@ class _ProfilepageState extends State<Profilepage> {
                               size: 20,
                               color: Colors.grey,
                             ),
-
                           ),
                         ],
                       ),
@@ -780,31 +783,24 @@ class _ProfilepageState extends State<Profilepage> {
               ],
             ),
           ),
-          SizedBox(height: 100,),
+          SizedBox(height: 100),
         ],
       ),
     ),
   );
 
-
   Widget _buildProfileImage() {
-
     if (_image != null) {
       return ClipOval(
-        child: Image.file(
-          _image!,
-          width: 140,
-          height: 140,
-          fit: BoxFit.cover,
-        ),
+        child: Image.file(_image!, width: 140, height: 140, fit: BoxFit.cover),
       );
     } else if (_uploadedImageUrl != null) {
       return Stack(
         children: [
-
           ClipOval(
             child: CachedNetworkImage(
-              imageUrl: "${_uploadedImageUrl!}?v=${DateTime.now().millisecondsSinceEpoch}",
+              imageUrl:
+                  "${_uploadedImageUrl!}?v=${DateTime.now().millisecondsSinceEpoch}",
               width: 140,
               height: 140,
               fit: BoxFit.cover,
@@ -814,15 +810,14 @@ class _ProfilepageState extends State<Profilepage> {
                 color: Colors.blue.shade200,
                 child: const Center(child: CircularProgressIndicator()),
               ),
-              errorWidget: (context, url, error) => const Icon(Icons.person, size: 70),
+              errorWidget: (context, url, error) =>
+                  const Icon(Icons.person, size: 70),
             ),
           ),
         ],
       );
     } else {
-      return const Icon(Icons.person, size: 70,color:Colors.grey,);
+      return const Icon(Icons.person, size: 70, color: Colors.grey);
     }
   }
-
-
 }

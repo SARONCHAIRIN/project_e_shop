@@ -14,6 +14,7 @@ class CartItem {
     required this.quantity,
     required this.image,
   });
+
   // Auto-calculated from quantity × unit price
   double get totalPrice => (productSku.price * quantity).toDouble();
 
@@ -25,8 +26,10 @@ class CartItem {
       productSku: ProductSku.fromJson(json['productSku']),
       name: json['name'] ?? '',
       quantity: json['quantity'] != null
-          ? (json['quantity'] is double ? (json['quantity'] as double).toInt() : json['quantity'])
-          :0,
+          ? (json['quantity'] is double
+                ? (json['quantity'] as double).toInt()
+                : json['quantity'])
+          : 0,
       image: json['image'] ?? '',
     );
   }

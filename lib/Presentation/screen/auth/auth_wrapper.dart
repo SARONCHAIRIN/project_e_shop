@@ -36,13 +36,13 @@ class _AuthWrapperState extends State<AuthWrapper> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return _isLoggedIn
-        ? DivicesNav(authRepository: widget.authRepository)  // មាន Bottom Nav
-        : LoginScreen(authRepository: widget.authRepository); // គ្មាន Bottom Nav
+        ? DivicesNav(authRepository: widget.authRepository) // មាន Bottom Nav
+        : LoginScreen(
+            authRepository: widget.authRepository,
+          ); // គ្មាន Bottom Nav
   }
 }

@@ -16,9 +16,6 @@ class _SeeAllCategoryState extends State<SeeAllCategory> {
     'Drone',
     'shose',
     'Clothing',
-    'Books',
-    'Home',
-    'Toys',
     'Sports',
     'Beauty',
   ];

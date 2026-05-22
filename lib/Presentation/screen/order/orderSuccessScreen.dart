@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/widgets/animation_widgets.dart';
+import 'order_history_screen.dart';
+
 class OrderSuccessScreen extends StatefulWidget {
   final paymentMethod;
   final int orderId;
@@ -44,10 +47,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
       curve: Curves.elasticOut,
     );
 
-    _fadeAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeIn,
-    );
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.25),
@@ -76,8 +76,18 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
   String _formattedNow() {
     final now = DateTime.now();
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     final hour = now.hour % 12 == 0 ? 12 : now.hour % 12;
     final minute = now.minute.toString().padLeft(2, '0');
@@ -94,8 +104,9 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
     final totalAmount = hasOrder
         ? '\$${widget.order!.totalAmount!.toStringAsFixed(2)}'
         : null;
-    final displayOrderId =
-    hasOrder ? widget.order!.id.toString() : widget.orderId.toString();
+    final displayOrderId = hasOrder
+        ? widget.order!.id.toString()
+        : widget.orderId.toString();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F7F4),
@@ -133,9 +144,13 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                             const Spacer(),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 6),
+                                horizontal: 14,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF32C787).withOpacity(0.12),
+                                color: const Color(
+                                  0xFF32C787,
+                                ).withOpacity(0.12),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Row(
@@ -167,7 +182,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
 
                         // Space for lottie
                         // SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-                        SizedBox(height: 40,),
+                        SizedBox(height: 40),
 
                         // ── Check icon ──
                         ScaleTransition(
@@ -180,8 +195,9 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                 height: 100,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color:
-                                  const Color(0xFF32C787).withOpacity(0.1),
+                                  color: const Color(
+                                    0xFF32C787,
+                                  ).withOpacity(0.1),
                                 ),
                               ),
                               Container(
@@ -189,8 +205,9 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                 height: 76,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color:
-                                  const Color(0xFF32C787).withOpacity(0.18),
+                                  color: const Color(
+                                    0xFF32C787,
+                                  ).withOpacity(0.18),
                                 ),
                               ),
                               Container(
@@ -207,8 +224,11 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                     ),
                                   ],
                                 ),
-                                child: const Icon(Icons.check_rounded,
-                                    color: Colors.white, size: 30),
+                                child: const Icon(
+                                  Icons.check_rounded,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
                               ),
                             ],
                           ),
@@ -269,16 +289,22 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                   // Order header strip
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 18, vertical: 14),
+                                      horizontal: 18,
+                                      vertical: 14,
+                                    ),
                                     decoration: const BoxDecoration(
                                       color: Color(0xFF1A1A2E),
                                       borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(20)),
+                                        top: Radius.circular(20),
+                                      ),
                                     ),
                                     child: Row(
                                       children: [
-                                        const Icon(Icons.receipt_long_rounded,
-                                            color: Colors.white, size: 18),
+                                        const Icon(
+                                          Icons.receipt_long_rounded,
+                                          color: Colors.white,
+                                          size: 18,
+                                        ),
                                         const SizedBox(width: 8),
                                         Text(
                                           'Order #$displayOrderId',
@@ -310,16 +336,20 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                           icon: Icons.receipt_long_outlined,
                                           label: 'Status',
                                           value: statusText,
-                                          valueColor: statusText == 'CONFIRMED' ||
-                                              statusText == 'SUCCESS'
+                                          valueColor:
+                                              statusText == 'CONFIRMED' ||
+                                                  statusText == 'SUCCESS'
                                               ? const Color(0xFF32C787)
                                               : const Color(0xFFFF9500),
-                                          valueBg: statusText == 'CONFIRMED' ||
-                                              statusText == 'SUCCESS'
-                                              ? const Color(0xFF32C787)
-                                              .withOpacity(0.1)
-                                              : const Color(0xFFFF9500)
-                                              .withOpacity(0.1),
+                                          valueBg:
+                                              statusText == 'CONFIRMED' ||
+                                                  statusText == 'SUCCESS'
+                                              ? const Color(
+                                                  0xFF32C787,
+                                                ).withOpacity(0.1)
+                                              : const Color(
+                                                  0xFFFF9500,
+                                                ).withOpacity(0.1),
                                         ),
                                         _buildDivider(),
                                         _buildInfoRow(
@@ -327,19 +357,23 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                           label: 'Delivery',
                                           value: 'Processing',
                                           valueColor: const Color(0xFF0066FF),
-                                          valueBg: const Color(0xFF0066FF)
-                                              .withOpacity(0.08),
+                                          valueBg: const Color(
+                                            0xFF0066FF,
+                                          ).withOpacity(0.08),
                                         ),
                                         _buildDivider(),
                                         _buildInfoRow(
                                           icon: Icons.payment_outlined,
                                           label: 'Payment',
 
-                                          value: widget.paymentMethod?.toString() ??
+                                          value:
+                                              widget.paymentMethod
+                                                  ?.toString() ??
                                               'Confirmed',
                                           valueColor: const Color(0xFF32C787),
-                                          valueBg: const Color(0xFF32C787)
-                                              .withOpacity(0.1),
+                                          valueBg: const Color(
+                                            0xFF32C787,
+                                          ).withOpacity(0.1),
                                         ),
                                         if (totalAmount != null) ...[
                                           _buildDivider(),
@@ -362,7 +396,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                         ),
 
                         // const Spacer(),
-                        const SizedBox(height: 20,),
+                        const SizedBox(height: 20),
 
                         // ── Buttons ──
                         SlideTransition(
@@ -380,21 +414,25 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                       final storage = TokenStorage();
                                       final token = await storage.readToken();
                                       final userId = await storage.readUserId();
-                                      if (token == null || userId == null) return;
+                                      if (token == null || userId == null)
+                                        return;
 
                                       if (!mounted) return;
                                       Navigator.pushNamed(
                                         context,
                                         '/trackMyOrder',
                                         arguments: {
-                                          'orderId' : widget.orderId,
+                                          'orderId': widget.orderId,
                                           'userId': userId,
                                           'token': token,
                                         },
                                       );
                                     },
-                                    icon: const Icon(Icons.local_shipping_outlined,
-                                        color: Colors.white, size: 20),
+                                    icon: const Icon(
+                                      Icons.local_shipping_outlined,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
                                     label: const Text(
                                       'Track My Order',
                                       style: TextStyle(
@@ -425,11 +463,13 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                       Navigator.pushNamedAndRemoveUntil(
                                         context,
                                         '/homemainppage',
-                                            (route) => false,
+                                        (route) => false,
                                       );
                                     },
-                                    icon: const Icon(Icons.shopping_bag_outlined,
-                                        size: 20),
+                                    icon: const Icon(
+                                      Icons.shopping_bag_outlined,
+                                      size: 20,
+                                    ),
                                     label: const Text(
                                       'Continue Shopping',
                                       style: TextStyle(
@@ -441,7 +481,9 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                     style: OutlinedButton.styleFrom(
                                       foregroundColor: const Color(0xFF1A1A2E),
                                       side: const BorderSide(
-                                          color: Color(0xFFE4E4EF), width: 1.5),
+                                        color: Color(0xFFE4E4EF),
+                                        width: 1.5,
+                                      ),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(14),
                                       ),
@@ -460,22 +502,28 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                       final storage = TokenStorage();
                                       final token = await storage.readToken();
                                       final userId = await storage.readUserId();
-                                      if (token == null || userId == null) return;
-
+                                      if (token == null || userId == null)
+                                        return;
                                       if (!mounted) return;
-                                      Navigator.pushNamed(
+
+                                      // ── FadeSlideRoute — transition beauty ──────────────
+                                      Navigator.push(
                                         context,
-                                        '/orderHistory',
-                                        arguments: {
-                                          'userId': userId,
-                                          'token': token,
-                                        },
+                                        FadeSlideRoute(
+                                          page: OrderHistoryScreen(
+                                            userId: userId,
+                                            token: token,
+                                          ),
+                                        ),
                                       );
                                     },
-                                    icon: const Icon(Icons.shopping_bag_outlined,
-                                        size: 20),
+                                    // ── icon correct order history ──────────────
+                                    icon: const Icon(
+                                      Icons.receipt_long_outlined,
+                                      size: 20,
+                                    ),
                                     label: const Text(
-                                      'OrderHistory',
+                                      'View My Orders',
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w600,
@@ -485,14 +533,15 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                     style: OutlinedButton.styleFrom(
                                       foregroundColor: const Color(0xFF1A1A2E),
                                       side: const BorderSide(
-                                          color: Color(0xFFE4E4EF), width: 1.5),
+                                        color: Color(0xFFE4E4EF),
+                                        width: 1.5,
+                                      ),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(14),
                                       ),
                                     ),
                                   ),
                                 ),
-
                                 const SizedBox(height: 10),
 
                                 // Cancel Order
@@ -509,7 +558,9 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                                     text: const TextSpan(
                                       text: 'Need help? ',
                                       style: TextStyle(
-                                          color: Color(0xFF8A8A9A), fontSize: 13),
+                                        color: Color(0xFF8A8A9A),
+                                        fontSize: 13,
+                                      ),
                                       children: [
                                         TextSpan(
                                           text: 'Contact Support',
@@ -575,8 +626,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
         ),
         const Spacer(),
         Container(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
             color: valueBg ?? Colors.transparent,
             borderRadius: BorderRadius.circular(8),
@@ -618,7 +668,8 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
           backgroundColor: const Color(0xFF32C787),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12)),
+            borderRadius: BorderRadius.circular(12),
+          ),
           duration: const Duration(seconds: 2),
         ),
       );
@@ -626,12 +677,11 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
       Navigator.pushNamedAndRemoveUntil(
         context,
         '/divicenav',
-            (route) => false,
+        (route) => false,
         arguments: {'tab': 2},
       );
     },
-    icon: const Icon(Icons.cancel_outlined,
-        color: Color(0xFFFF3B30), size: 20),
+    icon: const Icon(Icons.cancel_outlined, color: Color(0xFFFF3B30), size: 20),
     label: const Text(
       'Cancel Order',
       style: TextStyle(
@@ -643,121 +693,114 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
     ),
     style: OutlinedButton.styleFrom(
       foregroundColor: const Color(0xFFFF3B30),
-      side:
-      const BorderSide(color: Color(0xFFFFE0DE), width: 1.5),
-      backgroundColor:
-      const Color(0xFFFF3B30).withOpacity(0.04),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-      ),
+      side: const BorderSide(color: Color(0xFFFFE0DE), width: 1.5),
+      backgroundColor: const Color(0xFFFF3B30).withOpacity(0.04),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
     ),
   );
 
   Future<bool> _showCancelBottomSheet() async {
     return await showModalBottomSheet<bool>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius:
-          BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE0E0E0),
-                borderRadius: BorderRadius.circular(2),
-              ),
+          context: context,
+          backgroundColor: Colors.transparent,
+          builder: (ctx) => Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
-            const SizedBox(height: 24),
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                color:
-                const Color(0xFFFF3B30).withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.cancel_outlined,
-                  color: Color(0xFFFF3B30), size: 28),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Cancel Order?',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF1A1A2E),
-                letterSpacing: -0.3,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'This action cannot be undone.\nAre you sure you want to cancel?',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xFF8A8A9A),
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Row(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.pop(ctx, false),
-                    style: OutlinedButton.styleFrom(
-                      padding:
-                      const EdgeInsets.symmetric(vertical: 14),
-                      side: const BorderSide(
-                          color: Color(0xFFE4E4EF)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Keep Order',
-                      style: TextStyle(
-                        color: Color(0xFF1A1A2E),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE0E0E0),
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(ctx, true),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF3B30),
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      padding:
-                      const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                const SizedBox(height: 24),
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFF3B30).withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.cancel_outlined,
+                    color: Color(0xFFFF3B30),
+                    size: 28,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Cancel Order?',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1A1A2E),
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'This action cannot be undone.\nAre you sure you want to cancel?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF8A8A9A),
+                    height: 1.5,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(ctx, false),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          side: const BorderSide(color: Color(0xFFE4E4EF)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Keep Order',
+                          style: TextStyle(
+                            color: Color(0xFF1A1A2E),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
-                    child: const Text(
-                      'Yes, Cancel',
-                      style:
-                      TextStyle(fontWeight: FontWeight.w600),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(ctx, true),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFF3B30),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Yes, Cancel',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    ) ??
+          ),
+        ) ??
         false;
   }
 }

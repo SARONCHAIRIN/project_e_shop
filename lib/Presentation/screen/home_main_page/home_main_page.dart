@@ -5,8 +5,6 @@ import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../../Main_App_Bar/App_Bar/sliver_main_app_bar.dart';
 import '../../../data/models/user_model.dart';
 
@@ -42,9 +40,6 @@ class _HomeMainPageState extends State<HomeMainPage> {
     'Drone',
     'shose',
     'Clothing',
-    'Books',
-    'Home',
-    'Toys',
     'Sports',
     'Beauty',
   ];
@@ -101,175 +96,172 @@ class _HomeMainPageState extends State<HomeMainPage> {
           extendBodyBehindAppBar: true,
           backgroundColor: Colors.grey.shade50,
           body: CustomScrollView(
+            // physics: PageScrollPhysics(),
+            physics: ClampingScrollPhysics(),
+            controller: _scrollController,
+            slivers: [
+              // Your app bar - will scroll away
+              SliverMainAppBar(
+                showBars: showBars,
+                authRepository: widget.authRepository,
+              ),
 
-             // physics: PageScrollPhysics(),
-             physics: ClampingScrollPhysics(),
-             controller: _scrollController,
-             slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
 
-               // Your app bar - will scroll away
-               SliverMainAppBar(
-                 showBars: showBars,
-                 authRepository: widget.authRepository,
-               ),
+                    SizedBox(height: 4),
 
-               SliverToBoxAdapter(
-                 child: Column(
-                   children: [
-                     SizedBox(height: 10),
+                    //carousel slider of home page
+                    // HomeCarouselSlider(),
+                    // const SizedBox(height: 20,),
 
-                     SizedBox(height: 4),
+                    //Trending Categories
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      //text category see all
+                      child: Row(
+                        children: [
+                          Text(
+                            'Trending Categories',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
 
-                     //carousel slider of home page
-                     // HomeCarouselSlider(),
-                     // const SizedBox(height: 20,),
+                          Expanded(child: SizedBox(width: 1)),
 
-                     //Trending Categories
-                     Padding(
-                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                       //text category see all
-                       child: Row(
-                         children: [
-                           Text(
-                             'Trending Categories',
-                             style: TextStyle(
-                               color: Colors.black,
-                               fontSize: 16,
-                               fontWeight: FontWeight.w500,
-                             ),
-                           ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SeeAllCategory(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "See All",
+                              style: TextStyle(
+                                color: Colors.redAccent,
+                                fontSize: 15,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-                           Expanded(child: SizedBox(width: 1)),
+              IconSubWithProduct(),
 
-                           TextButton(
-                             onPressed: () {
-                               Navigator.push(
-                                 context,
-                                 MaterialPageRoute(
-                                   builder: (context) => SeeAllCategory(),
-                                 ),
-                               );
-                             },
-                             child: Text(
-                               "See All",
-                               style: TextStyle(
-                                 color: Colors.redAccent,
-                                 fontSize: 15,
-                                 fontStyle: FontStyle.italic,
-                               ),
-                             ),
-                           ),
-                         ],
-                       ),
-                     ),
-                   ],
-                 ),
-               ),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    //trending categories
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      //text category see all
+                      child: Row(
+                        children: [
+                          Text(
+                            ' Popular Products',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
 
-               IconSubWithProduct(),
+                          Expanded(child: SizedBox(width: 1)),
 
-               SliverToBoxAdapter(
-                 child: Column(
-                   children: [
-                     //trending categories
-                     Padding(
-                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                       //text category see all
-                       child: Row(
-                         children: [
-                           Text(
-                             ' Popular Products',
-                             style: TextStyle(
-                               color: Colors.black,
-                               fontSize: 16,
-                               fontWeight: FontWeight.w500,
-                             ),
-                           ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SeeAllCategory(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "See All",
+                              style: TextStyle(
+                                color: Colors.redAccent,
+                                fontSize: 15,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
 
-                           Expanded(child: SizedBox(width: 1)),
+                    DefaultTabController(
+                      length: categories.length,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TabBar(
+                            isScrollable: true,
+                            tabAlignment: TabAlignment.start,
+                            labelColor: const Color(0xFF1E88E5),
+                            unselectedLabelColor: Colors.grey[600],
+                            indicatorColor: const Color(0xFF1E88E5),
+                            indicatorWeight: 3,
+                            labelStyle: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
+                            unselectedLabelStyle: const TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13,
+                            ),
+                            tabs: categories.map((category) {
+                              return Tab(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                  ),
+                                  child: Text(
+                                    category,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
 
-                           TextButton(
-                             onPressed: () {
-                               Navigator.push(
-                                 context,
-                                 MaterialPageRoute(
-                                   builder: (context) => SeeAllCategory(),
-                                 ),
-                               );
-                             },
-                             child: Text(
-                               "See All",
-                               style: TextStyle(
-                                 color: Colors.redAccent,
-                                 fontSize: 15,
-                                 fontStyle: FontStyle.italic,
-                               ),
-                             ),
-                           ),
-                         ],
-                       ),
-                     ),
+                            onTap: (index) {
+                              setState(() {
+                                selectedCategory = categories[index];
+                              });
+                            },
+                          ),
 
-                     DefaultTabController(
-                       length: categories.length,
-                       child: Column(
-                         crossAxisAlignment: CrossAxisAlignment.start,
-                         children: [
-                           TabBar(
-                             isScrollable: true,
-                             tabAlignment: TabAlignment.start,
-                             labelColor: const Color(0xFF1E88E5),
-                             unselectedLabelColor: Colors.grey[600],
-                             indicatorColor: const Color(0xFF1E88E5),
-                             indicatorWeight: 3,
-                             labelStyle: const TextStyle(
-                               fontWeight: FontWeight.w600,
-                               fontSize: 13,
-                             ),
-                             unselectedLabelStyle: const TextStyle(
-                               fontWeight: FontWeight.w400,
-                               fontSize: 13,
-                             ),
-                             tabs: categories.map((category) {
-                               return Tab(
-                                 child: Padding(
-                                   padding: const EdgeInsets.symmetric(
-                                     horizontal: 14,
-                                   ),
-                                   child: Text(
-                                     category,
-                                     style: const TextStyle(
-                                       fontWeight: FontWeight.w600,
-                                     ),
-                                   ),
-                                 ),
-                               );
-                             }).toList(),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                  ],
+                ),
+              ),
 
-                             onTap: (index) {
-                               setState(() {
-                                 selectedCategory = categories[index];
-                               });
-                             },
-                           ),
+              SubcategoryWithProduct(categoryName: selectedCategory),
 
-                           const SizedBox(height: 16),
-                         ],
-                       ),
-                     ),
-                     SizedBox(height: 15),
-                   ],
-                 ),
-               ),
-
-               SubcategoryWithProduct(categoryName: selectedCategory),
-
-               SliverToBoxAdapter(child: SizedBox(height: 100)),
-             ],
-           ),
+              SliverToBoxAdapter(child: SizedBox(height: 100)),
+            ],
+          ),
         ),
       ],
     );
   }
-
 }

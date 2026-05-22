@@ -7,10 +7,7 @@ class AuthRepository {
   final dynamic service; // ឬ AuthService
   final TokenStorage storage;
 
-  AuthRepository({
-    required this.service,
-    required this.storage,
-  });
+  AuthRepository({required this.service, required this.storage});
 
   // Login method
   Future<Map<String, dynamic>> login(String username, String password) async {
@@ -20,10 +17,7 @@ class AuthRepository {
       final response = await http.post(
         Uri.parse('${ApiEndpoints.baseUrl}/api/auth/login'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'username': username,
-          'password': password,
-        }),
+        body: json.encode({'username': username, 'password': password}),
       );
 
       print(' Response status: ${response.statusCode}');
@@ -40,17 +34,11 @@ class AuthRepository {
           'message': 'Login successful',
         };
       } else {
-        return {
-          'success': false,
-          'message': 'Login failed',
-        };
+        return {'success': false, 'message': 'Login failed'};
       }
     } catch (e) {
       print(' Login error: $e');
-      return {
-        'success': false,
-        'message': 'Network error',
-      };
+      return {'success': false, 'message': 'Network error'};
     }
   }
 
@@ -100,10 +88,7 @@ class AuthRepository {
       }
     } catch (e) {
       print(' Register error: $e');
-      return {
-        'success': false,
-        'message': 'Network error',
-      };
+      return {'success': false, 'message': 'Network error'};
     }
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// OrderStatusTimeline displays the progression of order status
-/// 
+///
 /// Features:
 /// - Visual timeline showing all status stages
 /// - Current status highlighted
@@ -139,8 +139,8 @@ class OrderStatusTimeline extends StatelessWidget {
                         color: isCompleted
                             ? (completedColor ?? Colors.green)
                             : isActive
-                                ? (activeColor ?? Colors.blue)
-                                : (pendingColor ?? Colors.grey.shade300),
+                            ? (activeColor ?? Colors.blue)
+                            : (pendingColor ?? Colors.grey.shade300),
                         border: isActive
                             ? Border.all(
                                 color: (activeColor ?? Colors.blue),
@@ -183,8 +183,12 @@ class OrderStatusTimeline extends StatelessWidget {
                           _getStatusLabel(status),
                           style: TextStyle(
                             fontSize: 14,
-                            fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
-                            color: isActive ? Colors.black : Colors.grey.shade700,
+                            fontWeight: isActive
+                                ? FontWeight.w600
+                                : FontWeight.w500,
+                            color: isActive
+                                ? Colors.black
+                                : Colors.grey.shade700,
                           ),
                         ),
                         // Timestamp
@@ -226,12 +230,21 @@ class OrderStatusTimeline extends StatelessWidget {
   /// Format DateTime to readable string
   String _formatDateTime(DateTime dateTime) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     final hour = dateTime.hour.toString().padLeft(2, '0');
     final minute = dateTime.minute.toString().padLeft(2, '0');
     return '${dateTime.day} ${months[dateTime.month - 1]} ${dateTime.year} at $hour:$minute';
   }
 }
-

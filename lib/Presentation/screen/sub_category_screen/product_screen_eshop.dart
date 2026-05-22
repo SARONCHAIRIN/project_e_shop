@@ -1,4 +1,3 @@
-
 import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_detail_screen_eshop.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,7 +37,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
   // Flying animation variables
   final GlobalKey<State> _cartIconKey = GlobalKey<State>();
   List<_FlyingCartAnimation> _flyingAnimations = [];
-  
+
   // Map to store keys for each product's cart button
   final Map<int, GlobalKey> _productCartButtonKeys = {};
 
@@ -108,15 +107,13 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                     final storage = TokenStorage();
                     final userId = await storage.getUserId();
                     final token = await storage.getToken();
-                    
+
                     if (userId != null && token != null && mounted) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CartScreen(
-                            userId: userId,
-                            token: token,
-                          ),
+                          builder: (context) =>
+                              CartScreen(userId: userId, token: token),
                         ),
                       );
                     }
@@ -150,35 +147,27 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
       body: Stack(
         children: [
           FutureBuilder<List<Product>>(
-            future:
-                apiService.fetchProductsBySubcategoryId(widget.subcategoryId),
+            future: apiService.fetchProductsBySubcategoryId(
+              widget.subcategoryId,
+            ),
             builder: (context, snapshot) {
               /// ================= LOADING =================
-              if (snapshot.connectionState ==
-                  ConnectionState.waiting) {
-
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                  child: SpinKitFadingCircle(
-                    color: Colors.black,
-                    size: 40,
-                  ),
+                  child: SpinKitFadingCircle(color: Colors.black, size: 40),
                 );
               }
 
               /// ================= ERROR =================
               if (snapshot.hasError) {
-
                 return Center(
                   child: SizedBox(
                     height: 350,
                     child: Column(
-                      mainAxisAlignment:
-                      MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 70,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 70),
 
                           child: Lottie.asset(
                             'assets/animations/Error_404.json',
@@ -206,24 +195,17 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
               }
 
               /// ================= EMPTY =================
-              if (!snapshot.hasData ||
-                  snapshot.data!.isEmpty) {
-
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return Center(
-                  child:
-                  SizedBox(
+                  child: SizedBox(
                     height: 350,
 
                     child: Column(
-                      mainAxisAlignment:
-                      MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
 
                       children: [
-
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 70,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 70),
 
                           child: Lottie.asset(
                             'assets/animations/empty.json',
@@ -249,9 +231,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                         const Text(
                           "Try a different keyword",
 
-                          style: TextStyle(
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(color: Colors.grey),
                         ),
                       ],
                     ),
@@ -279,12 +259,11 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              ProductDetailScreen(
-                                product: product,
-                                subcategoryId: widget.subcategoryId,
-                                subcategoryName: widget.subcategoryName,
-                              ),
+                          builder: (context) => ProductDetailScreen(
+                            product: product,
+                            subcategoryId: widget.subcategoryId,
+                            subcategoryName: widget.subcategoryName,
+                          ),
                         ),
                       );
                     },
@@ -314,8 +293,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                 children: [
                                   Expanded(
                                     child: ClipRRect(
-                                      borderRadius:
-                                          const BorderRadius.vertical(
+                                      borderRadius: const BorderRadius.vertical(
                                         top: Radius.circular(8),
                                       ),
                                       child: product.mainImage.isEmpty
@@ -327,30 +305,34 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                           : Image.network(
                                               product.mainImage,
                                               width: double.infinity,
-                                              errorBuilder: (context, error,
-                                                  stackTrace) {
-                                                return Image.asset(
-                                                  'assets/images/default_image.png',
-                                                  fit: BoxFit.fill,
-                                                );
-                                              },
-                                              loadingBuilder: (context, child,
-                                                  loadingProgress) {
-                                                if (loadingProgress == null)
-                                                  return child;
-                                                return Container(
-                                                  color: Colors.grey[200],
-                                                  child: const Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                            strokeWidth: 2),
-                                                  ),
-                                                );
-                                              },
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                    return Image.asset(
+                                                      'assets/images/default_image.png',
+                                                      fit: BoxFit.fill,
+                                                    );
+                                                  },
+                                              loadingBuilder:
+                                                  (
+                                                    context,
+                                                    child,
+                                                    loadingProgress,
+                                                  ) {
+                                                    if (loadingProgress == null)
+                                                      return child;
+                                                    return Container(
+                                                      color: Colors.grey[200],
+                                                      child: const Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                              strokeWidth: 2,
+                                                            ),
+                                                      ),
+                                                    );
+                                                  },
                                             ),
                                     ),
                                   ),
-
 
                                   Padding(
                                     padding: EdgeInsets.symmetric(),
@@ -364,13 +346,15 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text(product.name,
-                                              maxLines: 2,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                                overflow: TextOverflow.ellipsis,
-                                              )),
+                                          child: Text(
+                                            product.name,
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
@@ -389,7 +373,8 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                   color: Colors.green,
                                                   shadows: [
                                                     BoxShadow(
-                                                      color: Colors.yellowAccent,
+                                                      color:
+                                                          Colors.yellowAccent,
                                                       blurStyle:
                                                           BlurStyle.outer,
                                                       blurRadius: 3,
@@ -399,7 +384,8 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                 ),
                                               ),
                                               Expanded(
-                                                  child: SizedBox(width: 1)),
+                                                child: SizedBox(width: 1),
+                                              ),
 
                                               Container(
                                                 width: 30,
@@ -408,70 +394,118 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                   shape: BoxShape.circle,
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.blueAccent.shade100,
+                                                      color: Colors
+                                                          .blueAccent
+                                                          .shade100,
                                                       spreadRadius: 1,
-                                                      blurStyle: BlurStyle.outer,
+                                                      blurStyle:
+                                                          BlurStyle.outer,
                                                       blurRadius: 1,
                                                     ),
                                                   ],
                                                 ),
                                                 child: IconButton(
-                                                  key: _productCartButtonKeys.putIfAbsent(
-                                                    product.id,
-                                                    () => GlobalKey(),
-                                                  ),
+                                                  key: _productCartButtonKeys
+                                                      .putIfAbsent(
+                                                        product.id,
+                                                        () => GlobalKey(),
+                                                      ),
                                                   onPressed: () async {
                                                     // Store references before async operation
-                                                    final storage = TokenStorage();
-                                                    final cartController = context.read<CartController>();
-                                                    final scaffoldMessenger = ScaffoldMessenger.of(context);
+                                                    final storage =
+                                                        TokenStorage();
+                                                    final cartController =
+                                                        context
+                                                            .read<
+                                                              CartController
+                                                            >();
+                                                    final scaffoldMessenger =
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        );
 
                                                     try {
                                                       // Verify token and userId exist
-                                                      final token = await storage.readToken();
-                                                      final userId = await storage.readUserId();
+                                                      final token =
+                                                          await storage
+                                                              .readToken();
+                                                      final userId =
+                                                          await storage
+                                                              .readUserId();
 
-
-                                                      if (token == null || token.isEmpty) {
-                                                        
+                                                      if (token == null ||
+                                                          token.isEmpty) {
                                                         if (mounted) {
-                                                          scaffoldMessenger.showSnackBar(
-                                                            const SnackBar(
-                                                              content: Text('Please login first'),
-                                                              duration: Duration(seconds: 2),
-                                                              backgroundColor: Colors.orange,
-                                                            ),
-                                                          );
+                                                          scaffoldMessenger
+                                                              .showSnackBar(
+                                                                const SnackBar(
+                                                                  content: Text(
+                                                                    'Please login first',
+                                                                  ),
+                                                                  duration:
+                                                                      Duration(
+                                                                        seconds:
+                                                                            2,
+                                                                      ),
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .orange,
+                                                                ),
+                                                              );
                                                         }
-                                                        if(mounted) {
-                                                          Navigator.pushNamed(context,LoginScreen.routeName);
+                                                        if (mounted) {
+                                                          Navigator.pushNamed(
+                                                            context,
+                                                            LoginScreen
+                                                                .routeName,
+                                                          );
                                                         }
                                                         return;
                                                       }
 
-                                                      if (userId == null || userId <= 0) {
+                                                      if (userId == null ||
+                                                          userId <= 0) {
                                                         if (mounted) {
-                                                          scaffoldMessenger.showSnackBar(
-                                                            const SnackBar(
-                                                              content: Text('User session invalid. Please login again'),
-                                                              duration: Duration(seconds: 2),
-                                                              backgroundColor: Colors.orange,
-                                                            ),
-                                                          );
+                                                          scaffoldMessenger
+                                                              .showSnackBar(
+                                                                const SnackBar(
+                                                                  content: Text(
+                                                                    'User session invalid. Please login again',
+                                                                  ),
+                                                                  duration:
+                                                                      Duration(
+                                                                        seconds:
+                                                                            2,
+                                                                      ),
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .orange,
+                                                                ),
+                                                              );
                                                         }
                                                         return;
                                                       }
 
                                                       // Get product icon button position
-                                                      final GlobalKey iconKey = _productCartButtonKeys[product.id]!;
-                                                      final RenderBox? iconBox = iconKey.currentContext?.findRenderObject() as RenderBox?;
+                                                      final GlobalKey iconKey =
+                                                          _productCartButtonKeys[product
+                                                              .id]!;
+                                                      final RenderBox? iconBox =
+                                                          iconKey.currentContext
+                                                                  ?.findRenderObject()
+                                                              as RenderBox?;
 
                                                       if (iconBox == null) {
-                                                        debugPrint('Error: Could not find icon button render box');
+                                                        debugPrint(
+                                                          'Error: Could not find icon button render box',
+                                                        );
                                                         return;
                                                       }
 
-                                                      final productPosition = iconBox.localToGlobal(Offset.zero);
+                                                      final productPosition =
+                                                          iconBox.localToGlobal(
+                                                            Offset.zero,
+                                                          );
 
                                                       // Create flying animation
                                                       if (mounted) {
@@ -482,20 +516,35 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                       }
 
                                                       // Add to cart
-                                                      debugPrint('Adding product ${product.id} to cart for user $userId');
+                                                      debugPrint(
+                                                        'Adding product ${product.id} to cart for user $userId',
+                                                      );
 
-                                                      await cartController.addItem(product.id, 1);
-
+                                                      await cartController
+                                                          .addItem(
+                                                            product.id,
+                                                            1,
+                                                          );
                                                     } catch (e, stackTrace) {
-                                                      debugPrint('Error adding to cart: $e');
-                                                      debugPrint('Stack trace: $stackTrace');
+                                                      debugPrint(
+                                                        'Error adding to cart: $e',
+                                                      );
+                                                      debugPrint(
+                                                        'Stack trace: $stackTrace',
+                                                      );
 
                                                       if (mounted) {
                                                         scaffoldMessenger.showSnackBar(
                                                           SnackBar(
-                                                            content: Text('Failed to add item. Please try again.'),
-                                                            duration: const Duration(seconds: 2),
-                                                            backgroundColor: Colors.red,
+                                                            content: Text(
+                                                              'Failed to add item. Please try again.',
+                                                            ),
+                                                            duration:
+                                                                const Duration(
+                                                                  seconds: 2,
+                                                                ),
+                                                            backgroundColor:
+                                                                Colors.red,
                                                           ),
                                                         );
                                                       }
@@ -570,14 +619,16 @@ class _FlyingCartAnimation extends StatelessWidget {
     ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInOutQuad));
 
     // Animate scale down
-    final scaleAnimation = Tween<double>(begin: 1.0, end: 0.3).animate(
-      CurvedAnimation(parent: controller, curve: Curves.easeInOutQuad),
-    );
+    final scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.3,
+    ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInOutQuad));
 
     // Animate opacity
-    final opacityAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(parent: controller, curve: Curves.easeInOutQuad),
-    );
+    final opacityAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInOutQuad));
 
     return AnimatedBuilder(
       animation: controller,
@@ -589,15 +640,17 @@ class _FlyingCartAnimation extends StatelessWidget {
             opacity: opacityAnimation.value,
             child: Transform.scale(
               scale: scaleAnimation.value,
-             child:  Container(
+              child: Container(
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Color.fromARGB(204, 63, 81, 181), // Blue with ~80% opacity
+                  color: Color.fromARGB(204, 63, 81, 181),
+                  // Blue with ~80% opacity
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(128, 63, 81, 181), // Blue with ~50% opacity
+                      color: Color.fromARGB(128, 63, 81, 181),
+                      // Blue with ~50% opacity
                       blurRadius: 8,
                       spreadRadius: 2,
                     ),
@@ -616,5 +669,3 @@ class _FlyingCartAnimation extends StatelessWidget {
     );
   }
 }
-
-

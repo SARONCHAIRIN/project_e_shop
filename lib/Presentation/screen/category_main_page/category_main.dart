@@ -6,11 +6,8 @@ import '../../../core/network/api_client.dart';
 
 class CategoryMain extends StatefulWidget {
   final authRepository;
-  const CategoryMain({
-    super.key,
-    required this.authRepository,
 
-  });
+  const CategoryMain({super.key, required this.authRepository});
 
   @override
   State<CategoryMain> createState() => _CategoryMainState();
@@ -21,7 +18,16 @@ class _CategoryMainState extends State<CategoryMain> {
   bool showBars = true;
   bool showTextField = true;
 
-  List<String> categories = ['All','Laptop','Electronics', 'Drone', 'shose','Clothing', 'Books', 'Home', 'Toys', 'Sports', 'Beauty'];
+  List<String> categories = [
+    'All',
+    'Laptop',
+    'Electronics',
+    'Drone',
+    'shose',
+    'Clothing',
+    'Sports',
+    'Beauty',
+  ];
   String selectedCategory = 'All';
 
   @override
@@ -29,11 +35,12 @@ class _CategoryMainState extends State<CategoryMain> {
     super.initState();
 
     _scrollController.addListener(() {
-      if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
         if (showBars) setState(() => showBars = false);
         // if(showTextField ) setState(() => showTextField = false);
-      }
-      else if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
+      } else if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
         if (!showBars) setState(() => showBars = true);
         // if(!showTextField) setState(() => showTextField = true);
       }
@@ -43,6 +50,7 @@ class _CategoryMainState extends State<CategoryMain> {
     print('|              Category Page Loads                |');
     print('|=================================================|');
   }
+
   @override
   Widget build(BuildContext context) {
     final apiClient = ApiClient();
@@ -53,20 +61,16 @@ class _CategoryMainState extends State<CategoryMain> {
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
-
           // Your app bar - will scroll away
           SliverMainAppBar(
             showBars: showBars,
             authRepository: widget.authRepository,
           ),
 
-
-
           SliverToBoxAdapter(
             child: Column(
               children: [
-                SizedBox(height: 10,),
-
+                SizedBox(height: 10),
 
                 DefaultTabController(
                   length: categories.length,
@@ -91,7 +95,9 @@ class _CategoryMainState extends State<CategoryMain> {
                         tabs: categories.map((category) {
                           return Tab(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 14),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                              ),
                               child: Text(
                                 category,
                                 style: const TextStyle(
@@ -110,21 +116,17 @@ class _CategoryMainState extends State<CategoryMain> {
                       ),
 
                       const SizedBox(height: 16),
-
                     ],
                   ),
                 ),
 
-                SizedBox(height: 10,),
+                SizedBox(height: 10),
               ],
             ),
           ),
 
-
           // Your grid
-           SubcategoryWithProduct(
-            categoryName: selectedCategory,
-          ),
+          SubcategoryWithProduct(categoryName: selectedCategory),
         ],
       ),
     );

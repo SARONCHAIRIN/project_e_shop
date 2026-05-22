@@ -1,5 +1,7 @@
+import 'package:e_shop/core/widgets/loading_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../core/widgets/animation_widgets.dart';
 import '../../../data/datasources/adress/adress_service.dart';
 import '../../../data/models/address/address_model.dart';
 import '../../../data/models/order/order_item_model.dart';
@@ -39,8 +41,9 @@ class OrderDetailScreen extends StatefulWidget {
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   final OrderRepository _orderRepository = OrderRepository();
-  final AddressRepository _addressRepository =
-  AddressRepository(AddressService());
+  final AddressRepository _addressRepository = AddressRepository(
+    AddressService(),
+  );
 
   AddressModel? _address;
 
@@ -80,9 +83,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   bool get _canCancel => _order?.status == OrderStatus.pending;
+
   bool get _canTrack =>
       _order?.status == OrderStatus.shipped ||
-          _order?.status == OrderStatus.delivered;
+      _order?.status == OrderStatus.delivered;
 
   String get _formattedDate {
     // Prefer parsed createdAt DateTime, fall back to raw orderDate string
@@ -97,8 +101,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   String _monthName(int month) {
     const months = [
-      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      '',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return months[month];
   }
@@ -123,16 +138,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.warning_amber_rounded,
-                      color: Colors.red[400], size: 24),
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    color: Colors.red[400],
+                    size: 24,
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'This action cannot be undone. Your order will be cancelled immediately.',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.red[700],
-                      ),
+                      style: TextStyle(fontSize: 13, color: Colors.red[700]),
                     ),
                   ),
                 ],
@@ -154,7 +169,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             onPressed: () => Navigator.pop(ctx),
             child: Text(
               'Keep Order',
-              style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           ElevatedButton(
@@ -205,8 +223,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             content: const Text('Order cancelled successfully.'),
             backgroundColor: Colors.green[600],
             behavior: SnackBarBehavior.floating,
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         );
       }
@@ -247,8 +266,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const Icon(Icons.local_shipping_outlined,
-                size: 48, color: Color(0xFF1E88E5)),
+            const Icon(
+              Icons.local_shipping_outlined,
+              size: 48,
+              color: Color(0xFF1E88E5),
+            ),
             const SizedBox(height: 12),
             const Text(
               'Shipment Tracking',
@@ -272,8 +294,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text('Close',
-                    style: TextStyle(fontWeight: FontWeight.w600)),
+                child: const Text(
+                  'Close',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -357,9 +381,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   ),
                 ],
               ),
-              OrderStatusBadge(
-                status: status?.name.toUpperCase() ?? 'PENDING',
-                isLarge: false,
+              AnimatedStatusBadge(
+                status: _order!.status?.name.toUpperCase() ?? 'PENDING',
+                builder: (status) =>
+                    OrderStatusBadge(status: status, isLarge: false),
               ),
             ],
           ),
@@ -401,11 +426,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ),
 
               if (!isLast)
-                Divider(
-                  color: Colors.grey[200],
-                  height: 20,
-                  thickness: 1,
-                ),
+                Divider(color: Colors.grey[200], height: 20, thickness: 1),
             ],
           );
         }).toList(),
@@ -466,10 +487,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   const SizedBox(height: 4),
                   Text(
                     '${_address!.city}, ${_address!.zipcode}, ${_address!.country}',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -479,6 +497,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       ),
     );
   }
+
   Widget _buildPaymentSection() {
     final method = _order!.resolvedPaymentMethod.toUpperCase();
     final total = _order!.total;
@@ -513,7 +532,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   if (isBakong && isVerified) ...[
                     const SizedBox(width: 6),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green[50],
                         borderRadius: BorderRadius.circular(6),
@@ -522,7 +544,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.verified, size: 11, color: Colors.green[600]),
+                          Icon(
+                            Icons.verified,
+                            size: 11,
+                            color: Colors.green[600],
+                          ),
                           const SizedBox(width: 3),
                           Text(
                             'Verified',
@@ -541,16 +567,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ],
           ),
           const SizedBox(height: 10),
-          _DetailRow(
-            label: 'Order Date',
-            value: _formattedDate,
-          ),
+          _DetailRow(label: 'Order Date', value: _formattedDate),
           // Show cancelled date if order was cancelled
           if (cancelledAt != null) ...[
             const SizedBox(height: 10),
             _DetailRow(
               label: 'Cancelled On',
-              value: '${cancelledAt.day} ${_monthName(cancelledAt.month)} ${cancelledAt.year}',
+              value:
+                  '${cancelledAt.day} ${_monthName(cancelledAt.month)} ${cancelledAt.year}',
               valueColor: Colors.red[400],
             ),
           ],
@@ -626,13 +650,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 onPressed: _isCancelling ? null : _showCancelDialog,
                 icon: _isCancelling
                     ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.red,
-                  ),
-                )
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.red,
+                        ),
+                      )
                     : const Icon(Icons.cancel_outlined, size: 20),
                 label: Text(
                   _isCancelling ? 'Cancelling...' : 'Cancel Order',
@@ -744,8 +768,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new,
-              size: 18, color: Color(0xFF1A1A2E)),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            size: 18,
+            color: Color(0xFF1A1A2E),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
@@ -756,35 +783,35 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         ],
       ),
 
-
       body: _isLoading
-          ? _buildLoadingState()
+          // ? _buildLoadingState()
+          ? OrderDetailSkeleton()
           : _errorMessage != null
           ? _buildErrorState()
           : SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildStatusHeader(),
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if ((_order!.items ?? []).isNotEmpty)
-                    _buildItemsSection(),
+                  _buildStatusHeader(),
                   const SizedBox(height: 12),
-                  _buildAddressSection(),
-                  const SizedBox(height: 12),
-                  _buildPaymentSection(),
-                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        if ((_order!.items ?? []).isNotEmpty)
+                          _buildItemsSection(),
+                        const SizedBox(height: 12),
+                        _buildAddressSection(),
+                        const SizedBox(height: 12),
+                        _buildPaymentSection(),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                  _buildActionButtons(),
                 ],
               ),
             ),
-            _buildActionButtons(),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -849,21 +876,14 @@ class _DetailRow extends StatelessWidget {
   final String value;
   final Color? valueColor;
 
-  const _DetailRow({
-    required this.label,
-    required this.value,
-    this.valueColor,
-  });
+  const _DetailRow({required this.label, required this.value, this.valueColor});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-        ),
+        Text(label, style: TextStyle(fontSize: 13, color: Colors.grey[600])),
         Text(
           value,
           style: TextStyle(
@@ -875,6 +895,4 @@ class _DetailRow extends StatelessWidget {
       ],
     );
   }
-
-
 }

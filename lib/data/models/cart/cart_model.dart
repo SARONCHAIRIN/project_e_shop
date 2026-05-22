@@ -20,17 +20,18 @@ class CartModel {
           : 0,
       totalPrice: json['total_price'] != null
           ? (json['total_price'] is num
-              ? (json['total_price'] as num).toDouble()
-              : double.tryParse(json['total_price'].toString()) ?? 0.0)
+                ? (json['total_price'] as num).toDouble()
+                : double.tryParse(json['total_price'].toString()) ?? 0.0)
           : 0.0,
       totalItems: json['total_items'] != null
           ? (json['total_items'] is double
-          ? (json['total_items'] as double).toInt()
-          : json['total_items'])
+                ? (json['total_items'] as double).toInt()
+                : json['total_items'])
           : 0,
-      items: (json['items'] as List<dynamic>?)
-          ?.map((e) => CartItem.fromJson(e))
-          .toList() ??
+      items:
+          (json['items'] as List<dynamic>?)
+              ?.map((e) => CartItem.fromJson(e))
+              .toList() ??
           [],
     );
   }

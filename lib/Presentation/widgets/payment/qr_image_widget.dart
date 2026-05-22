@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 /// QRImageWidget displays QR code image with action buttons
-/// 
+///
 /// Features:
 /// - Display QR image from base64 or network URL
 /// - Download button to save QR code
@@ -59,10 +59,7 @@ class _QRImageWidgetState extends State<QRImageWidget> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.grey.shade200,
-              width: 2,
-            ),
+            border: Border.all(color: Colors.grey.shade200, width: 2),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -125,10 +122,7 @@ class _QRImageWidgetState extends State<QRImageWidget> {
             ),
             child: Text(
               _errorMessage!,
-              style: TextStyle(
-                color: Colors.red.shade700,
-                fontSize: 13,
-              ),
+              style: TextStyle(color: Colors.red.shade700, fontSize: 13),
             ),
           ),
         ],
@@ -158,10 +152,7 @@ class _QRImageWidgetState extends State<QRImageWidget> {
                   const SizedBox(height: 8),
                   Text(
                     'Failed to load QR',
-                    style: TextStyle(
-                      color: Colors.red.shade600,
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.red.shade600, fontSize: 12),
                   ),
                 ],
               ),
@@ -182,7 +173,7 @@ class _QRImageWidgetState extends State<QRImageWidget> {
             child: CircularProgressIndicator(
               value: progress.expectedTotalBytes != null
                   ? progress.cumulativeBytesLoaded /
-                      progress.expectedTotalBytes!
+                        progress.expectedTotalBytes!
                   : null,
               strokeWidth: 2,
             ),
@@ -209,10 +200,7 @@ class _QRImageWidgetState extends State<QRImageWidget> {
           const SizedBox(height: 8),
           Text(
             message,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 12,
-            ),
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
           ),
         ],
       ),
@@ -222,9 +210,7 @@ class _QRImageWidgetState extends State<QRImageWidget> {
   /// Convert base64 string to Uint8List
   Uint8List _base64ToBytes(String base64String) {
     try {
-      return Uint8List.fromList(
-        base64String.codeUnits,
-      );
+      return Uint8List.fromList(base64String.codeUnits);
     } catch (e) {
       throw Exception('Failed to decode base64: $e');
     }
@@ -284,4 +270,3 @@ class _QRImageWidgetState extends State<QRImageWidget> {
     }
   }
 }
-

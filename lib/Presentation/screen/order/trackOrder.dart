@@ -84,10 +84,7 @@ class _TrackOrderPageState extends State<TrackOrderPage>
           ? const Center(child: CircularProgressIndicator())
           : _error != null
           ? _errorView()
-          : FadeTransition(
-        opacity: _controller,
-        child: _buildBody(),
-      ),
+          : FadeTransition(opacity: _controller, child: _buildBody()),
     );
   }
 
@@ -120,18 +117,12 @@ class _TrackOrderPageState extends State<TrackOrderPage>
         children: [
           Text(
             "#${order.orderNumber}",
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-            ),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 6),
           Text(
             "Total: \$${order.total.toStringAsFixed(2)}",
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 13,
-            ),
+            style: const TextStyle(color: Colors.grey, fontSize: 13),
           ),
         ],
       ),
@@ -214,10 +205,7 @@ class _TrackOrderPageState extends State<TrackOrderPage>
                     ),
                     Text(
                       done ? "Completed" : "Pending",
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -259,18 +247,19 @@ class _TrackOrderPageState extends State<TrackOrderPage>
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       color: Colors.grey.shade200,
-
                     ),
-                    child: Icon(Icons.picture_as_pdf_outlined,size: 30,color: Colors.grey,),
+                    child: Icon(
+                      Icons.picture_as_pdf_outlined,
+                      size: 30,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     sku.description,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
                 Text(
@@ -287,6 +276,7 @@ class _TrackOrderPageState extends State<TrackOrderPage>
       ),
     );
   }
+
   // ───────────────────────── SUPPORT BUTTON (MODERN CTA)
   Widget _supportButton() {
     return AnimatedContainer(
@@ -324,7 +314,7 @@ class _TrackOrderPageState extends State<TrackOrderPage>
             color: Colors.black.withOpacity(0.04),
             blurRadius: 20,
             offset: const Offset(0, 8),
-          )
+          ),
         ],
       ),
       child: child,
@@ -341,10 +331,7 @@ class _TrackOrderPageState extends State<TrackOrderPage>
           const SizedBox(height: 10),
           Text(_error ?? "Error"),
           const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: _load,
-            child: const Text("Retry"),
-          )
+          ElevatedButton(onPressed: _load, child: const Text("Retry")),
         ],
       ),
     );

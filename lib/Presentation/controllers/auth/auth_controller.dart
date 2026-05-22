@@ -11,15 +11,15 @@ class AuthController extends ChangeNotifier {
   String? _token;
   Map<String, dynamic>? _userData;
 
-  AuthController({
-    required this.authRepository,
-    required this.tokenStorage,
-  });
+  AuthController({required this.authRepository, required this.tokenStorage});
 
   // Getters
   bool get isAuthenticated => _isAuthenticated;
+
   bool get isLoading => _isLoading;
+
   String? get token => _token;
+
   Map<String, dynamic>? get userData => _userData;
 
   // Check login status when app starts

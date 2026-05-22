@@ -38,18 +38,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
       AddAddressCheckout(storage: widget.storage, repo: widget.repo),
       // PaymentScreen(userId: widget.userId, token: widget.token, addressId: widget.addressId),
       PaymentMethodScreen(
-        totalPrice: 0,
         addressId: widget.addressId,
-        addressLine1: '',
-        city: '',
-        country: '',
-        zipCode: '',
+        totalPrice: 100,
       ),
-      // ReviewScreen(userId: widget.userId,
-      //     token: widget.token,
-      //     addressId: widget.addressId,
-      //     paymentMethod: "Credit Card"
-      // ),
     ];
   }
 
@@ -71,9 +62,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(height: 50),
 
@@ -85,20 +79,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 },
                 icon: Icon(Icons.arrow_back),
               ),
-              SizedBox(width: 100),
-              Center(
-                child: Text(
-                  "Checkout",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                ),
+              Spacer(),
+
+              const Text(
+                "Checkout",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               ),
+              SizedBox(width: 30,),
+              Spacer(),
             ],
           ),
           SizedBox(height: 5),
 
           // Step Indicator
           Padding(
-            padding: const EdgeInsets.only(left: 50),
+            padding: EdgeInsets.only(left: width * 0.20),
             child: CheckoutStepIndicator(
               currentStep: currentStep,
               onStepTap: (step) {
@@ -108,6 +103,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               },
             ),
           ),
+
           SizedBox(height: 10),
 
           //  Page Content

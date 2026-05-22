@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class SubcategoryTile extends StatelessWidget {
@@ -17,9 +16,7 @@ class SubcategoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 3,
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -34,7 +31,7 @@ class SubcategoryTile extends StatelessWidget {
                 height: 80,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) =>
-                const Icon(Icons.image_not_supported),
+                    const Icon(Icons.image_not_supported),
               ),
             ),
 
@@ -57,9 +54,7 @@ class SubcategoryTile extends StatelessWidget {
                     description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.grey,
-                    ),
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 ],
               ),

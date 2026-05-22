@@ -19,8 +19,12 @@ class CartService {
     throw Exception("Failed to fetch cart");
   }
 
-
-  Future<void> addItem(int userId, int productId, int quantity, String token) async {
+  Future<void> addItem(
+    int userId,
+    int productId,
+    int quantity,
+    String token,
+  ) async {
     final response = await http.post(
       Uri.parse("$baseUrl/user/$userId/items"),
       headers: {
@@ -28,10 +32,7 @@ class CartService {
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
-      body: jsonEncode({
-        "product_id": productId,
-        "quantity": quantity,
-      }),
+      body: jsonEncode({"product_id": productId, "quantity": quantity}),
     );
 
     print("STATUS: ${response.statusCode}");
@@ -41,13 +42,16 @@ class CartService {
       throw Exception("Failed to add item");
     }
   }
+
   Future<void> updateItem(
-      int userId,
-      int cartItemId,
-      int quantity,
-      String token
-      ) async {
-    final url = Uri.parse('https://e-shop-1-m034.onrender.com/api/v1/cart/user/$userId/items/$cartItemId');
+    int userId,
+    int cartItemId,
+    int quantity,
+    String token,
+  ) async {
+    final url = Uri.parse(
+      'https://e-shop-1-m034.onrender.com/api/v1/cart/user/$userId/items/$cartItemId',
+    );
 
     final response = await http.put(
       url,
@@ -56,10 +60,7 @@ class CartService {
         'Authorization': 'Bearer $token',
         "Accept": "application/json",
       },
-      body: jsonEncode({
-        'quantity': quantity,
-         'product_id': cartItemId,
-      }),
+      body: jsonEncode({'quantity': quantity, 'product_id': cartItemId}),
     );
     print("STATUS: ${response.statusCode}");
     print("BODY: ${response.body}");
@@ -71,6 +72,7 @@ class CartService {
 
     print('Update success: ${response.body}');
   }
+
   // DELETE single item
   Future<void> deleteItem(int userId, int cartItemId, String token) async {
     final response = await http.delete(

@@ -30,6 +30,9 @@ class _SearchProductpageState extends State<SearchProductpage> {
     'Drone',
     'iphone',
     'keyboard',
+    'Sports',
+    'Beauty',
+    'Clothing',
   ];
   List<String> history = [];
   bool showDiscover = true;

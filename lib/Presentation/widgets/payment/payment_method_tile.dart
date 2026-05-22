@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// PaymentMethodTile widget for selecting payment method (COD or Bakong)
-/// 
+///
 /// Features:
 /// - Display icon, title, description
 /// - Show selected state with visual feedback
@@ -48,7 +48,7 @@ class PaymentMethodTile extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected 
+          color: isSelected
               ? (selectedColor ?? Colors.blue.shade50)
               : Colors.white,
           border: Border.all(
@@ -70,20 +70,16 @@ class PaymentMethodTile extends StatelessWidget {
           children: [
             // Icon
             Container(
-              width: 56,
-              height: 56,
+              width: 50,
+              height: 45,
               decoration: BoxDecoration(
                 color: (iconColor ?? Colors.blue).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                icon,
-                color: iconColor ?? Colors.blue,
-                size: 28,
-              ),
+              child: Icon(icon, color: iconColor ?? Colors.blue, size: 28),
             ),
             const SizedBox(width: 16),
-            
+
             // Title and Description
             Expanded(
               child: Column(
@@ -92,8 +88,8 @@ class PaymentMethodTile extends StatelessWidget {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                       color: Colors.black,
                     ),
                   ),
@@ -101,7 +97,7 @@ class PaymentMethodTile extends StatelessWidget {
                   Text(
                     description,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 12,
                       color: Colors.grey.shade600,
                       fontWeight: FontWeight.w400,
                     ),
@@ -110,7 +106,7 @@ class PaymentMethodTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            
+
             // Selection Indicator
             AnimatedScale(
               scale: isSelected ? 1.2 : 1.0,
@@ -127,11 +123,7 @@ class PaymentMethodTile extends StatelessWidget {
                   ),
                 ),
                 child: isSelected
-                    ? const Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 14,
-                      )
+                    ? const Icon(Icons.check, color: Colors.white, size: 14)
                     : null,
               ),
             ),
@@ -141,4 +133,3 @@ class PaymentMethodTile extends StatelessWidget {
     );
   }
 }
-

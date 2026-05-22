@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 /// PaymentTimerWidget displays a countdown timer for payment (default 5 minutes)
-/// 
+///
 /// Features:
 /// - Countdown timer display (MM:SS format)
 /// - Color changes on warning (yellow at 1 min, red at 30 sec)
@@ -107,10 +107,7 @@ class _PaymentTimerWidgetState extends State<PaymentTimerWidget> {
           decoration: BoxDecoration(
             color: _getTimerColor().withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: _getTimerColor(),
-              width: 2,
-            ),
+            border: Border.all(color: _getTimerColor(), width: 2),
           ),
           child: Column(
             children: [
@@ -145,10 +142,7 @@ class _PaymentTimerWidgetState extends State<PaymentTimerWidget> {
           height: 40,
           child: ElevatedButton.icon(
             onPressed: _togglePause,
-            icon: Icon(
-              _isPaused ? Icons.play_arrow : Icons.pause,
-              size: 18,
-            ),
+            icon: Icon(_isPaused ? Icons.play_arrow : Icons.pause, size: 18),
             label: Text(
               _isPaused ? 'Resume' : 'Pause',
               style: const TextStyle(fontSize: 13),
@@ -229,4 +223,3 @@ class _PaymentTimerWidgetState extends State<PaymentTimerWidget> {
     );
   }
 }
-

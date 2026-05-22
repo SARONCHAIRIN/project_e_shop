@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../../models/user/get_user_model.dart';
+
 class GetUserIdService {
   Future<GetUserModel?> getUserById(int id, String token) async {
     try {
@@ -23,7 +24,7 @@ class GetUserIdService {
       //  IMPORTANT
       final data = body['data'];
 
-      print('DATA FROM API: $data');           //
+      print('DATA FROM API: $data'); //
       print('fullName in data: ${data['fullName']}'); //
       return GetUserModel.fromJson(data);
     } catch (e) {

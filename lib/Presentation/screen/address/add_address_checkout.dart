@@ -5,6 +5,7 @@ import 'package:e_shop/data/models/address/address_model.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import '../../../data/repositories/order_repository.dart';
 
 class AddAddressCheckout extends StatefulWidget {
   final AddressRepository repo;
@@ -30,10 +31,14 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
   int? _existingAddressId;
   FocusNode zipcodeFocusNode = FocusNode();
 
+  final OrderRepository _orderRepository = OrderRepository();
+  double totalPrice = 0.0;
+
   @override
   void initState() {
     super.initState();
     _loadExistingAddress();
+    _loadOrderTotal();
   }
 
   Future<void> _loadExistingAddress() async {
@@ -138,12 +143,8 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
             context,
             MaterialPageRoute(
               builder: (_) => PaymentMethodScreen(
-                totalPrice: 10,
+                totalPrice: totalPrice,
                 addressId: savedAddress.id!,
-                addressLine1: 'test',
-                city: 'test',
-                country: 'test',
-                zipCode: 'test001',
               ),
             ),
           );
@@ -166,6 +167,30 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
         duration: Duration(seconds: 2),
       ),
     );
+  }
+
+  Future<void> _loadOrderTotal() async {
+    try {
+      final userId = await widget.storage.getUserId();
+      final token = await widget.storage.getToken();
+
+      if (userId == null || token == null) return;
+
+      final result = await _orderRepository.getOrders(
+        userId: userId,
+        token: token,
+        page: 1,
+        limit: 1,
+      );
+
+      if (result.orders.isNotEmpty) {
+        setState(() {
+          totalPrice = result.orders.first.totalAmount ?? 0.0;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading total price: $e');
+    }
   }
 
   @override
@@ -249,7 +274,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
     },
     child: Container(
       width: double.infinity,
-      height: 450,
+      height: 380,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
