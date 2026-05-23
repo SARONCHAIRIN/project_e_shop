@@ -309,8 +309,6 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
             },
           ),
         );
-
-        // return _buildShimmerPopular();
       },
     );
   }
@@ -333,37 +331,72 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: Column(
               children: [
-                Shimmer.fromColors(
-                  baseColor: Colors.grey.shade300,
-                  highlightColor: Colors.grey.shade50,
+                Stack(
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade50,
 
-                  child: Container(
-                    // margin: EdgeInsets.only(bottom: 30),
-                    constraints: const BoxConstraints(minHeight: 200),
+                      child: Container(
+                        // margin: EdgeInsets.only(bottom: 30),
+                        constraints: const BoxConstraints(minHeight: 200),
 
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
 
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
 
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 12,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade400,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 12,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade400,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
+                    Positioned(
+                      top: 10,
+                      left: 15,
+                      child: Container(
+                        height: 25,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.white,
+                              blurStyle: BlurStyle.outer,
+                              blurRadius: 2,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 5,
+                          ),
+                          width: 20,
+                          height: 2,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: 8),
