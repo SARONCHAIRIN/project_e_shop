@@ -9,7 +9,8 @@ import '../../../../data/models/subcategory_model_eshop.dart';
 
 class IconSubWithProduct extends StatefulWidget {
   final User_AuthRepository repository;
-  const IconSubWithProduct({super.key,required this.repository});
+
+  const IconSubWithProduct({super.key, required this.repository});
 
   @override
   State<IconSubWithProduct> createState() => _IconSubWithProductState();
@@ -90,7 +91,7 @@ class _IconSubWithProductState extends State<IconSubWithProduct> {
             ),
           );
         }
-        // no data
+        // no data isEmpty
         else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return SliverFillRemaining(
             hasScrollBody: false,
@@ -295,7 +296,7 @@ Widget buildCarouselShimmer() {
           child: Container(
             height: 200,
             margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            padding: EdgeInsets.only(top: 30),
+            padding: EdgeInsets.only(top: 10),
             decoration: BoxDecoration(
               color: Colors.grey.withOpacity(0.1),
               borderRadius: BorderRadius.circular(15),
@@ -315,7 +316,7 @@ Widget buildCarouselShimmer() {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
 
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
@@ -336,22 +337,36 @@ Widget buildCarouselShimmer() {
                     scrollDirection: Axis.horizontal,
                     itemCount: 5,
                     itemBuilder: (context, index) {
-                      return Shimmer.fromColors(
-                        baseColor: Colors.grey.shade300,
-                        highlightColor: Colors.grey.shade100,
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                            left: 30,
-                            right: 30,
-                            top: 20,
-                            bottom: 10,
+                      return Column(
+                        children: [
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                left: 30,
+                                right: 30,
+                                top: 20,
+                                bottom: 10,
+                              ),
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
                           ),
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
+
+                          Container(
+                            width: 100,
+                            height: 5,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                        ),
+                        ],
                       );
                     },
                   ),

@@ -11,7 +11,8 @@ import '../../../data/models/product_model_eshop.dart';
 import '../sub_category_screen/product_detail_screen_eshop.dart';
 
 class SearchProductpage extends StatefulWidget {
-  final User_AuthRepository  repository;
+  final User_AuthRepository repository;
+
   const SearchProductpage({super.key, required this.repository});
 
   @override
@@ -143,162 +144,6 @@ class _SearchProductpageState extends State<SearchProductpage> {
     onSearchChanged(keyword);
     FocusScope.of(context).unfocus();
   }
-
-  /// Discover section
-  Widget _buildDiscover() {
-    return ListView(
-      padding: const EdgeInsets.all(15),
-      children: [
-        Row(
-          children: [
-            Icon(Icons.content_paste_search, size: 22, color: Colors.black),
-            const Text(
-              " Trending Search",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-
-        Wrap(
-          spacing: 20,
-          children: trending
-              .map(
-                (e) => ActionChip(
-                  avatar: Icon(Icons.search, size: 22, color: Colors.grey),
-                  backgroundColor: Colors.white,
-                  label: Text(e),
-                  onPressed: () => selectKeyword(e),
-                ),
-              )
-              .toList(),
-        ),
-      ],
-    );
-  }
-
-  /// GridView with shimmer effect
-  Widget _buildProductGrid() {
-    if (isLoading && products.isEmpty) {
-      return GridView.builder(
-        padding: const EdgeInsets.all(10),
-        itemCount: 6,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 0.75,
-        ),
-        itemBuilder: (_, __) => Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-            ),
-          ),
-        ),
-      );
-    }
-
-    return GridView.builder(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(10),
-      itemCount: products.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        childAspectRatio: 0.75,
-      ),
-      itemBuilder: (context, index) {
-        final product = products[index];
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ProductDetailScreen(product: product,repository: widget.repository,),
-              ),
-            );
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: const [
-                BoxShadow(color: Colors.black12, blurRadius: 1),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(15),
-                    ),
-                    child: Image.network(
-                      product.mainImage ?? "",
-                      // fit: BoxFit.fill,
-                      errorBuilder: (_, __, ___) => const Icon(Icons.image),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product.name ?? "",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        "\$${product.lowestPrice ?? 0}",
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  /// Search TextField
-  Widget _buildSearchField() => PreferredSize(
-    preferredSize: const Size.fromHeight(60),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-      child: TextField(
-        controller: searchController,
-        focusNode: searchFocus,
-        onChanged: onSearchChanged,
-        cursorColor: Colors.grey,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          hintText: "Search product...",
-          prefixIcon: const Icon(Icons.search, color: Colors.grey),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25),
-            borderSide: BorderSide(),
-          ),
-        ),
-      ),
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -437,37 +282,170 @@ class _SearchProductpageState extends State<SearchProductpage> {
         childAspectRatio: 0.75,
       ),
       itemBuilder: (_, __) {
-        return Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
-          highlightColor: Colors.grey.shade100,
+        return Stack(
+          children: [
+            Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.grey.shade100,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+            ),
+
+            Positioned(
+              bottom: 10,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(height: 12, width: 150, color: Colors.white),
+                        SizedBox(height: 5),
+                        Container(height: 12, width: 150, color: Colors.white),
+
+                        const SizedBox(height: 8),
+                        Container(height: 12, width: 70, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Discover section
+  Widget _buildDiscover() {
+    return ListView(
+      padding: const EdgeInsets.all(15),
+      children: [
+        Row(
+          children: [
+            Icon(Icons.content_paste_search, size: 22, color: Colors.black),
+            const Text(
+              " Trending Search",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+
+        Wrap(
+          spacing: 20,
+          children: trending
+              .map(
+                (e) => ActionChip(
+                  avatar: Icon(Icons.search, size: 22, color: Colors.grey),
+                  backgroundColor: Colors.white,
+                  label: Text(e),
+                  onPressed: () => selectKeyword(e),
+                ),
+              )
+              .toList(),
+        ),
+      ],
+    );
+  }
+
+  /// GridView with shimmer effect
+  Widget _buildProductGrid() {
+    if (isLoading && products.isEmpty) {
+      return GridView.builder(
+        padding: const EdgeInsets.all(10),
+        itemCount: 6,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          childAspectRatio: 0.75,
+        ),
+        itemBuilder: (_, __) => Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(15),
             ),
+          ),
+        ),
+      );
+    }
+
+    return GridView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(10),
+      itemCount: products.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 0.75,
+      ),
+      itemBuilder: (context, index) {
+        final product = products[index];
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProductDetailScreen(
+                  product: product,
+                  repository: widget.repository,
+                ),
+              ),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: const [
+                BoxShadow(color: Colors.black12, blurRadius: 1),
+              ],
+            ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // IMAGE SHIMMER
                 Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(15),
-                      ),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(15),
+                    ),
+                    child: Image.network(
+                      product.mainImage ?? "",
+                      // fit: BoxFit.fill,
+                      errorBuilder: (_, __, ___) => const Icon(Icons.image),
                     ),
                   ),
                 ),
-
-                // TEXT SHIMMER
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(height: 12, width: 120, color: Colors.white),
-                      const SizedBox(height: 8),
-                      Container(height: 12, width: 70, color: Colors.white),
+                      Text(
+                        product.name ?? "",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        "\$${product.lowestPrice ?? 0}",
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -478,4 +456,28 @@ class _SearchProductpageState extends State<SearchProductpage> {
       },
     );
   }
+
+  /// Search TextField
+  Widget _buildSearchField() => PreferredSize(
+    preferredSize: const Size.fromHeight(60),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      child: TextField(
+        controller: searchController,
+        focusNode: searchFocus,
+        onChanged: onSearchChanged,
+        cursorColor: Colors.grey,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          hintText: "Search product...",
+          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: BorderSide(),
+          ),
+        ),
+      ),
+    ),
+  );
 }
