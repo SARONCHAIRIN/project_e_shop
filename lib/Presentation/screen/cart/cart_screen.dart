@@ -58,7 +58,7 @@ class _CartScreenState extends State<CartScreen> {
 
           // Show loading indicator while fetching cart
           if (cartController.isLoading)
-            SliverFillRemaining(child: _buildCartShimmer())
+            SliverToBoxAdapter(child: _buildCartShimmer())
           // Show empty state if cart is empty
           else if (cartController.cart == null ||
               cartController.cart!.items.isEmpty)
@@ -327,6 +327,7 @@ class _CartScreenState extends State<CartScreen> {
           SliverToBoxAdapter(
             child: _buildcheckoutButton(context, cartController),
           ),
+
           SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
@@ -461,103 +462,190 @@ class _CartScreenState extends State<CartScreen> {
 }
 
 Widget _buildCartShimmer() {
-  return Shimmer.fromColors(
-    baseColor: Colors.grey.shade300,
-    highlightColor: Colors.grey.shade100,
-    child: SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
+  return Stack(
+    children: [
+      Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // Product Card Shimmer
+              Container(
+                height: 100,
+                padding: const EdgeInsets.symmetric(),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Summary Card
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  children: [
+                    buildRowShimmer(),
+                    const SizedBox(height: 20),
+                    buildRowShimmer(),
+                    const SizedBox(height: 20),
+                    Divider(color: Colors.grey.shade300),
+                    const SizedBox(height: 20),
+                    buildRowShimmer(),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 30),
+            ],
+          ),
+        ),
+      ),
+
+      Positioned(child: _buildItemCart()),
+
+      Positioned(child: _buildsubtotal()),
+    ],
+  );
+}
+
+Widget _buildItemCart() => Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 26),
+  child: Row(
+    children: [
+      // Image
+      Container(
+        width: 75,
+        height: 75,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+
+      const SizedBox(width: 16),
+
+      // Title + Price
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            shimmerBox(width: 150, height: 18),
+            const SizedBox(height: 10),
+            shimmerBox(width: 80, height: 14),
+            const SizedBox(height: 10),
+            shimmerBox(width: 100, height: 18),
+          ],
+        ),
+      ),
+
+      const SizedBox(width: 10),
+
+      // Qty Button
+      Container(
+        width: 110,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.remove, size: 25, color: Colors.grey.shade300),
+            SizedBox(width: 5),
+            Container(width: 20, height: 20, color: Colors.grey.shade300),
+            SizedBox(width: 5),
+            Icon(Icons.add, size: 25, color: Colors.grey.shade300),
+          ],
+        ),
+      ),
+    ],
+  ),
+);
+
+Widget _buildsubtotal() => Padding(
+  padding: EdgeInsetsGeometry.only(top: 150, left: 30, right: 30),
+
+  child: Column(
+    children: [
+      Row(
         children: [
-          // Product Card Shimmer
           Container(
-            padding: const EdgeInsets.all(16),
+            height: 20,
+            width: 100,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              children: [
-                // Image
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-
-                const SizedBox(width: 16),
-
-                // Title + Price
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      shimmerBox(width: 150, height: 18),
-                      const SizedBox(height: 10),
-                      shimmerBox(width: 80, height: 14),
-                      const SizedBox(height: 10),
-                      shimmerBox(width: 100, height: 18),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(width: 10),
-
-                // Qty Button
-                Container(
-                  width: 110,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ],
             ),
           ),
-
-          const SizedBox(height: 20),
-
-          const SizedBox(height: 20),
-
-          // Summary Card
+          Expanded(child: SizedBox(width: 1)),
           Container(
-            padding: const EdgeInsets.all(20),
+            height: 25,
+            width: 50,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              children: [
-                buildRowShimmer(),
-                const SizedBox(height: 20),
-                buildRowShimmer(),
-                const SizedBox(height: 20),
-                Divider(color: Colors.grey.shade300),
-                const SizedBox(height: 20),
-                buildRowShimmer(),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 30),
-
-          // Checkout Button
-          Container(
-            height: 60,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(40),
             ),
           ),
         ],
       ),
-    ),
-  );
-}
+      SizedBox(height: 20),
+      Row(
+        children: [
+          Container(
+            height: 20,
+            width: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+          ),
+          Expanded(child: SizedBox(width: 1)),
+          Container(
+            height: 25,
+            width: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 15),
+      Divider(height: 1, thickness: 1, color: Colors.white),
+      SizedBox(height: 15),
+      Row(
+        children: [
+          Container(
+            height: 20,
+            width: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+          ),
+          Expanded(child: SizedBox(width: 1)),
+          Container(
+            height: 25,
+            width: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+);
 
 Widget buildRowShimmer() {
   return Row(
@@ -574,7 +662,7 @@ Widget shimmerBox({required double width, required double height}) {
     width: width,
     height: height,
     decoration: BoxDecoration(
-      color: Colors.grey.shade300,
+      color: Colors.white,
       borderRadius: BorderRadius.circular(10),
     ),
   );
