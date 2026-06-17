@@ -1,6 +1,7 @@
 
 
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/repositories/auth_repository.dart';
@@ -41,6 +42,31 @@ class AuthController extends StateNotifier<AuthState> {
 
   AuthController(this.repository) : super(const AuthState());
 
+
+  String _getErrorMessage(dynamic e) {
+    if (e is DioException) {
+      final data = e.response?.data;
+
+      if (data is Map<String, dynamic>) {
+        return data['message']?.toString() ??
+            data['error']?.toString() ??
+            'Request failed';
+      }
+
+      switch (e.type) {
+        case DioExceptionType.connectionTimeout:
+          return 'Connection timeout';
+        case DioExceptionType.receiveTimeout:
+          return 'Server timeout';
+        case DioExceptionType.connectionError:
+          return 'No internet connection';
+        default:
+          return 'Request failed';
+      }
+    }
+
+    return 'Something went wrong';
+  }
   // =========================
   // LOGIN
   // =========================
@@ -53,7 +79,7 @@ class AuthController extends StateNotifier<AuthState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        error: e.toString(),
+        error: _getErrorMessage(e),
       );
     }
   }
@@ -61,17 +87,26 @@ class AuthController extends StateNotifier<AuthState> {
   // =========================
   // REGISTER
   // =========================
-  Future<void> register(RegisterRequest request) async {
+
+  Future<bool> register(RegisterRequest request) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
       final res = await repository.register(request);
-      state = state.copyWith(isLoading: false, data: res);
+
+      state = state.copyWith(
+        isLoading: false,
+        data: res,
+      );
+
+      return true;
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        error: e.toString(),
+        error: _getErrorMessage(e),
       );
+
+      return false;
     }
   }
 
@@ -87,7 +122,7 @@ class AuthController extends StateNotifier<AuthState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        error: e.toString(),
+        error: _getErrorMessage(e,)
       );
     }
   }
@@ -139,7 +174,7 @@ class AuthController extends StateNotifier<AuthState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        error: e.toString(),
+        error: _getErrorMessage(e),
       );
     }
   }
@@ -161,7 +196,7 @@ class AuthController extends StateNotifier<AuthState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        error: e.toString(),
+        error: _getErrorMessage(e,)
       );
 
       return false;

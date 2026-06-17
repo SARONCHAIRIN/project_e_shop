@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../../../core/constants/otp_flow.dart';
 import '../controllers/auth_controller.dart';
 import '../../data/models/auth_models.dart';
 import '../providers/auth_providers.dart';
@@ -198,6 +199,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                                   MaterialPageRoute(
                                     builder: (_) => OtpScreen(
                                       email: _emailController.text.trim(),
+                                      flow: OtpFlow.forgotPassword,
+
                                     ),
                                   ),
                                 ),

@@ -3,8 +3,11 @@ import 'package:e_shop/Presentation/controllers/payment/payment_controller.dart'
 import 'package:e_shop/Presentation/screen/auth/signup/signup_screen.dart';
 import 'package:e_shop/Presentation/screen/order/order_history_screen.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/device_profile_gate.dart';
+import 'package:e_shop/core/constants/otp_flow.dart';
+import 'package:e_shop/features/auth/presentation/screens/new_password.dart';
 import 'package:e_shop/features/auth/presentation/screens/otp_screen.dart';
 import 'package:e_shop/features/auth/presentation/screens/register_screen.dart';
+import 'package:e_shop/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,6 +81,10 @@ class MyApp extends StatelessWidget {
   final User_AuthRepository authRepository;
   final String initialScreen;
 
+  // String get _otpCode => _controllers.map((c) => c.text).join();
+  //
+  // bool get _isComplete => _otpCode.length == _otpLength;
+
   const MyApp({
     super.key,
     required this.authRepository,
@@ -105,8 +112,17 @@ class MyApp extends StatelessWidget {
         if (settings.name == '/otp-verify') {
           final email = settings.arguments as String;
 
+          return MaterialPageRoute(builder: (_) => OtpScreen(
+            email: email,
+            flow: OtpFlow.register,
+          ));
+        }
+
+        if (settings.name == '/newPassword') {
+          final email = settings.arguments as String;
+
           return MaterialPageRoute(
-            builder: (_) => OtpScreen(email: email),
+            builder: (_) => NewPasswordScreen(email: email, code: ''),
           );
         }
 
@@ -117,9 +133,10 @@ class MyApp extends StatelessWidget {
         // }
 
         if (settings.name == '/register') {
-          return MaterialPageRoute(
-            builder: (_) => RegisterScreen(),
-          );
+          return MaterialPageRoute(builder: (_) => RegisterScreen());
+        }
+        if (settings.name == '/resetpassword') {
+          return MaterialPageRoute(builder: (_) => ResetPasswordScreen());
         }
 
         if (settings.name == '/orderHistory') {
@@ -132,8 +149,10 @@ class MyApp extends StatelessWidget {
           );
         }
 
-        if(settings.name == '/deviceProfile') {
-          return MaterialPageRoute(builder: (_) => DeviceProfileGate(repository: authRepository));
+        if (settings.name == '/deviceProfile') {
+          return MaterialPageRoute(
+            builder: (_) => DeviceProfileGate(repository: authRepository),
+          );
         }
 
         if (settings.name == '/trackMyOrder') {
