@@ -10,6 +10,7 @@ import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/datasources/adress/adress_service.dart';
 import 'package:e_shop/data/models/user/get_user_model.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
+import 'package:e_shop/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -564,7 +565,9 @@ class _ProfilepageState extends State<Profilepage> {
                           ),
 
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (_) =>  ForgotPasswordScreen()) );
+                            },
                             icon: Icon(
                               Icons.arrow_forward_ios,
                               size: 20,

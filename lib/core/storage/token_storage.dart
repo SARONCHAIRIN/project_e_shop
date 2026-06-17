@@ -1,71 +1,52 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Secure token storage using FlutterSecureStorage for tokens
+/// and SharedPreferences for non-sensitive user data.
+///
+/// Production-ready implementation following clean architecture patterns.
 class TokenStorage {
-  static const String _tokenKey = 'auth_token';
+  final FlutterSecureStorage _secureStorage;
+
+  static const _keyToken = 'ACCESS_TOKEN';
+  static const _keyRefresh = 'REFRESH_TOKEN';
+  static const _keyUserId = 'USER_ID';
   static const String _usernameKey = 'username';
   static const String _userEmailKey = 'email';
-  static const String _userIdKey = 'user_id';
   static const String _fullnameKey = 'full_name';
 
-  // ========== TOKEN METHODS ==========
-  Future<void> saveToken(String token) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_tokenKey, token);
-      print(' Token saved: $token');
-    } catch (e) {
-      print(' Error saving token: $e');
-    }
-  }
+  TokenStorage({FlutterSecureStorage? secureStorage})
+      : _secureStorage = secureStorage ?? const FlutterSecureStorage();
 
-  // Future<void> writeToken(String token) => saveToken(token);
-  Future<void> writeToken(String? token) async {
-    if (token == null || token.isEmpty) {
-      print("Token not saved because it is null");
-      return;
-    }
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("token", token);
-    await prefs.setString(_tokenKey, token); // use consistent key
+  // ========== SECURE TOKEN METHODS (FlutterSecureStorage) ==========
 
-    print("Token saved: $token");
-    saveToken(token);
-  }
+  /// Write access token to secure storage.
+  Future<void> writeToken(String token) =>
+      _secureStorage.write(key: _keyToken, value: token);
 
-  Future<String?> readToken() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString(_tokenKey);
-      print(' Token read: $token');
-      return token;
-    } catch (e) {
-      print(' Error reading token: $e');
-      return null;
-    }
-  }
+  /// Read access token from secure storage.
+  Future<String?> readToken() => _secureStorage.read(key: _keyToken);
 
-  Future<String?> getToken() => readToken();
+  /// Delete access token from secure storage.
+  Future<void> deleteToken() => _secureStorage.delete(key: _keyToken);
 
-  Future<void> deleteToken() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(_tokenKey);
-      print('️ Token deleted');
-    } catch (e) {
-      print(' Error deleting token: $e');
-    }
-  }
+  /// Write refresh token to secure storage.
+  Future<void> writeRefreshToken(String refreshToken) =>
+      _secureStorage.write(key: _keyRefresh, value: refreshToken);
 
-  Future<void> clearToken() => deleteToken();
+  /// Read refresh token from secure storage.
+  Future<String?> readRefreshToken() =>
+      _secureStorage.read(key: _keyRefresh);
 
+  /// Delete refresh token from secure storage.
+  Future<void> deleteRefreshToken() =>
+      _secureStorage.delete(key: _keyRefresh);
+
+  /// Check if access token exists.
   Future<bool> hasToken() async {
     final token = await readToken();
     return token != null && token.isNotEmpty;
   }
-
-  //  encrypted storage for sensitive data
-  final _secureStorage = const FlutterSecureStorage();
 
   // PASSWORD — secure
   Future<void> writePassword(String password) async {
@@ -76,90 +57,152 @@ class TokenStorage {
   Future<String?> readPassword() async {
     return await _secureStorage.read(key: 'password');
   }
-
   Future<void> deletePassword() async {
     await _secureStorage.delete(key: 'password');
   }
 
-  // TOKEN — secure ផងដែរ (optional upgrade)
-  Future<void> writeTokenSecure(String token) async {
-    await _secureStorage.write(key: 'auth_token', value: token);
+
+  // ========== USER DATA METHODS (SharedPreferences) ==========
+  Future<void> writeUserId(int userId) async {
+
+    await _secureStorage.write(
+
+      key: _keyUserId,
+
+      value: userId.toString(),
+
+    );
+
   }
 
-  Future<String?> readTokenSecure() async {
-    return await _secureStorage.read(key: 'auth_token');
+  Future<int?> readUserId() async {
+
+    final value = await _secureStorage.read(key: _keyUserId);
+
+    return value == null ? null : int.tryParse(value);
+
   }
 
-  //refresh token=======
-  Future<void> saveRefreshToken(String refreshToken) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('refresh_token', refreshToken);
-      print(' Refresh token saved: $refreshToken');
-    } catch (e) {
-      print(' Error saving refresh token: $e');
-    }
+  Future<void> deleteUserId() async {
+
+    await _secureStorage.delete(key: _keyUserId);
+
   }
 
-  Future<void> writeRefreshToken(String? refreshToken) async {
-    if (refreshToken == null || refreshToken.isEmpty) {
-      print("Refresh token not saved because it is null");
-      return;
-    }
+  /// Write username to SharedPreferences.
+  Future<void> writeUsername(String username) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("refresh_token", refreshToken);
-    print("Refresh token saved: $refreshToken");
-    saveRefreshToken(refreshToken);
+    await prefs.setString(_usernameKey, username);
   }
 
-  Future<String?> readRefreshToken() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final refreshToken = prefs.getString('refresh_token');
-      print(' Refresh token read: $refreshToken');
-      return refreshToken;
-    } catch (e) {
-      print(' Error reading refresh token: $e');
-      return null;
-    }
-  }
-
-  Future<void> deleteRefreshToken() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('refresh_token');
-      print(' Refresh token deleted');
-    } catch (e) {
-      print(' Error deleting refresh token: $e');
-    }
-  }
-
-  // ========== USERNAME METHODS ==========
-  Future<void> saveUsername(String username) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_usernameKey, username);
-      print(' Username saved: $username');
-    } catch (e) {
-      print(' Error saving username: $e');
-    }
-  }
-
-  //  add method want to  writeUsername
-  Future<void> writeUsername(String username) => saveUsername(username);
-
+  /// Read username from SharedPreferences.
   Future<String?> readUsername() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final username = prefs.getString(_usernameKey);
-      print(' Username read: $username');
-      return username;
-    } catch (e) {
-      print(' Error reading username: $e');
-      return null;
-    }
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_usernameKey);
   }
 
+  /// Write email to SharedPreferences.
+  Future<void> writeUserEmail(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_userEmailKey, email);
+  }
+
+  /// Read email from SharedPreferences.
+  Future<String?> readUserEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_userEmailKey);
+  }
+
+  /// Write full name to SharedPreferences.
+  Future<void> writeFullName(String fullName) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_fullnameKey, fullName);
+  }
+
+  /// Read full name from SharedPreferences.
+  Future<String?> readFullName() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_fullnameKey);
+  }
+
+  /// Write user image URL to SharedPreferences.
+  Future<void> writeUserImage(String url) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_image', url);
+  }
+
+  /// Read user image URL from SharedPreferences.
+  Future<String?> readUserImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_image');
+  }
+
+  /// Delete user image URL from SharedPreferences.
+  Future<void> deleteUserImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_image');
+  }
+
+  // ========== BULK OPERATIONS ==========
+
+  /// Save all user data at once (tokens + metadata).
+  Future<void> saveUserData({
+    required String token,
+    required String refreshToken,
+    required int userId,
+    required String username,
+    required String email,
+    required String fullName,
+  }) async {
+    await writeToken(token);
+    await writeRefreshToken(refreshToken);
+    await writeUserId(userId);
+    await writeUsername(username);
+    await writeUserEmail(email);
+    await writeFullName(fullName);
+  }
+
+  /// Retrieve all stored user info.
+  Future<Map<String, dynamic>> getAllUserInfo() async {
+    return {
+      'token': await readToken(),
+      'refresh_token': await readRefreshToken(),
+      'userId': await readUserId(),
+      'username': await readUsername(),
+      'email': await readUserEmail(),
+      'full_name': await readFullName(),
+      'user_image': await readUserImage(),
+    };
+  }
+
+  /// Clear all tokens and user data (logout).
+  Future<void> clearAll() async {
+    await deleteToken();
+    await deleteRefreshToken();
+    await deleteUserId();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_usernameKey);
+    await prefs.remove(_userEmailKey);
+    await prefs.remove(_fullnameKey);
+    await prefs.remove('user_image');
+  }
+
+  /// Clear all data from SharedPreferences (legacy cleanup).
+  Future<void> clearAllUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
+  // ========== LEGACY COMPATIBILITY METHODS ==========
+  // These methods are kept for backward compatibility
+
+  Future<void> saveToken(String token) => writeToken(token);
+  Future<String?> getToken() => readToken();
+  Future<void> clearToken() => deleteToken();
+
+  Future<void> saveRefreshToken(String refreshToken) => writeRefreshToken(refreshToken);
+
+  Future<void> saveUsername(String username) => writeUsername(username);
   Future<String?> getUsername() => readUsername();
 
   Future<void> deleteUsername() async {
@@ -172,124 +215,15 @@ class TokenStorage {
     }
   }
 
-  //==== image =====
-  Future<void> writeUserImage(String url) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_image', url);
+
+  Future<void> saveUserEmail(String email) => writeUserEmail(email);
+
+  Future<void> saveUserId(int userId) => writeUserId(userId);
+  Future<int?> readUserIdAsInt() async {
+    return await readUserId();
   }
 
-  Future<String?> readUserImage() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('user_image');
-  }
+  Future<int?> getUserId() => readUserIdAsInt();
 
-  Future<void> deleteUserImage() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('user_image');
-  }
-
-  // ========== USER EMAIL METHODS ==========
-  Future<void> saveUserEmail(String email) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_userEmailKey, email);
-      print(' Email saved: $email');
-    } catch (e) {
-      print(' Error saving email: $e');
-    }
-  }
-
-  Future<void> writeUserEmail(String email) => saveUserEmail(email);
-
-  Future<String?> readUserEmail() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final email = prefs.getString(_userEmailKey);
-      print(' Email read from storage: $email');
-
-      return email;
-    } catch (e) {
-      print(' Error reading email: $e');
-      return null;
-    }
-  }
-
-  // ========== USER ID METHODS ==========
-  Future<void> saveUserId(int userId) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt(_userIdKey, userId);
-      print(' UserId saved: $userId');
-    } catch (e) {
-      print(' Error saving userId: $e');
-    }
-  }
-
-  Future<void> writeUserId(int userId) => saveUserId(userId);
-
-  Future<int?> readUserId() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final userId = prefs.getInt(_userIdKey);
-      print(' UserId read: $userId');
-      return userId;
-    } catch (e) {
-      print(' Error reading userId: $e');
-      return null;
-    }
-  }
-
-  Future<int?> getUserId() => readUserId();
-
-  Future<void> deleteUserId() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(_userIdKey);
-      print('️ UserId deleted');
-    } catch (e) {
-      print(' Error deleting userId: $e');
-    }
-  }
-
-  //==========about method full Name=========
-  Future<void> saveFullName(String fullName) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_fullnameKey, fullName);
-  }
-
-  Future<String?> readFullName() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_fullnameKey);
-  }
-
-  // all data user
-  //new
-  Future<void> saveUserData({
-    required String token,
-    required String username,
-    required String email,
-    required int userId,
-    required String fullName,
-  }) async {
-    await saveToken(token);
-    await saveUsername(username);
-    await saveUserEmail(email);
-    await saveUserId(userId);
-    await saveFullName(fullName);
-  }
-
-  Future<void> clearAllUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-  }
-
-  Future<Map<String, dynamic>> getAllUserInfo() async {
-    return {
-      'token': await readToken(),
-      'username': await readUsername(),
-      'email': await readUserEmail(),
-      'userId': await readUserId(),
-      'full_name': await readFullName(),
-    };
-  }
+  Future<void> saveFullName(String fullName) => writeFullName(fullName);
 }

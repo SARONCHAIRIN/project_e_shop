@@ -101,14 +101,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     ErrorRecovery.showSnackBar(context, message);
   }
 
-  // Future<void> _handleContinue() async {
-  //   if (_selectedPaymentMethod == null) {
-  //     _showError('Please select a payment method');
-  //     return;
-  //   }
-  //   }
-
-  // ── ៣. ហៅ shake() ពេល validation error ─────────────────────
   Future<void> _handleContinue() async {
     if (_selectedPaymentMethod == null) {
       _shakeKey.currentState?.shake(); // ← button shake!
