@@ -3,25 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import '../../../../core/constants/otp_flow.dart';
 import '../controllers/auth_controller.dart';
 import '../../data/models/auth_models.dart';
 import '../providers/auth_providers.dart';
 
 class _Palette {
-  static const bgTop    = Color(0xFF0B1120);
-  static const bgMid    = Color(0xFF182447);
+  static const bgTop = Color(0xFF0B1120);
+  static const bgMid = Color(0xFF182447);
   static const bgBottom = Color(0xFF2D1B4E);
-  static const gold     = Color(0xFFF2B705);
+  static const gold = Color(0xFFF2B705);
   static const goldDeep = Color(0xFFCB8A00);
   static const goldText = Color(0xFF231A00);
-  static const glass       = Color(0x14FFFFFF);
+  static const glass = Color(0x14FFFFFF);
   static const glassBorder = Color(0x2EFFFFFF);
   static const coral = Color(0xFFFF6B6B);
 }
 
 class OtpScreen extends ConsumerStatefulWidget {
+
   final String email;
-  const OtpScreen({super.key, required this.email});
+  final OtpFlow flow;
+
+  const OtpScreen({
+    super.key,
+    required this.email,
+    required this.flow,
+  });
 
   @override
   ConsumerState<OtpScreen> createState() => _OtpScreenState();
@@ -31,16 +39,21 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
     with SingleTickerProviderStateMixin {
   static const int _otpLength = 6;
 
-  final List<TextEditingController> _controllers =
-  List.generate(_otpLength, (_) => TextEditingController());
-  final List<FocusNode> _focusNodes =
-  List.generate(_otpLength, (_) => FocusNode());
+  final List<TextEditingController> _controllers = List.generate(
+    _otpLength,
+    (_) => TextEditingController(),
+  );
+  final List<FocusNode> _focusNodes = List.generate(
+    _otpLength,
+    (_) => FocusNode(),
+  );
 
   late final AnimationController _animController;
   late final Animation<double> _fadeAnim;
   late final Animation<Offset> _slideAnim;
 
   String get _otpCode => _controllers.map((c) => c.text).join();
+
   bool get _isComplete => _otpCode.length == _otpLength;
 
   @override
@@ -50,19 +63,11 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
       vsync: this,
       duration: const Duration(milliseconds: 650),
     );
-    _fadeAnim = CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOut,
-    );
-    _slideAnim = Tween<Offset>(
-      begin: const Offset(0, 0.06),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
+    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+        );
     // Forward AFTER both animations are assigned
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _animController.forward();
@@ -123,30 +128,53 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
 
   Future<void> _verify(AuthController controller) async {
     if (!_isComplete) return;
+
     await controller.verifyOtp(
       OtpVerifyRequest(email: widget.email, code: _otpCode),
     );
+
     if (!mounted) return;
+
     final state = ref.read(authControllerProvider);
+
     if (state.error == null) {
-      Navigator.pushReplacementNamed(context, '/divicenav');
+      if (widget.flow == OtpFlow.register) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/divicenav',
+              (route) => false,
+          arguments: {'verified': true},
+        );
+      }
+      else if (widget.flow == OtpFlow.forgotPassword) {
+        Navigator.pushReplacementNamed(
+          context,
+          '/newPassword',
+          arguments: {
+            'email': widget.email,
+            'code': _otpCode,
+          },
+        );
+      }
     } else {
       _showSnack(state.error ?? 'Invalid OTP', isError: true);
     }
   }
-
   @override
   Widget build(BuildContext context) {
-    final state      = ref.watch(authControllerProvider);
+    final state = ref.watch(authControllerProvider);
     final controller = ref.read(authControllerProvider.notifier);
-    final isLoading  = state.isLoading;
+    final isLoading = state.isLoading;
 
     return Scaffold(
       body: Stack(
         children: [
           // Background photo
           Positioned.fill(
-            child: Image.asset('assets/images/back_image.png', fit: BoxFit.cover),
+            child: Image.asset(
+              'assets/images/back_image.png',
+              fit: BoxFit.cover,
+            ),
           ),
           // Brand-tinted scrim
           Positioned.fill(
@@ -169,7 +197,6 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 100),
             child: SafeArea(
-
               child: FadeTransition(
                 opacity: _fadeAnim,
                 child: SlideTransition(
@@ -186,7 +213,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                             color: _Palette.glass,
                             borderRadius: BorderRadius.circular(28),
                             border: Border.all(
-                                color: _Palette.glassBorder, width: 1.2),
+                              color: _Palette.glassBorder,
+                              width: 1.2,
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.28),
@@ -200,8 +229,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.max,
                             children: [
-
-                              SizedBox(height: 50,),
+                              SizedBox(height: 50),
                               // Badge
                               Center(
                                 child: Container(
@@ -210,7 +238,10 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     gradient: const LinearGradient(
-                                      colors: [_Palette.gold, _Palette.goldDeep],
+                                      colors: [
+                                        _Palette.gold,
+                                        _Palette.goldDeep,
+                                      ],
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                     ),
@@ -298,7 +329,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                               // OTP boxes
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: List.generate(_otpLength, (index) {
                                   final isFilled =
                                       _controllers[index].text.isNotEmpty;
@@ -307,14 +338,12 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                     height: 58,
                                     child: KeyboardListener(
                                       focusNode: FocusNode(),
-                                      onKeyEvent: (e) =>
-                                          _onKeyEvent(index, e),
+                                      onKeyEvent: (e) => _onKeyEvent(index, e),
                                       child: TextFormField(
                                         controller: _controllers[index],
                                         focusNode: _focusNodes[index],
                                         textAlign: TextAlign.center,
-                                        keyboardType:
-                                        TextInputType.number,
+                                        keyboardType: TextInputType.number,
                                         maxLength: _otpLength,
                                         inputFormatters: [
                                           FilteringTextInputFormatter
@@ -330,24 +359,25 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                           counterText: '',
                                           filled: true,
                                           fillColor: isFilled
-                                              ? Colors.white
-                                              .withOpacity(0.18)
-                                              : Colors.white
-                                              .withOpacity(0.06),
+                                              ? Colors.white.withOpacity(0.18)
+                                              : Colors.white.withOpacity(0.06),
                                           enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(14),
+                                            borderRadius: BorderRadius.circular(
+                                              14,
+                                            ),
                                             borderSide: BorderSide(
                                               color: isFilled
                                                   ? _Palette.gold
-                                                  : Colors.white
-                                                  .withOpacity(0.14),
+                                                  : Colors.white.withOpacity(
+                                                      0.14,
+                                                    ),
                                               width: isFilled ? 1.6 : 1,
                                             ),
                                           ),
                                           focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(14),
+                                            borderRadius: BorderRadius.circular(
+                                              14,
+                                            ),
                                             borderSide: const BorderSide(
                                               color: _Palette.gold,
                                               width: 1.6,
@@ -372,60 +402,61 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                     borderRadius: BorderRadius.circular(16),
                                     gradient: _isComplete
                                         ? const LinearGradient(
-                                      colors: [
-                                        _Palette.gold,
-                                        _Palette.goldDeep
-                                      ],
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                    )
+                                            colors: [
+                                              _Palette.gold,
+                                              _Palette.goldDeep,
+                                            ],
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight,
+                                          )
                                         : null,
                                     color: _isComplete
                                         ? null
                                         : Colors.white.withOpacity(0.08),
                                     boxShadow: _isComplete
                                         ? [
-                                      BoxShadow(
-                                        color: _Palette.gold
-                                            .withOpacity(0.35),
-                                        blurRadius: 16,
-                                        offset: const Offset(0, 6),
-                                      ),
-                                    ]
+                                            BoxShadow(
+                                              color: _Palette.gold.withOpacity(
+                                                0.35,
+                                              ),
+                                              blurRadius: 16,
+                                              offset: const Offset(0, 6),
+                                            ),
+                                          ]
                                         : null,
                                   ),
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
-                                      borderRadius:
-                                      BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(16),
                                       onTap: (isLoading || !_isComplete)
                                           ? null
                                           : () => _verify(controller),
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            vertical: 15),
+                                          vertical: 15,
+                                        ),
                                         child: Center(
                                           child: isLoading
                                               ? const SpinKitDualRing(
-                                            color: _Palette.goldText,
-                                            size: 22,
-                                            lineWidth: 3,
-                                          )
+                                                  color: _Palette.goldText,
+                                                  size: 22,
+                                                  lineWidth: 3,
+                                                )
                                               : Text(
-                                            'Verify code',
-                                            style: TextStyle(
-                                              color: _isComplete
-                                                  ? _Palette.goldText
-                                                  : Colors.white
-                                                  .withOpacity(
-                                                  0.35),
-                                              fontSize: 16,
-                                              fontWeight:
-                                              FontWeight.w700,
-                                              letterSpacing: 0.3,
-                                            ),
-                                          ),
+                                                  'Verify code',
+                                                  style: TextStyle(
+                                                    color: _isComplete
+                                                        ? _Palette.goldText
+                                                        : Colors.white
+                                                              .withOpacity(
+                                                                0.35,
+                                                              ),
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    letterSpacing: 0.3,
+                                                  ),
+                                                ),
                                         ),
                                       ),
                                     ),
@@ -450,12 +481,11 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                       padding: EdgeInsets.zero,
                                       minimumSize: const Size(0, 0),
                                       tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
+                                          MaterialTapTargetSize.shrinkWrap,
                                     ),
                                     onPressed: () async {
                                       final success = await ref
-                                          .read(authControllerProvider
-                                          .notifier)
+                                          .read(authControllerProvider.notifier)
                                           .resendOtp(widget.email);
                                       if (!mounted) return;
                                       _showSnack(
@@ -503,8 +533,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                          color: Colors.white.withOpacity(0.2)),
+                      border: Border.all(color: Colors.white.withOpacity(0.2)),
                     ),
                     child: IconButton(
                       padding: EdgeInsets.zero,

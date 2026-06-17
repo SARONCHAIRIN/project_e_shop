@@ -134,10 +134,11 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
     //         (route) => false,
     //     arguments: {'resetSuccess': true},
     //   );
-    // } else {
-    //   final state = ref.read(authControllerProvider);
-    //   _showSnack(state.error ?? 'Failed to reset password. Try again.', isError: true);
     // }
+    else {
+      final state = ref.read(authControllerProvider);
+      _showSnack('Failed to reset password. Try again.', isError: true);
+    }
   }
 
   InputDecoration _decoration({

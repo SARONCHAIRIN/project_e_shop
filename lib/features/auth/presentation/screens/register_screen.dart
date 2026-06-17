@@ -125,6 +125,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
     }
 
     try {
+      final success =
       await ref.read(authControllerProvider.notifier).register(
         RegisterRequest(
           username: username.text.trim(),
@@ -134,8 +135,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
         ),
       );
 
-      if (mounted) {
-        Navigator.pushNamed(context, '/otp-verify', arguments: email.text.trim());
+      if (!mounted) return;
+
+      if (success) {
+        Navigator.pushNamed(
+          context,
+          '/otp-verify',
+          arguments: email.text.trim(),
+        );
+      } else {
+        final error =
+            ref.read(authControllerProvider).error ??
+                'Registration failed';
+
+        _showSnack(error, isError: true);
       }
     } catch (e) {
       if (mounted) _showSnack(e.toString(), isError: true);
@@ -565,66 +578,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                   ),
                                   const SizedBox(height: 15),
 
-                                  // Divider
-                                  // Row(
-                                  //   children: [
-                                  //     Expanded(
-                                  //       child: Divider(color: Colors.white.withOpacity(0.18)),
-                                  //     ),
-                                  //     Padding(
-                                  //       padding: const EdgeInsets.symmetric(horizontal: 12),
-                                  //       child: Text(
-                                  //         'or continue with',
-                                  //         style: TextStyle(
-                                  //           color: Colors.white.withOpacity(0.55),
-                                  //           fontSize: 12.5,
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //     Expanded(
-                                  //       child: Divider(color: Colors.white.withOpacity(0.18)),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  // const SizedBox(height: 16),
-
-                                  // // Google button
-                                  // SizedBox(
-                                  //   width: double.infinity,
-                                  //   height: 50,
-                                  //   child: OutlinedButton(
-                                  //     onPressed: () {},
-                                  //     style: OutlinedButton.styleFrom(
-                                  //       backgroundColor: Colors.white,
-                                  //       side: BorderSide(color: Colors.white.withOpacity(0.4)),
-                                  //       shape: RoundedRectangleBorder(
-                                  //         borderRadius: BorderRadius.circular(14),
-                                  //       ),
-                                  //     ),
-                                  //     child: Row(
-                                  //       mainAxisAlignment: MainAxisAlignment.center,
-                                  //       children: [
-                                  //         Image.asset(
-                                  //           'assets/images/logo_google.png',
-                                  //           width: 22,
-                                  //           height: 22,
-                                  //         ),
-                                  //         const SizedBox(width: 12),
-                                  //         const Text(
-                                  //           'Continue with Google',
-                                  //           style: TextStyle(
-                                  //             color: Color(0xFF3C4043),
-                                  //             fontSize: 15,
-                                  //             fontWeight: FontWeight.w600,
-                                  //           ),
-                                  //         ),
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  // const SizedBox(height: 18),
-
-                                  // Already have an account
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
