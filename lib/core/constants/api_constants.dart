@@ -29,7 +29,4 @@ class ApiConstants {
 
   //search product
 static const String searchProduct = "$BASE_URL/products/search?keyword";
-
-
-
 }

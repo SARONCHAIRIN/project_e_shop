@@ -32,7 +32,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
   FocusNode zipcodeFocusNode = FocusNode();
 
   final OrderRepository _orderRepository = OrderRepository();
-  double totalPrice = 0.0;
+   double? totalPrice;
 
   @override
   void initState() {
@@ -143,7 +143,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
             context,
             MaterialPageRoute(
               builder: (_) => PaymentMethodScreen(
-                totalPrice: totalPrice,
+                totalPrice: totalPrice?? 0.0,
                 addressId: savedAddress.id!,
               ),
             ),

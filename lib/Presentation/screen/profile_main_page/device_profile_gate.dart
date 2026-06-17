@@ -1,4 +1,5 @@
 import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
+import 'package:e_shop/features/auth/presentation/screens/login_button_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/profile_main.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
@@ -65,7 +66,8 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
       isDismissible: true,
       enableDrag: true,
       backgroundColor: Colors.transparent,
-      builder: (_) =>LoginBottomSheet(authRepository: widget.repository),
+      // builder: (_) =>LoginBottomSheet(authRepository: widget.repository),
+      builder: (_) =>LoginBottomSheet1(),
     );
   }
   @override

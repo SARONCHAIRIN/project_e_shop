@@ -1,5 +1,6 @@
 import 'package:e_shop/Presentation/screen/cart/cart_screen.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
+import 'package:e_shop/features/auth/presentation/screens/login_button_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../../../core/storage/token_storage.dart';
@@ -51,7 +52,7 @@ class _CartMainState extends State<CartMain> {
       isDismissible: true,
       enableDrag: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => LoginBottomSheet(authRepository: widget.repository),
+      builder: (_) => LoginBottomSheet1(),
     );
   }
 
