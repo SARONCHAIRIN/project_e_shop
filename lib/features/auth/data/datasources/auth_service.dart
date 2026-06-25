@@ -20,7 +20,7 @@ class AuthService {
     try {
       print("====================================");
       print("LOGIN START");
-      print("URL: ${dio.options.baseUrl}/api/v1/public/username/login");
+      print("URL: ${dio.options.baseUrl}/api/v1/public/email/username/login");
       print("INPUT: $input");
       print("IS EMAIL: $isEmail");
       print("REQUEST BODY: $body");
@@ -28,7 +28,7 @@ class AuthService {
       print("====================================");
 
       final res = await dio.post(
-        "/api/v1/public/username/login",
+        "/api/v1/public/email/username/login",
         data: body,
       );
 

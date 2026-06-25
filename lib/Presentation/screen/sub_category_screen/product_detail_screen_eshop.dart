@@ -3,13 +3,14 @@ import 'package:e_shop/Presentation/screen/cart/cart_screen.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_in_Product_detail.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 import '../../../core/storage/token_storage.dart' show TokenStorage;
 import '../../../data/models/product_model_eshop.dart';
+import '../../../provider/cart_provider.dart';
 import '../../controllers/cart/cart_controller.dart';
 
-class ProductDetailScreen extends StatefulWidget {
+class ProductDetailScreen extends ConsumerStatefulWidget {
   final Product product;
   final int? subcategoryId;
   final String? subcategoryName;
@@ -25,10 +26,10 @@ class ProductDetailScreen extends StatefulWidget {
   });
 
   @override
-  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+  ConsumerState<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
-class _ProductDetailScreenState extends State<ProductDetailScreen> {
+class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   ProductSku? selectedSku;
   bool isPressed = false;
   bool isPressed1 = false;
@@ -101,7 +102,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           product.mainImage == null || product.mainImage.isEmpty
                           ? Image.asset('assets/images/default_image.png')
                           : Image.network(
-                              product.mainImage,
+                              // product.mainImage,
+                            product.mainImage.isNotEmpty
+                                ? product.mainImage.first
+                                : "",
                               height: 350,
                               // fit: BoxFit.fill,
                               errorBuilder: (context, error, stackTrace) {
@@ -679,76 +683,50 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ],
       ),
       bottomNavigationBar: _buildnav(),
+        // bottomNavigationBar: Container(width: 200,height: 50,color: Colors.red,),
+
     );
   }
 
   Widget _buildnav() => GestureDetector(
     onTap: () async {
       final product = widget.product;
-      try {
-        final storage = TokenStorage();
-        final int? userId = await storage.readUserId();
-        final String? token = await storage.readToken();
 
-        if (userId == null || token == null) {
-          //  to login screen
+      final storage = TokenStorage();
+      final userId = await storage.readUserId();
+      final token = await storage.readToken();
 
-          _showLoginSheet(context);
-          return;
-        }
-
-        final int productId = product.id; // assume product.id is int
-        final cartController = Provider.of<CartController>(
-          context,
-          listen: false,
-        );
-
-        // Show loader
-        cartController.isLoading = true;
-        cartController.notifyListeners();
-
-        // Call addItem
-        await cartController.addItem(productId, 1); // quantity = 1
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CartScreen(userId: userId, token: token),
-          ),
-        );
-      } catch (e) {
-      } finally {
-        // Stop loader
-        final cartController = Provider.of<CartController>(
-          context,
-          listen: false,
-        );
-        cartController.isLoading = false;
-        cartController.notifyListeners();
+      if (userId == null || token == null) {
+        _showLoginSheet(context);
+        return;
       }
+
+      final cartController = ref.read(cartControllerProvider.notifier);
+
+      await cartController.addItem(product.id, 1);
+
+      if (!mounted) return;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => CartScreen(userId: userId, token: token),
+        ),
+      );
     },
     child: Container(
-      margin: const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 18),
+      margin: const EdgeInsets.all(20),
       height: 50,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: Colors.blue.shade300,
+        color: Colors.blue,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Consumer<CartController>(
-        builder: (context, cartController, child) {
-          return cartController.isLoading
-              ? const SpinKitCircle(color: Colors.blue, size: 40)
-              : const Text(
-                  "Add to Cart",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-        },
+      child: ref.watch(cartControllerProvider).isLoading
+          ? const CircularProgressIndicator(color: Colors.white)
+          : const Text(
+        "Add to Cart",
+        style: TextStyle(color: Colors.white, fontSize: 18),
       ),
     ),
-  );
-}
+  );}

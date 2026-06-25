@@ -5,9 +5,10 @@ import '../models/subcategory_model_eshop.dart';
 
 class ApiService {
   static const String baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
+  // static const String baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
 
   Future<List<SubcategoryData>> fetchSubcategories() async {
-    final response = await http.get(
+    final response = await http.post(
       Uri.parse('$baseUrl/subcategories/All'),
       headers: {
         'Content-Type': 'application/json',

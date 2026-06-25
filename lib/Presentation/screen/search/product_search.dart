@@ -421,8 +421,11 @@ class _SearchProductpageState extends State<SearchProductpage> {
                       top: Radius.circular(15),
                     ),
                     child: Image.network(
-                      product.mainImage ?? "",
-                      // fit: BoxFit.fill,
+                      product.mainImage.isNotEmpty
+
+                          ? product.mainImage.first
+
+                          : "",                      // fit: BoxFit.fill,
                       errorBuilder: (_, __, ___) => const Icon(Icons.image),
                     ),
                   ),

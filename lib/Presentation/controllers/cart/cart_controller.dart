@@ -1,156 +1,110 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../../data/models/cart/cart_model.dart';
 import '../../../data/repositories/cart/cart_repo.dart';
-
-class CartController extends ChangeNotifier {
+class CartController extends StateNotifier<CartState> {
   final CartRepository repository;
 
-  CartController({required this.repository});
+  CartController({required this.repository}) : super(CartState());
 
-  bool isLoading = false;
-  CartModel? cart;
-
-  bool hasError = false;
-  String errorMessage = '';
-
-  // =========================
-  // FETCH CART
-  // =========================
   Future<void> fetchCart() async {
     final storage = TokenStorage();
     final token = await storage.readToken();
     final userId = await storage.readUserId();
 
-    if (token == null || userId == null) {
-      debugPrint(" Token or userId is null");
-      return;
-    }
+    if (token == null || userId == null) return;
 
     try {
-      isLoading = true;
-      notifyListeners();
+      state = state.copyWith(isLoading: true);
 
-      cart = await repository.getCart(userId, token);
+      final cart = await repository.getCart(userId, token);
+
+      state = state.copyWith(
+        isLoading: false,
+        cart: cart,
+      );
     } catch (e) {
-      debugPrint(" Fetch cart error: $e");
-
-      hasError = true;
-
-      errorMessage = e.toString().contains('Socket')
-          ? "No internet connection"
-          : "Server error. Please try again";
-    } finally {
-      isLoading = false;
-      notifyListeners();
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: "Error loading cart",
+      );
     }
   }
 
-  // =========================
-  // ADD ITEM
-  // =========================
   Future<void> addItem(int productId, int quantity) async {
     final storage = TokenStorage();
     final token = await storage.readToken();
     final userId = await storage.readUserId();
 
-    if (token == null || userId == null) {
-      debugPrint(" Token or userId is null");
-      return;
-    }
+    if (token == null || userId == null) return;
 
-    try {
-      isLoading = true;
-      notifyListeners();
-
-      await repository.addItem(userId, productId, quantity, token);
-      await fetchCart();
-    } catch (e) {
-      debugPrint(" Add item error: $e");
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
+    await repository.addItem(userId, productId, quantity, token);
+    await fetchCart();
   }
 
   Future<void> updateItem(int cartItemId, int quantity) async {
     final storage = TokenStorage();
     final token = await storage.readToken();
     final userId = await storage.readUserId();
+
     if (quantity < 1) return;
+    if (token == null || userId == null) return;
 
-    if (token == null || userId == null) {
-      debugPrint("Token or userId is null");
-      return;
-    }
-
-    // Update locally immediately — no isLoading, no flicker
-    final index = cart!.items.indexWhere((item) => item.id == cartItemId);
-    if (index != -1) {
-      cart!.items[index].quantity = quantity;
-      notifyListeners();
-    }
-
-    try {
-      await repository.updateItem(userId, cartItemId, quantity, token);
-    } catch (e) {
-      debugPrint("Update item error: $e");
-      // Revert by re-fetching if API fails
-      await fetchCart();
-    }
+    await repository.updateItem(userId, cartItemId, quantity, token);
+    await fetchCart();
   }
 
-  // =========================
-  // DELETE ITEM
-  // =========================
   Future<void> deleteItem(int cartItemId) async {
     final storage = TokenStorage();
     final token = await storage.readToken();
     final userId = await storage.readUserId();
 
-    if (token == null || userId == null) {
-      debugPrint(" Token or userId is null");
-      return;
-    }
+    if (token == null || userId == null) return;
 
-    try {
-      isLoading = true;
-      notifyListeners();
-
-      await repository.deleteItem(userId, cartItemId, token);
-      await fetchCart();
-    } catch (e) {
-      debugPrint(" Delete item error: $e");
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
+    await repository.deleteItem(userId, cartItemId, token);
+    await fetchCart();
   }
 
-  // =========================
-  // CLEAR CART
-  // =========================
   Future<void> clearCart() async {
     final storage = TokenStorage();
     final token = await storage.readToken();
     final userId = await storage.readUserId();
 
-    if (token == null || userId == null) {
-      debugPrint(" Token or userId is null");
-      return;
-    }
+    if (token == null || userId == null) return;
 
-    try {
-      isLoading = true;
-      notifyListeners();
+    await repository.clearCart(userId, token);
+    await fetchCart();
+  }
+}
 
-      await repository.clearCart(userId, token);
-      await fetchCart();
-    } catch (e) {
-      debugPrint(" Clear cart error: $e");
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
+
+
+
+class CartState {
+  final bool isLoading;
+  final bool hasError;
+  final String errorMessage;
+  final CartModel? cart;
+
+  CartState({
+    this.isLoading = false,
+    this.hasError = false,
+    this.errorMessage = '',
+    this.cart,
+  });
+
+  CartState copyWith({
+    bool? isLoading,
+    bool? hasError,
+    String? errorMessage,
+    CartModel? cart,
+  }) {
+    return CartState(
+      isLoading: isLoading ?? this.isLoading,
+      hasError: hasError ?? this.hasError,
+      errorMessage: errorMessage ?? this.errorMessage,
+      cart: cart ?? this.cart,
+    );
   }
 }

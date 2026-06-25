@@ -1,7 +1,7 @@
 // Product SKU model
 class ProductSku {
   final String sku;
-  final String description;
+  final String? description;
   final double price;
   final String? color;
   final String? size;
@@ -9,7 +9,7 @@ class ProductSku {
 
   ProductSku({
     required this.sku,
-    required this.description,
+    this.description,
     required this.price,
     required this.color,
     required this.size,
@@ -19,7 +19,7 @@ class ProductSku {
   factory ProductSku.fromJson(Map<String, dynamic> json) {
     return ProductSku(
       sku: json['sku'],
-      description: json['description'],
+      description: json['description'] as String?,
       price: json['price'].toDouble(),
       color: json['color']?.toString()?? '',
       size: json['size']?? '',
@@ -34,7 +34,7 @@ class Product {
   final String name;
   // final String sku;
   final String description;
-  final String mainImage;
+  final List<String> mainImage;
   final bool isActive;
   final List<ProductSku> skus;
   bool isFavorite  ;
@@ -51,16 +51,18 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
-    var skusList = json['skus'] as List;
-    List<ProductSku> skus = skusList.map((sku) => ProductSku.fromJson(sku)).toList();
+    var skusList = json['skus'] as List? ?? [];
+    List<ProductSku> skus =
+    skusList.map((sku) => ProductSku.fromJson(sku)).toList();
 
     return Product(
       id: json['id'],
       name: json['name']?.toString() ?? '',
       // sku: json['sku'],
       description: json['description'],
-      mainImage: json['main_image']?.toString()?? "",
-      isActive: json['is_active'],
+      // mainImage: json['main_image']?.toString()?? "",
+      mainImage: List<String>.from(json['main_image'] ?? []),
+      isActive: json['is_active'] ?? false,
       skus: skus,
       isFavorite:  json['is_favorite'] ?? false,
     );

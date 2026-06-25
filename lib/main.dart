@@ -119,10 +119,12 @@ class MyApp extends StatelessWidget {
         }
 
         if (settings.name == '/newPassword') {
-          final email = settings.arguments as String;
+          final args = settings.arguments as Map<String, dynamic>;
+          final email = args['email'] as String;
+          final code = args['code'] as String? ?? '';
 
           return MaterialPageRoute(
-            builder: (_) => NewPasswordScreen(email: email, code: ''),
+            builder: (_) => NewPasswordScreen(email: email, code: code),
           );
         }
 

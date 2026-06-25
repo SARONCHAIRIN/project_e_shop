@@ -219,7 +219,10 @@ class _ProductInProductDetailState extends State<ProductInProductDetail> {
                                       width: double.infinity,
                                     )
                                   : Image.network(
-                                      product.mainImage,
+                                      // product.mainImage,
+                                product.mainImage.isNotEmpty
+                                    ? product.mainImage.first
+                                    : "",
 
                                       width: double.infinity,
 
