@@ -20,7 +20,7 @@ final tokenStorageProvider = Provider<TokenStorage>((ref) {
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(
     BaseOptions(
-      baseUrl: "http://localhost:8080", // change to your backend
+      baseUrl: "http://localhost:8080", // change to your backendx
       // baseUrl:  "http://192.168.1.15:8080", // change to your backend
       // baseUrl: "https://e-shop-1-m034.onrender.com", // change to your backend
       connectTimeout: const Duration(seconds: 15),

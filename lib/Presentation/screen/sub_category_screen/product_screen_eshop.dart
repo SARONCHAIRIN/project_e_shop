@@ -11,9 +11,7 @@ import '../../../data/datasources/sub_with_product/sub_product_service.dart';
 import '../../../data/models/product_model_eshop.dart';
 import 'package:provider/provider.dart';
 import 'package:e_shop/Presentation/controllers/cart/cart_controller.dart';
-import 'package:badges/badges.dart' as badges;
 import '../../../core/storage/token_storage.dart';
-import '../cart/cart_screen.dart';
 
 class ProductScreen_sub extends StatefulWidget {
   final int subcategoryId;
@@ -102,6 +100,7 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
         centerTitle: true,
         backgroundColor: Colors.white,
         title: Text(
+          overflow: TextOverflow.ellipsis,
           widget.subcategoryName,
           style: TextStyle(
             fontSize: 16,
@@ -109,60 +108,65 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
             fontStyle: FontStyle.italic,
           ),
         ),
-        actions: [
-          // Cart icon with badge
-          Consumer<CartController>(
-            builder: (context, cartController, _) {
-              final itemCount = cartController.cart?.totalItems ?? 0;
-              return Padding(
-                padding: const EdgeInsets.only(right: 15),
-                child: GestureDetector(
-                  key: _cartIconKey,
-                  onTap: () async {
-                    final storage = TokenStorage();
-                    final userId = await storage.getUserId();
-                    final token = await storage.getToken();
 
-                    if (userId != null && token != null && mounted) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CartScreen(userId: userId, token: token),
-                        ),
-                      );
-                    }
-                  },
-                  child: badges.Badge(
-                    badgeContent: Text(
-                      itemCount.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    badgeAnimation: const badges.BadgeAnimation.scale(
-                      animationDuration: Duration(milliseconds: 300),
-                    ),
-                    showBadge: itemCount > 0,
-                    position: badges.BadgePosition.topEnd(top: -10, end: -10),
-                    child: Icon(
-                      CupertinoIcons.cart,
-                      size: 28,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
+        // actions: [
+        //   // Cart icon with badge
+        //   Consumer<CartController>(
+        //     builder: (context, cartController, _) {
+        //       final itemCount = cartController.cart?.totalItems ?? 0;
+        //       return Padding(
+        //         padding: const EdgeInsets.only(right: 15),
+        //         child: GestureDetector(
+        //           key: _cartIconKey,
+        //           onTap: () async {
+        //             final storage = TokenStorage();
+        //             final userId = await storage.getUserId();
+        //             final token = await storage.getToken();
+        //
+        //             if (userId != null && token != null && mounted) {
+        //               Navigator.push(
+        //                 context,
+        //                 MaterialPageRoute(
+        //                   builder: (context) =>
+        //                       CartScreen(userId: userId, token: token),
+        //                 ),
+        //               );
+        //             }
+        //           },
+        //           child: badges.Badge(
+        //             badgeContent: Text(
+        //               itemCount.toString(),
+        //               style: const TextStyle(
+        //                 color: Colors.white,
+        //                 fontSize: 12,
+        //                 fontWeight: FontWeight.bold,
+        //               ),
+        //             ),
+        //             badgeAnimation: const badges.BadgeAnimation.scale(
+        //               animationDuration: Duration(milliseconds: 300),
+        //             ),
+        //             showBadge: itemCount > 0,
+        //             position: badges.BadgePosition.topEnd(top: -10, end: -10),
+        //             child: Icon(
+        //               CupertinoIcons.cart,
+        //               size: 28,
+        //               color: Colors.blue,
+        //             ),
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ],
       ),
       body: Stack(
         children: [
           FutureBuilder<List<Product>>(
-            future: apiService.fetchProductsBySubcategoryId(
+            // Use ProductService (GET endpoint) instead of ApiService POST variant.
+            // `productService` is already instantiated above; it calls
+            // GET https://e-shop-1-m034.onrender.com/api/v1/products/subcategory/{id}
+            // which matches the backend and returns the expected payload.
+            future: ApiService().fetchProductsBySubcategoryId(
               widget.subcategoryId,
             ),
             builder: (context, snapshot) {
@@ -265,7 +269,6 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final product = products[index];
-                  final image = product.mainImage;
 
                   return GestureDetector(
                     onTap: () {
@@ -317,7 +320,10 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                               width: double.infinity,
                                             )
                                           : Image.network(
-                                              product.mainImage,
+                                              // product.mainImage,
+                                              product.mainImage.isNotEmpty
+                                                  ? product.mainImage.first
+                                                  : "",
                                               width: double.infinity,
                                               errorBuilder:
                                                   (context, error, stackTrace) {

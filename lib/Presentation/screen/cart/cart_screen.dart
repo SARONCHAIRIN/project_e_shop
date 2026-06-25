@@ -1,36 +1,47 @@
+import 'package:e_shop/Presentation/controllers/cart/cart_controller.dart';
 import 'package:e_shop/Presentation/screen/order/checkout_page.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/datasources/adress/adress_service.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../controllers/cart/cart_controller.dart';
 
-class CartScreen extends StatefulWidget {
+import '../../../provider/cart_provider.dart';
+// import '../../controllers/cart/cart_controller.dart';
+
+class CartScreen extends ConsumerStatefulWidget {
   final int userId;
   final String token;
 
-  const CartScreen({super.key, required this.userId, required this.token});
+  const CartScreen({
+    super.key,
+    required this.userId,
+    required this.token,
+  });
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
+  ConsumerState<CartScreen> createState() => _CartScreenState();
 }
 
-class _CartScreenState extends State<CartScreen> {
+class _CartScreenState extends ConsumerState<CartScreen> {
   @override
   void initState() {
     super.initState();
 
     Future.microtask(() {
-      context.read<CartController>().fetchCart();
+
+      ref.read(cartControllerProvider.notifier).fetchCart();
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final cartController = context.watch<CartController>();
+    // final cartController = context.watch<CartController>();
+    // final cartState = ref.watch(cartControllerProvider);
+    final cartController = ref.read(cartControllerProvider.notifier);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
@@ -57,16 +68,16 @@ class _CartScreenState extends State<CartScreen> {
           ),
 
           // Show loading indicator while fetching cart
-          if (cartController.isLoading)
+          if (CartState().isLoading)
             SliverToBoxAdapter(child: _buildCartShimmer())
           // Show empty state if cart is empty
-          else if (cartController.cart == null ||
-              cartController.cart!.items.isEmpty)
+          else if (CartState().cart == null ||
+              CartState().cart!.items.isEmpty)
             SliverFillRemaining(hasScrollBody: false, child: _buildEmptyCart())
           else
             SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-                final item = cartController.cart!.items[index];
+                final item = CartState().cart!.items[index];
 
                 return Column(
                   children: [
@@ -215,7 +226,7 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ],
                 );
-              }, childCount: cartController.cart?.items.length ?? 0),
+              }, childCount: CartState().cart?.items.length ?? 0),
             ),
 
           SliverToBoxAdapter(
@@ -259,7 +270,7 @@ class _CartScreenState extends State<CartScreen> {
                         ),
 
                         Text(
-                          "\$${cartController.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
+                          "\$${CartState().cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
@@ -309,7 +320,7 @@ class _CartScreenState extends State<CartScreen> {
                         ),
 
                         Text(
-                          "\$${cartController.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
+                          "\$${CartState().cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
@@ -412,7 +423,7 @@ class _CartScreenState extends State<CartScreen> {
       padding: const EdgeInsets.only(bottom: 130, left: 20, right: 20),
       child: ElevatedButton(
         onPressed:
-            cartController.cart == null || cartController.cart!.items.isEmpty
+            CartState().cart == null || CartState().cart!.items.isEmpty
             ? null
             : () async {
                 Navigator.push(

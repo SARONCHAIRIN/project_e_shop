@@ -44,7 +44,12 @@ class SearchResultsScreen extends StatelessWidget {
                   return ListTile(
                     leading: Image.network(
                       fit: BoxFit.fill,
-                      product.mainImage,
+                      // product.mainImage,
+                      product.mainImage.isNotEmpty
+
+                          ? product.mainImage.first
+
+                          : '',
                       width: 50,
                       height: 50,
                       errorBuilder: (_, __, ___) =>

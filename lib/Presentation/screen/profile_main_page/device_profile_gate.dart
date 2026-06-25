@@ -1,5 +1,6 @@
 import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/features/auth/presentation/screens/login_button_sheet.dart';
+import 'package:e_shop/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/profile_main.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
@@ -227,7 +228,21 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
           iconColor: const Color(0xFF185FA5),
           title: 'Track order',
           subtitle: 'Enter order ID to track',
-          onTap: () {},
+          onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Track Order'),
+                  content: Text('Please enter your order ID to track your order.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('Close'),
+                    ),
+                  ],
+                ),
+              );
+          },
         ),
         _MenuTile(
           icon: Icons.headset_mic_outlined,
@@ -235,7 +250,10 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
           iconColor: const Color(0xFF0F6E56),
           title: 'Help & support',
           subtitle: 'Chat, call or email us',
-          onTap: () {},
+          onTap: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) =>ResetPasswordScreen()));
+
+          },
         ),
       ],
     ),

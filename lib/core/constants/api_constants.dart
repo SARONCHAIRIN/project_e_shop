@@ -22,7 +22,7 @@ class ApiConstants {
   static const String addToCart = "$BASE_URL/cart/user";   // POST /cart/user/{id}/items
 
 // Product
-  static const String products = "$BASE_URL/products";
+  static const String products = "$BASE_URL/products/get/all";
 
   //cart
   static const String cartByUser = "$BASE_URL/cart/user";
