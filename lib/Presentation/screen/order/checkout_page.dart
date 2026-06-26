@@ -4,8 +4,11 @@ import 'package:e_shop/Presentation/screen/payment/payment_method_screen.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CheckoutPage extends StatefulWidget {
+import '../../../provider/cart_provider.dart';
+
+class CheckoutPage extends ConsumerStatefulWidget {
   final AddressRepository repo;
   final TokenStorage storage;
 
@@ -23,10 +26,10 @@ class CheckoutPage extends StatefulWidget {
   final int addressId;
 
   @override
-  State<CheckoutPage> createState() => _CheckoutPageState();
+  ConsumerState<CheckoutPage> createState() => _CheckoutPageState();
 }
 
-class _CheckoutPageState extends State<CheckoutPage> {
+class _CheckoutPageState extends ConsumerState<CheckoutPage> {
   int currentStep = 0;
 
   late List<Widget> pages;
@@ -34,14 +37,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
-    pages = [
-      AddAddressCheckout(storage: widget.storage, repo: widget.repo),
-      // PaymentScreen(userId: widget.userId, token: widget.token, addressId: widget.addressId),
-      PaymentMethodScreen(
-        addressId: widget.addressId,
-        totalPrice: 100,
-      ),
-    ];
   }
 
   void nextStep() {
@@ -63,7 +58,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final cartState = ref.watch(cartControllerProvider);
+    final total = cartState.cart?.totalPrice ?? 0;
 
+
+
+
+
+    final pages = [
+
+      AddAddressCheckout(storage: widget.storage, repo: widget.repo),
+
+      PaymentMethodScreen(
+
+        addressId: widget.addressId,
+
+        totalPrice: total,
+
+      ),
+
+    ];
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(

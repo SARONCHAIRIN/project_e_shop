@@ -3,6 +3,7 @@ import 'package:e_shop/Presentation/screen/payment/payment_processing_screen.dar
 import 'package:e_shop/core/widgets/animation_widgets.dart';
 import 'package:e_shop/data/datasources/adress/adress_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/storage/token_storage.dart';
 import '../../../core/utils/utils.dart';
 import '../../../core/widgets/loading_widgets.dart';
@@ -10,10 +11,11 @@ import '../../../data/models/address/address_model.dart';
 import '../../../data/repositories/address/address_repository.dart';
 import '../../../data/repositories/order_repository.dart';
 import '../../../data/repositories/payment_repository.dart';
+import '../../../provider/cart_provider.dart';
 import '../../widgets/payment/payment_method_tile.dart';
 
 /// PaymentMethodScreen allows user to select payment method (COD or Bakong)
-class PaymentMethodScreen extends StatefulWidget {
+class PaymentMethodScreen extends ConsumerStatefulWidget {
   final double totalPrice;
   final int addressId;
   final int? userId;
@@ -28,10 +30,10 @@ class PaymentMethodScreen extends StatefulWidget {
   });
 
   @override
-  State<PaymentMethodScreen> createState() => _PaymentMethodScreenState();
+  ConsumerState<PaymentMethodScreen> createState() => _PaymentMethodScreenState();
 }
 
-class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
+class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
   String? _selectedPaymentMethod;
   bool _isLoading = false;
   String? _errorMessage;
@@ -42,6 +44,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   AddressModel? _address;
   bool _loadingAddress = true;
 
+
   // ── Task 15: double-submit guard ──────────────────────────
   final _guard = SubmitGuard();
 
@@ -50,6 +53,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   @override
   void initState() {
     super.initState();
+
     _storage = TokenStorage();
     _initializeUserData().then((_) {
       _loadAddress();
@@ -233,6 +237,11 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final cartState = ref.watch(cartControllerProvider);
+    final total = cartState.cart?.totalPrice ?? 0;
+
+
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
