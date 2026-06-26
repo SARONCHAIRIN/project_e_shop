@@ -15,7 +15,7 @@ class DivicesNav extends StatefulWidget {
   const DivicesNav({
     super.key,
     required this.authRepository,
-    this.initialIndex=0,
+    this.initialIndex = 0,
   });
 
   static const routeName = '/divicenav';
@@ -37,8 +37,9 @@ class _DivicesNavState extends State<DivicesNav> {
       HomeMainPage(authRepository: widget.authRepository),
       CategoryMain(authRepository: widget.authRepository),
       MessageMain(),
-      CartMain(repository:  widget.authRepository
-        ,),
+      CartMain(repository: widget.authRepository,
+      ),
+
       // ProfileMain(authRepository: widget.authRepository),
       DeviceProfileGate(repository: widget.authRepository),
     ]);

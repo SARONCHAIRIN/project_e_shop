@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../../../provider/cart_provider.dart';
-// import '../../controllers/cart/cart_controller.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   final int userId;
@@ -40,7 +38,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   @override
   Widget build(BuildContext context) {
     // final cartController = context.watch<CartController>();
-    // final cartState = ref.watch(cartControllerProvider);
+    final cartState = ref.watch(cartControllerProvider);
     final cartController = ref.read(cartControllerProvider.notifier);
 
     return Scaffold(
@@ -68,16 +66,16 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           ),
 
           // Show loading indicator while fetching cart
-          if (CartState().isLoading)
+          if (cartState.isLoading)
             SliverToBoxAdapter(child: _buildCartShimmer())
           // Show empty state if cart is empty
-          else if (CartState().cart == null ||
-              CartState().cart!.items.isEmpty)
+          else if (cartState.cart == null ||
+              cartState.cart!.items.isEmpty)
             SliverFillRemaining(hasScrollBody: false, child: _buildEmptyCart())
           else
             SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-                final item = CartState().cart!.items[index];
+                final item = cartState.cart!.items[index];
 
                 return Column(
                   children: [
@@ -143,10 +141,22 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             leading: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Image.network(
-                                item.image,
+                                (item.image != null &&
+                                    item.image!.isNotEmpty &&
+                                    item.image != "[]")
+                                    ? item.image!
+                                    : "",
                                 width: 70,
                                 height: 70,
-                                // fit: BoxFit.f,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset(
+                                    'assets/images/default_image.png',
+                                    width: 70,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               ),
                             ),
 
@@ -226,7 +236,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     ),
                   ],
                 );
-              }, childCount: CartState().cart?.items.length ?? 0),
+              }, childCount: cartState.cart?.items.length ?? 0),
             ),
 
           SliverToBoxAdapter(
@@ -270,7 +280,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ),
 
                         Text(
-                          "\$${CartState().cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
+                          "\$${cartState.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
@@ -320,7 +330,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ),
 
                         Text(
-                          "\$${CartState().cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
+                          "\$${cartState.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
@@ -336,7 +346,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           ),
 
           SliverToBoxAdapter(
-            child: _buildcheckoutButton(context, cartController),
+            child: _buildcheckoutButton(context, cartController,cartState),
           ),
 
           SliverToBoxAdapter(child: SizedBox(height: 100)),
@@ -418,12 +428,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   Widget _buildcheckoutButton(
     BuildContext context,
     CartController cartController,
+      CartState cartState,
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 130, left: 20, right: 20),
       child: ElevatedButton(
         onPressed:
-            CartState().cart == null || CartState().cart!.items.isEmpty
+            cartState.cart == null || cartState.cart!.items.isEmpty
             ? null
             : () async {
                 Navigator.push(
@@ -438,6 +449,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           userId: widget.userId,
                           token: widget.token,
                           addressId: 0,
+
                         ),
                   ),
                 );

@@ -20,7 +20,8 @@ class OrderService {
   }) async {
     try {
       final response = await _dio.post(
-        '$_baseUrl/orders/user/$userId/from-cart',
+        // '$_baseUrl/orders/user/$userId/from-cart',
+        '$_baseUrl/orders/user/{id}/from-cart',
         data: {'address_id': addressId, 'payment_method': 'COD'},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
@@ -54,7 +55,7 @@ class OrderService {
   }) async {
     try {
       final response = await _dio.post(
-        '$_baseUrl/orders/user/$userId/from-cart/bakong',
+        '$_baseUrl/orders/user/from-cart/bakong',
         data: {'address_id': addressId, 'payment_method': 'BAKONG'},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
