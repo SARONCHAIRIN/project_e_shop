@@ -16,43 +16,45 @@ final tokenStorageProvider = Provider<TokenStorage>((ref) {
   return TokenStorage();
 });
 
-// Dio / ApiClient
-final dioProvider = Provider<Dio>((ref) {
-  final dio = Dio(
+
+
+final localDioProvider = Provider<Dio>((ref) {
+  return Dio(
     BaseOptions(
-      baseUrl: "http://localhost:8080", // change to your backendx
-      // baseUrl:  "http://192.168.1.15:8080", // change to your backend
-      // baseUrl: "https://e-shop-1-m034.onrender.com", // change to your backend
+      // ip angkor home
+      baseUrl: "http://localhost:8080", // local backend
+      // baseUrl: "http://192.168.18.61:8080", // local backend
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
       headers: {
-
         "Content-Type": "application/json",
-
         "Accept": "application/json",
-
       },
     ),
   );
+});
 
-  // dio.interceptors.add(
-  //   LogInterceptor(
-  //     request: true,
-  //     requestHeader: true,
-  //     requestBody: true,
-  //     responseBody: true,
-  //     error: true,
-  //   ),
-  // );
-
-  return dio;
+final serverDioProvider = Provider<Dio>((ref) {
+  return Dio(
+    BaseOptions(
+      baseUrl: "https://e-shop-1-m034.onrender.com", // real server
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+    ),
+  );
 });
 
 // Auth Service
 final authServiceProvider = Provider<AuthService>((ref) {
-  return AuthService(dio: ref.read(dioProvider));
+  return AuthService(
+    localDio: ref.read(localDioProvider),
+    serverDio: ref.read(serverDioProvider),
+  );
 });
-
 // Auth Repository
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(
@@ -60,7 +62,6 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
     tokenStorage: ref.read(tokenStorageProvider),
   );
 });
-
 // Auth Controller (StateNotifier)
 final authControllerProvider =
 StateNotifierProvider<AuthController, AuthState>((ref) {

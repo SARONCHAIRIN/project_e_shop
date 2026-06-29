@@ -22,6 +22,26 @@ class ProductService {
   }
 
   // Search products by name (API)
+  // Future<List<Product>> searchProducts(String query) async {
+  //   final response = await http.get(
+  //     Uri.parse('$baseUrl/products/search?name=$query'),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json',
+  //     },
+  //   );
+  //
+  //   if (response.statusCode == 200) {
+  //     var jsonResponse = jsonDecode(response.body);
+  //     ProductApiResponse apiResponse = ProductApiResponse.fromJson(
+  //       jsonResponse,
+  //     );
+  //     return apiResponse.content.map((item) => item.data).toList();
+  //   } else {
+  //     throw Exception('Failed to search products.');
+  //   }
+  // }
+
   Future<List<Product>> searchProducts(String query) async {
     final response = await http.get(
       Uri.parse('$baseUrl/products/search?name=$query'),
@@ -32,16 +52,15 @@ class ProductService {
     );
 
     if (response.statusCode == 200) {
-      var jsonResponse = jsonDecode(response.body);
-      ProductApiResponse apiResponse = ProductApiResponse.fromJson(
-        jsonResponse,
-      );
-      return apiResponse.content.map((item) => item.data).toList();
+      final jsonResponse = jsonDecode(response.body);
+
+      final List data = jsonResponse['data'] ?? [];
+
+      return data.map((item) => Product.fromJson(item)).toList();
     } else {
       throw Exception('Failed to search products.');
     }
   }
-
   // Fetch products by category name (subcategory name)
   Future<List<Product>> fetchProductsByCategory(String categoryName) async {
     final allProducts = await fetchAllProducts();
@@ -59,7 +78,6 @@ class ProductService {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-
       },
     );
 
@@ -92,13 +110,11 @@ class ProductService {
     );
     final body = {'product_id': productId, 'is_favorite': isFavorite};
     print('POST body: $body');
-    print('Headers: Authorization=Bearer $token');
 
     final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
       },
 
       body: jsonEncode(body),

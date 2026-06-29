@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../core/storage/token_storage.dart';
 import '../../models/product_model_eshop.dart';
 import '../../models/subcategory_model_eshop.dart';
@@ -10,14 +8,10 @@ class ApiService {
   static const String baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
 
 
-  // បន្ថែមក្នុង ApiService
   Future<Map<String, String>> _getHeaders() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token =await TokenStorage().readToken();
     return {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
     };
   }
   // Get all subcategories
@@ -67,7 +61,6 @@ class ApiService {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
       },
     );
 
@@ -84,7 +77,7 @@ class ApiService {
             .map((e) => Product.fromJson(e['data'] as Map<String, dynamic>))
             .toList();
       } catch (e, st) {
-        print("❌ PARSE ERROR => $e");
+        print(" PARSE ERROR => $e");
         print(st);
         rethrow;
       }

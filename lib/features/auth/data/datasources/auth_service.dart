@@ -1,10 +1,18 @@
-
 import 'package:dio/dio.dart';
 import '../models/auth_models.dart';
-class AuthService {
-  final Dio dio;
 
-  AuthService({required this.dio});
+// https://e-shop-1-m034.onrender.com/swagger-ui/index.html
+class AuthService {
+  final Dio localDio;
+
+  final Dio serverDio;
+
+  // static const String basturl  = "https://e-shop-1-m034.onrender.com";
+
+  AuthService({
+    required this.localDio,
+    required this.serverDio,
+  });
 
   static const _base = "/api/v1/public";
 
@@ -20,14 +28,14 @@ class AuthService {
     try {
       print("====================================");
       print("LOGIN START");
-      print("URL: ${dio.options.baseUrl}/api/v1/public/email/username/login");
+      print("URL: ${serverDio.options.baseUrl}/api/v1/public/email/username/login");
       print("INPUT: $input");
       print("IS EMAIL: $isEmail");
       print("REQUEST BODY: $body");
-      print("HEADERS: ${dio.options.headers}");
+      print("HEADERS: ${serverDio.options.headers}");
       print("====================================");
 
-      final res = await dio.post(
+      final res = await serverDio.post(
         "/api/v1/public/email/username/login",
         data: body,
       );
@@ -66,7 +74,7 @@ class AuthService {
       print("URL: $_base/register");
       print("BODY: ${request.toJson()}");
 
-      final res = await dio.post(
+      final res = await localDio.post(
         // "http://localhost:8080/api/v1/public/register",
         "/api/v1/public/register",
         data: request.toJson(),
@@ -91,7 +99,7 @@ class AuthService {
       print("URL: $_base/verify");
       print("QUERY: ${request.toJson()}");
 
-      final res = await dio.post(
+      final res = await localDio.post(
         "$_base/verify",
         queryParameters: request.toJson(), // FIX HERE
       );
@@ -109,15 +117,13 @@ class AuthService {
     }
   }
 
-  Future<Response> forgotPassword(
-      ForgotPasswordRequest request,
-      ) async {
+  Future<Response> forgotPassword(ForgotPasswordRequest request) async {
     try {
       print("======= FORGOT PASSWORD =======");
       print("URL: $_base/forgot-password");
       print("BODY: ${request.toJson()}");
 
-      final res = await dio.post(
+      final res = await localDio.post(
         "$_base/forgot-password",
         data: request.toJson(),
       );
@@ -134,15 +140,14 @@ class AuthService {
       rethrow;
     }
   }
-  Future<Response> resetPassword(
-      ResetPasswordRequest request,
-      ) async {
+
+  Future<Response> resetPassword(ResetPasswordRequest request) async {
     try {
       print("======== RESET PASSWORD ========");
       print("URL: $_base/reset-password");
       print("BODY: ${request.toJson()}");
 
-      final res = await dio.post(
+      final res = await localDio.post(
         "$_base/reset-password",
         data: request.toJson(),
       );
@@ -161,12 +166,6 @@ class AuthService {
   }
 
   Future<void> resendOtp(String email) async {
-    await dio.post(
-      '/api/v1/public/resend',
-      queryParameters: {
-        'email': email,
-      },
-    );
+    await localDio.post('/api/v1/public/resend', queryParameters: {'email': email});
   }
-
 }

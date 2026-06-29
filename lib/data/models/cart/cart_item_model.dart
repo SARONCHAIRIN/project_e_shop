@@ -5,14 +5,14 @@ class CartItem {
   final ProductSku productSku;
   final String name;
   int quantity;
-  final String image;
+  final List<String> mainImage;
 
   CartItem({
     required this.id,
     required this.productSku,
     required this.name,
     required this.quantity,
-    required this.image,
+    required this.mainImage,
   });
 
   // Auto-calculated from quantity × unit price
@@ -30,7 +30,9 @@ class CartItem {
                 ? (json['quantity'] as double).toInt()
                 : json['quantity'])
           : 0,
-      image: json['image'] ?? '',
+      mainImage: json['main_image'] != null
+          ? List<String>.from(json['main_image'])
+          : [],
     );
   }
 }
