@@ -13,11 +13,7 @@ class CartScreen extends ConsumerStatefulWidget {
   final int userId;
   final String token;
 
-  const CartScreen({
-    super.key,
-    required this.userId,
-    required this.token,
-  });
+  const CartScreen({super.key, required this.userId, required this.token});
 
   @override
   ConsumerState<CartScreen> createState() => _CartScreenState();
@@ -29,11 +25,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     super.initState();
 
     Future.microtask(() {
-
       ref.read(cartControllerProvider.notifier).fetchCart();
-
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +65,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           if (cartState.isLoading)
             SliverToBoxAdapter(child: _buildCartShimmer())
           // Show empty state if cart is empty
-          else if (cartState.cart == null ||
-              cartState.cart!.items.isEmpty)
+          else if (cartState.cart == null || cartState.cart!.items.isEmpty)
             SliverFillRemaining(hasScrollBody: false, child: _buildEmptyCart())
           else
             SliverList(
@@ -138,13 +133,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           elevation: 0.001,
 
                           child: ListTile(
-                            leading: ClipRRect(
+                            leading:
+                            ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                (item.image != null &&
-                                    item.image!.isNotEmpty &&
-                                    item.image != "[]")
-                                    ? item.image!
+                              child:
+                              Image.network(
+                                (item.mainImage.isNotEmpty)
+                                    ? item.mainImage?.first?? ''
                                     : "",
                                 width: 70,
                                 height: 70,
@@ -172,7 +167,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
                             subtitle: Text(
                               " Qty: ${item.quantity} "
-                              "\n \$${item.totalPrice.toStringAsFixed(2)}",
+                                  "\n \$${item.totalPrice.toStringAsFixed(2)}",
                             ),
 
                             trailing: Container(
@@ -203,9 +198,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                     ),
                                     onPressed: item.quantity > 1
                                         ? () => cartController.updateItem(
-                                            item.id,
-                                            item.quantity - 1,
-                                          )
+                                      item.id,
+                                      item.quantity - 1,
+                                    )
                                         : null,
                                   ),
 
@@ -346,7 +341,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           ),
 
           SliverToBoxAdapter(
-            child: _buildcheckoutButton(context, cartController,cartState),
+            child: _buildcheckoutButton(context, cartController, cartState),
           ),
 
           SliverToBoxAdapter(child: SizedBox(height: 100)),
@@ -397,6 +392,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
+
   Widget _buildEmptyCart() => Center(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -426,34 +422,32 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   );
 
   Widget _buildcheckoutButton(
-    BuildContext context,
-    CartController cartController,
+      BuildContext context,
+      CartController cartController,
       CartState cartState,
-  ) {
+      ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 130, left: 20, right: 20),
       child: ElevatedButton(
-        onPressed:
-            cartState.cart == null || cartState.cart!.items.isEmpty
+        onPressed: cartState.cart == null || cartState.cart!.items.isEmpty
             ? null
             : () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        // PaymentMethodScreen(
-                        // totalPrice: 120, addressId: widget.a, addressLine1: addressLine1, city: city, country: country, zipCode: zipCode)
-                        CheckoutPage(
-                          repo: AddressRepository(AddressService()),
-                          storage: TokenStorage(),
-                          userId: widget.userId,
-                          token: widget.token,
-                          addressId: 0,
-
-                        ),
-                  ),
-                );
-              },
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) =>
+              // PaymentMethodScreen(
+              // totalPrice: 120, addressId: widget.a, addressLine1: addressLine1, city: city, country: country, zipCode: zipCode)
+              CheckoutPage(
+                repo: AddressRepository(AddressService()),
+                storage: TokenStorage(),
+                userId: widget.userId,
+                token: widget.token,
+                addressId: 0,
+              ),
+            ),
+          );
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blueAccent,
           padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 11),
@@ -532,9 +526,9 @@ Widget _buildCartShimmer() {
         ),
       ),
 
-      Positioned(child: _buildItemCart()),
+      Positioned(top: 0, left: 0, right: 0, child: _buildItemCart()),
 
-      Positioned(child: _buildsubtotal()),
+      Positioned(bottom: 0, left: 0, right: 0, child: _buildsubtotal()),
     ],
   );
 }

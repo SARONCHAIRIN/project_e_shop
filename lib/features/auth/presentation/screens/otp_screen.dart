@@ -194,320 +194,324 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
           ),
 
           // Main card
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 100),
-            child: SafeArea(
-              child: FadeTransition(
-                opacity: _fadeAnim,
-                child: SlideTransition(
-                  position: _slideAnim,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 440),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(28),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-                        child: Container(
-                          padding: const EdgeInsets.fromLTRB(26, 30, 26, 26),
-                          decoration: BoxDecoration(
-                            color: _Palette.glass,
-                            borderRadius: BorderRadius.circular(28),
-                            border: Border.all(
-                              color: _Palette.glassBorder,
-                              width: 1.2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.28),
-                                blurRadius: 30,
-                                offset: const Offset(0, 14),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              SizedBox(height: 50),
-                              // Badge
-                              Center(
-                                child: Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        _Palette.gold,
-                                        _Palette.goldDeep,
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: _Palette.gold.withOpacity(0.4),
-                                        blurRadius: 18,
-                                        spreadRadius: 1,
-                                      ),
-                                    ],
-                                  ),
-                                  child: const Icon(
-                                    Icons.mark_email_read_outlined,
-                                    color: _Palette.goldText,
-                                    size: 28,
-                                  ),
+          SizedBox.expand(
+            child: Padding(
+              padding: const EdgeInsets.symmetric( vertical: 0,horizontal: 10),
+              child: SafeArea(
+                child: FadeTransition(
+                  opacity: _fadeAnim,
+                  child: SlideTransition(
+                    position: _slideAnim,
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(28),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(26, 30, 26, 26),
+                              decoration: BoxDecoration(
+                                color: _Palette.glass,
+                                borderRadius: BorderRadius.circular(28),
+                                border: Border.all(
+                                  color: _Palette.glassBorder,
+                                  width: 1.2,
                                 ),
-                              ),
-                              const SizedBox(height: 25),
-
-                              // Step indicator — step 2 of 2, both filled
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 4,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(2),
-                                        color: _Palette.gold,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Expanded(
-                                    child: Container(
-                                      height: 4,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(2),
-                                        color: _Palette.gold,
-                                      ),
-                                    ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.28),
+                                    blurRadius: 30,
+                                    offset: const Offset(0, 14),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                'STEP 2 OF 2 · VERIFY EMAIL',
-                                style: TextStyle(
-                                  color: _Palette.gold,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 1.1,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-
-                              const Text(
-                                'Verify your email',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                'We sent a 6-digit code to',
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.65),
-                                  fontSize: 13.5,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                widget.email,
-                                style: const TextStyle(
-                                  color: _Palette.gold,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.3,
-                                ),
-                              ),
-                              const SizedBox(height: 34),
-
-                              // OTP boxes
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: List.generate(_otpLength, (index) {
-                                  final isFilled =
-                                      _controllers[index].text.isNotEmpty;
-                                  return SizedBox(
-                                    width: 46,
-                                    height: 58,
-                                    child: KeyboardListener(
-                                      focusNode: FocusNode(),
-                                      onKeyEvent: (e) => _onKeyEvent(index, e),
-                                      child: TextFormField(
-                                        controller: _controllers[index],
-                                        focusNode: _focusNodes[index],
-                                        textAlign: TextAlign.center,
-                                        keyboardType: TextInputType.number,
-                                        maxLength: _otpLength,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter
-                                              .digitsOnly,
-                                        ],
-                                        style: const TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                        cursorColor: _Palette.gold,
-                                        decoration: InputDecoration(
-                                          counterText: '',
-                                          filled: true,
-                                          fillColor: isFilled
-                                              ? Colors.white.withOpacity(0.18)
-                                              : Colors.white.withOpacity(0.06),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              14,
-                                            ),
-                                            borderSide: BorderSide(
-                                              color: isFilled
-                                                  ? _Palette.gold
-                                                  : Colors.white.withOpacity(
-                                                      0.14,
-                                                    ),
-                                              width: isFilled ? 1.6 : 1,
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              14,
-                                            ),
-                                            borderSide: const BorderSide(
-                                              color: _Palette.gold,
-                                              width: 1.6,
-                                            ),
-                                          ),
-                                          contentPadding: EdgeInsets.zero,
-                                        ),
-                                        onChanged: (v) =>
-                                            _onDigitChanged(index, v),
-                                      ),
-                                    ),
-                                  );
-                                }),
-                              ),
-                              const SizedBox(height: 34),
-
-                              // Verify button
-                              SizedBox(
-                                width: double.infinity,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    gradient: _isComplete
-                                        ? const LinearGradient(
+                              child: IntrinsicHeight(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(height: 20),
+                                    // Badge
+                                    Center(
+                                      child: Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: const LinearGradient(
                                             colors: [
                                               _Palette.gold,
                                               _Palette.goldDeep,
                                             ],
-                                            begin: Alignment.centerLeft,
-                                            end: Alignment.centerRight,
-                                          )
-                                        : null,
-                                    color: _isComplete
-                                        ? null
-                                        : Colors.white.withOpacity(0.08),
-                                    boxShadow: _isComplete
-                                        ? [
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          boxShadow: [
                                             BoxShadow(
-                                              color: _Palette.gold.withOpacity(
-                                                0.35,
-                                              ),
-                                              blurRadius: 16,
-                                              offset: const Offset(0, 6),
+                                              color: _Palette.gold.withOpacity(0.4),
+                                              blurRadius: 18,
+                                              spreadRadius: 1,
                                             ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(16),
-                                      onTap: (isLoading || !_isComplete)
-                                          ? null
-                                          : () => _verify(controller),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 15,
+                                          ],
                                         ),
-                                        child: Center(
-                                          child: isLoading
-                                              ? const SpinKitDualRing(
-                                                  color: _Palette.goldText,
-                                                  size: 22,
-                                                  lineWidth: 3,
-                                                )
-                                              : Text(
-                                                  'Verify code',
-                                                  style: TextStyle(
-                                                    color: _isComplete
-                                                        ? _Palette.goldText
-                                                        : Colors.white
-                                                              .withOpacity(
-                                                                0.35,
-                                                              ),
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    letterSpacing: 0.3,
-                                                  ),
-                                                ),
+                                        child: const Icon(
+                                          Icons.mark_email_read_outlined,
+                                          color: _Palette.goldText,
+                                          size: 28,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 24),
-
-                              // Resend row
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Didn't receive the code? ",
-                                    style: TextStyle(
-                                      color: Colors.white.withOpacity(0.6),
-                                      fontSize: 13,
+                                    const SizedBox(height: 10),
+                                
+                                    // Step indicator — step 2 of 2, both filled
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            height: 4,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(2),
+                                              color: _Palette.gold,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Expanded(
+                                          child: Container(
+                                            height: 4,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(2),
+                                              color: _Palette.gold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  TextButton(
-                                    style: TextButton.styleFrom(
-                                      padding: EdgeInsets.zero,
-                                      minimumSize: const Size(0, 0),
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    onPressed: () async {
-                                      final success = await ref
-                                          .read(authControllerProvider.notifier)
-                                          .resendOtp(widget.email);
-                                      if (!mounted) return;
-                                      _showSnack(
-                                        success
-                                            ? 'OTP sent successfully'
-                                            : 'Failed to resend OTP',
-                                        isError: !success,
-                                      );
-                                    },
-                                    child: const Text(
-                                      'Resend',
+                                    const SizedBox(height: 10),
+                                    const Text(
+                                      'STEP 2 OF 2 · VERIFY EMAIL',
                                       style: TextStyle(
                                         color: _Palette.gold,
-                                        fontSize: 13,
+                                        fontSize: 11,
                                         fontWeight: FontWeight.w700,
+                                        letterSpacing: 1.1,
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(height: 10),
+                                
+                                    const Text(
+                                      'Verify your email',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      'We sent a 6-digit code to',
+                                      style: TextStyle(
+                                        color: Colors.white.withOpacity(0.65),
+                                        fontSize: 13.5,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      widget.email,
+                                      style: const TextStyle(
+                                        color: _Palette.gold,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.3,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                
+                                    // OTP boxes
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: List.generate(_otpLength, (index) {
+                                        final isFilled =
+                                            _controllers[index].text.isNotEmpty;
+                                        return SizedBox(
+                                          width: 46,
+                                          height: 58,
+                                          child: KeyboardListener(
+                                            focusNode: FocusNode(),
+                                            onKeyEvent: (e) => _onKeyEvent(index, e),
+                                            child: TextFormField(
+                                              controller: _controllers[index],
+                                              focusNode: _focusNodes[index],
+                                              textAlign: TextAlign.center,
+                                              keyboardType: TextInputType.number,
+                                              maxLength: _otpLength,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter
+                                                    .digitsOnly,
+                                              ],
+                                              style: const TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                              cursorColor: _Palette.gold,
+                                              decoration: InputDecoration(
+                                                counterText: '',
+                                                filled: true,
+                                                fillColor: isFilled
+                                                    ? Colors.white.withOpacity(0.18)
+                                                    : Colors.white.withOpacity(0.06),
+                                                enabledBorder: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(
+                                                    14,
+                                                  ),
+                                                  borderSide: BorderSide(
+                                                    color: isFilled
+                                                        ? _Palette.gold
+                                                        : Colors.white.withOpacity(
+                                                            0.14,
+                                                          ),
+                                                    width: isFilled ? 1.6 : 1,
+                                                  ),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(
+                                                    14,
+                                                  ),
+                                                  borderSide: const BorderSide(
+                                                    color: _Palette.gold,
+                                                    width: 1.6,
+                                                  ),
+                                                ),
+                                                contentPadding: EdgeInsets.zero,
+                                              ),
+                                              onChanged: (v) =>
+                                                  _onDigitChanged(index, v),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                    const SizedBox(height: 16),
+                                
+                                    // Verify button
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(16),
+                                          gradient: _isComplete
+                                              ? const LinearGradient(
+                                                  colors: [
+                                                    _Palette.gold,
+                                                    _Palette.goldDeep,
+                                                  ],
+                                                  begin: Alignment.centerLeft,
+                                                  end: Alignment.centerRight,
+                                                )
+                                              : null,
+                                          color: _isComplete
+                                              ? null
+                                              : Colors.white.withOpacity(0.08),
+                                          boxShadow: _isComplete
+                                              ? [
+                                                  BoxShadow(
+                                                    color: _Palette.gold.withOpacity(
+                                                      0.35,
+                                                    ),
+                                                    blurRadius: 16,
+                                                    offset: const Offset(0, 6),
+                                                  ),
+                                                ]
+                                              : null,
+                                        ),
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            borderRadius: BorderRadius.circular(16),
+                                            onTap: (isLoading || !_isComplete)
+                                                ? null
+                                                : () => _verify(controller),
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                vertical: 15,
+                                              ),
+                                              child: Center(
+                                                child: isLoading
+                                                    ? const SpinKitDualRing(
+                                                        color: _Palette.goldText,
+                                                        size: 22,
+                                                        lineWidth: 3,
+                                                      )
+                                                    : Text(
+                                                        'Verify code',
+                                                        style: TextStyle(
+                                                          color: _isComplete
+                                                              ? _Palette.goldText
+                                                              : Colors.white
+                                                                    .withOpacity(
+                                                                      0.35,
+                                                                    ),
+                                                          fontSize: 16,
+                                                          fontWeight: FontWeight.w700,
+                                                          letterSpacing: 0.3,
+                                                        ),
+                                                      ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 1),
+                                
+                                    // Resend row
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Didn't receive the code? ",
+                                          style: TextStyle(
+                                            color: Colors.white.withOpacity(0.6),
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            padding: EdgeInsets.zero,
+                                            minimumSize: const Size(0, 0),
+                                            tapTargetSize:
+                                                MaterialTapTargetSize.shrinkWrap,
+                                          ),
+                                          onPressed: () async {
+                                            final success = await ref
+                                                .read(authControllerProvider.notifier)
+                                                .resendOtp(widget.email);
+                                            if (!mounted) return;
+                                            _showSnack(
+                                              success
+                                                  ? 'OTP sent successfully'
+                                                  : 'Failed to resend OTP',
+                                              isError: !success,
+                                            );
+                                          },
+                                          child: const Text(
+                                            'Resend',
+                                            style: TextStyle(
+                                              color: _Palette.gold,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Spacer(),
-                            ],
+                            ),
                           ),
                         ),
                       ),
