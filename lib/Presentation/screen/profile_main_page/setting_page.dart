@@ -131,38 +131,38 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                 ),
 
-                IconButton(
-                  onPressed: () async {
-                    try {
-                      final tokenStorage = TokenStorage();
-                      final token = await tokenStorage.getToken();
-                      final userId = await tokenStorage.getUserId();
-                      final username = await tokenStorage.getUsername();
-                      final email = await tokenStorage.readUserEmail();
-
-                      if (token != null && username != null && email != null) {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProfileScreen(
-                              // userId: userId ?? 0,
-                              username: username,
-                              token: token,
-                              email: email,
-                            ),
-                          ),
-                        );
-                      }
-                    } catch (e) {
-                      print("Error: $e");
-                    }
-                  },
-                  icon: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 20,
-                    color: Colors.grey,
-                  ),
-                ),
+                // IconButton(
+                //   onPressed: () async {
+                //     try {
+                //       final tokenStorage = TokenStorage();
+                //       final token = await tokenStorage.getToken();
+                //       final userId = await tokenStorage.getUserId();
+                //       final username = await tokenStorage.getUsername();
+                //       final email = await tokenStorage.readUserEmail();
+                //
+                //       if (token != null && username != null && email != null) {
+                //         await Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //             builder: (context) => ProfileScreen(
+                //               // userId: userId ?? 0,
+                //               username: username,
+                //               token: token,
+                //               email: email,
+                //             ),
+                //           ),
+                //         );
+                //       }
+                //     } catch (e) {
+                //       print("Error: $e");
+                //     }
+                //   },
+                //   icon: Icon(
+                //     Icons.arrow_forward_ios,
+                //     size: 20,
+                //     color: Colors.grey,
+                //   ),
+                // ),
               ],
             ),
 

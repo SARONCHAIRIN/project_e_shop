@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../data/models/cart/cart_item_model.dart';
 import '../../../provider/cart_provider.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
@@ -28,6 +29,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       ref.read(cartControllerProvider.notifier).fetchCart();
     });
   }
+
 
 
 
@@ -136,23 +138,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             leading:
                             ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child:
-                              Image.network(
-                                (item.mainImage.isNotEmpty)
-                                    ? item.mainImage?.first?? ''
-                                    : "",
-                                width: 70,
-                                height: 70,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.asset(
-                                    'assets/images/default_image.png',
-                                    width: 70,
-                                    height: 70,
-                                    fit: BoxFit.cover,
-                                  );
-                                },
-                              ),
+                              child: cartImage(item),
+
                             ),
 
                             title: Text(
@@ -198,7 +185,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                     ),
                                     onPressed: item.quantity > 1
                                         ? () => cartController.updateItem(
-                                      item.id,
+                                      item.id,              // cartItemId
+                                      item.productSku.id,   // productId
                                       item.quantity - 1,
                                     )
                                         : null,
@@ -218,7 +206,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                       color: Colors.black,
                                     ),
                                     onPressed: () => cartController.updateItem(
-                                      item.id,
+                                      item.id,              // cartItemId
+                                      item.productSku.id,   // productId
                                       item.quantity + 1,
                                     ),
                                   ),
@@ -682,5 +671,32 @@ Widget shimmerBox({required double width, required double height}) {
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
     ),
+  );
+}
+
+Widget cartImage(CartItem item) {
+  if (item.mainImage.isEmpty) {
+    return Image.asset(
+      'assets/images/default_image.png',
+      width: 70,
+      height: 70,
+      fit: BoxFit.cover
+      ,
+    );
+  }
+
+  return Image.network(
+    item.mainImage.last,
+    width: 70,
+    height: 70,
+    fit: BoxFit.fill,
+    errorBuilder: (_, __, ___) {
+      return Image.asset(
+        'assets/images/default_image.png',
+        width: 70,
+        height: 70,
+        fit: BoxFit.cover,
+      );
+    },
   );
 }
