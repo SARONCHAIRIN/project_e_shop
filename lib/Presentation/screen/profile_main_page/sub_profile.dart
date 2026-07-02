@@ -65,6 +65,7 @@ class _ProfilepageState extends State<Profilepage> {
       final name = await storage.readUsername();
       final storedEmail = await storage.readUserEmail();
 
+
       // fallback: if email is empty, use username
       final emailToShow = (storedEmail?.isNotEmpty == true)
           ? storedEmail
@@ -79,6 +80,9 @@ class _ProfilepageState extends State<Profilepage> {
       }
 
       final allInfo = await storage.getAllUserInfo();
+
+      print(allInfo);
+
       print('All storage info: $allInfo');
       print('Final username: $username');
       print('Final email: $email');
@@ -104,7 +108,7 @@ class _ProfilepageState extends State<Profilepage> {
 
       //  use authenticatedGet — auto refresh token when 401
       final response = await widget.authRepository.authenticatedGet(
-        '/user/$userId/user',
+        '/user/id/user?id=$userId',
       );
 
       print("API RESULT: $response");
@@ -241,7 +245,9 @@ class _ProfilepageState extends State<Profilepage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _buildBody(), backgroundColor: Colors.grey.shade50);
+    return Scaffold(
+        body: _buildBody(),
+        backgroundColor: Colors.grey.shade100,);
   }
 
   Widget _buildBody() => SingleChildScrollView(
@@ -298,37 +304,39 @@ class _ProfilepageState extends State<Profilepage> {
                   child: IconButton(
                     onPressed: () async {
                       try {
-                        final tokenStorage = TokenStorage();
-                        final token = await tokenStorage.getToken();
-                        final userId = await tokenStorage.getUserId();
-                        final username = await tokenStorage.getUsername();
-                        final email = await tokenStorage.readUserEmail();
-
-                        print('all data : ${tokenStorage.getAllUserInfo()}');
-
-                        if (token != null &&
-                            username != null &&
-                            email != null) {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProfileScreen(
-                                username: username,
-                                token: token,
-                                email: email,
-                              ),
+                        final source = await showModalBottomSheet<ImageSource>(
+                          context: context,
+                          builder: (context) => SafeArea(
+                            child: Wrap(
+                              children: [
+                                ListTile(
+                                  leading: const Icon(Icons.photo_library),
+                                  title: const Text('Gallery'),
+                                  onTap: () => Navigator.pop(context, ImageSource.gallery),
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.camera_alt),
+                                  title: const Text('Camera'),
+                                  onTap: () => Navigator.pop(context, ImageSource.camera),
+                                ),
+                              ],
                             ),
-                          );
+                          ),
+                        );
 
-                          // back reload data
-                          await _loadSavedImage();
-                          await fetchUser();
-                        }
+                        if (source == null) return;
+
+                        await _pickImage(source);
+
+                        // refresh user after upload
+                        await fetchUser();
+                        await _loadSavedImage();
+
                       } catch (e) {
-                        print("Error: $e");
+                        print("Image update error: $e");
                       }
                     },
-                    icon: Icon(Icons.edit, size: 26, color: Colors.blue),
+                    icon: const Icon(Icons.edit, size: 26, color: Colors.blue),
                   ),
                 ),
               ),

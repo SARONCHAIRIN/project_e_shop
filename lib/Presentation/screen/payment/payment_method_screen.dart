@@ -106,6 +106,8 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
   }
 
   Future<void> _handleContinue() async {
+    final cartState = ref.watch(cartControllerProvider);
+    final total = cartState.cart?.totalPrice ?? 0;
     if (_selectedPaymentMethod == null) {
       _shakeKey.currentState?.shake(); // ← button shake!
       _showError('Please select a payment method');
@@ -119,7 +121,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
       try {
         debugPrint('[PaymentMethod] Selected: $_selectedPaymentMethod');
         debugPrint('[PaymentMethod] Address ID: ${widget.addressId}');
-        debugPrint('[PaymentMethod] Total: \$${widget.totalPrice}');
+        debugPrint('[PaymentMethod] Total: \$${total.toStringAsFixed(2)}');
 
         // ══════════════════════════════════════════════════
         // COD FLOW
@@ -133,7 +135,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
             MaterialPageRoute(
               builder: (_) => PaymentProcessingScreen(
                 addressId: widget.addressId,
-                totalPrice: widget.totalPrice,
+                totalPrice:total,
                 paymentMethod: 'COD',
                 orderRepository: orderRepository,
                 paymentRepository: paymentRepository,
@@ -420,7 +422,10 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
   }
 
   Widget _buildOrderSummarySection() {
+    final cartState = ref.watch(cartControllerProvider);
+    final total = cartState.cart?.totalPrice ?? 0;
     return Container(
+
       margin: const EdgeInsets.symmetric(horizontal: 13, vertical: 5),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -466,7 +471,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
                 ),
               ),
               Text(
-                '\$${widget.totalPrice.toStringAsFixed(2)}',
+                '\$${total.toStringAsFixed(2)}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

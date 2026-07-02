@@ -41,11 +41,13 @@ class OrderRepository {
   /// Wraps: OrderService.createBakongOrder()
   /// Handles: Error logging, response parsing, validation
   /// Returns: OrderModel with QR data (bakong_qr, bakong_md5)
+/*
   Future<OrderModel> createBakongOrder({
     required int userId,
     required int addressId,
     required String token,
-  }) async {
+  })
+  async {
     try {
       debugPrint('[OrderRepository] createBakongOrder for user $userId');
       final data = await _orderService.createBakongOrder(
@@ -61,12 +63,54 @@ class OrderRepository {
       rethrow;
     }
   }
+*/
+
+  //new
+  Future<OrderModel> createBakongOrder({
+    required int userId,
+    required int addressId,
+    required String token,
+  }) async {
+    try {
+      debugPrint('================ REPO: START BAKONG ORDER ================');
+      debugPrint('👉 STEP 1: Input received');
+      debugPrint('User ID: $userId');
+      debugPrint('Address ID: $addressId');
+
+      debugPrint('👉 STEP 2: Calling OrderService...');
+
+      final data = await _orderService.createBakongOrder(
+        userId: userId,
+        addressId: addressId,
+        token: token,
+      );
+
+      debugPrint('👉 STEP 3: Service returned data');
+      debugPrint('Raw Data: $data');
+
+      debugPrint('👉 STEP 4: Parsing OrderModel...');
+
+      final order = OrderModel.fromJson(data);
+
+      debugPrint('================ SUCCESS REPO =================');
+      debugPrint('Order ID: ${order.id}');
+      debugPrint('================================================');
+
+      return order;
+    } catch (e) {
+      debugPrint('================ REPO ERROR =================');
+      debugPrint('Error Type: ${e.runtimeType}');
+      debugPrint('Error Message: $e');
+      debugPrint('=============================================');
+      rethrow;
+    }
+  }
 
   Future<({List<OrderModel> orders, Map<String, dynamic> pagination})>
   getOrders({
     required int userId,
     required String token,
-    int page = 1,
+    int page = 0,
     int limit = 10,
   }) async {
     try {
@@ -81,30 +125,17 @@ class OrderRepository {
 
       debugPrint('[OrderRepository] RAW RESPONSE: $response');
 
-      /// ==============================
-      /// GET CONTENT LIST
-      /// ==============================
-      final List<dynamic> contentList =
+      final List<dynamic> content =
           response['content'] as List<dynamic>? ?? [];
 
-      /// ==============================
-      /// CONVERT TO ORDER MODEL
-      /// ==============================
-      final List<OrderModel> orders = contentList.map((item) {
-        final map = item as Map<String, dynamic>;
-
-        final orderData = map['data'] as Map<String, dynamic>? ?? {};
-
-        return OrderModel.fromJson(orderData);
+      final orders = content.map((item) {
+        return OrderModel.fromJson(item['data']);
       }).toList();
 
-      /// ==============================
-      /// PAGINATION
-      /// ==============================
-      final Map<String, dynamic> pagination = {
-        'page': page,
-        'limit': limit,
-        'total': orders.length,
+      final pagination = {
+        "page": response['number'] ?? page,
+        "limit": response['size'] ?? limit,
+        "total": response['totalElements'] ?? 0,
       };
 
       debugPrint('[OrderRepository] Fetched ${orders.length} orders');

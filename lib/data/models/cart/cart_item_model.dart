@@ -1,4 +1,45 @@
-import 'package:e_shop/data/models/product_model_eshop.dart';
+/*
+import '../product_model_eshop.dart';
+
+class CartItem {
+  final int id;
+  final ProductSku productSku;
+  final String name;
+  int quantity;
+  final List<String> mainImage;
+
+  CartItem({
+    required this.id,
+    required this.productSku,
+    required this.name,
+    required this.quantity,
+    required this.mainImage,
+  });
+  double get totalPrice => (productSku.price * quantity).toDouble();
+
+
+  static List<String> extractImages(String raw) {
+    final regex = RegExp(r'https?://[^,\]\s]+');
+    return regex
+        .allMatches(raw)
+        .map((e) => e.group(0)!)
+        .toList();
+  }
+
+  factory CartItem.fromJson(Map<String, dynamic> json) {
+    final rawImage = json['image']?.toString() ?? '';
+
+    return CartItem(
+      id: json['id'] ?? 0,
+      productSku: ProductSku.fromJson(json['productSku']),
+      name: json['name'] ?? '',
+      quantity: json['quantity'] ?? 0,
+      mainImage: extractImages(rawImage), // 🔥 IMPORTANT FIX
+    );
+  }
+}*/
+
+import '../product_model_eshop.dart';
 
 class CartItem {
   final int id;
@@ -15,24 +56,45 @@ class CartItem {
     required this.mainImage,
   });
 
-  // Auto-calculated from quantity × unit price
   double get totalPrice => (productSku.price * quantity).toDouble();
 
-  factory CartItem.fromJson(Map<String, dynamic> json) {
+  CartItem copyWith({
+    int? id,
+    ProductSku? productSku,
+    String? name,
+    int? quantity,
+    List<String>? mainImage,
+  }) {
     return CartItem(
-      id: json['id'] != null
-          ? (json['id'] is double ? (json['id'] as double).toInt() : json['id'])
-          : 0,
-      productSku: ProductSku.fromJson(json['productSku']),
+      id: id ?? this.id,
+      productSku: productSku ?? this.productSku,
+      name: name ?? this.name,
+      quantity: quantity ?? this.quantity,
+      mainImage: mainImage ?? this.mainImage,
+    );
+  }
+
+  static List<String> extractImages(String raw) {
+    final regex = RegExp(r'https?://[^,\]\s]+');
+    return regex.allMatches(raw).map((e) => e.group(0)!).toList();
+  }
+
+  factory CartItem.fromJson(Map<String, dynamic> json) {
+    final sku = json['productSku'];
+
+    return CartItem(
+      id: json['id'] ?? 0,
+      productSku: ProductSku.fromJson(sku),
+
       name: json['name'] ?? '',
-      quantity: json['quantity'] != null
-          ? (json['quantity'] is double
-                ? (json['quantity'] as double).toInt()
-                : json['quantity'])
-          : 0,
-      mainImage: json['main_image'] != null
-          ? List<String>.from(json['main_image'])
-          : [],
+      quantity: json['quantity'] ?? 0,
+
+      // ✅ TAKE IMAGE FROM SKU (NOT ROOT)
+      mainImage:
+          (sku?['main_image'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
     );
   }
 }

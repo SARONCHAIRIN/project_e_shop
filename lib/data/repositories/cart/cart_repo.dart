@@ -15,9 +15,10 @@ class CartRepository {
   Future<void> updateItem(
     int userId,
     int cartItemId,
+    int productId,
     int quantity,
     String token,
-  ) => service.updateItem(userId, cartItemId, quantity,token);
+  ) => service.updateItem(userId, cartItemId,productId, quantity,token);
 
   // Future<void> updateItem(
   //     int userId,

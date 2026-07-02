@@ -85,57 +85,80 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
 
   Map<String, String> selectedAttributes = {};
   Widget _buildAttributes() {
-    if (selectedSku == null || selectedSku!.attributes.isEmpty) {
-      return const SizedBox();
+    final sku = selectedSku;
+
+    if (sku == null || sku.attributes.isEmpty) {
+      return const SizedBox.shrink();
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: selectedSku!.attributes.map((attribute) {
+      children: List.generate(sku.attributes.length, (index) {
+        final attribute = sku.attributes[index];
+
         return Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              Text(
-                attribute.name,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                children: attribute.values.map((value) {
-
-                  final selected =
-                      selectedAttributes[attribute.name] == value.value;
-
-                  return ChoiceChip(
-                    label: Text(value.value),
-
-                    selected: selected,
-
-                    onSelected: (_) {
-                      setState(() {
-                        selectedAttributes[attribute.name] = value.value;
-                      });
-                    },
-                  );
-
-                }).toList(),
-              ),
-            ],
-          ),
+          padding: const EdgeInsets.only(bottom: 5),
+          child: _buildAttributeGroup(attribute),
         );
-      }).toList(),
+      }),
     );
   }
+
+  Widget _buildAttributeGroup(dynamic attribute) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              attribute.name,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(width: 10,),
+
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: attribute.values.map<Widget>((value) {
+                final isSelected =
+                    selectedAttributes[attribute.name] == value.value;
+
+                return ChoiceChip(
+                  label: Text(value.value),
+                  selected: isSelected,
+                  selectedColor: Colors.black,
+                  labelStyle: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  backgroundColor: Colors.grey.shade200,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  side: BorderSide(
+                    color: isSelected ? Colors.black : Colors.grey.shade300,
+                  ),
+                  onSelected: (_) {
+                    setState(() {
+                      selectedAttributes[attribute.name] = value.value;
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+
+          ],
+        ),
+        const SizedBox(height: 12),
+
+
+      ],
+    );
+  }
+
 
 
   @override
@@ -821,88 +844,8 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
       ),
       bottomNavigationBar: _buildnav(),
 
-      // bottomNavigationBar: Container(width: 200,height: 50,color: Colors.red,),
     );
   }
-  // Widget _buildnav() => Container(
-  //   child: Row(
-  //     children: [
-  //       Container(
-  //         alignment: Alignment.center,
-  //         width: 140,
-  //         height: 30,
-  //         padding: EdgeInsets.symmetric(
-  //           horizontal: 10,
-  //           vertical: 5,
-  //         ),
-  //         decoration: BoxDecoration(
-  //           color: Colors.white,
-  //           borderRadius: BorderRadius.circular(10),
-  //           boxShadow: [
-  //             BoxShadow(
-  //               color: Colors.grey.shade200,
-  //               blurRadius: 1,
-  //               offset: const Offset(0, 1),
-  //               blurStyle: BlurStyle.outer,
-  //             ),
-  //           ],
-  //         ),
-  //         child: Text(
-  //           '${product.isActive ? "In Stock" : "Out of Stock"}',
-  //           style: TextStyle(
-  //             color: Colors.black,
-  //             fontSize: 14,
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //       ),
-  //
-  //       SizedBox(width: 10,),
-  //       GestureDetector(
-  //         onTap: () async {
-  //           final product = widget.product;
-  //
-  //           final storage = TokenStorage();
-  //           final userId = await storage.readUserId();
-  //           final token = await storage.readToken();
-  //
-  //           if (userId == null || token == null) {
-  //             _showLoginSheet(context);
-  //             return;
-  //           }
-  //
-  //           final cartController = ref.read(cartControllerProvider.notifier);
-  //
-  //           await cartController.addItem(product.id, 1);
-  //
-  //           if (!mounted) return;
-  //
-  //           Navigator.push(
-  //             context,
-  //             MaterialPageRoute(
-  //               builder: (_) => CartScreen(userId: userId, token: token),
-  //             ),
-  //           );
-  //         },
-  //         child: Container(
-  //           margin: const EdgeInsets.all(20),
-  //           height: 50,
-  //           alignment: Alignment.center,
-  //           decoration: BoxDecoration(
-  //             color: Colors.blue,
-  //             borderRadius: BorderRadius.circular(20),
-  //           ),
-  //           child: ref.watch(cartControllerProvider).isLoading
-  //               ? const CircularProgressIndicator(color: Colors.white)
-  //               : const Text(
-  //                   "Add to Cart",
-  //                   style: TextStyle(color: Colors.white, fontSize: 18),
-  //                 ),
-  //         ),
-  //       ),
-  //     ],
-  //   ),
-  // );
 
   Widget _buildnav() {
     final product = widget.product;
