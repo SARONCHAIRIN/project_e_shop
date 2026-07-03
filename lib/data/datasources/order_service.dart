@@ -6,6 +6,10 @@ class OrderService {
   final Dio _dio;
 
   static const String _baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
+  static const String _baseUrllocal = 'http://localhost:8080/api/v1';
+
+  // angkor home wifi
+  static const String _baseUrllocalwifi = 'http://192.168.18.61:8080/api/v1';
 
   // OrderService({Dio? dio}) : _dio = dio ?? Dio();
   OrderService({Dio? dio})
@@ -31,7 +35,8 @@ class OrderService {
   }) async {
     try {
       final response = await _dio.post(
-        '$_baseUrl/orders/user/from-cart',
+        // '$_baseUrllocal/orders/user/from-cart',
+        '$_baseUrllocalwifi/orders/user/from-cart',
         queryParameters: {'userId': userId},
         data: {'address_id': addressId, 'payment_method': 'COD'},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
@@ -59,49 +64,6 @@ class OrderService {
   /// POST /api/v1/orders/user/{userId}/from-cart/bakong
   /// Body: { address_id, payment_method: "BAKONG" }
   /// Returns: { id, user_id, address_id, payment_method, status, total_price, bakong_qr, bakong_md5, created_at }
-/*  Future<Map<String, dynamic>> createBakongOrder({
-    required int userId,
-    required int addressId,
-    required String token,
-  })
-  async {
-    try {
-      debugPrint("=========== Start Bakong API===================");
-      final response = await _dio.post(
-        // '$_baseUrl/orders/user/from-cart/bakong',
-        '$_baseUrl/orders/user/from-cart/bakong',
-        queryParameters: {'userId': userId},
-        data: {'address_id': addressId, 'payment_method': 'BAKONG'},
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-          sendTimeout: const Duration(seconds: 60),
-          receiveTimeout: const Duration(seconds: 60),
-        ),
-      );
-
-      if (response.statusCode == 201) {
-        final data = response.data['data'] as Map<String, dynamic>;
-        debugPrint(
-          '[OrderService] createBakongOrder success: Order #${data['id']}',
-        );
-
-        debugPrint("URL: $_baseUrl/orders/user/from-cart/bakong");
-
-        debugPrint(
-          "BODY: ${{'userId': userId, 'address_id': addressId, 'payment_method': 'BAKONG'}}",
-        );
-        debugPrint("👉 Bakong API done");
-        return data;
-      }
-      throw Exception('Failed to create Bakong order: ${response.statusCode}');
-    } on DioException catch (e) {
-      debugPrint('[OrderService] DioException: ${e.message}');
-      throw _handleError(e);
-    } catch (e) {
-      debugPrint('[OrderService] Error: $e');
-      rethrow;
-    }
-  }*/
 
   Future<Map<String, dynamic>> createBakongOrder({
     required int userId,
@@ -110,20 +72,18 @@ class OrderService {
   }) async {
     try {
       debugPrint('================ START BAKONG API ================');
-      debugPrint('👉 STEP 1: Prepare request');
+      debugPrint(' STEP 1: Prepare request');
       debugPrint('User ID: $userId');
       debugPrint('Address ID: $addressId');
 
-      final url = '$_baseUrl/orders/user/from-cart/bakong';
-      debugPrint('👉 STEP 2: URL => $url');
+      final url = '$_baseUrllocalwifi/orders/user/from-cart/bakong';
+      // final url = '$_baseUrllocal/orders/user/from-cart/bakong';
+      debugPrint(' STEP 2: URL => $url');
 
-      final body = {
-        'address_id': addressId,
-        'payment_method': 'BAKONG',
-      };
-      debugPrint('👉 STEP 3: BODY => $body');
+      final body = {'address_id': addressId, 'payment_method': 'BAKONG'};
+      debugPrint(' STEP 3: BODY => $body');
 
-      debugPrint('👉 STEP 4: Sending request...');
+      debugPrint(' STEP 4: Sending request...');
 
       final response = await _dio.post(
         url,
@@ -136,7 +96,7 @@ class OrderService {
         ),
       );
 
-      debugPrint('👉 STEP 5: Response received');
+      debugPrint(' STEP 5: Response received');
       debugPrint('Status Code: ${response.statusCode}');
       debugPrint('Response Data: ${response.data}');
 
@@ -178,7 +138,8 @@ class OrderService {
     int limit = 10,
   }) async {
     final response = await _dio.get(
-      '$_baseUrl/orders?page=0&size=100&sort=DESC',
+      '$_baseUrllocalwifi/orders?page=0&size=100&sort=DESC',
+      // '$_baseUrllocalwifi/orders?page=0&size=100&sort=DESC',
       // 'https://e-shop-1-m034.onrender.com/api/v1/orders/user/id/?userId=4&page=0&size=10&sort=DESC',
       queryParameters: {'userId': userId, 'page': page, 'size': limit},
       options: Options(headers: {'Authorization': 'Bearer $token'}),

@@ -67,7 +67,10 @@ dependencies:
   freezed_annotation: ^2.4.1
   json_annotation: ^4.9.0
   equatable: ^2.0.7
-
+  screenshot: ^3.0.0
+  permission_handler: ^11.0.0
+  path_provider: ^2.1.4
+  gal: ^2.3.0
 
 
 

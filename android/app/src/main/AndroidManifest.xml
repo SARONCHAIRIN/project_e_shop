@@ -1,8 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- ====== PERMISSIONS ====== -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <!-- Declare camera hardware as optional -->
     <uses-feature
@@ -54,16 +59,17 @@
         <!-- Bakong deep link -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
+            <data
+                android:host="payment"
+                android:scheme="bakong" />
+        </intent>
+
+        <!-- fallback general -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
             <data android:scheme="bakong" />
         </intent>
 
-        <!-- Process text apps -->
-        <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT" />
-            <data android:mimeType="text/plain" />
-        </intent>
-
-        <!-- Specific app package (CORRECT WAY) -->
         <package android:name="com.nbc.bakong_khqr" />
 
     </queries>
