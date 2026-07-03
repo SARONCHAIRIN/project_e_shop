@@ -197,17 +197,17 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                         if (product.mainImage.isEmpty) {
                           return Image.asset(
                             'assets/images/default_image.png',
-                            fit: BoxFit.fill,
+                            // fit: BoxFit.fill,
                           );
                         }
 
                         return Image.network(
                           product.mainImage[index],
-                          fit: BoxFit.fill,
+                          // fit: BoxFit.fill,
                           errorBuilder: (context, error, stackTrace) {
                             return Image.asset(
                               'assets/images/default_image.png',
-                              fit: BoxFit.fill,
+                              // fit: BoxFit.fill,
                             );
                           },
                         );

@@ -16,14 +16,12 @@ final tokenStorageProvider = Provider<TokenStorage>((ref) {
   return TokenStorage();
 });
 
-
-
 final localDioProvider = Provider<Dio>((ref) {
   return Dio(
     BaseOptions(
       // ip angkor home
-      baseUrl: "http://localhost:8080", // local backend
-      // baseUrl: "http://192.168.18.61:8080", // local backend
+      // baseUrl: "http://localhost:8080", // local backend
+      baseUrl: "http://192.168.18.61:8080", // local backend
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
       headers: {
@@ -63,7 +61,8 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   );
 });
 // Auth Controller (StateNotifier)
-final authControllerProvider =
-StateNotifierProvider<AuthController, AuthState>((ref) {
-  return AuthController(ref.read(authRepositoryProvider));
-});
+final authControllerProvider = StateNotifierProvider<AuthController, AuthState>(
+  (ref) {
+    return AuthController(ref.read(authRepositoryProvider));
+  },
+);

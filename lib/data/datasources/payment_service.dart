@@ -6,6 +6,11 @@ class PaymentService {
   final Dio _dio;
   static const String _baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
 
+  // angkor home
+  static const String _baseUrlwifi = 'http://192.168.18.61:8080/api/v1';
+
+  static const String _baseUrllocal = 'http://localhost:8080/api/v1';
+
   PaymentService({Dio? dio}) : _dio = dio ?? Dio();
 
   /// POST /api/v1/orders/{orderId}/bakong/initiate
@@ -15,7 +20,10 @@ class PaymentService {
   }) async {
     try {
       final response = await _dio.post(
-        '$_baseUrl/orders/$orderId/bakong/initiate',
+        // '$_baseUrl/orders/bakong/initiate',
+        // '$_baseUrllocal/orders/bakong/initiate',
+        '$_baseUrlwifi/orders/bakong/initiate',
+        queryParameters: {'orderId': orderId},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
@@ -61,7 +69,7 @@ class PaymentService {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
           },
-          responseType: ResponseType.bytes, // ✅ raw PNG bytes
+          responseType: ResponseType.bytes, //  raw PNG bytes
         ),
       );
 
@@ -107,7 +115,7 @@ class PaymentService {
         if (raw is Map<String, dynamic>) {
           final inner = raw['data'];
 
-          // ✅ data: { status: ... }
+          //  data: { status: ... }
           if (inner is Map<String, dynamic>) {
             debugPrint(
               '[PaymentService] checkTransaction status: ${inner['status']}',
@@ -115,7 +123,7 @@ class PaymentService {
             return inner;
           }
 
-          // ✅ data: null = still pending, don't crash
+          // data: null = still pending, don't crash
           if (inner == null) {
             debugPrint(
               '[PaymentService] checkTransaction: data=null → PENDING',
@@ -124,7 +132,7 @@ class PaymentService {
           }
         }
 
-        // ✅ Fallback
+        // Fallback
         return {'status': 'PENDING'};
       }
 
