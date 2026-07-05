@@ -1,7 +1,14 @@
 class ApiConstants {
 
+  // static const String BASE_URL =
+  //     "https://e-shop-1-m034.onrender.com/api/v1";
+
   static const String BASE_URL =
-      "https://e-shop-1-m034.onrender.com/api/v1";
+      "http://localhost:8080/api/v1";
+
+  // ip rupp
+  // static const String BASE_URL =
+  //     "http://10.1.121.208:8080/api/v1";
 
   //  Auth
   static const String login =

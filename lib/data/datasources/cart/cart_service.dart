@@ -4,7 +4,12 @@ import 'package:http/http.dart' as http;
 import '../../models/cart/cart_model.dart';
 
 class CartService {
-  final String baseUrl = "https://e-shop-1-m034.onrender.com/api/v1/cart";
+  // final String baseUrl = "https://e-shop-1-m034.onrender.com/api/v1/cart";
+
+  // final String baseUrl = "http://10.1.121.208:8080/api/v1/cart";
+
+
+  final String baseUrl = "http://localhost:8080/api/v1/cart";
 
   // GET cart
   Future<CartModel> getCart(int userId, String token) async {

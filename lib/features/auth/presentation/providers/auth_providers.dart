@@ -20,9 +20,16 @@ final localDioProvider = Provider<Dio>((ref) {
   return Dio(
     BaseOptions(
       // ip angkor home
-      // baseUrl: "http://localhost:8080", // local backend
-      baseUrl: "http://192.168.18.61:8080", // local backend
-      connectTimeout: const Duration(seconds: 15),
+      baseUrl: "http://localhost:8080", // local backend
+
+        // angkor home
+        // static const String _baseUrl = 'http://192.168.18.61:8080';
+
+        // rupp ip
+        // static const String _baseUrl = 'http://10.1.121.208:8080';
+
+
+    connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
       headers: {
         "Content-Type": "application/json",

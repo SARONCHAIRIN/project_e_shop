@@ -5,11 +5,15 @@ import 'package:flutter/foundation.dart';
 class OrderService {
   final Dio _dio;
 
-  static const String _baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
-  static const String _baseUrllocal = 'http://localhost:8080/api/v1';
+  // static const String _baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
+
+  static const String _baseUrl = 'http://localhost:8080/api/v1';
 
   // angkor home wifi
-  static const String _baseUrllocalwifi = 'http://192.168.18.61:8080/api/v1';
+  // static const String _baseUrl = 'http://192.168.18.61:8080/api/v1';
+
+  //ip rupp
+  // static const String _baseUrl = 'http://10.1.121.208:8080/api/v1';
 
   // OrderService({Dio? dio}) : _dio = dio ?? Dio();
   OrderService({Dio? dio})
@@ -35,8 +39,8 @@ class OrderService {
   }) async {
     try {
       final response = await _dio.post(
-        // '$_baseUrllocal/orders/user/from-cart',
-        '$_baseUrllocalwifi/orders/user/from-cart',
+        '$_baseUrl/orders/user/from-cart',
+        // '$_baseUrllocalwifi/orders/user/from-cart',
         queryParameters: {'userId': userId},
         data: {'address_id': addressId, 'payment_method': 'COD'},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
@@ -76,8 +80,8 @@ class OrderService {
       debugPrint('User ID: $userId');
       debugPrint('Address ID: $addressId');
 
-      final url = '$_baseUrllocalwifi/orders/user/from-cart/bakong';
-      // final url = '$_baseUrllocal/orders/user/from-cart/bakong';
+      // final url = '$_baseUrllocalwifi/orders/user/from-cart/bakong';
+      final url = '$_baseUrl/orders/user/from-cart/bakong';
       debugPrint(' STEP 2: URL => $url');
 
       final body = {'address_id': addressId, 'payment_method': 'BAKONG'};
@@ -138,7 +142,7 @@ class OrderService {
     int limit = 10,
   }) async {
     final response = await _dio.get(
-      '$_baseUrllocalwifi/orders?page=0&size=100&sort=DESC',
+      '$_baseUrl/orders?page=0&size=100&sort=DESC',
       // '$_baseUrllocalwifi/orders?page=0&size=100&sort=DESC',
       // 'https://e-shop-1-m034.onrender.com/api/v1/orders/user/id/?userId=4&page=0&size=10&sort=DESC',
       queryParameters: {'userId': userId, 'page': page, 'size': limit},
@@ -161,7 +165,8 @@ class OrderService {
   Future<Map<String, dynamic>> getOrderDetail({
     required int orderId,
     required String token,
-  }) async {
+  })
+  async {
     try {
       final response = await _dio.get(
         '$_baseUrl/orders/$orderId',
