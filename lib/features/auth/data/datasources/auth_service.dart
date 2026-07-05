@@ -28,14 +28,14 @@ class AuthService {
     try {
       print("====================================");
       print("LOGIN START");
-      print("URL: ${serverDio.options.baseUrl}/api/v1/public/email/username/login");
+      print("URL: ${localDio.options.baseUrl}/api/v1/public/email/username/login");
       print("INPUT: $input");
       print("IS EMAIL: $isEmail");
       print("REQUEST BODY: $body");
-      print("HEADERS: ${serverDio.options.headers}");
+      print("HEADERS: ${localDio.options.headers}");
       print("====================================");
 
-      final res = await serverDio.post(
+      final res = await localDio.post(
         "/api/v1/public/email/username/login",
         data: body,
       );

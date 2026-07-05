@@ -4,7 +4,13 @@ import 'package:http/http.dart' as http;
 
 class SearchService {
 
-final String uri = "https://e-shop-1-m034.onrender.com/api/v1/products/search?keyword=";
+// final String uri = "https://e-shop-1-m034.onrender.com/api/v1/products/search?keyword=";
+
+final String uri = "http://localhost:8080/api/v1/products/search?keyword=";
+
+// ip rupp
+// final String uri = "http://10.1.121.208:8080/api/v1/products/search?keyword=";
+
 
   Future<List<SearchProductModel>> searchProducts(String keyword) async{
 

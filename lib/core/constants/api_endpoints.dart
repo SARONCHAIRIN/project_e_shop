@@ -1,5 +1,12 @@
 class ApiEndpoints {
-  static const String baseUrl = 'https://e-shop-1-m034.onrender.com';
+  // static const String baseUrl = 'https://e-shop-1-m034.onrender.com';
+
+
+  // ip rupp
+  // static const String baseUrl = 'http://10.1.121.208:8080';
+
+
+  static const String baseUrl = 'http://localhost:8080';
 
   // Auth endpoints
   static const String login = '/api/v1/public/login';

@@ -4,12 +4,15 @@ import 'package:flutter/foundation.dart';
 
 class PaymentService {
   final Dio _dio;
-  static const String _baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
+  // static const String _baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
 
   // angkor home
-  static const String _baseUrlwifi = 'http://192.168.18.61:8080/api/v1';
+  // static const String _baseUrl = 'http://192.168.18.61:8080/api/v1';
 
-  static const String _baseUrllocal = 'http://localhost:8080/api/v1';
+  // rupp ip
+  // static const String _baseUrl = 'http://10.1.121.208:8080/api/v1';
+
+  static const String _baseUrl = 'http://localhost:8080/api/v1';
 
   PaymentService({Dio? dio}) : _dio = dio ?? Dio();
 
@@ -21,8 +24,8 @@ class PaymentService {
     try {
       final response = await _dio.post(
         // '$_baseUrl/orders/bakong/initiate',
-        // '$_baseUrllocal/orders/bakong/initiate',
-        '$_baseUrlwifi/orders/bakong/initiate',
+        '$_baseUrl/orders/bakong/initiate',
+        // '$_baseUrlwifi/orders/bakong/initiate',
         queryParameters: {'orderId': orderId},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
@@ -44,8 +47,6 @@ class PaymentService {
     }
   }
 
-  /// POST /api/v1/bakong/get-qr-image
-  /// Server returns raw PNG bytes
   Future<Uint8List> generateQRImage({
     required String qr,
     required String md5,
@@ -156,7 +157,7 @@ class PaymentService {
   }) async {
     try {
       final response = await _dio.post(
-        '$_baseUrl/orders/$orderId/bakong/verify',
+        '$_baseUrl/orders/bakong/verify',
         queryParameters: {'transactionId': transactionId},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
