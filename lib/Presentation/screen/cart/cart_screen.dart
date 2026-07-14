@@ -228,7 +228,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               child: Container(
                 width: double.infinity,
-                height: 130,
+                height: 120,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white,
@@ -268,6 +268,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
+                            color: Colors.blueAccent
                           ),
                         ),
                       ],
@@ -318,7 +319,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
-                            color: Colors.blueAccent,
+                            color: Colors.redAccent,
                           ),
                         ),
                       ],

@@ -274,7 +274,7 @@ class _ProfilepageState extends State<Profilepage> {
                   ],
                 ),
                 child: CircleAvatar(
-                  radius: 70,
+                  radius: 55,
                   backgroundColor: Colors.grey.shade50,
                   // optional background
                   child: _buildProfileImage(),
@@ -389,7 +389,7 @@ class _ProfilepageState extends State<Profilepage> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   width: double.infinity,
-                  height: 180,
+                  height: 160,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
@@ -613,9 +613,9 @@ class _ProfilepageState extends State<Profilepage> {
 
                 // type of activity
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  padding: EdgeInsets.symmetric(horizontal: 8),
                   width: double.infinity,
-                  height: 110,
+                  height: 106,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),

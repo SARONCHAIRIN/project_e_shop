@@ -8,6 +8,7 @@ import '../../../core/storage/token_storage.dart';
 import '../../../core/utils/utils.dart';
 import '../../../core/widgets/loading_widgets.dart';
 import '../../../data/models/address/address_model.dart';
+import '../../../data/models/order/order_model.dart';
 import '../../../data/repositories/address/address_repository.dart';
 import '../../../data/repositories/order_repository.dart';
 import '../../../data/repositories/payment_repository.dart';
@@ -30,7 +31,8 @@ class PaymentMethodScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<PaymentMethodScreen> createState() => _PaymentMethodScreenState();
+  ConsumerState<PaymentMethodScreen> createState() =>
+      _PaymentMethodScreenState();
 }
 
 class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
@@ -43,7 +45,6 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
 
   AddressModel? _address;
   bool _loadingAddress = true;
-
 
   // ── Task 15: double-submit guard ──────────────────────────
   final _guard = SubmitGuard();
@@ -135,7 +136,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
             MaterialPageRoute(
               builder: (_) => PaymentProcessingScreen(
                 addressId: widget.addressId,
-                totalPrice:total,
+                totalPrice: total,
                 paymentMethod: 'COD',
                 orderRepository: orderRepository,
                 paymentRepository: paymentRepository,
@@ -150,43 +151,27 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
           //   );
           // }
         }
-        // ══════════════════════════════════════════════════
-        // BAKONG FLOW
-        // ══════════════════════════════════════════════════
         else if (_selectedPaymentMethod == 'bakong') {
           final orderRepository = OrderRepository();
           final paymentRepository = PaymentRepository();
 
-          // 1. Create Bakong Order — with 30s timeout
-          final order = await withTimeout(
+          // 1. Create Bakong Order — qr_code + transaction_id already included
+          final OrderModel order = await withTimeout(
             future: orderRepository.createBakongOrder(
               userId: _userId,
               addressId: widget.addressId,
               token: _token,
             ),
-            duration: const Duration(seconds: 30),
-            timeoutMessage: 'Order creation timed out. Please try again.',
           );
 
           final int orderId = order.id;
+          final String bakongQrString = order.resolvedQrCode;   //  from getter
+          final String? bakongMd5 = order.transactionId;         //  from getter
 
-          // 2. Initiate Bakong Payment — with 20s timeout
-          final paymentData = await withTimeout(
-            future: paymentRepository.initiateBakongPayment(
-              orderId: orderId,
-              token: _token,
-            ),
-            duration: const Duration(seconds: 20),
-            timeoutMessage: 'Bakong service timed out. Please try again.',
-          );
-
-          if (paymentData == null || paymentData.qrString.isEmpty) {
+          if (bakongQrString.isEmpty || bakongMd5 == null || bakongMd5.isEmpty) {
             _showError('Bakong service unavailable. Please try again later.');
             return;
           }
-
-          final String bakongQrString = paymentData.qrString;
-          final String bakongMd5 = paymentData.md5;
 
           final uri = Uri(
             scheme: 'bakong',
@@ -214,10 +199,6 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
               ),
             ),
           );
-
-          // if (mounted) {
-          //   ErrorRecovery.showSuccess(context, 'Proceeding with Bakong QR');
-          // }
         }
       } catch (e) {
         debugPrint('Payment Error: $e');
@@ -239,10 +220,8 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final cartState = ref.watch(cartControllerProvider);
     final total = cartState.cart?.totalPrice ?? 0;
-
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
@@ -299,7 +278,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
                             iconColor: Colors.orange,
                             selectedColor: Colors.orange.shade50,
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
 
                           PaymentMethodTile(
                             icon: Icons.qr_code,
@@ -385,7 +364,12 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.location_on, color: Colors.blue, size: 20),
+                Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blueAccent.shade100,
+                    ),
+                    child: const Icon(Icons.location_on, color: Colors.white, size: 20)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -406,7 +390,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${_address!.city ?? ''}, ${_address!.country ?? ''} ${_address!.zipcode ?? ''}',
+                          '${_address!.city ?? ''},   ${_address!.country ?? ''} ,  ${_address!.zipcode ?? ''}',
                           style: TextStyle(fontSize: 13, color: Colors.grey),
                         ),
                       ],
@@ -425,8 +409,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
     final cartState = ref.watch(cartControllerProvider);
     final total = cartState.cart?.totalPrice ?? 0;
     return Container(
-
-      margin: const EdgeInsets.symmetric(horizontal: 13, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.blue.shade50,
@@ -456,16 +439,16 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 5),
           Divider(color: Colors.blue.shade200, thickness: 1),
-          const SizedBox(height: 12),
+          const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Total Amount',
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue.shade900,
                 ),
@@ -493,10 +476,10 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       child: ShakeWidget(
-        // ← រុំ button
+        // ←  button
         key: _shakeKey,
         child: SizedBox(
-          height: 56,
+          height: 40,
           child: ElevatedButton(
             onPressed: (_isLoading || _guard.isRunning)
                 ? null
@@ -510,8 +493,8 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
             ),
             child: _isLoading
                 ? const SizedBox(
-                    height: 24,
-                    width: 24,
+                    height: 18,
+                    width: 18,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),

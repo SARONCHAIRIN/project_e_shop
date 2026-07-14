@@ -46,6 +46,7 @@ class _TrackOrderPageState extends State<TrackOrderPage>
     try {
       final res = await _repo.getOrderDetail(
         orderId: widget.orderId,
+        userId: widget.userId,
         token: widget.token,
       );
 
