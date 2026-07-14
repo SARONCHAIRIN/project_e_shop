@@ -9,10 +9,7 @@ class AuthService {
 
   // static const String basturl  = "https://e-shop-1-m034.onrender.com";
 
-  AuthService({
-    required this.localDio,
-    required this.serverDio,
-  });
+  AuthService({required this.localDio, required this.serverDio});
 
   static const _base = "/api/v1/public";
 
@@ -28,14 +25,16 @@ class AuthService {
     try {
       print("====================================");
       print("LOGIN START");
-      print("URL: ${localDio.options.baseUrl}/api/v1/public/email/username/login");
+      print(
+        "URL: ${serverDio.options.baseUrl}/api/v1/public/email/username/login",
+      );
       print("INPUT: $input");
       print("IS EMAIL: $isEmail");
       print("REQUEST BODY: $body");
-      print("HEADERS: ${localDio.options.headers}");
+      print("HEADERS: ${serverDio.options.headers}");
       print("====================================");
 
-      final res = await localDio.post(
+      final res = await serverDio.post(
         "/api/v1/public/email/username/login",
         data: body,
       );
@@ -51,19 +50,6 @@ class AuthService {
 
       return res;
     } catch (e) {
-      // print("====================================");
-      // print("LOGIN ERROR");
-      // print("TYPE: ${e.type}");
-      // print("MESSAGE: ${e.message}");
-      // print("REQUEST URI: ${e.requestOptions.uri}");
-      // print("REQUEST METHOD: ${e.requestOptions.method}");
-      // print("REQUEST DATA: ${e.requestOptions.data}");
-      // print("REQUEST HEADERS: ${e.requestOptions.headers}");
-      // print("STATUS: ${e.response?.statusCode}");
-      // print("STATUS MESSAGE: ${e.response?.statusMessage}");
-      // print("ERROR DATA: ${e.response?.data}");
-      // print("====================================");
-
       throw "LOGIN FAILED";
     }
   }
@@ -99,7 +85,7 @@ class AuthService {
       print("URL: $_base/verify");
       print("QUERY: ${request.toJson()}");
 
-      final res = await localDio.post(
+      final res = await serverDio.post(
         "$_base/verify",
         queryParameters: request.toJson(), // FIX HERE
       );
@@ -123,7 +109,7 @@ class AuthService {
       print("URL: $_base/forgot-password");
       print("BODY: ${request.toJson()}");
 
-      final res = await localDio.post(
+      final res = await serverDio.post(
         "$_base/forgot-password",
         data: request.toJson(),
       );
@@ -147,7 +133,7 @@ class AuthService {
       print("URL: $_base/reset-password");
       print("BODY: ${request.toJson()}");
 
-      final res = await localDio.post(
+      final res = await serverDio.post(
         "$_base/reset-password",
         data: request.toJson(),
       );
@@ -166,6 +152,9 @@ class AuthService {
   }
 
   Future<void> resendOtp(String email) async {
-    await localDio.post('/api/v1/public/resend', queryParameters: {'email': email});
+    await serverDio.post(
+      '/api/v1/public/resend',
+      queryParameters: {'email': email},
+    );
   }
 }

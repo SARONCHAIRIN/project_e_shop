@@ -146,13 +146,18 @@ class _BakongQrScreenState extends State<BakongQrScreen>
     });
   }
 
+  /*
   void _startPolling() {
     _pollTimer?.cancel();
-    int _retryCount = 0;
+
+    int retryCount = 0;
     const maxRetries = 3;
 
     _pollTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-      if (!mounted) return;
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
 
       try {
         final storage = TokenStorage();
@@ -163,52 +168,200 @@ class _BakongQrScreenState extends State<BakongQrScreen>
           token: token ?? '',
         );
 
-        _retryCount = 0;
+        debugPrint("Check Transaction => $res");
 
-        final status = (res['status'] ?? 'PENDING').toString();
+        final status = res["status"];
 
-        if (status.toUpperCase() == 'SUCCESS') {
+        // ==========================
+        // WAITING PAYMENT
+        // ==========================
+        if (status == "PENDING") {
+          debugPrint("Waiting user payment...");
+
+          return;
+        }
+
+        // ==========================
+        // PAYMENT SUCCESS
+        // ==========================
+        if (status == "SUCCESS") {
           timer.cancel();
+
           _countdownTimer?.cancel();
 
-          final transactionId =
-              (res['transaction_id'] ?? res['transactionId'] ?? '').toString();
+          final transactionId = res["transactionId"];
 
-          await widget.paymentRepository.verifyPayment(
+          debugPrint("Transaction Hash => $transactionId");
+
+          if (transactionId == null) {
+            debugPrint("Transaction ID is null");
+            return;
+          }
+
+          final verifyRes = await widget.paymentRepository.verifyPayment(
             orderId: widget.orderId,
+
             transactionId: transactionId,
+
             token: token ?? '',
           );
 
+          debugPrint("Verify Response => $verifyRes");
+          final _userId = await storage.getUserId();
+
           final order = await widget.orderRepository.getOrderDetail(
             orderId: widget.orderId,
+            userId: _userId ?? 0,
             token: token ?? '',
           );
 
           if (!mounted) return;
+
           Navigator.pushReplacement(
             context,
+
             FadeSlideRoute(
               page: OrderSuccessScreen(
                 paymentMethod: "BAKONG",
-                orderId: order.id,
+
+                orderId: widget.orderId,
               ),
             ),
           );
         }
       } catch (e) {
-        _retryCount++;
-        debugPrint(
-          '[BakongQrScreen] Polling error ($_retryCount/$maxRetries): $e',
-        );
+        retryCount++;
 
-        if (_retryCount >= maxRetries) {
-          debugPrint('[BakongQrScreen] Too many errors, pausing poll...');
+        debugPrint("Polling Error ($retryCount/$maxRetries): $e");
+
+        if (retryCount >= maxRetries) {
           timer.cancel();
 
           await Future.delayed(const Duration(seconds: 10));
+
           if (mounted) {
-            _retryCount = 0;
+            retryCount = 0;
+
+            _startPolling();
+          }
+        }
+      }
+    });
+  }
+*/
+
+  void _startPolling() {
+    _pollTimer?.cancel();
+
+    int retryCount = 0;
+    const maxRetries = 3;
+
+    _pollTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
+      try {
+        final storage = TokenStorage();
+        final token = await storage.getToken();
+
+        // ==========================
+        // CHECK BAKONG TRANSACTION
+        // ==========================
+
+        final res = await widget.paymentRepository.checkTransaction(
+          md5: widget.bakongMd5,
+          token: token ?? '',
+        );
+
+        debugPrint("Check Transaction => $res");
+
+        final status = res["status"];
+
+        // ==========================
+        // WAITING PAYMENT
+        // ==========================
+
+        if (status == "PENDING") {
+          debugPrint("Waiting user payment...");
+
+          return;
+        }
+
+        // ==========================
+        // PAYMENT SUCCESS
+        // ==========================
+
+        if (status == "SUCCESS") {
+          // stop polling
+          timer.cancel();
+          _pollTimer?.cancel();
+
+          _countdownTimer?.cancel();
+
+          final transactionId = res["transactionId"];
+
+          debugPrint("Transaction Hash => $transactionId");
+
+          if (transactionId == null || transactionId.toString().isEmpty) {
+            debugPrint("Transaction ID is null");
+
+            return;
+          }
+
+          // ==========================
+          // VERIFY PAYMENT
+          // ==========================
+
+          final verifyRes = await widget.paymentRepository.verifyPayment(
+            orderId: widget.orderId,
+            transactionId: transactionId,
+            token: token ?? '',
+          );
+
+          debugPrint("Verify Response => $verifyRes");
+
+          // ==========================
+          // CHECK CONFIRMED
+          // ==========================
+
+          if (verifyRes["status"] == "CONFIRMED") {
+            debugPrint("Payment CONFIRMED");
+
+            if (!mounted) return;
+
+            // ==========================
+            // GO SUCCESS PAGE
+            // ==========================
+
+            Navigator.pushReplacement(
+              context,
+
+              FadeSlideRoute(
+                page: OrderSuccessScreen(
+                  paymentMethod: "BAKONG",
+                  orderId: widget.orderId,
+                ),
+              ),
+            );
+          } else {
+            debugPrint("Verify failed: $verifyRes");
+          }
+        }
+      } catch (e) {
+        retryCount++;
+
+        debugPrint("Polling Error ($retryCount/$maxRetries): $e");
+
+        if (retryCount >= maxRetries) {
+          timer.cancel();
+
+          await Future.delayed(const Duration(seconds: 10));
+
+          if (mounted) {
+            retryCount = 0;
+
             _startPolling();
           }
         }

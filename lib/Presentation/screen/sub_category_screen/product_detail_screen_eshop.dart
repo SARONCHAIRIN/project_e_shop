@@ -4,12 +4,10 @@ import 'package:e_shop/Presentation/screen/sub_category_screen/product_in_Produc
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../core/storage/token_storage.dart' show TokenStorage;
 import '../../../data/models/product_model_eshop.dart';
 import '../../../provider/cart_provider.dart';
-import '../../controllers/cart/cart_controller.dart';
 
 class ProductDetailScreen extends ConsumerStatefulWidget {
   final Product product;
@@ -50,11 +48,12 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
     Colors.orange,
   ];
   bool isExpandedText = false;
-
   int currentIndex = 0;
-
   late PageController _controller;
 
+  int getSkuStock(ProductSku sku) {
+    return sku.quantity ?? 0;
+  }
 
   @override
   void initState() {
@@ -62,7 +61,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
 
     _controller = PageController(); //  MUST HAVE THIS
     if (widget.product.skus.isNotEmpty) {
-      selectedSku = widget.product.skus.last;
+      selectedSku = widget.product.skus.first;
     }
   }
 
@@ -83,87 +82,121 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
     );
   }
 
-  Map<String, String> selectedAttributes = {};
-  Widget _buildAttributes() {
-    final sku = selectedSku;
+  List<String> images = [];
 
-    if (sku == null || sku.attributes.isEmpty) {
+  List<String> getDisplayImages() {
+    if (selectedSku != null &&
+        selectedSku!.images != null &&
+        selectedSku!.images!.isNotEmpty) {
+      return selectedSku!.images!;
+    }
+
+    if (widget.product.mainImage.isNotEmpty) {
+      return widget.product.mainImage;
+    }
+
+    return ['assets/images/default_image.png'];
+  }
+
+  Widget _buildSkuSelector() {
+    final skus = widget.product.skus;
+
+    if (skus.isEmpty) {
       return const SizedBox.shrink();
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(sku.attributes.length, (index) {
-        final attribute = sku.attributes[index];
-
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 5),
-          child: _buildAttributeGroup(attribute),
-        );
-      }),
-    );
-  }
-
-  Widget _buildAttributeGroup(dynamic attribute) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              attribute.name,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: skus.map((sku) {
+            final isSelected = selectedSku?.id == sku.id;
+
+            final String attrNameText = sku.attributes
+                .map(
+                  (attr) =>
+                      attr.values.isNotEmpty ? attr.values.first.value : '',
+                )
+                .where((text) => text.isNotEmpty)
+                .join(" - ");
+
+            // final isAvailable = (sku.quantity ?? 0) > 0;
+            final isAvailable = getSkuStock(sku) > 0;
+
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedSku = sku;
+                  currentIndex = 0;
+                });
+
+                _controller.jumpToPage(0);
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.44,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.orange.shade50 : Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: isSelected ? Colors.orange : Colors.grey.shade300,
+                    width: isSelected ? 2 : 1,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      attrNameText,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.w500,
+                        color: isSelected
+                            ? Colors.blueAccent
+                            : Colors.black,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+
+                    Text(
+                      "\$${sku.price.toStringAsFixed(2)}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+
+                    // Text(
+                    //   isAvailable ? "In Stock" : "Out of Stock",
+                    //   style: TextStyle(
+                    //     fontSize: 12,
+                    //     color: isAvailable ? Colors.green : Colors.red,
+                    //     fontWeight: FontWeight.w500,
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(width: 10,),
-
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: attribute.values.map<Widget>((value) {
-                final isSelected =
-                    selectedAttributes[attribute.name] == value.value;
-
-                return ChoiceChip(
-                  label: Text(value.value),
-                  selected: isSelected,
-                  selectedColor: Colors.black,
-                  labelStyle: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  backgroundColor: Colors.grey.shade200,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  side: BorderSide(
-                    color: isSelected ? Colors.black : Colors.grey.shade300,
-                  ),
-                  onSelected: (_) {
-                    setState(() {
-                      selectedAttributes[attribute.name] = value.value;
-                    });
-                  },
-                );
-              }).toList(),
-            ),
-
-          ],
+            );
+          }).toList(),
         ),
-        const SizedBox(height: 12),
-
-
       ],
+
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
+    final images = getDisplayImages();
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
@@ -185,32 +218,29 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     height: 350,
                     child: PageView.builder(
                       controller: _controller,
-                      itemCount: product.mainImage.isEmpty
-                          ? 1
-                          : product.mainImage.length,
+                      itemCount: images.length,
                       onPageChanged: (index) {
                         setState(() {
                           currentIndex = index;
                         });
                       },
                       itemBuilder: (context, index) {
-                        if (product.mainImage.isEmpty) {
-                          return Image.asset(
-                            'assets/images/default_image.png',
+                        final image = images[index];
+
+                        if (image.startsWith('http')) {
+                          return Image.network(
+                            image,
                             // fit: BoxFit.fill,
+                            errorBuilder: (_, __, ___) {
+                              return Image.asset(
+                                'assets/images/default_image.png',
+                                fit: BoxFit.fill,
+                              );
+                            },
                           );
                         }
 
-                        return Image.network(
-                          product.mainImage[index],
-                          // fit: BoxFit.fill,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              'assets/images/default_image.png',
-                              // fit: BoxFit.fill,
-                            );
-                          },
-                        );
+                        return Image.asset(image, fit: BoxFit.fill);
                       },
                     ),
                   ),
@@ -220,14 +250,14 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     child: product.mainImage.isEmpty
                         ? const SizedBox.shrink()
                         : SmoothPageIndicator(
-                      controller: _controller,
-                      count: product.mainImage.length,
-                      effect: const WormEffect(
-                        dotHeight: 8,
-                        dotWidth: 8,
-                        activeDotColor: Colors.blue,
-                      ),
-                    ),
+                            controller: _controller,
+                            count: product.mainImage.length,
+                            effect: const WormEffect(
+                              dotHeight: 8,
+                              dotWidth: 8,
+                              activeDotColor: Colors.blue,
+                            ),
+                          ),
                   ),
                   SizedBox(height: 10),
 
@@ -273,193 +303,18 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
 
                       SizedBox(height: 10),
 
-                      // Price
                       Text(
                         selectedSku != null
                             ? "\$${selectedSku!.price.toStringAsFixed(2)}"
-                            : "\$${product.lowestPrice.toStringAsFixed(2)}",
+                            : "\$${widget.product.lowestPrice.toStringAsFixed(2)}", // បើមិនទាន់រើស ឲ្យបង្ហាញតម្លៃទាបជាងគេ
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                          color: Colors.redAccent, // ពណ៌ក្រហមដូច Amazon
                         ),
                       ),
+
                       const SizedBox(height: 25),
-
-                     /* //available option
-                      Text(
-                        'Available Option',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          // fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 30,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 5,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //select Size
-                            Text(
-                              'Select Size',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-
-                            //size of product
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(sizeOption.length, (
-                                index,
-                              ) {
-                                bool isSelected = selectIndex == index;
-                                bool isAvailable = widget.product.skus.any(
-                                  (sku) => sku.size == sizeOption[index],
-                                );
-
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectIndex = index;
-                                      selectedSku = widget.product.skus
-                                          .firstWhere(
-                                            (sku) =>
-                                                sku.size == sizeOption[index],
-                                            orElse: () => selectedSku!,
-                                          );
-                                    });
-                                  },
-                                  child: AnimatedContainer(
-                                    duration: Duration(milliseconds: 150),
-                                    transform: Matrix4.identity()
-                                      ..scale(isAvailable ? 0.95 : 1.0),
-
-                                    width: 45,
-                                    height: 45,
-                                    decoration: BoxDecoration(
-                                      color: isAvailable
-                                          ? Colors.blue
-                                          : Colors.white,
-                                      borderRadius: BorderRadius.circular(16),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: isAvailable ? 5 : 10,
-                                          offset: Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        sizeOption[index],
-                                        style: TextStyle(
-                                          color: isAvailable
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-
-                            SizedBox(height: 35),
-
-                            // select color
-                            Text(
-                              'Select Colors',
-                              style: TextStyle(
-                                fontStyle: FontStyle.italic,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-
-                            //row of color
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(colorOption.length, (
-                                index,
-                              ) {
-                                bool isselected = selectColorIndex == index;
-                                bool isAvailable = widget.product.skus.any(
-                                  (sku) => sku.color == colorOption[index],
-                                );
-
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectColorIndex = index;
-
-                                      selectedSku = widget.product.skus
-                                          .firstWhere(
-                                            (sku) =>
-                                                sku.color ==
-                                                colorOption[index].toString(),
-                                            orElse: () => selectedSku!,
-                                          );
-                                    });
-                                  },
-                                  child: AnimatedContainer(
-                                    duration: Duration(milliseconds: 150),
-                                    padding: EdgeInsets.all(3),
-                                    transform: Matrix4.identity()
-                                      ..scale(isselected ? 1.10 : 1.0),
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: colorOption[index],
-                                      border: Border.all(
-                                        color: isselected
-                                            ? Colors.redAccent
-                                            : Colors.white,
-                                        width: 3,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: isselected ? 5 : 10,
-                                          offset: Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                            SizedBox(height: 10),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 25),*/
 
                       const Text(
                         "Available Options",
@@ -471,25 +326,27 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
 
                       const SizedBox(height: 20),
 
-                      _buildAttributes(),
+                      _buildSkuSelector(),
 
-                      //description
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
                         child: Text(
                           'Description',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 17,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                      // Product Description
                       Text(
-                        widget.product.description,
+                        selectedSku != null &&
+                                selectedSku!.description != null &&
+                                selectedSku!.description!.isNotEmpty
+                            ? selectedSku!.description!
+                            : widget.product.description,
                         maxLines: isExpandedText ? null : 6,
                         overflow: isExpandedText
                             ? TextOverflow.visible
@@ -504,11 +361,11 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                           });
                         },
                         child: AnimatedSize(
-                          duration: Duration(milliseconds: 50),
+                          duration: const Duration(milliseconds: 50),
                           curve: Curves.easeInOut,
                           child: Text(
                             isExpandedText ? 'Show Less  ' : 'Show More...  ',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.blueAccent,
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
@@ -516,6 +373,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 5),
 
                       Divider(
@@ -525,22 +383,21 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       ),
                       SizedBox(height: 10),
 
-                      // image
+                      // Product Images show list of images from selectedSku or mainImage
                       Column(
-                        children: List.generate(product.mainImage.length, (
-                          index,
-                        ) {
+                        children: List.generate(images.length, (index) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 20),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(12),
                               child: Image.network(
-                                product.mainImage[index],
+                                images[index],
                                 height: 250,
                                 width: double.infinity,
                                 // fit: BoxFit.fill,
                                 errorBuilder: (_, __, ___) => Image.asset(
                                   'assets/images/default_image.png',
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
@@ -549,55 +406,6 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       ),
 
                       SizedBox(height: 20),
-
-                      // Avaibility of product
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 2),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Availability : ',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-
-                            Container(
-                              alignment: Alignment.center,
-                              width: 140,
-                              height: 30,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 5,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.shade200,
-                                    blurRadius: 1,
-                                    offset: const Offset(0, 1),
-                                    blurStyle: BlurStyle.outer,
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                '${product.isActive ? "In Stock" : "Out of Stock"}',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
 
                       //delivery info
                       Row(
@@ -843,98 +651,206 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
         ],
       ),
       bottomNavigationBar: _buildnav(),
-
     );
   }
 
   Widget _buildnav() {
-    final product = widget.product;
-    final bool isInStock = product.isActive;
+    final bool isInStock =
+        selectedSku != null && (selectedSku!.quantity ?? 0) > 0;
+    // final int stockCount = selectedSku?.quantity ?? 0;
+    final stockCount = getSkuStock(selectedSku!);
+
+    print("==================selectSku:  $selectedSku");
+    print("==================isInStock :$isInStock");
+    print("===================qty :${selectedSku?.quantity}");
 
     return SafeArea(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        color: Colors.white,
-        child: Row(
-          children: [
-            // Stock Status
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
-              ),
-              decoration: BoxDecoration(
-                color: isInStock ? Colors.green.shade50 : Colors.red.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isInStock ? Colors.green : Colors.red,
-                ),
-              ),
-              child: Text(
-                isInStock ? "In Stock" : "Out of Stock",
-                style: TextStyle(
-                  color: isInStock ? Colors.green : Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 1, bottom: 0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -4),
             ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  selectedSku != null
+                      ? "\$${selectedSku!.price.toStringAsFixed(2)}"
+                      : "\$${widget.product.lowestPrice.toStringAsFixed(2)}",
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
+                  ),
+                ),
 
-            const SizedBox(width: 12),
+                if (isInStock)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          size: 14,
+                          color: Colors.orange.shade800,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          "Only $stockCount left",
+                          style: TextStyle(
+                            color: Colors.orange.shade900,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  const Text(
+                    "Out of Stock",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
 
-            // Add to Cart Button
-            Expanded(
-              child: GestureDetector(
-                onTap: isInStock
-                    ? () async {
-                  final storage = TokenStorage();
-                  final userId = await storage.readUserId();
-                  final token = await storage.readToken();
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: isInStock
+                        ? () async {
+                            final storage = TokenStorage();
+                            final userId = await storage.readUserId();
+                            final token = await storage.readToken();
+                            print("===============user id $userId");
+                            print("===============token $token");
 
-                  if (userId == null || token == null) {
-                    _showLoginSheet(context);
-                    return;
-                  }
+                            if (userId == null || token == null) {
+                              _showLoginSheet(context);
+                              return;
+                            }
 
-                  final cartController =
-                  ref.read(cartControllerProvider.notifier);
+                            final cartController = ref.read(
+                              cartControllerProvider.notifier,
+                            );
+                            try {
+                              await cartController.addItem(selectedSku!.id, 1);
+                              print("Add success");
+                            } catch (e) {
+                              print("Add failed: $e");
+                            }
 
-                  await cartController.addItem(product.id, 1);
-
-                  if (!mounted) return;
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => CartScreen(
-                        userId: userId,
-                        token: token,
+                            if (!mounted) return;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    CartScreen(userId: userId, token: token),
+                              ),
+                            );
+                          }
+                        : null,
+                    child: Container(
+                      height: 48,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: isInStock
+                            ? const Color(0xFFF1B140)
+                            : Colors.grey.shade300,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(24),
+                          bottomLeft: Radius.circular(24),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.shopping_cart_outlined,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            "Add to Cart",
+                            style: TextStyle(
+                              color: isInStock
+                                  ? Colors.white
+                                  : Colors.grey.shade600,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                }
-                    : null,
-                child: Container(
-                  height: 50,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: isInStock ? Colors.blue : Colors.grey,
-                    borderRadius: BorderRadius.circular(20),
                   ),
-                  child: ref.watch(cartControllerProvider).isLoading
-                      ? const SpinKitThreeBounce(
-                    color: Colors.white,
-                    size: 20,
-                  )
-                      : Text(
-                    isInStock ? "Add to Cart" : "Out of Stock",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                ),
+
+                Expanded(
+                  child: GestureDetector(
+                    onTap: isInStock
+                        ? () {
+                            // Logic សម្រាប់កម្មង់ទិញភ្លាមៗ (Direct Checkout)
+                          }
+                        : null,
+                    child: Container(
+                      height: 48,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: isInStock
+                            ? const Color(0xFFE56A5D)
+                            : Colors.grey.shade400,
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(24),
+                          bottomRight: Radius.circular(24),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.bolt, color: Colors.white, size: 20),
+                          const SizedBox(width: 4),
+                          Text(
+                            "Buy Now",
+                            style: TextStyle(
+                              color: isInStock
+                                  ? Colors.white
+                                  : Colors.grey.shade700,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
           ],
         ),

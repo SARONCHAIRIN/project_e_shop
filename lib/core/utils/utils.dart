@@ -44,12 +44,14 @@ class SubmitGuard {
 ///   timeoutMessage: 'Order request timed out. Please try again.',
 /// );
 /// ```
+///
 Future<T> withTimeout<T>({
   required Future<T> future,
   Duration duration = const Duration(seconds: 30),
   String? timeoutMessage,
 }) async {
   try {
+
     return await future.timeout(duration);
   } on TimeoutException {
     throw TimeoutException(
@@ -57,6 +59,7 @@ Future<T> withTimeout<T>({
     );
   }
 }
+
 
 // ── 3. Error Recovery Handler ─────────────────────────────────
 

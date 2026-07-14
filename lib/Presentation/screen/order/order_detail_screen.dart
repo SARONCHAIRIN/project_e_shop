@@ -1,11 +1,12 @@
 import 'package:e_shop/core/widgets/loading_widgets.dart';
+import 'package:e_shop/data/models/order/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/widgets/animation_widgets.dart';
 import '../../../data/datasources/adress/adress_service.dart';
 import '../../../data/models/address/address_model.dart';
 import '../../../data/models/order/order_item_model.dart';
-import '../../../data/models/order/order_model.dart';
+// import '../../../data/models/order/order_model.dart';
 import '../../../data/models/order/order_status_enum.dart';
 import '../../../data/repositories/address/address_repository.dart';
 import '../../../data/repositories/order_repository.dart';
@@ -68,6 +69,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     try {
       final order = await _orderRepository.getOrderDetail(
         orderId: widget.orderId,
+        userId: widget.userId,
         token: widget.token,
       );
       setState(() {
@@ -315,6 +317,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     try {
       final order = await _orderRepository.getOrderDetail(
         orderId: widget.orderId,
+        userId: widget.userId,
         token: widget.token,
       );
 

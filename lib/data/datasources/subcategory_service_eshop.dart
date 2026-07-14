@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../models/subcategory_model_eshop.dart';
 
 class ApiService {
-  // static const String baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
+  static const String baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
 
   // angkor home
   // static const String baseUrl = 'http://192.168.18.61:8080/api/v1';
@@ -12,7 +12,7 @@ class ApiService {
   // rupp ip
   // static const String baseUrl = 'http://10.1.121.208:8080/api/v1';
 
-  static const String baseUrl = 'http://localhost:8080/api/v1';
+  // static const String baseUrl = 'http://localhost:8080/api/v1';
 
 
   Future<List<SubcategoryData>> fetchSubcategories() async {

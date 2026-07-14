@@ -19,6 +19,7 @@ class OrderRepository {
     required int userId,
     required int addressId,
     required String token,
+    required String currency,
   }) async {
     try {
       debugPrint('[OrderRepository] createCODOrder for user $userId');
@@ -26,6 +27,7 @@ class OrderRepository {
         userId: userId,
         addressId: addressId,
         token: token,
+        currency: currency,
       );
       final order = OrderModel.fromJson(data);
       debugPrint('[OrderRepository] COD Order created: #${order.id}');
@@ -36,36 +38,6 @@ class OrderRepository {
     }
   }
 
-  /// Create an order with Bakong QR payment
-  ///
-  /// Wraps: OrderService.createBakongOrder()
-  /// Handles: Error logging, response parsing, validation
-  /// Returns: OrderModel with QR data (bakong_qr, bakong_md5)
-/*
-  Future<OrderModel> createBakongOrder({
-    required int userId,
-    required int addressId,
-    required String token,
-  })
-  async {
-    try {
-      debugPrint('[OrderRepository] createBakongOrder for user $userId');
-      final data = await _orderService.createBakongOrder(
-        userId: userId,
-        addressId: addressId,
-        token: token,
-      );
-      final order = OrderModel.fromJson(data);
-      debugPrint('[OrderRepository] Bakong Order created: #${order.id}');
-      return order;
-    } catch (e) {
-      debugPrint('[OrderRepository] Error creating Bakong order: $e');
-      rethrow;
-    }
-  }
-*/
-
-  //new
   Future<OrderModel> createBakongOrder({
     required int userId,
     required int addressId,
@@ -83,6 +55,7 @@ class OrderRepository {
         userId: userId,
         addressId: addressId,
         token: token,
+        currency: 'KHR',
       );
 
       debugPrint('👉 STEP 3: Service returned data');
@@ -125,8 +98,7 @@ class OrderRepository {
 
       debugPrint('[OrderRepository] RAW RESPONSE: $response');
 
-      final List<dynamic> content =
-          response['content'] as List<dynamic>? ?? [];
+      final List<dynamic> content = response['content'] as List<dynamic>? ?? [];
 
       final orders = content.map((item) {
         return OrderModel.fromJson(item['data']);
@@ -154,12 +126,14 @@ class OrderRepository {
   /// Returns: OrderModel with full details (items, address, payment info)
   Future<OrderModel> getOrderDetail({
     required int orderId,
+    required int userId,
     required String token,
   }) async {
     try {
       debugPrint('[OrderRepository] getOrderDetail for order $orderId');
       final data = await _orderService.getOrderDetail(
         orderId: orderId,
+        userId: userId,
         token: token,
       );
       final order = OrderModel.fromJson(data);
@@ -187,13 +161,17 @@ class OrderRepository {
     try {
       debugPrint('[OrderRepository] Attempting to cancel order $orderId');
 
-      // Fetch current order to check status
-      final order = await getOrderDetail(orderId: orderId, token: token);
+      // Get current order status
+      final order = await getOrderDetail(
+        orderId: orderId,
+        userId: userId,
+        token: token,
+      );
 
-      // Only allow cancellation of PENDING orders
+      // Only cancel PENDING
       if (order.status != OrderStatus.pending) {
         throw Exception(
-          'Cannot cancel order with status: ${order.status!.value}',
+          'Cannot cancel order with status: ${order.status?.value}',
         );
       }
 
@@ -204,10 +182,13 @@ class OrderRepository {
       );
 
       final cancelledOrder = OrderModel.fromJson(data);
+
       debugPrint('[OrderRepository] Order #$orderId cancelled successfully');
+
       return cancelledOrder;
     } catch (e) {
       debugPrint('[OrderRepository] Error cancelling order: $e');
+
       rethrow;
     }
   }

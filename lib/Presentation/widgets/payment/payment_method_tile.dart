@@ -46,7 +46,7 @@ class PaymentMethodTile extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: isSelected
               ? (selectedColor ?? Colors.blue.shade50)

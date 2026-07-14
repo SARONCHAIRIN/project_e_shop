@@ -61,22 +61,10 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
     final cartState = ref.watch(cartControllerProvider);
     final total = cartState.cart?.totalPrice ?? 0;
 
-
-
-
-
     final pages = [
-
       AddAddressCheckout(storage: widget.storage, repo: widget.repo),
 
-      PaymentMethodScreen(
-
-        addressId: widget.addressId,
-
-        totalPrice: total,
-
-      ),
-
+      PaymentMethodScreen(addressId: widget.addressId, totalPrice: total),
     ];
     return Scaffold(
       backgroundColor: Colors.white,
@@ -99,7 +87,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                 "Checkout",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               ),
-              SizedBox(width: 30,),
+              SizedBox(width: 30),
               Spacer(),
             ],
           ),

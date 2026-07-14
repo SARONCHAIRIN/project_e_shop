@@ -73,19 +73,26 @@ class PaymentRepository {
     }
   }
 
-  /// Check transaction status by MD5
   Future<Map<String, dynamic>> checkTransaction({
     required String md5,
     required String token,
   }) async {
     try {
       debugPrint('[PaymentRepository] checkTransaction');
+
       final data = await _paymentService.checkTransaction(
         md5: md5,
         token: token,
       );
-      final status = data['status'] as String? ?? 'PENDING';
-      debugPrint('[PaymentRepository] Transaction status: $status');
+
+      final responseCode = data['responseCode'];
+
+      if (responseCode == 0) {
+        debugPrint('[PaymentRepository] Transaction SUCCESS');
+      } else {
+        debugPrint('[PaymentRepository] Transaction PENDING');
+      }
+
       return data;
     } catch (e) {
       debugPrint('[PaymentRepository] Error checking transaction: $e');
@@ -93,29 +100,32 @@ class PaymentRepository {
     }
   }
 
-  /// Verify payment after successful transaction
   Future<Map<String, dynamic>> verifyPayment({
     required int orderId,
     required String transactionId,
     required String token,
   }) async {
     try {
-      debugPrint('[PaymentRepository] verifyPayment for order $orderId');
+      debugPrint('[PaymentRepository] verifyPayment order=$orderId');
+
       final data = await _paymentService.verifyPayment(
         orderId: orderId,
         transactionId: transactionId,
         token: token,
       );
-      final verified = data['payment_verified'] as bool? ?? false;
-      debugPrint('[PaymentRepository] Payment verified: $verified');
+
+      final status = data['status'] ?? 'UNKNOWN';
+
+      debugPrint('[PaymentRepository] Verify status: $status');
+
       return data;
     } catch (e) {
-      debugPrint('[PaymentRepository] Error verifying payment: $e');
+      debugPrint('[PaymentRepository] Verify error: $e');
+
       rethrow;
     }
   }
 
-  /// Poll checkTransaction with linear backoff
   Future<Map<String, dynamic>> checkTransactionWithRetry({
     required String md5,
     required String token,
@@ -125,26 +135,35 @@ class PaymentRepository {
     for (int attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         final result = await checkTransaction(md5: md5, token: token);
-        final status = result['status'] as String? ?? 'PENDING';
 
-        if (status == 'SUCCESS') {
+        final responseCode = result['responseCode'];
+
+        // Payment success
+        if (responseCode == 0) {
           debugPrint(
-            '[PaymentRepository] Transaction successful on attempt $attempt',
+            '[PaymentRepository] Transaction successful attempt $attempt',
           );
+
           return result;
         }
 
+        // Not paid yet
+        debugPrint('[PaymentRepository] Waiting payment attempt $attempt');
+
         if (attempt < maxRetries) {
-          final delay = initialDelay * attempt;
-          debugPrint('[PaymentRepository] Retry $attempt: waiting ${delay}s');
-          await Future.delayed(Duration(seconds: delay));
+          await Future.delayed(Duration(seconds: initialDelay));
         }
       } catch (e) {
-        debugPrint('[PaymentRepository] Retry $attempt failed: $e');
-        if (attempt == maxRetries) rethrow;
-        await Future.delayed(Duration(seconds: initialDelay * attempt));
+        debugPrint('[PaymentRepository] Retry error $e');
+
+        if (attempt == maxRetries) {
+          rethrow;
+        }
+
+        await Future.delayed(Duration(seconds: initialDelay));
       }
     }
-    throw Exception('Transaction check timeout after $maxRetries attempts');
+
+    throw Exception('Transaction timeout');
   }
 }

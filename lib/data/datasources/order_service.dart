@@ -5,27 +5,31 @@ import 'package:flutter/foundation.dart';
 class OrderService {
   final Dio _dio;
 
-  // static const String _baseUrl = 'https://e-shop-1-m034.onrender.com/api/v1';
+  static const String _baseUrl_server =
+      'https://e-shop-1-m034.onrender.com/api/v1';
 
-  static const String _baseUrl = 'http://localhost:8080/api/v1';
+  // static const String _baseUrl = 'http://localhost:8080/api/v1';
 
   // angkor home wifi
-  // static const String _baseUrl = 'http://192.168.18.61:8080/api/v1';
+  static const String _baseUrl = 'http://192.168.18.61:8080/api/v1';
 
   //ip rupp
   // static const String _baseUrl = 'http://10.1.121.208:8080/api/v1';
 
-  // OrderService({Dio? dio}) : _dio = dio ?? Dio();
   OrderService({Dio? dio})
     : _dio =
           dio ??
           Dio(
             BaseOptions(
-              connectTimeout: const Duration(seconds: 60),
-              receiveTimeout: const Duration(seconds: 120),
-              sendTimeout: const Duration(seconds: 60),
+              connectTimeout: const Duration(seconds: 180),
+              receiveTimeout: const Duration(seconds: 180),
+              sendTimeout: const Duration(seconds: 180),
             ),
-          );
+          ) {
+    _dio.interceptors.add(
+      LogInterceptor(requestBody: true, responseBody: true, error: true),
+    );
+  }
 
   /// Create an order with Cash on Delivery (COD) payment
   ///
@@ -36,13 +40,18 @@ class OrderService {
     required int userId,
     required int addressId,
     required String token,
+    required String currency,
   }) async {
     try {
       final response = await _dio.post(
         '$_baseUrl/orders/user/from-cart',
         // '$_baseUrllocalwifi/orders/user/from-cart',
         queryParameters: {'userId': userId},
-        data: {'address_id': addressId, 'payment_method': 'COD'},
+        data: {
+          'address_id': addressId,
+          'payment_method': 'COD',
+          'currency': currency.toUpperCase(),
+        },
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
@@ -73,6 +82,7 @@ class OrderService {
     required int userId,
     required int addressId,
     required String token,
+    required String currency,
   }) async {
     try {
       debugPrint('================ START BAKONG API ================');
@@ -84,10 +94,16 @@ class OrderService {
       final url = '$_baseUrl/orders/user/from-cart/bakong';
       debugPrint(' STEP 2: URL => $url');
 
-      final body = {'address_id': addressId, 'payment_method': 'BAKONG'};
+      final body = {
+        'address_id': addressId,
+        'payment_method': 'BAKONG',
+        'currency': currency.toUpperCase(),
+      };
       debugPrint(' STEP 3: BODY => $body');
 
       debugPrint(' STEP 4: Sending request...');
+
+      debugPrint("TIME START: ${DateTime.now()}");
 
       final response = await _dio.post(
         url,
@@ -95,10 +111,11 @@ class OrderService {
         data: body,
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
-          sendTimeout: const Duration(seconds: 60),
-          receiveTimeout: const Duration(seconds: 60),
+          sendTimeout: const Duration(seconds: 300),
+          receiveTimeout: const Duration(seconds: 300),
         ),
       );
+      debugPrint("TIME END: ${DateTime.now()}");
 
       debugPrint(' STEP 5: Response received');
       debugPrint('Status Code: ${response.statusCode}');
@@ -119,10 +136,11 @@ class OrderService {
       debugPrint('================ DIO ERROR =================');
       debugPrint('Type: ${e.type}');
       debugPrint('Message: ${e.message}');
-      debugPrint('Response: ${e.response?.data}');
-      debugPrint('===========================================');
+      debugPrint('Status: ${e.response?.statusCode}');
+      debugPrint('Data: ${e.response?.data}');
+      debugPrint('============================================');
 
-      throw Exception('Response timeout');
+      throw _handleError(e);
     } catch (e) {
       debugPrint('================ UNKNOWN ERROR =================');
       debugPrint(e.toString());
@@ -142,7 +160,7 @@ class OrderService {
     int limit = 10,
   }) async {
     final response = await _dio.get(
-      '$_baseUrl/orders?page=0&size=100&sort=DESC',
+      '$_baseUrl_server/orders?page=0&size=100&sort=DESC',
       // '$_baseUrllocalwifi/orders?page=0&size=100&sort=DESC',
       // 'https://e-shop-1-m034.onrender.com/api/v1/orders/user/id/?userId=4&page=0&size=10&sort=DESC',
       queryParameters: {'userId': userId, 'page': page, 'size': limit},
@@ -163,27 +181,40 @@ class OrderService {
   /// GET /api/v1/orders/{id}
   /// Returns: { id, status, payment_method, total_price, address, items, created_at }
   Future<Map<String, dynamic>> getOrderDetail({
+    required int userId,
     required int orderId,
     required String token,
-  })
-  async {
+  }) async {
     try {
-      final response = await _dio.get(
-        '$_baseUrl/orders/$orderId',
+      final response = await _dio.post(
+        '$_baseUrl/orders/user/detail',
 
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
+        queryParameters: {'userId': userId, 'orderId': orderId},
+
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        ),
       );
+
+      debugPrint('[OrderService] getOrderDetail response => ${response.data}');
 
       if (response.statusCode == 200) {
         final data = response.data['data'] as Map<String, dynamic>;
+
         debugPrint(
           '[OrderService] getOrderDetail success: Order #${data['id']}',
         );
+
         return data;
       }
+
       throw Exception('Failed to fetch order detail: ${response.statusCode}');
     } on DioException catch (e) {
-      debugPrint('[OrderService] DioException: ${e.message}');
+      debugPrint('[OrderService] DioException: ${e.response?.data}');
+
       throw _handleError(e);
     } catch (e) {
       debugPrint('[OrderService] Error: $e');
@@ -202,23 +233,36 @@ class OrderService {
   }) async {
     try {
       final response = await _dio.post(
-        '$_baseUrl/orders/$orderId/user/$userId/cancel',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
+        '$_baseUrl/orders/user/cancel',
+
+        queryParameters: {'id': orderId, 'userId': userId},
+
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        ),
       );
+
+      debugPrint('[OrderService] cancel response => ${response.data}');
 
       if (response.statusCode == 200) {
         final data = response.data['data'] as Map<String, dynamic>;
-        debugPrint(
-          '[OrderService] cancelOrder success: Order #${data['id']} cancelled',
-        );
+
+        debugPrint('[OrderService] Order cancelled: ${data['id']}');
+
         return data;
       }
+
       throw Exception('Failed to cancel order: ${response.statusCode}');
     } on DioException catch (e) {
-      debugPrint('[OrderService] DioException: ${e.message}');
+      debugPrint('[OrderService] Cancel error => ${e.response?.data}');
+
       throw _handleError(e);
     } catch (e) {
       debugPrint('[OrderService] Error: $e');
+
       rethrow;
     }
   }

@@ -127,22 +127,6 @@ class AuthController extends StateNotifier<AuthState> {
     }
   }
 
-  // =========================
-  // FORGOT PASSWORD
-  // =========================
-  // Future<void> forgotPassword(ForgotPasswordRequest request) async {
-  //   state = state.copyWith(isLoading: true, error: null);
-  //
-  //   try {
-  //     final res = await repository.forgotPassword(request);
-  //     state = state.copyWith(isLoading: false, data: res);
-  //   } catch (e) {
-  //     state = state.copyWith(
-  //       isLoading: false,
-  //       error: e.toString(),
-  //     );
-  //   }
-  // }
 
 
   Future<bool> forgotPassword(ForgotPasswordRequest request) async {
