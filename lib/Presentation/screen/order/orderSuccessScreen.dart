@@ -1,13 +1,15 @@
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/models/order/order_model.dart';
+import 'package:e_shop/data/repositories/order_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/widgets/animation_widgets.dart';
 import 'order_history_screen.dart';
 
-class OrderSuccessScreen extends StatefulWidget {
+class OrderSuccessScreen extends ConsumerStatefulWidget {
   final paymentMethod;
   final int orderId;
 
@@ -22,10 +24,10 @@ class OrderSuccessScreen extends StatefulWidget {
   });
 
   @override
-  State<OrderSuccessScreen> createState() => _OrderSuccessScreenState();
+  ConsumerState<OrderSuccessScreen> createState() => _OrderSuccessScreenState();
 }
 
-class _OrderSuccessScreenState extends State<OrderSuccessScreen>
+class _OrderSuccessScreenState extends ConsumerState<OrderSuccessScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
@@ -645,6 +647,59 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
     );
   }
 
+  // Widget _buildCancelOrder() => OutlinedButton.icon(
+  //   onPressed: () async {
+  //     final confirmed = await _showCancelBottomSheet();
+  //     if (!confirmed) return;
+  //
+  //     final storage = TokenStorage();
+  //     final token = await storage.readToken();
+  //     final userId = await storage.readUserId();
+  //     if (token == null || userId == null) return;
+  //
+  //     if (!mounted) return;
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: const Row(
+  //           children: [
+  //             Icon(Icons.check_circle, color: Colors.white),
+  //             SizedBox(width: 8),
+  //             Text('Order cancelled successfully'),
+  //           ],
+  //         ),
+  //         backgroundColor: const Color(0xFF32C787),
+  //         behavior: SnackBarBehavior.floating,
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(12),
+  //         ),
+  //         duration: const Duration(seconds: 2),
+  //       ),
+  //     );
+  //
+  //     Navigator.pushNamedAndRemoveUntil(
+  //       context,
+  //       '/divicenav',
+  //       (route) => false,
+  //       arguments: {'tab': 2},
+  //     );
+  //   },
+  //   icon: const Icon(Icons.cancel_outlined, color: Color(0xFFFF3B30), size: 20),
+  //   label: const Text(
+  //     'Cancel Order',
+  //     style: TextStyle(
+  //       fontSize: 15,
+  //       fontWeight: FontWeight.w600,
+  //       color: Color(0xFFFF3B30),
+  //       letterSpacing: -0.2,
+  //     ),
+  //   ),
+  //   style: OutlinedButton.styleFrom(
+  //     foregroundColor: const Color(0xFFFF3B30),
+  //     side: const BorderSide(color: Color(0xFFFFE0DE), width: 1.5),
+  //     backgroundColor: const Color(0xFFFF3B30).withOpacity(0.04),
+  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+  //   ),
+  // );
   Widget _buildCancelOrder() => OutlinedButton.icon(
     onPressed: () async {
       final confirmed = await _showCancelBottomSheet();
@@ -653,35 +708,74 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
       final storage = TokenStorage();
       final token = await storage.readToken();
       final userId = await storage.readUserId();
-      if (token == null || userId == null) return;
 
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.white),
-              SizedBox(width: 8),
-              Text('Order cancelled successfully'),
-            ],
-          ),
-          backgroundColor: const Color(0xFF32C787),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      if (token == null || userId == null) {
+        if (!mounted) return;
 
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/divicenav',
-        (route) => false,
-        arguments: {'tab': 2},
-      );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Authentication information not found'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      try {
+        // Call repository to cancel order
+        final repository = OrderRepository();
+       await repository.cancelOrder(
+          orderId: widget.orderId,
+          userId: userId,
+          token: token,
+        );
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Text('Order cancelled successfully'),
+              ],
+            ),
+            backgroundColor: const Color(0xFF32C787),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/divicenav',
+              (route) => false,
+          arguments: {'tab': 2},
+        );
+      } catch (e) {
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to cancel order\n$e'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      }
     },
-    icon: const Icon(Icons.cancel_outlined, color: Color(0xFFFF3B30), size: 20),
+    icon: const Icon(
+      Icons.cancel_outlined,
+      color: Color(0xFFFF3B30),
+      size: 20,
+    ),
     label: const Text(
       'Cancel Order',
       style: TextStyle(
@@ -693,9 +787,14 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
     ),
     style: OutlinedButton.styleFrom(
       foregroundColor: const Color(0xFFFF3B30),
-      side: const BorderSide(color: Color(0xFFFFE0DE), width: 1.5),
+      side: const BorderSide(
+        color: Color(0xFFFFE0DE),
+        width: 1.5,
+      ),
       backgroundColor: const Color(0xFFFF3B30).withOpacity(0.04),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+      ),
     ),
   );
 

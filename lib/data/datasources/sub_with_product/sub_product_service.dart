@@ -109,17 +109,25 @@ class ApiService {
     final response = await http.post(
       url,
       headers: await _getHeaders(),
-      body: jsonEncode({
-        "criteria_type": 2, // Filter by category ID
-        "criteria_value": categoryId.toString(),
-        "page": 1,
-        "size": 100
-      }),
+      body: jsonEncode(
+      //     {
+      //   "criteria_type": 2, // Filter by category ID
+      //   "criteria_value": categoryId.toString(),
+      //   "page": 1,
+      //   "size": 100
+      // }
+          { "page": 1, "size": 100, "criteria_type": 0, "criteria_value": "2" }
+
+      ),
     );
+    print("SUBCAT-BY-ID STATUS: ${response.statusCode}");
+    print("SUBCAT-BY-ID BODY: ${response.body}");   // <-- ដាក់ log នេះ
+
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      final List content = jsonResponse['payload']['payload'] ?? [];
+      final dataStructure = jsonResponse['data'];
+      final List content = (dataStructure != null) ? (dataStructure['payload'] ?? []) : [];
       return content
           .map((item) => SubcategoryData.fromJson(item as Map<String, dynamic>))
           .toList();
@@ -127,7 +135,6 @@ class ApiService {
       throw Exception('Failed to load subcategories by category id');
     }
   }
-
   // វិធីសាស្ត្រចាស់ (Local Filter): ទាញមកទាំងអស់ រួចចម្រោះតាមឈ្មោះនៅលើ App
   Future<List<SubcategoryData>> fetchSubcategoriesByCategoryName(String categoryName) async {
     final allSubcategories = await fetchSubcategories();

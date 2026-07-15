@@ -158,7 +158,7 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
                 ),
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 15),
 
               // Text content
               SlideTransition(
@@ -234,7 +234,7 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
                 ),
               ),
 
-              const Spacer(flex: 3),
+              const Spacer(flex: 2),
 
               // Action buttons
               SlideTransition(
@@ -246,7 +246,7 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
                       // Primary button
                       SizedBox(
                         width: double.infinity,
-                        height: 54,
+                        height: 45,
                         child: ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
@@ -273,7 +273,7 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
                       // Secondary button
                       SizedBox(
                         width: double.infinity,
-                        height: 54,
+                        height: 45,
                         child: OutlinedButton(
                           onPressed: () {
                             Navigator.pushNamedAndRemoveUntil(
@@ -311,11 +311,13 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
                           _openTelegram();
                         },
                         child: const Text(
+
                           'Need help? Contact support',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF8A8A9A),
+                            color: Colors.redAccent,
                             fontWeight: FontWeight.w500,
+
                           ),
                         ),
                       ),
