@@ -8,11 +8,13 @@ import '../../../data/datasources/sub_with_product/sub_product_service.dart';
 import '../../../data/models/subcategory_model_eshop.dart';
 
 class SubcategoryWithProduct extends StatefulWidget {
-  final String categoryName;
+  // final int? categoryId;
+  final String? categoryName;
   final User_AuthRepository repository;
 
   const SubcategoryWithProduct({
     super.key,
+    // required this.categoryId,
     required this.categoryName,
     required this.repository,
   });
@@ -45,9 +47,14 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
   }
 
   void _loadData() {
-    _futureSubcategories = apiService.fetchSubcategoriesByCategoryName(
-      widget.categoryName,
-    );
+    final id = widget.categoryName;
+    if (id != null) {
+      _futureSubcategories = apiService.fetchSubcategoriesByCategoryName(
+        widget.categoryName ?? 'ALL'
+      );
+    } else {
+      _futureSubcategories = apiService.fetchSubcategories(); // ឬ Future.value([])
+    }
   }
 
   Future<void> _refresh() async {

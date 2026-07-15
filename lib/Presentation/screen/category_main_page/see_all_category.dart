@@ -103,7 +103,7 @@ class _SeeAllCategoryState extends State<SeeAllCategory> {
           ),
 
           // Your grid
-          SubcategoryWithProduct(categoryName: selectedCategory,repository: widget.repository,),
+          // SubcategoryWithProduct(categoryId: selectedCategory,repository: widget.repository,),
         ],
       ),
     );
