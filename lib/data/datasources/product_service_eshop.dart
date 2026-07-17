@@ -28,26 +28,6 @@ class ProductService {
     }
   }
 
-  // Search products by name (API)
-  // Future<List<Product>> searchProducts(String query) async {
-  //   final response = await http.get(
-  //     Uri.parse('$baseUrl/products/search?name=$query'),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Accept': 'application/json',
-  //     },
-  //   );
-  //
-  //   if (response.statusCode == 200) {
-  //     var jsonResponse = jsonDecode(response.body);
-  //     ProductApiResponse apiResponse = ProductApiResponse.fromJson(
-  //       jsonResponse,
-  //     );
-  //     return apiResponse.content.map((item) => item.data).toList();
-  //   } else {
-  //     throw Exception('Failed to search products.');
-  //   }
-  // }
 
   Future<List<Product>> searchProducts(String query) async {
     final response = await http.get(
@@ -133,4 +113,57 @@ class ProductService {
       throw Exception('Failed to update favorite');
     }
   }
+
+  //=================================
+  Future<List<Product>> fetchAll_Products() async {
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/products/get/all'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode({
+        "page": 1,
+        "size": 100,
+        "criteria_type": 0,
+        "criteria_value": ""
+      }),
+    );
+
+
+    print("PRODUCT RESPONSE:");
+    print(response.body);
+
+
+    if(response.statusCode == 200){
+
+      final jsonResponse = jsonDecode(response.body);
+
+
+      final List payload =
+          jsonResponse["data"]["payload"] ?? [];
+
+
+      return payload.map((item){
+
+        return Product.fromJson(item);
+
+      }).toList();
+
+
+    }else{
+
+      throw Exception(
+          "Failed load products ${response.statusCode}"
+      );
+
+    }
+
+  }
+
 }
+
+
+
+

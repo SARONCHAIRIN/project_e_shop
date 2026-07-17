@@ -1,19 +1,21 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_detail_screen_eshop.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shop/data/datasources/product_service_eshop.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../data/datasources/sub_with_product/sub_product_service.dart';
 import '../../../data/models/product_model_eshop.dart';
-import 'package:provider/provider.dart';
-import 'package:e_shop/Presentation/controllers/cart/cart_controller.dart';
 import '../../../core/storage/token_storage.dart';
+import '../../../provider/cart_provider.dart';
+import '../cart/cart_screen.dart';
 
-class ProductScreen_sub extends StatefulWidget {
+class ProductScreen_sub extends ConsumerStatefulWidget {
   final int subcategoryId;
   final String subcategoryName;
   final User_AuthRepository repository;
@@ -26,10 +28,10 @@ class ProductScreen_sub extends StatefulWidget {
   });
 
   @override
-  State<ProductScreen_sub> createState() => _ProductScreen_subState();
+  ConsumerState<ProductScreen_sub> createState() => _ProductScreen_subState();
 }
 
-class _ProductScreen_subState extends State<ProductScreen_sub>
+class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
     with TickerProviderStateMixin {
   final ApiService apiService = ApiService();
   ProductSku? selectedSku;
@@ -43,9 +45,13 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
   // Map to store keys for each product's cart button
   final Map<int, GlobalKey> _productCartButtonKeys = {};
 
+  Future<List<Product>>? _productsFuture; // <-- ADD HERE
   @override
   void initState() {
     super.initState();
+    _productsFuture = apiService.fetchProductsBySubcategoryId(
+      widget.subcategoryId,
+    );
   }
 
   @override
@@ -109,66 +115,64 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
           ),
         ),
 
-        // actions: [
-        //   // Cart icon with badge
-        //   Consumer<CartController>(
-        //     builder: (context, cartController, _) {
-        //       final itemCount = cartController.cart?.totalItems ?? 0;
-        //       return Padding(
-        //         padding: const EdgeInsets.only(right: 15),
-        //         child: GestureDetector(
-        //           key: _cartIconKey,
-        //           onTap: () async {
-        //             final storage = TokenStorage();
-        //             final userId = await storage.getUserId();
-        //             final token = await storage.getToken();
-        //
-        //             if (userId != null && token != null && mounted) {
-        //               Navigator.push(
-        //                 context,
-        //                 MaterialPageRoute(
-        //                   builder: (context) =>
-        //                       CartScreen(userId: userId, token: token),
-        //                 ),
-        //               );
-        //             }
-        //           },
-        //           child: badges.Badge(
-        //             badgeContent: Text(
-        //               itemCount.toString(),
-        //               style: const TextStyle(
-        //                 color: Colors.white,
-        //                 fontSize: 12,
-        //                 fontWeight: FontWeight.bold,
-        //               ),
-        //             ),
-        //             badgeAnimation: const badges.BadgeAnimation.scale(
-        //               animationDuration: Duration(milliseconds: 300),
-        //             ),
-        //             showBadge: itemCount > 0,
-        //             position: badges.BadgePosition.topEnd(top: -10, end: -10),
-        //             child: Icon(
-        //               CupertinoIcons.cart,
-        //               size: 28,
-        //               color: Colors.blue,
-        //             ),
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ],
+        actions: [
+          // Cart icon with badge
+          Consumer(
+            builder: (context, ref, _) {
+              final cartState = ref.watch(cartControllerProvider);
+
+              final itemCount = cartState.cart?.totalItems ?? 0;
+
+              return Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: GestureDetector(
+                  key: _cartIconKey,
+                  onTap: () async {
+                    final storage = TokenStorage();
+
+                    final userId = await storage.getUserId();
+                    final token = await storage.getToken();
+
+                    if (userId != null && token != null && mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CartScreen(userId: userId, token: token),
+                        ),
+                      );
+                    }
+                  },
+                  child: badges.Badge(
+                    badgeContent: Text(
+                      itemCount.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    badgeAnimation: const badges.BadgeAnimation.scale(
+                      animationDuration: Duration(milliseconds: 300),
+                    ),
+                    showBadge: itemCount > 0,
+                    position: badges.BadgePosition.topEnd(top: -10, end: -10),
+                    child: const Icon(
+                      CupertinoIcons.cart,
+                      size: 28,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Stack(
         children: [
           FutureBuilder<List<Product>>(
-            // Use ProductService (GET endpoint) instead of ApiService POST variant.
-            // `productService` is already instantiated above; it calls
-            // GET https://e-shop-1-m034.onrender.com/api/v1/products/subcategory/{id}
-            // which matches the backend and returns the expected payload.
-            future: ApiService().fetchProductsBySubcategoryId(
-              widget.subcategoryId,
-            ),
+            future: _productsFuture,
             builder: (context, snapshot) {
               /// ================= LOADING =================
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -434,11 +438,11 @@ class _ProductScreen_subState extends State<ProductScreen_sub>
                                                     // Store references before async operation
                                                     final storage =
                                                         TokenStorage();
-                                                    final cartController =
-                                                        context
-                                                            .read<
-                                                              CartController
-                                                            >();
+                                                    final cartController = ref
+                                                        .read(
+                                                          cartControllerProvider
+                                                              .notifier,
+                                                        );
                                                     final scaffoldMessenger =
                                                         ScaffoldMessenger.of(
                                                           context,
