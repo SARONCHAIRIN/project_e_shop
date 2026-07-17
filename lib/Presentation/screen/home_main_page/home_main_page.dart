@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../Main_App_Bar/App_Bar/sliver_main_app_bar.dart';
 import '../../../data/models/category /category_icon_model.dart';
 import '../../../data/models/user_model.dart';
@@ -37,7 +38,6 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
   bool showTextField = true;
   bool _isAnimationLoaded = false;
   bool _isloading = true;
-
 
   List<CategoryModel> categories = [];
   CategoryModel? selectedCategory;
@@ -87,9 +87,7 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
       debugPrint("================================");
       debugPrint("Start loading categories...");
 
-      final result = await ref
-          .read(categoryRepositoryProvider)
-          .getCategories();
+      final result = await ref.read(categoryRepositoryProvider).getCategories();
 
       debugPrint("Category count from API: ${result.length}");
 
@@ -124,10 +122,86 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
       });
     }
   }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  //========shimmer
+  Widget _categoryShimmer() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 55,
+
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+
+            itemCount: 5,
+
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 20),
+
+                child: Row(
+                  children: [
+                    // Icon shimmer
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+
+                      highlightColor: Colors.grey.shade100,
+
+                      child: Container(
+                        width: 30,
+                        height: 30,
+
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 8),
+
+                    // Text shimmer
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+
+                      highlightColor: Colors.grey.shade100,
+
+                      child: Container(
+                        width: 55 + (index * 10),
+
+                        height: 12,
+
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+        SizedBox(height: 4),
+        Container(
+          width: double.infinity,
+
+          height: 1,
+
+          color: Colors.grey.shade300,
+        ),
+      ],
+    );
   }
 
   @override
@@ -241,7 +315,7 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
                               "See All",
                               style: TextStyle(
                                 color: Colors.redAccent,
-                                fontSize: 15,
+                                fontSize: 12,
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
@@ -251,9 +325,7 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
                     ),
 
                     isLoadingCategory
-                        ? const Center(
-                            child: SpinKitCircle(color: Colors.grey, size: 20),
-                          )
+                        ? _categoryShimmer()
                         : DefaultTabController(
                             length: categories.length + 1, // +1 for "All" tab
                             child: Column(
@@ -304,7 +376,7 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
                                                       .withOpacity(0.4),
                                                 ),
                                                 child: Image.network(
-                                                  category.icon?? '',
+                                                  category.icon ?? '',
                                                   width: 25,
                                                   height: 25,
                                                   errorBuilder:

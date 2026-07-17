@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _navigateNext() async {
     // Wait for 3 seconds (can adjust based on animation length)
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 3));
 
     // Check if user has a token
     final token = await TokenStorage().readToken();
