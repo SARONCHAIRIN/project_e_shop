@@ -119,6 +119,48 @@ class OrderRepository {
     }
   }
 
+  ///get order history
+  Future<({List<OrderModel> orders, Map<String, dynamic> pagination})>
+  getOrderHistory({
+    required int userId,
+    required String token,
+    int page = 0,
+    int limit = 10,
+  }) async {
+    try {
+      debugPrint('[OrderRepository] getOrderHistory user=$userId page=$page');
+
+      final response = await _orderService.getOrderHistory(
+        userId: userId,
+        token: token,
+        page: page,
+        limit: limit,
+      );
+
+      debugPrint('[OrderRepository] HISTORY RESPONSE: $response');
+
+      final List<dynamic> content = response['content'] as List<dynamic>? ?? [];
+
+      final orders = content.map((item) {
+        return OrderModel.fromJson(item['data']);
+      }).toList();
+
+      final pagination = {
+        "page": response['number'] ?? page,
+        "limit": response['size'] ?? limit,
+        "total": response['totalElements'] ?? 0,
+      };
+
+      debugPrint('[OrderRepository] History loaded ${orders.length} orders');
+
+      return (orders: orders, pagination: pagination);
+    } catch (e) {
+      debugPrint('[OrderRepository] getOrderHistory error: $e');
+
+      rethrow;
+    }
+  }
+
   /// Get detailed information about a specific order
   ///
   /// Wraps: OrderService.getOrderDetail()
@@ -131,18 +173,35 @@ class OrderRepository {
   }) async {
     try {
       debugPrint('[OrderRepository] getOrderDetail for order $orderId');
+
       final data = await _orderService.getOrderDetail(
         orderId: orderId,
         userId: userId,
         token: token,
       );
+
+      debugPrint("DETAIL JSON BEFORE MODEL => $data");
+
+
       final order = OrderModel.fromJson(data);
+
+
       debugPrint(
-        '[OrderRepository] Order detail fetched: #${order.id} (${order.items!.length} items)',
+          '[OrderRepository] Order detail fetched: #${order.id}'
       );
+
       return order;
-    } catch (e) {
-      debugPrint('[OrderRepository] Error fetching order detail: $e');
+
+    } catch (e, stack) {
+
+      debugPrint(
+          '[OrderRepository] ERROR => $e'
+      );
+
+      debugPrint(
+          stack.toString()
+      );
+
       rethrow;
     }
   }

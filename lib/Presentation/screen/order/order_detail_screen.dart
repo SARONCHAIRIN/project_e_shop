@@ -2,6 +2,7 @@ import 'package:e_shop/core/widgets/loading_widgets.dart';
 import 'package:e_shop/data/models/order/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/widgets/animation_widgets.dart';
 import '../../../data/datasources/adress/adress_service.dart';
 import '../../../data/models/address/address_model.dart';
@@ -13,6 +14,7 @@ import '../../../data/repositories/order_repository.dart';
 import '../../widgets/order/order_status_timeline.dart';
 import '../../widgets/order/order_item_card.dart';
 import '../../widgets/payment/payment_status_badge.dart';
+import '../returnProduct/return_product_screen.dart';
 
 /// TASK 12: Order Detail Screen
 ///
@@ -24,7 +26,7 @@ import '../../widgets/payment/payment_status_badge.dart';
 /// - Payment method & details
 /// - Cancel order (only if PENDING)
 /// - Track shipment (SHIPPED/DELIVERED)
-class OrderDetailScreen extends StatefulWidget {
+class OrderDetailScreen extends ConsumerStatefulWidget {
   final int orderId;
   final int userId;
   final String token;
@@ -37,10 +39,10 @@ class OrderDetailScreen extends StatefulWidget {
   });
 
   @override
-  State<OrderDetailScreen> createState() => _OrderDetailScreenState();
+  ConsumerState<OrderDetailScreen> createState() => _OrderDetailScreenState();
 }
 
-class _OrderDetailScreenState extends State<OrderDetailScreen> {
+class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
   final OrderRepository _orderRepository = OrderRepository();
   final AddressRepository _addressRepository = AddressRepository(
     AddressService(),
@@ -56,7 +58,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchOrderDetail();
+    // _fetchOrderDetail();
     _loadOrderDetail();
   }
 
@@ -84,6 +86,30 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
   }
 
+  ///user can return product
+  bool get _canReturn {
+
+    if (_order?.status != OrderStatus.shipped) {
+      return false;
+    }
+
+    final deliveredDate = _order?.updatedAt;
+
+    if(deliveredDate == null){
+      return true;
+    }
+
+
+    // allow return within 7 days
+    final days =
+        DateTime.now()
+            .difference(deliveredDate)
+            .inDays;
+
+
+    return days <= 7;
+
+  }
   bool get _canCancel => _order?.status == OrderStatus.pending;
 
   bool get _canTrack =>
@@ -333,7 +359,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
           _address = address;
         } catch (e) {
-          debugPrint('Failed to load address: $e');
+          debugPrint('Failed to load address');
         }
       }
 
@@ -620,19 +646,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Widget _buildActionButtons() {
+    final canReturn = _order?.status == OrderStatus.delivered;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
       child: Column(
         children: [
+
+          // Track Shipment
           if (_canTrack)
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: _trackShipment,
-                icon: const Icon(Icons.local_shipping_outlined, size: 20),
+                icon: const Icon(
+                  Icons.local_shipping_outlined,
+                  size: 20,
+                ),
                 label: const Text(
                   'Track Shipment',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1E88E5),
@@ -641,71 +677,176 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  elevation: 0,
                 ),
               ),
             ),
-          if (_canTrack) const SizedBox(height: 10),
+
+
+          if (_canTrack)
+            const SizedBox(height: 10),
+
+
+
+          // Cancel Order
           if (_canCancel)
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                onPressed: _isCancelling ? null : _showCancelDialog,
+                onPressed:
+                _isCancelling ? null : _showCancelDialog,
+
                 icon: _isCancelling
                     ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.red,
-                        ),
-                      )
-                    : const Icon(Icons.cancel_outlined, size: 20),
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.red,
+                  ),
+                )
+                    : const Icon(
+                  Icons.cancel_outlined,
+                  size: 20,
+                ),
+
                 label: Text(
-                  _isCancelling ? 'Cancelling...' : 'Cancel Order',
+                  _isCancelling
+                      ? 'Cancelling...'
+                      : 'Cancel Order',
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 15,
                   ),
                 ),
+
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.red[400],
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  side: BorderSide(color: Colors.red[300]!, width: 1.5),
+                  foregroundColor: Colors.red,
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 14),
+                  side: const BorderSide(
+                    color: Colors.red,
+                    width: 1.5,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
               ),
             ),
-          if (!_canCancel && !_canTrack)
+
+
+
+          if (_canCancel && canReturn)
+            const SizedBox(height: 10),
+
+
+
+
+          if (_canReturn)
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+
+                onPressed: () {
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ReturnProductScreen(
+                        orderId: widget.orderId,
+                        userId: widget.userId,
+                        token: widget.token,
+
+                        productId:
+                        _order!.items!.first.productSku.id,
+
+                        amount:
+                        _order!.total,
+                      ),
+                    ),
+                  );
+
+                },
+
+                icon: const Icon(
+                  Icons.assignment_return,
+                ),
+
+                label: const Text(
+                  "Return Product",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+              ),
+            ),
+
+
+
+          // No Action
+          if (!_canCancel && !_canTrack && !canReturn)
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(14),
+
               decoration: BoxDecoration(
                 color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.grey[200]!),
+                borderRadius:
+                BorderRadius.circular(14),
+
+                border:
+                Border.all(
+                  color: Colors.grey[200]!,
+                ),
               ),
+
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment:
+                MainAxisAlignment.center,
+
                 children: [
-                  Icon(Icons.info_outline, size: 18, color: Colors.grey[400]),
-                  const SizedBox(width: 8),
-                  Text(
-                    _order?.status == OrderStatus.cancelled
-                        ? 'This order has been cancelled.'
-                        : 'No actions available.',
-                    style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+
+                  Icon(
+                    Icons.info_outline,
+                    size: 18,
+                    color: Colors.grey[400],
                   ),
+
+                  const SizedBox(width:8),
+
+                  Text(
+                    _order?.status ==
+                        OrderStatus.cancelled
+                        ?
+                    'This order has been cancelled.'
+                        :
+                    'No actions available.',
+
+                    style: TextStyle(
+                      fontSize:13,
+                      color:Colors.grey[500],
+                    ),
+                  ),
+
                 ],
               ),
             ),
+
         ],
       ),
     );
   }
-
   Widget _buildLoadingState() {
     return const Center(
       child: Column(

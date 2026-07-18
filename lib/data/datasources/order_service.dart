@@ -180,6 +180,46 @@ class OrderService {
     throw Exception("Failed to fetch orders");
   }
 
+  ///order history
+  Future<Map<String, dynamic>> getOrderHistory({
+    required int userId,
+    required String token,
+    int page = 0,
+    int limit = 10,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '$_baseUrl_server/orders/user/history',
+
+        queryParameters: {
+          'userId': userId,
+          'page': page,
+          'size': limit,
+          'sort': 'createdAt,DESC',
+        },
+
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      debugPrint("USER HISTORY RESPONSE => ${response.data}");
+
+      if (response.statusCode == 200) {
+        return response.data;
+      }
+
+      throw Exception("Failed loading orders ${response.statusCode}");
+    } on DioException catch (e) {
+      debugPrint("ORDER HISTORY ERROR => ${e.response?.data}");
+
+      rethrow;
+    }
+  }
+
   /// Get detailed information about a specific order
   ///
   /// GET /api/v1/orders/{id}
@@ -191,7 +231,7 @@ class OrderService {
   }) async {
     try {
       final response = await _dio.post(
-        '$_baseUrl/orders/user/detail',
+        '$_baseUrl_server/orders/user/detail',
 
         queryParameters: {'userId': userId, 'orderId': orderId},
 
@@ -282,7 +322,7 @@ class OrderService {
   }) async {
     try {
       final response = await _dio.patch(
-        '$_baseUrl/orders/$orderId/status',
+        '$_baseUrl_server/orders/$orderId/status',
         queryParameters: {'status': status},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
