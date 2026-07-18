@@ -104,10 +104,10 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
     });
 
     try {
-      final result = await _orderRepository.getOrders(
+      final result = await _orderRepository.getOrderHistory(
         userId: widget.userId,
         token: widget.token,
-        page: 1,
+        page: 0,
         limit: _pageLimit,
       );
 
