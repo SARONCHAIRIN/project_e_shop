@@ -12,10 +12,6 @@ import '../providers/auth_providers.dart';
 /// shares the same "frosted glass over navy-to-violet gradient, single
 /// gold accent" look.
 class _Palette {
-  static const bgTop = Color(0xFF0B1120);
-  static const bgMid = Color(0xFF182447);
-  static const bgBottom = Color(0xFF2D1B4E);
-
   static const gold = Color(0xFFF2B705);
   static const goldDeep = Color(0xFFCB8A00);
   static const goldText = Color(0xFF231A00);
@@ -61,10 +57,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
       duration: const Duration(milliseconds: 650),
     );
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
-    _slideAnim = Tween<Offset>(
-      begin: const Offset(0, 0.06),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic));
+    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+        );
     _animController.forward();
   }
 
@@ -172,11 +168,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
 
       _showSnack('Password reset successfully');
 
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/login',
-            (_) => false,
-      );
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
     } catch (e) {
       if (mounted) _showSnack(e.toString(), isError: true);
     }
@@ -193,7 +185,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
         children: [
           // Background photo
           Positioned.fill(
-            child: Image.asset('assets/images/back_image.png', fit: BoxFit.cover),
+            child: Image.asset(
+              'assets/images/back_image.png',
+              fit: BoxFit.cover,
+            ),
           ),
 
           // Brand-tinted scrim so the glass card always has consistent
@@ -230,11 +225,19 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                           child: BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
                             child: Container(
-                              padding: const EdgeInsets.fromLTRB(26, 30, 26, 26),
+                              padding: const EdgeInsets.fromLTRB(
+                                26,
+                                30,
+                                26,
+                                26,
+                              ),
                               decoration: BoxDecoration(
                                 color: _Palette.glass,
                                 borderRadius: BorderRadius.circular(28),
-                                border: Border.all(color: _Palette.glassBorder, width: 1.2),
+                                border: Border.all(
+                                  color: _Palette.glassBorder,
+                                  width: 1.2,
+                                ),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.28),
@@ -256,13 +259,18 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           gradient: const LinearGradient(
-                                            colors: [_Palette.gold, _Palette.goldDeep],
+                                            colors: [
+                                              _Palette.gold,
+                                              _Palette.goldDeep,
+                                            ],
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: _Palette.gold.withOpacity(0.4),
+                                              color: _Palette.gold.withOpacity(
+                                                0.4,
+                                              ),
                                               blurRadius: 18,
                                               spreadRadius: 1,
                                             ),
@@ -285,7 +293,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                           child: Container(
                                             height: 4,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(2),
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
                                               color: _Palette.gold,
                                             ),
                                           ),
@@ -295,7 +304,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                           child: Container(
                                             height: 4,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(2),
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
                                               color: _Palette.gold,
                                             ),
                                           ),
@@ -337,7 +347,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                       initialValue: email,
                                       readOnly: true,
                                       cursorColor: _Palette.gold,
-                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                       decoration: _decoration(
                                         label: 'Email',
                                         icon: Icons.mail_outline,
@@ -350,7 +363,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                       controller: otpController,
                                       keyboardType: TextInputType.number,
                                       cursorColor: _Palette.gold,
-                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                       decoration: _decoration(
                                         label: 'OTP code',
                                         icon: Icons.password_outlined,
@@ -369,7 +385,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                       controller: passwordController,
                                       obscureText: obscurePassword,
                                       cursorColor: _Palette.gold,
-                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                       decoration: _decoration(
                                         label: 'New password',
                                         icon: Icons.lock_outline,
@@ -381,11 +400,14 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                             color: Colors.white60,
                                             size: 20,
                                           ),
-                                          onPressed: () =>
-                                              setState(() => obscurePassword = !obscurePassword),
+                                          onPressed: () => setState(
+                                            () => obscurePassword =
+                                                !obscurePassword,
+                                          ),
                                         ),
                                       ),
-                                      validator: (v) => v != null && v.trim().length >= 6
+                                      validator: (v) =>
+                                          v != null && v.trim().length >= 6
                                           ? null
                                           : 'Use at least 6 characters',
                                     ),
@@ -397,22 +419,33 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                         if (passwordController.text.isEmpty) {
                                           return const SizedBox(height: 6);
                                         }
-                                        final strength =
-                                        _passwordStrength(passwordController.text);
+                                        final strength = _passwordStrength(
+                                          passwordController.text,
+                                        );
                                         return Padding(
-                                          padding: const EdgeInsets.only(top: 8, left: 2, right: 2),
+                                          padding: const EdgeInsets.only(
+                                            top: 8,
+                                            left: 2,
+                                            right: 2,
+                                          ),
                                           child: Row(
                                             children: [
                                               Expanded(
                                                 child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(3),
+                                                  borderRadius:
+                                                      BorderRadius.circular(3),
                                                   child: LinearProgressIndicator(
                                                     value: strength,
                                                     minHeight: 4,
-                                                    backgroundColor: Colors.white.withOpacity(0.12),
-                                                    valueColor: AlwaysStoppedAnimation(
-                                                      _strengthColor(strength),
-                                                    ),
+                                                    backgroundColor: Colors
+                                                        .white
+                                                        .withOpacity(0.12),
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation(
+                                                          _strengthColor(
+                                                            strength,
+                                                          ),
+                                                        ),
                                                   ),
                                                 ),
                                               ),
@@ -420,7 +453,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                               Text(
                                                 _strengthLabel(strength),
                                                 style: TextStyle(
-                                                  color: _strengthColor(strength),
+                                                  color: _strengthColor(
+                                                    strength,
+                                                  ),
                                                   fontSize: 11,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -437,7 +472,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                       controller: confirmPasswordController,
                                       obscureText: obscureConfirm,
                                       cursorColor: _Palette.gold,
-                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                       decoration: _decoration(
                                         label: 'Confirm password',
                                         icon: Icons.lock_outline,
@@ -449,11 +487,14 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                             color: Colors.white60,
                                             size: 20,
                                           ),
-                                          onPressed: () =>
-                                              setState(() => obscureConfirm = !obscureConfirm),
+                                          onPressed: () => setState(
+                                            () => obscureConfirm =
+                                                !obscureConfirm,
+                                          ),
                                         ),
                                       ),
-                                      validator: (v) => v == passwordController.text
+                                      validator: (v) =>
+                                          v == passwordController.text
                                           ? null
                                           : 'Passwords do not match',
                                     ),
@@ -464,15 +505,22 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                       width: double.infinity,
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(16),
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
                                           gradient: const LinearGradient(
-                                            colors: [_Palette.gold, _Palette.goldDeep],
+                                            colors: [
+                                              _Palette.gold,
+                                              _Palette.goldDeep,
+                                            ],
                                             begin: Alignment.centerLeft,
                                             end: Alignment.centerRight,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: _Palette.gold.withOpacity(0.35),
+                                              color: _Palette.gold.withOpacity(
+                                                0.35,
+                                              ),
                                               blurRadius: 16,
                                               offset: const Offset(0, 6),
                                             ),
@@ -481,26 +529,36 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                         child: Material(
                                           color: Colors.transparent,
                                           child: InkWell(
-                                            borderRadius: BorderRadius.circular(16),
-                                            onTap: isLoading ? null : () => _submit(controller),
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                            onTap: isLoading
+                                                ? null
+                                                : () => _submit(controller),
                                             child: Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 15),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 15,
+                                                  ),
                                               child: Center(
                                                 child: isLoading
                                                     ? const SpinKitDualRing(
-                                                  color: _Palette.goldText,
-                                                  size: 22,
-                                                  lineWidth: 3,
-                                                )
+                                                        color:
+                                                            _Palette.goldText,
+                                                        size: 22,
+                                                        lineWidth: 3,
+                                                      )
                                                     : const Text(
-                                                  'Reset password',
-                                                  style: TextStyle(
-                                                    color: _Palette.goldText,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    letterSpacing: 0.3,
-                                                  ),
-                                                ),
+                                                        'Reset password',
+                                                        style: TextStyle(
+                                                          color:
+                                                              _Palette.goldText,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          letterSpacing: 0.3,
+                                                        ),
+                                                      ),
                                               ),
                                             ),
                                           ),
@@ -510,12 +568,15 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                     const SizedBox(height: 15),
 
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Remembered it? ',
                                           style: TextStyle(
-                                            color: Colors.white.withOpacity(0.6),
+                                            color: Colors.white.withOpacity(
+                                              0.6,
+                                            ),
                                             fontSize: 13,
                                           ),
                                         ),
@@ -523,13 +584,14 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                           style: TextButton.styleFrom(
                                             padding: EdgeInsets.zero,
                                             minimumSize: const Size(0, 0),
-                                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            tapTargetSize: MaterialTapTargetSize
+                                                .shrinkWrap,
                                           ),
                                           onPressed: () {
                                             Navigator.pushNamedAndRemoveUntil(
                                               context,
                                               '/login',
-                                                  (_) => false,
+                                              (_) => false,
                                             );
                                           },
                                           child: const Text(

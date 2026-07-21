@@ -10,9 +10,6 @@ import '../../data/models/auth_models.dart';
 import '../providers/auth_providers.dart';
 
 class _Palette {
-  static const bgTop    = Color(0xFF0B1120);
-  static const bgMid    = Color(0xFF182447);
-  static const bgBottom = Color(0xFF2D1B4E);
   static const gold     = Color(0xFFF2B705);
   static const goldDeep = Color(0xFFCB8A00);
   static const goldText = Color(0xFF231A00);

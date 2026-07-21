@@ -211,8 +211,8 @@ class _IconSubWithProductState extends State<IconSubWithProduct> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => ProductScreen_sub(
-                                    subcategoryId: sub.id ?? 0,
-                                    subcategoryName: sub.name ?? "No Name",
+                                    subcategoryId: sub.id,
+                                    subcategoryName: sub.name,
                                     repository: widget.repository,
                                   ),
                                 ),
@@ -230,35 +230,46 @@ class _IconSubWithProductState extends State<IconSubWithProduct> {
                                     children: [
                                       // IMAGE
                                       Container(
-                                        padding: EdgeInsets.only(right: 5),
-                                        height: 80,
-                                        width: 90,
+                                        height: 90,
+                                        width: 80,
+                                        // padding: const EdgeInsets.all(5),
                                         decoration: BoxDecoration(
-                                          // shape: BoxShape.circle,
-                                          borderRadius: BorderRadius.circular(
-                                            15,
-                                          ),
-                                          // boxShadow: [
-                                          //   BoxShadow(
-                                          //     color: Colors.white,
-                                          //     blurRadius: 1,
-                                          //     spreadRadius: 1,
-                                          //     blurStyle: BlurStyle.outer,
-                                          //   ),
-                                          // ],
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade200,
+                                              blurStyle: BlurStyle.outer,
+                                              blurRadius: 1,
+                                            ),
+                                          ],
                                         ),
+                                        clipBehavior: Clip.hardEdge,
                                         child: (sub.image?.isEmpty ?? true)
                                             ? Image.asset(
                                                 'assets/images/default_image.png',
-                                                fit: BoxFit.fill,
+                                                fit: BoxFit.cover,
                                               )
-                                            : Image.network(sub.image!),
+                                            : Image.network(
+                                                sub.image!,
+                                                // fit: BoxFit.cover,
+                                                errorBuilder:
+                                                    (
+                                                      context,
+                                                      error,
+                                                      stackTrace,
+                                                    ) {
+                                                      return Image.asset(
+                                                        'assets/images/default_image.png',
+                                                        fit: BoxFit.cover,
+                                                      );
+                                                    },
+                                              ),
                                       ),
 
-                                      const SizedBox(height: 10),
+                                      const SizedBox(height: 2),
 
                                       Text(
-                                        sub.name ?? "No Name",
+                                        sub.name,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(

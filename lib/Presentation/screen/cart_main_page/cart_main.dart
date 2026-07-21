@@ -4,7 +4,6 @@ import 'package:e_shop/features/auth/presentation/screens/login_button_sheet.dar
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../../../core/storage/token_storage.dart';
-import '../auth/login/login_screen.dart';
 
 class CartMain extends StatefulWidget {
   final User_AuthRepository repository;

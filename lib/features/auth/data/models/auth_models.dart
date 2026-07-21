@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'auth_models.freezed.dart';
+
 part 'auth_models.g.dart';
 
 /// ==============================
@@ -30,6 +31,7 @@ class LoginRequest with _$LoginRequest {
   factory LoginRequest.fromJson(Map<String, dynamic> json) =>
       _$LoginRequestFromJson(json);
 }
+
 /// ==============================
 /// REGISTER REQUEST
 /// ==============================
@@ -40,7 +42,6 @@ class RegisterRequest with _$RegisterRequest {
     required String email,
     required String phone,
     required String password,
-
   }) = _RegisterRequest;
 
   factory RegisterRequest.fromJson(Map<String, dynamic> json) =>
@@ -66,9 +67,8 @@ class OtpVerifyRequest with _$OtpVerifyRequest {
 /// ==============================
 @freezed
 class ForgotPasswordRequest with _$ForgotPasswordRequest {
-  const factory ForgotPasswordRequest({
-    required String email,
-  }) = _ForgotPasswordRequest;
+  const factory ForgotPasswordRequest({required String email}) =
+      _ForgotPasswordRequest;
 
   factory ForgotPasswordRequest.fromJson(Map<String, dynamic> json) =>
       _$ForgotPasswordRequestFromJson(json);
@@ -83,7 +83,6 @@ class ResetPasswordRequest with _$ResetPasswordRequest {
     required String email,
     required String code,
     required String newPassword,
-
   }) = _ResetPasswordRequest;
 
   factory ResetPasswordRequest.fromJson(Map<String, dynamic> json) =>
@@ -93,32 +92,16 @@ class ResetPasswordRequest with _$ResetPasswordRequest {
 /// ==============================
 /// GENERIC AUTH RESPONSE
 /// ==============================
-// @freezed
-// class AuthResponse with _$AuthResponse {
-//   const factory AuthResponse({
-//     required String message,
-//     TokenModel? tokens,
-//     required int userId,
-//
-//   }) = _AuthResponse;
-//
-//   factory AuthResponse.fromJson(Map<String, dynamic> json) =>
-//       _$AuthResponseFromJson(json);
-// }
 @freezed
 class AuthResponse with _$AuthResponse {
   const factory AuthResponse({
-    @JsonKey(name: 'id')
-    int? userId,
+    @JsonKey(name: 'id') int? userId,
 
-    @JsonKey(name: 'access_token')
-    String? accessToken,
+    @JsonKey(name: 'access_token') String? accessToken,
 
-    @JsonKey(name: 'refresh_token')
-    String? refreshToken,
+    @JsonKey(name: 'refresh_token') String? refreshToken,
 
-    @JsonKey(name: 'token_type')
-    String? tokenType,
+    @JsonKey(name: 'token_type') String? tokenType,
 
     String? message,
     String? email,

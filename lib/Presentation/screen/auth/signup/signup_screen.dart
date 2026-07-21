@@ -1,5 +1,4 @@
 import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
-import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
 import 'package:e_shop/utils/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -407,10 +406,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                     MaterialPageRoute(
                                       builder: (_) => DivicesNav(
                                         authRepository: widget.authRepository,
-                                        initialIndex: 4, //  4 = profile tab (adjust to your tab index)
+                                        initialIndex:
+                                            4, //  4 = profile tab (adjust to your tab index)
                                       ),
                                     ),
-                                        (route) => false,
+                                    (route) => false,
                                   );
                                 },
                                 child: const Text(
@@ -437,17 +437,19 @@ class _SignupScreenState extends State<SignupScreen> {
             top: 50,
             left: 25,
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
                     builder: (_) => DivicesNav(
                       authRepository: widget.authRepository,
-                      initialIndex: 4, //  4 = profile tab (adjust to your tab index)
+                      initialIndex:
+                          4, //  4 = profile tab (adjust to your tab index)
                     ),
                   ),
-                      (route) => false,
-                );                },
+                  (route) => false,
+                );
+              },
               child: Container(
                 alignment: Alignment.center,
                 width: 36,
@@ -464,15 +466,18 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ],
                 ),
-                child:  Padding(
+                child: Padding(
                   padding: const EdgeInsets.only(left: 10),
-                  child: Icon(Icons.arrow_back_ios, size: 25, color: Colors.white),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    size: 25,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
           ),
         ],
-
       ),
     );
   }

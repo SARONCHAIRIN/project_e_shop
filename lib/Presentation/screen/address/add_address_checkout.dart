@@ -58,10 +58,10 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
         setState(() {
           _isEditingMode = true;
           _existingAddressId = address.id;
-          citycontroller.text = address.city ?? '';
-          countrycontroller.text = address.country ?? '';
-          addressline1controller.text = address.addressline1 ?? '';
-          zipcodecontroller.text = address.zipcode ?? '';
+          citycontroller.text = address.city;
+          countrycontroller.text = address.country;
+          addressline1controller.text = address.addressline1;
+          zipcodecontroller.text = address.zipcode;
         });
       }
     } catch (e) {

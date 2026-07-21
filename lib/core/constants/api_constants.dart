@@ -1,9 +1,9 @@
 class ApiConstants {
 
-  // static const String BASE_URL =
-  //     "https://e-shop-1-m034.onrender.com/api/v1";
-
   static const String BASE_URL =
+      "https://e-shop-1-m034.onrender.com/api/v1";
+
+  static const String BASE_URL_local =
       "http://localhost:8080/api/v1";
 
   // ip rupp

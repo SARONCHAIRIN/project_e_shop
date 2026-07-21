@@ -51,7 +51,7 @@ class _ReturnProductScreenState extends ConsumerState<ReturnProductScreen> {
           "order_id": widget.orderId,
           "customer_id": widget.userId,
           "product_id": widget.productId,
-          "return_type": "REFUND",
+          "return_type": "EXCHANGE",
         },
         token: widget.token,
       );
@@ -62,7 +62,7 @@ class _ReturnProductScreenState extends ConsumerState<ReturnProductScreen> {
       }
     } catch (e) {
       if (mounted) {
-        _showSnack("Failed: $e", success: false);
+        _showSnack("Failed:", success: false);
       }
     } finally {
       if (mounted) setState(() => loading = false);

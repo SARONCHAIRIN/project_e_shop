@@ -150,8 +150,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
           //     'Proceeding with Cash on Delivery',
           //   );
           // }
-        }
-        else if (_selectedPaymentMethod == 'bakong') {
+        } else if (_selectedPaymentMethod == 'bakong') {
           final orderRepository = OrderRepository();
           final paymentRepository = PaymentRepository();
 
@@ -165,10 +164,12 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
           );
 
           final int orderId = order.id;
-          final String bakongQrString = order.resolvedQrCode;   //  from getter
-          final String? bakongMd5 = order.transactionId;         //  from getter
+          final String bakongQrString = order.resolvedQrCode; //  from getter
+          final String? bakongMd5 = order.transactionId; //  from getter
 
-          if (bakongQrString.isEmpty || bakongMd5 == null || bakongMd5.isEmpty) {
+          if (bakongQrString.isEmpty ||
+              bakongMd5 == null ||
+              bakongMd5.isEmpty) {
             _showError('Bakong service unavailable. Please try again later.');
             return;
           }
@@ -220,9 +221,6 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cartState = ref.watch(cartControllerProvider);
-    final total = cartState.cart?.totalPrice ?? 0;
-
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
@@ -365,11 +363,16 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blueAccent.shade100,
-                    ),
-                    child: const Icon(Icons.location_on, color: Colors.white, size: 20)),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.blueAccent.shade100,
+                  ),
+                  child: const Icon(
+                    Icons.location_on,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -381,7 +384,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
                         const Text('No address found')
                       else ...[
                         Text(
-                          _address!.addressline1 ?? '',
+                          _address!.addressline1,
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -390,7 +393,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${_address!.city ?? ''},   ${_address!.country ?? ''} ,  ${_address!.zipcode ?? ''}',
+                          '${_address!.city},   ${_address!.country} ,  ${_address!.zipcode}',
                           style: TextStyle(fontSize: 13, color: Colors.grey),
                         ),
                       ],

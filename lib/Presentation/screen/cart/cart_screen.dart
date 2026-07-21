@@ -30,9 +30,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     });
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     // final cartController = context.watch<CartController>();
@@ -135,11 +132,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           elevation: 0.001,
 
                           child: ListTile(
-                            leading:
-                            ClipRRect(
+                            leading: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: cartImage(item),
-
                             ),
 
                             title: Text(
@@ -154,7 +149,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
                             subtitle: Text(
                               " Qty: ${item.quantity} "
-                                  "\n \$${item.totalPrice.toStringAsFixed(2)}",
+                              "\n \$${item.totalPrice.toStringAsFixed(2)}",
                             ),
 
                             trailing: Container(
@@ -185,10 +180,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                     ),
                                     onPressed: item.quantity > 1
                                         ? () => cartController.updateItem(
-                                      item.id,              // cartItemId
-                                      item.productSku.id,   // productId
-                                      item.quantity - 1,
-                                    )
+                                            item.id, // cartItemId
+                                            item.productSku.id, // productId
+                                            item.quantity - 1,
+                                          )
                                         : null,
                                   ),
 
@@ -206,8 +201,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                       color: Colors.black,
                                     ),
                                     onPressed: () => cartController.updateItem(
-                                      item.id,              // cartItemId
-                                      item.productSku.id,   // productId
+                                      item.id, // cartItemId
+                                      item.productSku.id, // productId
                                       item.quantity + 1,
                                     ),
                                   ),
@@ -268,7 +263,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
-                            color: Colors.blueAccent
+                            color: Colors.blueAccent,
                           ),
                         ),
                       ],
@@ -382,7 +377,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-
   Widget _buildEmptyCart() => Center(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -412,32 +406,32 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   );
 
   Widget _buildcheckoutButton(
-      BuildContext context,
-      CartController cartController,
-      CartState cartState,
-      ) {
+    BuildContext context,
+    CartController cartController,
+    CartState cartState,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 130, left: 20, right: 20),
       child: ElevatedButton(
         onPressed: cartState.cart == null || cartState.cart!.items.isEmpty
             ? null
             : () async {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) =>
-              // PaymentMethodScreen(
-              // totalPrice: 120, addressId: widget.a, addressLine1: addressLine1, city: city, country: country, zipCode: zipCode)
-              CheckoutPage(
-                repo: AddressRepository(AddressService()),
-                storage: TokenStorage(),
-                userId: widget.userId,
-                token: widget.token,
-                addressId: 0,
-              ),
-            ),
-          );
-        },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        // PaymentMethodScreen(
+                        // totalPrice: 120, addressId: widget.a, addressLine1: addressLine1, city: city, country: country, zipCode: zipCode)
+                        CheckoutPage(
+                          repo: AddressRepository(AddressService()),
+                          storage: TokenStorage(),
+                          userId: widget.userId,
+                          token: widget.token,
+                          addressId: 0,
+                        ),
+                  ),
+                );
+              },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blueAccent,
           padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 11),
@@ -681,8 +675,7 @@ Widget cartImage(CartItem item) {
       'assets/images/default_image.png',
       width: 70,
       height: 70,
-      fit: BoxFit.cover
-      ,
+      fit: BoxFit.cover,
     );
   }
 

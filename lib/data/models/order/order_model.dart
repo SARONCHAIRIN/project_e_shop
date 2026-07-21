@@ -112,7 +112,7 @@ class OrderModel {
       itemsCount: (json['items_count'] as num?)?.toInt(),
 
       address: json['address'] as Map<String, dynamic>?,
-      shippingAddress: json['shipping_address'] as Map<String, dynamic>?, // ✅ NEW
+      shippingAddress: json['shipping_address'] as Map<String, dynamic>?,
 
       createdAt: _parseDate(json['created_at']),
       updatedAt: _parseDate(json['updated_at']),

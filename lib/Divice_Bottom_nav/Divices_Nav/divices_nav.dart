@@ -5,7 +5,6 @@ import 'package:e_shop/Presentation/screen/home_main_page/home_main_page.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/device_profile_gate.dart';
 import 'package:flutter/material.dart';
 import '../../Presentation/screen/category_main_page/category_main.dart';
-import '../../core/storage/token_storage.dart';
 import '../../data/repositories/user_auth_repository.dart';
 
 class DivicesNav extends StatefulWidget {
@@ -37,34 +36,16 @@ class _DivicesNavState extends State<DivicesNav> {
       HomeMainPage(authRepository: widget.authRepository),
       CategoryMain(authRepository: widget.authRepository),
       MessageMain(),
-      CartMain(repository: widget.authRepository,
-      ),
+      CartMain(repository: widget.authRepository),
 
       // ProfileMain(authRepository: widget.authRepository),
       DeviceProfileGate(repository: widget.authRepository),
+      // Profilepage(authRepository: widget.authRepository,),
     ]);
   }
 
-  Future<bool> _isLoggedIn() async {
-    final token = await TokenStorage().readToken();
-    return token != null;
-  }
 
   void _onTabTapped(int index) async {
-    // Tabs that require login: Messages(2), Cart(3), Profile(4)
-    // if (index >= 2) {
-    //   bool loggedIn = await _isLoggedIn();
-    //   if (!loggedIn) {
-    //     // redirect to login
-    //     Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //         builder: (_) => LoginScreen(authRepository: widget.authRepository),
-    //       ),
-    //     );
-    //     return; // don't switch tab
-    //   }
-    // }
     setState(() => _currentIndex = index);
   }
 
@@ -90,7 +71,6 @@ class _DivicesNavState extends State<DivicesNav> {
           selectedItemColor: Colors.blueAccent,
           unselectedItemColor: Colors.grey,
           onTap: (index) async {
-            bool loggedIn = await _isLoggedIn();
             _onTabTapped(index);
             // optional: check login before switching screens
             setState(() => _currentIndex = index);

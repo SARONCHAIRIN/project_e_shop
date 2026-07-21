@@ -66,12 +66,6 @@ class _CategoryMainState extends ConsumerState<CategoryMain> {
   /// Sub-categories shown as circles for whichever parent is selected.
   /// Replace this with real nested data once available
   /// (e.g. `categories[selectedIndex - 1].subCategories`).
-  List<CategoryModel> _subCategoriesFor(int index) {
-    if (index == 0) return categories; // "Featured" -> show everything
-    final parent = categories[index - 1];
-    return categories.where((c) => c.name != parent.name).toList()
-      ..insert(0, parent);
-  }
 
   String? get _selectedCategoryName =>
       selectedIndex == 0 ? null : categories[selectedIndex - 1].name;
@@ -186,8 +180,6 @@ class _CategoryMainState extends ConsumerState<CategoryMain> {
 
   /// RIGHT column — sub-category circles (grid) + products.
   Widget _buildRightPanel() {
-    final subCategories = _subCategoriesFor(selectedIndex);
-
     return CustomScrollView(
       controller: _rightScrollController,
       slivers: [
@@ -224,58 +216,3 @@ class _CategoryMainState extends ConsumerState<CategoryMain> {
   }
 }
 
-class _SubCategoryCircle extends StatelessWidget {
-  final CategoryModel subcategory;
-
-  const _SubCategoryCircle({super.key, required this.subcategory});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 75,
-
-      child: Column(
-        children: [
-          Container(
-            width: 54,
-            height: 54,
-
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.blueAccent.withOpacity(0.12),
-            ),
-
-            child: ClipOval(
-              child: Image.network(
-                subcategory.icon ?? "",
-
-                width: 54,
-                height: 54,
-
-                fit: BoxFit.cover,
-
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.category, size: 24);
-                },
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 6),
-
-          Text(
-            subcategory.name,
-
-            maxLines: 1,
-
-            overflow: TextOverflow.ellipsis,
-
-            textAlign: TextAlign.center,
-
-            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-    );
-  }
-}

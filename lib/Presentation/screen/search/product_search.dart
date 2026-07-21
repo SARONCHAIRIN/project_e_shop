@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -110,24 +109,46 @@ class _SearchProductpageState extends State<SearchProductpage> {
 
   /// API search
   Future<void> searchProduct(String keyword) async {
-    setState(() => isLoading = true);
+    setState(() {
+      isLoading = true;
+    });
 
     final url = Uri.parse(
-      "https://e-shop-1-m034.onrender.com/api/v1/products/search?keyword=$keyword",
+      "https://e-shop-1-m034.onrender.com/api/v1/products/get/all",
     );
-    final response = await http.get(url);
+
+    final response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: jsonEncode({
+        "page": 0,
+        "size": 20,
+        "criteria_type": 0,
+        "criteria_value": keyword,
+      }),
+    );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final json = jsonDecode(response.body);
+
+      final List list = json["data"]["content"] ?? [];
+
       setState(() {
-        products = (data['content'] as List)
-            .map((e) => Product.fromJson(e['data']))
-            .toList();
+        products = list.map((e) => Product.fromJson(e)).toList();
+
         isLoading = false;
         showDiscover = false;
       });
     } else {
-      setState(() => isLoading = false);
+      setState(() {
+        isLoading = false;
+        products = [];
+      });
+
+      debugPrint(response.body);
     }
   }
 
@@ -187,7 +208,7 @@ class _SearchProductpageState extends State<SearchProductpage> {
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(Icons.search_off, size: 50, color: Colors.grey),
+        // const Icon(Icons.search_off, size: 50, color: Colors.grey),
         const SizedBox(height: 10),
         Lottie.asset(
           'assets/animations/empty.json',
@@ -422,10 +443,8 @@ class _SearchProductpageState extends State<SearchProductpage> {
                     ),
                     child: Image.network(
                       product.mainImage.isNotEmpty
-
                           ? product.mainImage.first
-
-                          : "",                      // fit: BoxFit.fill,
+                          : "", // fit: BoxFit.fill,
                       errorBuilder: (_, __, ___) => const Icon(Icons.image),
                     ),
                   ),
@@ -436,14 +455,14 @@ class _SearchProductpageState extends State<SearchProductpage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        product.name ?? "",
+                        product.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "\$${product.lowestPrice ?? 0}",
+                        "\$${product.lowestPrice}",
                         style: const TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,

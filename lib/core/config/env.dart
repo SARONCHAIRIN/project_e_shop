@@ -10,6 +10,4 @@ class Env {
   static String get mapboxToken =>
       dotenv.env['MAPBOX_TOKEN'] ?? '';
 
-  // static String get jwtSecret =>
-  //     dotenv.env['JWT_SECRET'] ?? '';
 }

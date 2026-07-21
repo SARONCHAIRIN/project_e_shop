@@ -1,10 +1,9 @@
 class ProductApiResponse {
-  final List<Product>
-  payload; // 👈 កែអក្ខរាវិរុទ្ធពី pauload មក payload និងដូរទៅ List<Product>
-  final int totalItems; // 👈 កែឱ្យត្រូវតាម JSON (total_items)
-  final int totalPages; // 👈 កែឱ្យត្រូវតាម JSON (total_pages)
-  final int currentPage; // 👈 កែឱ្យត្រូវតាម JSON (current_page)
-  final int pageSize; // 👈 កែឱ្យត្រូវតាម JSON (page_size)
+  final List<Product> payload;
+  final int totalItems;
+  final int totalPages;
+  final int currentPage;
+  final int pageSize;
 
   ProductApiResponse({
     required this.payload,
@@ -15,7 +14,6 @@ class ProductApiResponse {
   });
 
   factory ProductApiResponse.fromJson(Map<String, dynamic> json) {
-    // 🔍 ជំហានសំខាន់៖ ចាប់យកប្លុក "data" ជាមុនសិន ព្រោះទិន្នន័យទាំងអស់នៅក្នុងនោះ
     final dataBlock = json['data'] as Map<String, dynamic>? ?? {};
 
     final list = dataBlock['payload'] as List? ?? [];
@@ -58,9 +56,7 @@ class Product {
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       mainImage: List<String>.from(json['main_image'] ?? []),
-      // 👈 ចាប់យកពី main_image
       isActive: json['is_active'] ?? false,
-      // 👈 ចាប់យកពី is_active
       skus: skuList.map((e) => ProductSku.fromJson(e)).toList(),
       isFavorite: json['is_favorite'] ?? false,
     );
@@ -109,12 +105,10 @@ class ProductSku {
       description: json['description'],
       price: (json['price'] as num?)?.toDouble() ?? 0,
       quantity: json['quantity'] as int?,
-      images: (json['images'] as List<dynamic>?)
-
-          ?.map((e) => e.toString())
-
-          .toList() ??
-
+      images:
+          (json['images'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
           [],
       isDefault: json['is_default'] ?? false,
       attributes: (json['attributes'] as List? ?? [])
@@ -155,7 +149,6 @@ class ProductAttribute {
     return ProductAttribute(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
-      // 🔍 កែសម្រួល៖ នៅក្នុង JSON ប្លុកខាងក្នុងក៏ប្រើ Key ឈ្មោះ 'attributes' ដែរ
       values: (json['attributes'] as List? ?? [])
           .map((e) => AttributeValue.fromJson(e))
           .toList(),
@@ -170,9 +163,6 @@ class AttributeValue {
   AttributeValue({required this.id, required this.value});
 
   factory AttributeValue.fromJson(Map<String, dynamic> json) {
-    return AttributeValue(
-      id: json['id'] ?? 0,
-      value: json['value'] ?? '', // 👈 ចាប់យកពី 'value' ត្រង់ៗ
-    );
+    return AttributeValue(id: json['id'] ?? 0, value: json['value'] ?? '');
   }
 }

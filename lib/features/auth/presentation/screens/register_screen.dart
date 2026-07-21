@@ -1,6 +1,3 @@
-
-
-
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,10 +9,6 @@ import '../providers/auth_providers.dart';
 /// "frosted glass over a navy-to-violet gradient, single gold accent" look
 /// consistent across every auth screen instead of being re-guessed per file.
 class _Palette {
-  static const bgTop = Color(0xFF0B1120);
-  static const bgMid = Color(0xFF182447);
-  static const bgBottom = Color(0xFF2D1B4E);
-
   static const gold = Color(0xFFF2B705);
   static const goldDeep = Color(0xFFCB8A00);
   static const goldText = Color(0xFF231A00);
@@ -60,10 +53,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
       duration: const Duration(milliseconds: 650),
     );
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
-    _slideAnim = Tween<Offset>(
-      begin: const Offset(0, 0.06),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic));
+    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+        );
     _animController.forward();
   }
 
@@ -125,15 +118,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
     }
 
     try {
-      final success =
-      await ref.read(authControllerProvider.notifier).register(
-        RegisterRequest(
-          username: username.text.trim(),
-          email: email.text.trim(),
-          phone: phone.text.trim(),
-          password: password.text.trim(),
-        ),
-      );
+      final success = await ref
+          .read(authControllerProvider.notifier)
+          .register(
+            RegisterRequest(
+              username: username.text.trim(),
+              email: email.text.trim(),
+              phone: phone.text.trim(),
+              password: password.text.trim(),
+            ),
+          );
 
       if (!mounted) return;
 
@@ -145,8 +139,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
         );
       } else {
         final error =
-            ref.read(authControllerProvider).error ??
-                'Registration failed';
+            ref.read(authControllerProvider).error ?? 'Registration failed';
 
         _showSnack(error, isError: true);
       }
@@ -167,7 +160,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
 
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(color: Colors.white70, fontSize: 14.5, fontWeight: FontWeight.w500),
+      labelStyle: const TextStyle(
+        color: Colors.white70,
+        fontSize: 14.5,
+        fontWeight: FontWeight.w500,
+      ),
       prefixIcon: Icon(icon, color: _Palette.gold, size: 20),
       suffixIcon: suffixIcon,
       filled: true,
@@ -193,7 +190,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
         children: [
           // Background photo
           Positioned.fill(
-            child: Image.asset('assets/images/back_image.png', fit: BoxFit.fill),
+            child: Image.asset(
+              'assets/images/back_image.png',
+              fit: BoxFit.fill,
+            ),
           ),
 
           // Brand-tinted scrim so the glass card always has consistent
@@ -216,7 +216,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
 
           SizedBox.expand(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: SafeArea(
                 child: FadeTransition(
                   opacity: _fadeAnim,
@@ -229,11 +229,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 5,
+                            ),
                             decoration: BoxDecoration(
                               color: _Palette.glass,
                               borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: _Palette.glassBorder, width: 1.2),
+                              border: Border.all(
+                                color: _Palette.glassBorder,
+                                width: 1.2,
+                              ),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.28),
@@ -258,13 +264,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           gradient: const LinearGradient(
-                                            colors: [_Palette.gold, _Palette.goldDeep],
+                                            colors: [
+                                              _Palette.gold,
+                                              _Palette.goldDeep,
+                                            ],
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: _Palette.gold.withOpacity(0.4),
+                                              color: _Palette.gold.withOpacity(
+                                                0.4,
+                                              ),
                                               blurRadius: 18,
                                               spreadRadius: 1,
                                             ),
@@ -288,7 +299,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                           child: Container(
                                             height: 4,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(2),
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
                                               color: _Palette.gold,
                                             ),
                                           ),
@@ -298,8 +310,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                           child: Container(
                                             height: 4,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(2),
-                                              color: Colors.white.withOpacity(0.18),
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                              color: Colors.white.withOpacity(
+                                                0.18,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -339,13 +354,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                     TextFormField(
                                       controller: username,
                                       cursorColor: _Palette.gold,
-                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                       decoration: _decoration(
                                         label: 'Full name',
                                         icon: Icons.person_outline,
                                       ),
                                       validator: (v) =>
-                                      v != null && v.trim().isNotEmpty ? null : 'Required',
+                                          v != null && v.trim().isNotEmpty
+                                          ? null
+                                          : 'Required',
                                     ),
                                     const SizedBox(height: 12),
 
@@ -354,13 +374,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                       controller: email,
                                       keyboardType: TextInputType.emailAddress,
                                       cursorColor: _Palette.gold,
-                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                       decoration: _decoration(
                                         label: 'Email',
                                         icon: Icons.mail_outline,
                                       ),
                                       validator: (v) =>
-                                      v != null && v.contains('@') ? null : 'Enter a valid email',
+                                          v != null && v.contains('@')
+                                          ? null
+                                          : 'Enter a valid email',
                                     ),
                                     const SizedBox(height: 12),
 
@@ -369,7 +394,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                       controller: phone,
                                       keyboardType: TextInputType.phone,
                                       cursorColor: _Palette.gold,
-                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                       decoration: _decoration(
                                         label: 'Phone number',
                                         icon: Icons.phone_iphone_outlined,
@@ -388,7 +416,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                       controller: password,
                                       obscureText: _obscurePassword,
                                       cursorColor: _Palette.gold,
-                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                       decoration: _decoration(
                                         label: 'Password',
                                         icon: Icons.lock_outline,
@@ -400,12 +431,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                             color: Colors.white60,
                                             size: 20,
                                           ),
-                                          onPressed: () =>
-                                              setState(() => _obscurePassword = !_obscurePassword),
+                                          onPressed: () => setState(
+                                            () => _obscurePassword =
+                                                !_obscurePassword,
+                                          ),
                                         ),
                                       ),
                                       validator: (v) =>
-                                      v != null && v.length >= 6 ? null : 'Use at least 6 characters',
+                                          v != null && v.length >= 6
+                                          ? null
+                                          : 'Use at least 6 characters',
                                     ),
 
                                     // Strength meter — only shown once typing starts
@@ -415,21 +450,33 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                         if (password.text.isEmpty) {
                                           return const SizedBox(height: 6);
                                         }
-                                        final strength = _passwordStrength(password.text);
+                                        final strength = _passwordStrength(
+                                          password.text,
+                                        );
                                         return Padding(
-                                          padding: const EdgeInsets.only(top: 8, left: 2, right: 2),
+                                          padding: const EdgeInsets.only(
+                                            top: 8,
+                                            left: 2,
+                                            right: 2,
+                                          ),
                                           child: Row(
                                             children: [
                                               Expanded(
                                                 child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(3),
+                                                  borderRadius:
+                                                      BorderRadius.circular(3),
                                                   child: LinearProgressIndicator(
                                                     value: strength,
                                                     minHeight: 4,
-                                                    backgroundColor: Colors.white.withOpacity(0.12),
-                                                    valueColor: AlwaysStoppedAnimation(
-                                                      _strengthColor(strength),
-                                                    ),
+                                                    backgroundColor: Colors
+                                                        .white
+                                                        .withOpacity(0.12),
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation(
+                                                          _strengthColor(
+                                                            strength,
+                                                          ),
+                                                        ),
                                                   ),
                                                 ),
                                               ),
@@ -437,7 +484,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                               Text(
                                                 _strengthLabel(strength),
                                                 style: TextStyle(
-                                                  color: _strengthColor(strength),
+                                                  color: _strengthColor(
+                                                    strength,
+                                                  ),
                                                   fontSize: 11,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -454,7 +503,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                       controller: confirmPassword,
                                       obscureText: _obscureConfirm,
                                       cursorColor: _Palette.gold,
-                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                       decoration: _decoration(
                                         label: 'Confirm password',
                                         icon: Icons.lock_outline,
@@ -466,52 +518,68 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                             color: Colors.white60,
                                             size: 20,
                                           ),
-                                          onPressed: () =>
-                                              setState(() => _obscureConfirm = !_obscureConfirm),
+                                          onPressed: () => setState(
+                                            () => _obscureConfirm =
+                                                !_obscureConfirm,
+                                          ),
                                         ),
                                       ),
-                                      validator: (v) =>
-                                      v == password.text ? null : 'Passwords do not match',
+                                      validator: (v) => v == password.text
+                                          ? null
+                                          : 'Passwords do not match',
                                     ),
                                     const SizedBox(height: 14),
 
                                     // Terms checkbox
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           width: 22,
                                           height: 22,
                                           child: Checkbox(
                                             value: _agreedToTerms,
-                                            onChanged: (v) =>
-                                                setState(() => _agreedToTerms = v ?? false),
+                                            onChanged: (v) => setState(
+                                              () => _agreedToTerms = v ?? false,
+                                            ),
                                             checkColor: _Palette.goldText,
                                             activeColor: _Palette.gold,
-                                            side: BorderSide(color: Colors.white.withOpacity(0.4)),
+                                            side: BorderSide(
+                                              color: Colors.white.withOpacity(
+                                                0.4,
+                                              ),
+                                            ),
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(4),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
                                             ),
                                           ),
                                         ),
                                         const SizedBox(width: 10),
                                         Expanded(
                                           child: Padding(
-                                            padding: const EdgeInsets.only(top: 3),
+                                            padding: const EdgeInsets.only(
+                                              top: 3,
+                                            ),
                                             child: Text.rich(
                                               TextSpan(
                                                 style: TextStyle(
-                                                  color: Colors.white.withOpacity(0.65),
+                                                  color: Colors.white
+                                                      .withOpacity(0.65),
                                                   fontSize: 12.5,
                                                   height: 1.4,
                                                 ),
                                                 children: const [
-                                                  TextSpan(text: 'I agree to the '),
+                                                  TextSpan(
+                                                    text: 'I agree to the ',
+                                                  ),
                                                   TextSpan(
                                                     text: 'Terms of Service',
                                                     style: TextStyle(
                                                       color: _Palette.gold,
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                     ),
                                                   ),
                                                   TextSpan(text: ' and '),
@@ -519,7 +587,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                                     text: 'Privacy Policy',
                                                     style: TextStyle(
                                                       color: _Palette.gold,
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                     ),
                                                   ),
                                                   TextSpan(text: '.'),
@@ -537,15 +606,22 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                       width: double.infinity,
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(16),
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
                                           gradient: const LinearGradient(
-                                            colors: [_Palette.gold, _Palette.goldDeep],
+                                            colors: [
+                                              _Palette.gold,
+                                              _Palette.goldDeep,
+                                            ],
                                             begin: Alignment.centerLeft,
                                             end: Alignment.centerRight,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: _Palette.gold.withOpacity(0.35),
+                                              color: _Palette.gold.withOpacity(
+                                                0.35,
+                                              ),
                                               blurRadius: 16,
                                               offset: const Offset(0, 6),
                                             ),
@@ -554,26 +630,36 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                         child: Material(
                                           color: Colors.transparent,
                                           child: InkWell(
-                                            borderRadius: BorderRadius.circular(16),
-                                            onTap: isLoading ? null : _handleRegister,
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                            onTap: isLoading
+                                                ? null
+                                                : _handleRegister,
                                             child: Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 15),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 15,
+                                                  ),
                                               child: Center(
                                                 child: isLoading
                                                     ? const SpinKitDualRing(
-                                                  color: _Palette.goldText,
-                                                  size: 22,
-                                                  lineWidth: 3,
-                                                )
+                                                        color:
+                                                            _Palette.goldText,
+                                                        size: 22,
+                                                        lineWidth: 3,
+                                                      )
                                                     : const Text(
-                                                  'Create account',
-                                                  style: TextStyle(
-                                                    color: _Palette.goldText,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    letterSpacing: 0.3,
-                                                  ),
-                                                ),
+                                                        'Create account',
+                                                        style: TextStyle(
+                                                          color:
+                                                              _Palette.goldText,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          letterSpacing: 0.3,
+                                                        ),
+                                                      ),
                                               ),
                                             ),
                                           ),
@@ -583,12 +669,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                     const SizedBox(height: 15),
 
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Already have an account? ',
                                           style: TextStyle(
-                                            color: Colors.white.withOpacity(0.6),
+                                            color: Colors.white.withOpacity(
+                                              0.6,
+                                            ),
                                             fontSize: 13,
                                           ),
                                         ),
@@ -596,7 +685,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                           style: TextButton.styleFrom(
                                             padding: EdgeInsets.zero,
                                             minimumSize: const Size(0, 0),
-                                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            tapTargetSize: MaterialTapTargetSize
+                                                .shrinkWrap,
                                           ),
                                           onPressed: () {
                                             if (Navigator.canPop(context)) {

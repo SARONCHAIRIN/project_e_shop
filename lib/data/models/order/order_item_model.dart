@@ -1,7 +1,7 @@
 class OrderItemModel {
-  final int id;                    // ✅ NEW
+  final int id;
   final int quantity;
-  final String productName;        // ✅ NEW
+  final String productName;
   final double unitPrice;
   final double totalPrice;
   final ProductSkuModel productSku;
@@ -57,7 +57,6 @@ class AttributeValue {
   Map<String, dynamic> toJson() => {'id': id, 'value': value};
 }
 
-/// Attribute group, e.g. { "id": 2, "name": "កញ្ចប់", "attributes": [...] }
 class AttributeGroup {
   final int id;
   final String name;
@@ -93,10 +92,10 @@ class ProductSkuModel {
   final String description;
   final double price;
   final int quantity;
-  final bool operatorProductAttribute; // ✅ NEW
-  final bool isDefault;                // ✅ NEW
-  final String? imageUrl;              // ✅ NEW
-  final List<AttributeGroup> attributes; // ✅ FIXED: nested groups, not color/size
+  final bool operatorProductAttribute;
+  final bool isDefault;
+  final String? imageUrl;
+  final List<AttributeGroup> attributes;
 
   ProductSkuModel({
     required this.id,
@@ -119,7 +118,7 @@ class ProductSkuModel {
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
       quantity: (json['quantity'] as num?)?.toInt() ?? 0,
       operatorProductAttribute:
-      json['operatorProductAttribute'] as bool? ?? false,
+          json['operatorProductAttribute'] as bool? ?? false,
       isDefault: json['is_default'] as bool? ?? false,
       imageUrl: json['image_url'] as String?,
       attributes: attrList
@@ -143,7 +142,6 @@ class ProductSkuModel {
   }
 
   /// Convenience: flatten all attribute values into a display string
-  /// e.g. "កញ្ចប់: តូច, ធំ, មធ្យម"
   String get displayAttributes => attributes
       .map((g) => '${g.name}: ${g.attributes.map((a) => a.value).join(", ")}')
       .join(' | ');
