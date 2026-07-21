@@ -63,9 +63,6 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Scaffold(
       backgroundColor: const Color(0xFFF8F7F4),
       appBar: AppBar(
@@ -311,13 +308,11 @@ class _PaymentFailedScreenState extends State<PaymentFailedScreen>
                           _openTelegram();
                         },
                         child: const Text(
-
                           'Need help? Contact support',
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.redAccent,
                             fontWeight: FontWeight.w500,
-
                           ),
                         ),
                       ),

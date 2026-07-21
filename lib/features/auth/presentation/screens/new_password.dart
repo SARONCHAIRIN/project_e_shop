@@ -4,20 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../controllers/auth_controller.dart';
-import '../../data/models/auth_models.dart';
 import '../providers/auth_providers.dart';
 
 class _Palette {
-  static const bgTop    = Color(0xFF0B1120);
-  static const bgMid    = Color(0xFF182447);
-  static const bgBottom = Color(0xFF2D1B4E);
-  static const gold     = Color(0xFFF2B705);
+  static const gold = Color(0xFFF2B705);
   static const goldDeep = Color(0xFFCB8A00);
   static const goldText = Color(0xFF231A00);
-  static const glass       = Color(0x14FFFFFF);
+  static const glass = Color(0x14FFFFFF);
   static const glassBorder = Color(0x2EFFFFFF);
   static const coral = Color(0xFFFF6B6B);
-  static const mint  = Color(0xFF35D07F);
+  static const mint = Color(0xFF35D07F);
   static const amber = Color(0xFFFFB020);
 }
 
@@ -25,11 +21,7 @@ class NewPasswordScreen extends ConsumerStatefulWidget {
   final String email;
   final String code;
 
-  const NewPasswordScreen({
-    super.key,
-    required this.email,
-    required this.code,
-  });
+  const NewPasswordScreen({super.key, required this.email, required this.code});
 
   @override
   ConsumerState<NewPasswordScreen> createState() => _NewPasswordScreenState();
@@ -56,10 +48,10 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
       duration: const Duration(milliseconds: 650),
     );
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
-    _slideAnim = Tween<Offset>(
-      begin: const Offset(0, 0.06),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic));
+    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+        );
     _animController.forward();
     _password.addListener(_onPasswordChanged);
   }
@@ -100,8 +92,10 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
   }
 
   bool get _lengthOk => _password.text.length >= 6;
+
   bool get _matchOk =>
-      _confirmPassword.text.isNotEmpty && _confirmPassword.text == _password.text;
+      _confirmPassword.text.isNotEmpty &&
+      _confirmPassword.text == _password.text;
 
   void _showSnack(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -117,26 +111,9 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
   Future<void> _submit(AuthController controller) async {
     if (!_formKey.currentState!.validate()) return;
 
-    final success = await controller.resetPassword(
-      ResetPasswordRequest(
-        email: widget.email,
-        code: widget.code,
-        newPassword: _password.text.trim(),
-      ),
-    );
-
-    if (!mounted) return;
-
-    // if (success) {
-    //   Navigator.pushNamedAndRemoveUntil(
-    //     context,
-    //     '/login',
-    //         (route) => false,
-    //     arguments: {'resetSuccess': true},
-    //   );
-    // }
+    if (!mounted)
+      return;
     else {
-      final state = ref.read(authControllerProvider);
       _showSnack('Failed to reset password. Try again.', isError: true);
     }
   }
@@ -154,7 +131,10 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
     return InputDecoration(
       labelText: label,
       labelStyle: const TextStyle(
-          color: Colors.white70, fontSize: 14.5, fontWeight: FontWeight.w500),
+        color: Colors.white70,
+        fontSize: 14.5,
+        fontWeight: FontWeight.w500,
+      ),
       prefixIcon: Icon(icon, color: _Palette.gold, size: 20),
       suffixIcon: suffixIcon,
       filled: true,
@@ -183,7 +163,9 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
           Text(
             label,
             style: TextStyle(
-              color: ok ? Colors.white.withOpacity(0.85) : Colors.white.withOpacity(0.45),
+              color: ok
+                  ? Colors.white.withOpacity(0.85)
+                  : Colors.white.withOpacity(0.45),
               fontSize: 12.5,
             ),
           ),
@@ -203,7 +185,10 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset('assets/images/back_image.png', fit: BoxFit.cover),
+            child: Image.asset(
+              'assets/images/back_image.png',
+              fit: BoxFit.cover,
+            ),
           ),
           Positioned.fill(
             child: DecoratedBox(
@@ -232,7 +217,8 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                         maxWidth: 440,
-                        minHeight: MediaQuery.of(context).size.height -
+                        minHeight:
+                            MediaQuery.of(context).size.height -
                             MediaQuery.of(context).padding.top -
                             MediaQuery.of(context).padding.bottom -
                             10,
@@ -243,12 +229,19 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                           child: BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
                             child: Container(
-                              padding: const EdgeInsets.fromLTRB(26, 30, 26, 26),
+                              padding: const EdgeInsets.fromLTRB(
+                                26,
+                                30,
+                                26,
+                                26,
+                              ),
                               decoration: BoxDecoration(
                                 color: _Palette.glass,
                                 borderRadius: BorderRadius.circular(28),
                                 border: Border.all(
-                                    color: _Palette.glassBorder, width: 1.2),
+                                  color: _Palette.glassBorder,
+                                  width: 1.2,
+                                ),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.28),
@@ -271,13 +264,18 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           gradient: const LinearGradient(
-                                            colors: [_Palette.gold, _Palette.goldDeep],
+                                            colors: [
+                                              _Palette.gold,
+                                              _Palette.goldDeep,
+                                            ],
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: _Palette.gold.withOpacity(0.4),
+                                              color: _Palette.gold.withOpacity(
+                                                0.4,
+                                              ),
                                               blurRadius: 18,
                                               spreadRadius: 1,
                                             ),
@@ -327,7 +325,10 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                       controller: _password,
                                       obscureText: _obscurePassword,
                                       cursorColor: _Palette.gold,
-                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                       decoration: _decoration(
                                         label: 'New password',
                                         icon: Icons.lock_outline,
@@ -340,10 +341,13 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                             size: 20,
                                           ),
                                           onPressed: () => setState(
-                                                  () => _obscurePassword = !_obscurePassword),
+                                            () => _obscurePassword =
+                                                !_obscurePassword,
+                                          ),
                                         ),
                                       ),
-                                      validator: (v) => v != null && v.length >= 6
+                                      validator: (v) =>
+                                          v != null && v.length >= 6
                                           ? null
                                           : 'Use at least 6 characters',
                                     ),
@@ -351,19 +355,28 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                     // Strength meter
                                     if (_password.text.isNotEmpty)
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 8, left: 2, right: 2),
+                                        padding: const EdgeInsets.only(
+                                          top: 8,
+                                          left: 2,
+                                          right: 2,
+                                        ),
                                         child: Row(
                                           children: [
                                             Expanded(
                                               child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(3),
+                                                borderRadius:
+                                                    BorderRadius.circular(3),
                                                 child: LinearProgressIndicator(
                                                   value: strength,
                                                   minHeight: 4,
-                                                  backgroundColor: Colors.white.withOpacity(0.12),
-                                                  valueColor: AlwaysStoppedAnimation(
-                                                    _strengthColor(strength),
-                                                  ),
+                                                  backgroundColor: Colors.white
+                                                      .withOpacity(0.12),
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation(
+                                                        _strengthColor(
+                                                          strength,
+                                                        ),
+                                                      ),
                                                 ),
                                               ),
                                             ),
@@ -386,7 +399,10 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                       controller: _confirmPassword,
                                       obscureText: _obscureConfirm,
                                       cursorColor: _Palette.gold,
-                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
                                       decoration: _decoration(
                                         label: 'Confirm password',
                                         icon: Icons.lock_outline,
@@ -399,17 +415,23 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                             size: 20,
                                           ),
                                           onPressed: () => setState(
-                                                  () => _obscureConfirm = !_obscureConfirm),
+                                            () => _obscureConfirm =
+                                                !_obscureConfirm,
+                                          ),
                                         ),
                                       ),
-                                      validator: (v) =>
-                                      v == _password.text ? null : 'Passwords do not match',
+                                      validator: (v) => v == _password.text
+                                          ? null
+                                          : 'Passwords do not match',
                                       onChanged: (_) => setState(() {}),
                                     ),
                                     const SizedBox(height: 16),
 
                                     // Checklist
-                                    _checklistRow('At least 6 characters', _lengthOk),
+                                    _checklistRow(
+                                      'At least 6 characters',
+                                      _lengthOk,
+                                    ),
                                     _checklistRow('Passwords match', _matchOk),
                                     const SizedBox(height: 12),
 
@@ -418,15 +440,22 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                       width: double.infinity,
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(16),
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
                                           gradient: const LinearGradient(
-                                            colors: [_Palette.gold, _Palette.goldDeep],
+                                            colors: [
+                                              _Palette.gold,
+                                              _Palette.goldDeep,
+                                            ],
                                             begin: Alignment.centerLeft,
                                             end: Alignment.centerRight,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: _Palette.gold.withOpacity(0.35),
+                                              color: _Palette.gold.withOpacity(
+                                                0.35,
+                                              ),
                                               blurRadius: 16,
                                               offset: const Offset(0, 6),
                                             ),
@@ -435,26 +464,36 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                         child: Material(
                                           color: Colors.transparent,
                                           child: InkWell(
-                                            borderRadius: BorderRadius.circular(16),
-                                            onTap: isLoading ? null : () => _submit(controller),
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                            onTap: isLoading
+                                                ? null
+                                                : () => _submit(controller),
                                             child: Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 15),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 15,
+                                                  ),
                                               child: Center(
                                                 child: isLoading
                                                     ? const SpinKitDualRing(
-                                                  color: _Palette.goldText,
-                                                  size: 22,
-                                                  lineWidth: 3,
-                                                )
+                                                        color:
+                                                            _Palette.goldText,
+                                                        size: 22,
+                                                        lineWidth: 3,
+                                                      )
                                                     : const Text(
-                                                  'Reset password',
-                                                  style: TextStyle(
-                                                    color: _Palette.goldText,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    letterSpacing: 0.3,
-                                                  ),
-                                                ),
+                                                        'Reset password',
+                                                        style: TextStyle(
+                                                          color:
+                                                              _Palette.goldText,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          letterSpacing: 0.3,
+                                                        ),
+                                                      ),
                                               ),
                                             ),
                                           ),

@@ -2,7 +2,6 @@ import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
 import 'package:e_shop/utils/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import '../../../../data/models/user_model.dart';
 import '../../../../data/repositories/user_auth_repository.dart';
 import '../signup/signup_screen.dart';
 

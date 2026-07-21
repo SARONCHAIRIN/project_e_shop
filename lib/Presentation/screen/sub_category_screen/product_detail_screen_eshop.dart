@@ -122,8 +122,6 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                 .where((text) => text.isNotEmpty)
                 .join(" - ");
 
-            // final isAvailable = (sku.quantity ?? 0) > 0;
-            final isAvailable = getSkuStock(sku) > 0;
 
             return GestureDetector(
               onTap: () {

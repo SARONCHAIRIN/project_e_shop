@@ -1,4 +1,3 @@
-// This file contains all the model classes for the API response
 
 class SubcategoryData {
   final int id;

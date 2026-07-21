@@ -8,25 +8,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../Main_App_Bar/App_Bar/sliver_main_app_bar.dart';
-import '../../../data/models/category /category_icon_model.dart';
 import '../../../data/models/user_model.dart';
 
 class HomeMainPage extends ConsumerStatefulWidget {
   final UserModel? user;
   final authRepository;
 
-  // final bool showBars;
-
-  const HomeMainPage({
-    super.key,
-    this.user,
-    required this.authRepository,
-
-    // required this.showBars,
-  });
+  const HomeMainPage({super.key, this.user, required this.authRepository});
 
   @override
   ConsumerState<HomeMainPage> createState() => _HomeMainPageState();
@@ -36,15 +27,13 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
   final ScrollController _scrollController = ScrollController();
   bool showBars = true;
   bool showTextField = true;
-  bool _isAnimationLoaded = false;
-  bool _isloading = true;
-
   List<CategoryModel> categories = [];
   CategoryModel? selectedCategory;
-
   bool isLoadingCategory = true;
-
   int? userId;
+
+  static const _accent = Color(0xFF1E88E5);
+  static const _ink = Color(0xFF1A1A2E);
 
   @override
   void initState() {
@@ -56,15 +45,12 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         if (showBars) setState(() => showBars = false);
-        // if(showTextField ) setState(() => showTextField = false);
       } else if (_scrollController.position.userScrollDirection ==
           ScrollDirection.forward) {
         if (!showBars) setState(() => showBars = true);
-        // if(!showTextField) setState(() => showTextField = true);
       }
     });
 
-    //Home page show in console
     print('|=================================================|');
     print('|             HomeMainPage  loaded                |');
     print('|=================================================|');
@@ -72,14 +58,9 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
 
   Future<void> _loadUserData() async {
     final id = await TokenStorage().readUserId();
-
     print('userId in home page :  ${id}');
-
     if (!mounted) return;
-
-    setState(() {
-      userId = id;
-    });
+    setState(() => userId = id);
   }
 
   Future<void> _loadCategories() async {
@@ -90,7 +71,6 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
       final result = await ref.read(categoryRepositoryProvider).getCategories();
 
       debugPrint("Category count from API: ${result.length}");
-
       for (var item in result) {
         debugPrint(
           "Category => id:${item.id}, name:${item.name}, icon:${item.icon}",
@@ -101,12 +81,8 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
 
       setState(() {
         categories = result;
-
-        // Default = All
         selectedCategory = null;
-
         debugPrint("Selected Category: ALL");
-
         isLoadingCategory = false;
       });
 
@@ -114,12 +90,8 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
     } catch (e, stack) {
       debugPrint("Load Category Error: $e");
       debugPrint(stack.toString());
-
       if (!mounted) return;
-
-      setState(() {
-        isLoadingCategory = false;
-      });
+      setState(() => isLoadingCategory = false);
     }
   }
 
@@ -129,323 +101,292 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
     super.dispose();
   }
 
-  //========shimmer
+  // ── Section header (icon + title + optional trailing action) ──
+  Widget _sectionHeader({
+    required String title,
+    IconData? icon,
+    Widget? trailing,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 18, color: _accent),
+            const SizedBox(width: 6),
+          ],
+          Text(
+            title,
+            style: const TextStyle(
+              color: _ink,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.1,
+            ),
+          ),
+          const Spacer(),
+          if (trailing != null) trailing,
+        ],
+      ),
+    );
+  }
+
+  Widget _seeAllButton(VoidCallback onTap) {
+    return TextButton(
+      onPressed: onTap,
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        minimumSize: const Size(0, 0),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          Text(
+            "See All",
+            style: TextStyle(
+              color: _accent,
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(width: 2),
+          Icon(Icons.chevron_right, size: 15, color: _accent),
+        ],
+      ),
+    );
+  }
+
+  //========shimmer for category chips
   Widget _categoryShimmer() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 55,
+    return Padding(
+      padding: const EdgeInsets.only(top: 4, bottom: 4),
+      child: SizedBox(
+        height: 42,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: 5,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey.shade200,
+                highlightColor: Colors.grey.shade50,
+                child: Container(
+                  width: 70 + (index * 14).toDouble(),
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
 
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-
-            itemCount: 5,
-
-            itemBuilder: (context, index) {
+  // ── Modern pill-style category selector ──
+  Widget _categoryChips() {
+    return DefaultTabController(
+      length: categories.length + 1,
+      child: SizedBox(
+        height: 42,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          children: [
+            _chip(
+              label: 'All',
+              isSelected: selectedCategory == null,
+              onTap: () {
+                setState(() {
+                  selectedCategory = null;
+                  debugPrint("CATEGORY FILTER ID: ALL");
+                });
+              },
+            ),
+            ...categories.map((category) {
+              final isSelected = selectedCategory?.id == category.id;
               return Padding(
-                padding: const EdgeInsets.only(right: 20),
-
-                child: Row(
-                  children: [
-                    // Icon shimmer
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-
-                      highlightColor: Colors.grey.shade100,
-
-                      child: Container(
-                        width: 30,
-                        height: 30,
-
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 8),
-
-                    // Text shimmer
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-
-                      highlightColor: Colors.grey.shade100,
-
-                      child: Container(
-                        width: 55 + (index * 10),
-
-                        height: 12,
-
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                      ),
-                    ),
-                  ],
+                padding: const EdgeInsets.only(left: 8),
+                child: _chip(
+                  label: category.name,
+                  iconUrl: category.icon,
+                  isSelected: isSelected,
+                  onTap: () {
+                    setState(() {
+                      selectedCategory = category;
+                      debugPrint("CATEGORY FILTER ID: ${category.id}");
+                    });
+                  },
                 ),
               );
-            },
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _chip({
+    required String label,
+    String? iconUrl,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        padding: EdgeInsets.symmetric(
+          horizontal: iconUrl != null ? 10 : 16,
+          vertical: 8,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected ? _accent : Colors.white,
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(
+            color: isSelected ? _accent : Colors.grey.shade200,
+            width: 1,
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: _accent.withOpacity(0.25),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.03),
+                    blurRadius: 4,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
         ),
-        SizedBox(height: 4),
-        Container(
-          width: double.infinity,
-
-          height: 1,
-
-          color: Colors.grey.shade300,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (iconUrl != null) ...[
+              Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isSelected
+                      ? Colors.white.withOpacity(1)
+                      : Colors.blue.shade300,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: iconUrl.toLowerCase().endsWith('.svg')
+                      ? SvgPicture.network(
+                          iconUrl,
+                          fit: BoxFit.contain,
+                          placeholderBuilder: (context) =>
+                              const SizedBox.shrink(),
+                        )
+                      : Image.network(
+                          iconUrl,
+                          fit: BoxFit.contain,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const SizedBox.shrink();
+                          },
+                          errorBuilder: (context, error, stackTrace) => Icon(
+                            Icons.category,
+                            size: 13,
+                            color: isSelected
+                                ? Colors.white
+                                : Colors.grey.shade500,
+                          ),
+                        ),
+                ),
+              ),
+              const SizedBox(width: 7),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.grey.shade700,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          extendBody: false,
-          extendBodyBehindAppBar: true,
-          backgroundColor: Colors.grey.shade50,
-          body: CustomScrollView(
-            // physics: PageScrollPhysics(),
-            physics: ClampingScrollPhysics(),
-            controller: _scrollController,
-            slivers: [
-              // Your app bar - will scroll away
-              SliverMainAppBar(
-                showBars: showBars,
-                authRepository: widget.authRepository,
-              ),
-
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    SizedBox(height: 10),
-
-                    SizedBox(height: 4),
-
-                    //carousel slider of home page
-                    // HomeCarouselSlider(),
-                    // const SizedBox(height: 20,),
-
-                    //Trending Categories
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      //text category see all
-                      child: Row(
-                        children: [
-                          Text(
-                            'Trending Categories',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-
-                          Expanded(child: SizedBox(width: 1)),
-
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SeeAllCategory(
-                                    repository: widget.authRepository,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              "See All",
-                              style: TextStyle(
-                                color: Colors.redAccent,
-                                fontSize: 15,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              IconSubWithProduct(repository: widget.authRepository),
-
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    //trending categories
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      //text category see all
-                      child: Row(
-                        children: [
-                          Text(
-                            ' Popular Products',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-
-                          Expanded(child: SizedBox(width: 1)),
-
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SeeAllCategory(
-                                    repository: widget.authRepository,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              "See All",
-                              style: TextStyle(
-                                color: Colors.redAccent,
-                                fontSize: 12,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    isLoadingCategory
-                        ? _categoryShimmer()
-                        : DefaultTabController(
-                            length: categories.length + 1, // +1 for "All" tab
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TabBar(
-                                  isScrollable: true,
-                                  tabAlignment: TabAlignment.start,
-
-                                  labelColor: const Color(0xFF1E88E5),
-                                  unselectedLabelColor: Colors.grey[600],
-
-                                  indicatorColor: const Color(0xFF1E88E5),
-                                  indicatorWeight: 3,
-
-                                  tabs: [
-                                    const Tab(
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 14,
-                                        ),
-
-                                        child: Text(
-                                          "All",
-
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-
-                                    ...categories.map((category) {
-                                      return Tab(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 14,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              // Category Icon
-                                              Container(
-                                                width: 30,
-                                                height: 30,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.blueAccent
-                                                      .withOpacity(0.4),
-                                                ),
-                                                child: Image.network(
-                                                  category.icon ?? '',
-                                                  width: 25,
-                                                  height: 25,
-                                                  errorBuilder:
-                                                      (
-                                                        context,
-                                                        error,
-                                                        stackTrace,
-                                                      ) {
-                                                        return const Icon(
-                                                          Icons.category,
-                                                          size: 25,
-                                                        );
-                                                      },
-                                                ),
-                                              ),
-
-                                              const SizedBox(width: 8),
-
-                                              Text(
-                                                category.name,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ],
-
-                                  onTap: (index) {
-                                    setState(() {
-                                      if (index == 0) {
-                                        // All selected
-                                        selectedCategory = null;
-                                        debugPrint("CATEGORY FILTER ID: ALL");
-                                      } else {
-                                        selectedCategory =
-                                            categories[index - 1];
-
-                                        debugPrint(
-                                          "CATEGORY FILTER ID: ${selectedCategory!.id}",
-                                        );
-                                      }
-                                    });
-                                  },
-                                ),
-
-                                const SizedBox(height: 16),
-                              ],
-                            ),
-                          ),
-                    SizedBox(height: 15),
-                  ],
-                ),
-              ),
-
-              SubcategoryWithProduct(
-                // categoryId: selectedCategory?.id,
-                categoryName: selectedCategory?.name,
-                repository: widget.authRepository,
-              ),
-
-              SliverToBoxAdapter(child: SizedBox(height: 100)),
-            ],
+    return Scaffold(
+      extendBody: false,
+      extendBodyBehindAppBar: true,
+      backgroundColor: const Color(0xFFF5F6F8),
+      body: CustomScrollView(
+        physics: const ClampingScrollPhysics(),
+        controller: _scrollController,
+        slivers: [
+          SliverMainAppBar(
+            showBars: showBars,
+            authRepository: widget.authRepository,
           ),
-        ),
-      ],
+
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                const SizedBox(height: 14),
+                _sectionHeader(
+                  title: 'Trending Categories',
+                  icon: Icons.local_fire_department_rounded,
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+
+          IconSubWithProduct(repository: widget.authRepository),
+
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                const SizedBox(height: 22),
+                _sectionHeader(
+                  title: 'Popular Products',
+                  icon: Icons.trending_up_rounded,
+                  trailing: _seeAllButton(() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SeeAllCategory(repository: widget.authRepository),
+                      ),
+                    );
+                  }),
+                ),
+                const SizedBox(height: 12),
+                isLoadingCategory ? _categoryShimmer() : _categoryChips(),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+
+          SubcategoryWithProduct(
+            categoryName: selectedCategory?.name,
+            repository: widget.authRepository,
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        ],
+      ),
     );
   }
 }

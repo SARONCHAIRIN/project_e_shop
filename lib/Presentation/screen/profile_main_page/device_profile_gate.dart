@@ -1,10 +1,10 @@
-import 'package:e_shop/Presentation/screen/auth/login/login_screen.dart';
+import 'package:e_shop/Presentation/screen/profile_main_page/sub_profile.dart';
 import 'package:e_shop/features/auth/presentation/screens/login_button_sheet.dart';
 import 'package:e_shop/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:e_shop/Presentation/screen/profile_main_page/profile_main.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class DeviceProfileGate extends StatefulWidget {
   final User_AuthRepository repository;
@@ -39,12 +39,13 @@ class _DeviceProfileGateState extends State<DeviceProfileGate> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: Center(child: SpinKitCircle(color: Colors.grey,size: 20,)));
     }
     if (userId == null || userId == 0) {
       return  _GuestProfilePage(repository: widget.repository);
     }
-    return ProfileMain(authRepository: widget.repository);
+    return Profilepage(authRepository: widget.repository);
+    // return Profilepage(authRepository: widget.repository);
   }
 }
 
@@ -73,11 +74,8 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
   }
   @override
   Widget build(BuildContext context) {
-
-
-
-
     return Scaffold(
+      extendBody: true,
       // backgroundColor: const Color(0xFFF5F5F5),
       backgroundColor: Colors.grey.shade100,
       body: SafeArea(
@@ -86,8 +84,10 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
             _TopBar(),
             Expanded(
               child: SingleChildScrollView(
+                padding: const EdgeInsets.only(bottom: 100),
                 child: Column(
                   children: [
+
                     _GuestHero(context),
                     const SizedBox(height: 8),
                     _GuestMenuSection(),
@@ -251,8 +251,12 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
           title: 'Help & support',
           subtitle: 'Chat, call or email us',
           onTap: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) =>ResetPasswordScreen()));
-
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ResetPasswordScreen(),
+              ),
+            );
           },
         ),
       ],

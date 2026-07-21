@@ -5,10 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/storage/token_storage.dart' show TokenStorage;
 import '../../data/models/auth_models.dart';
 import '../providers/auth_providers.dart';
+
 class LoginBottomSheet1 extends ConsumerStatefulWidget {
   const LoginBottomSheet1({super.key});
-
-
 
   @override
   ConsumerState<LoginBottomSheet1> createState() => _LoginBottomSheetState();
@@ -25,8 +24,6 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
   @override
   void initState() {
     super.initState();
-
-
   }
 
   @override
@@ -35,8 +32,6 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
     _passwordController.dispose();
     super.dispose();
   }
-
-
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
@@ -55,15 +50,17 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
     final state = ref.read(authControllerProvider);
 
     if (state.error == null && state.data != null) {
-
       await TokenStorage().saveUserId(state.data!.userId!);
 
       if (!mounted) return;
-      Navigator.pop(context,true); // close bottom sheet first
+      Navigator.pop(context, true); // close bottom sheet first
 
       await Future.delayed(const Duration(milliseconds: 100));
 
-      Navigator.pushReplacementNamed(context, '/divicenav'); // then go to main screen
+      Navigator.pushReplacementNamed(
+        context,
+        '/divicenav',
+      ); // then go to main screen
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -72,12 +69,6 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
         ),
       );
     }
-  }
-
-  void _goToRegister() {
-    Navigator.pop(context);
-    // Navigator.pushNamed(context, '/register');
-    Navigator.push(context, MaterialPageRoute(builder: (_) => const RegisterScreen()));
   }
 
   void _forgotPassword() {
@@ -89,15 +80,12 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
 
   void _googleSignIn() {
     // TODO: wire up Google auth
-
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(authControllerProvider);
     final bottom = MediaQuery.of(context).viewInsets.bottom;
-
-
 
     return Container(
       padding: EdgeInsets.fromLTRB(24, 12, 24, 32 + bottom),
@@ -113,7 +101,8 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
             // Drag handle
             Center(
               child: Container(
-                width: 36, height: 4,
+                width: 36,
+                height: 4,
                 margin: const EdgeInsets.only(bottom: 24),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
@@ -122,11 +111,15 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
               ),
             ),
 
-            const Text("Welcome back",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+            const Text(
+              "Welcome back",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+            ),
             const SizedBox(height: 4),
-            Text("Sign in to your account to continue",
-                style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+            Text(
+              "Sign in to your account to continue",
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            ),
             const SizedBox(height: 24),
 
             Form(
@@ -152,7 +145,7 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                       ),
                     ),
                     validator: (v) =>
-                    v == null || v.isEmpty ? "Required" : null,
+                        v == null || v.isEmpty ? "Required" : null,
                   ),
                   const SizedBox(height: 14),
 
@@ -164,11 +157,14 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                       hintText: "Password",
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
-                        icon: Icon(_obscurePassword
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined),
-                        onPressed: () =>
-                            setState(() => _obscurePassword = !_obscurePassword),
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                        ),
+                        onPressed: () => setState(
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
                       ),
                       filled: true,
                       fillColor: Colors.grey.shade50,
@@ -182,7 +178,7 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                       ),
                     ),
                     validator: (v) =>
-                    v != null && v.length >= 6 ? null : "Min 6 chars",
+                        v != null && v.length >= 6 ? null : "Min 6 chars",
                   ),
 
                   // Error
@@ -190,12 +186,20 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.error_outline,
-                            color: Colors.red, size: 16),
+                        const Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                          size: 16,
+                        ),
                         const SizedBox(width: 6),
                         Expanded(
-                          child: Text(state.error!,
-                              style: const TextStyle(color: Colors.red, fontSize: 13)),
+                          child: Text(
+                            state.error!,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 13,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -214,8 +218,13 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                       const Spacer(),
                       TextButton(
                         onPressed: _forgotPassword,
-                        child: const Text("Forgot password?",
-                            style: TextStyle(color: Color(0xFF1D9E75), fontSize: 13)),
+                        child: const Text(
+                          "Forgot password?",
+                          style: TextStyle(
+                            color: Color(0xFF1D9E75),
+                            fontSize: 13,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -223,20 +232,26 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
 
                   // Sign in button
                   SizedBox(
-                    width: double.infinity, height: 50,
+                    width: double.infinity,
+                    height: 50,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1D9E75),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                       onPressed: state.isLoading ? null : _login,
                       icon: state.isLoading
                           ? const SizedBox(
-                          width: 18, height: 18,
-                          child: CircularProgressIndicator(
-                              color: Colors.white, strokeWidth: 2))
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
                           : const Icon(Icons.login),
                       label: Text(state.isLoading ? "Signing in…" : "Sign in"),
                     ),
@@ -244,35 +259,47 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                   const SizedBox(height: 18),
 
                   // Divider
-                  Row(children: [
-                    const Expanded(child: Divider()),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text("or continue with",
-                          style: TextStyle(color: Colors.grey.shade500, fontSize: 13)),
-                    ),
-                    const Expanded(child: Divider()),
-                  ]),
+                  Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Text(
+                          "or continue with",
+                          style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
                   const SizedBox(height: 18),
 
                   // Google button
                   SizedBox(
-                    width: double.infinity, height: 50,
+                    width: double.infinity,
+                    height: 50,
                     child: OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         side: BorderSide(color: Colors.grey.shade300),
                       ),
                       onPressed: _googleSignIn,
                       icon: Image.network(
                         'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
-                        width: 20, height: 20,
+                        width: 20,
+                        height: 20,
                         errorBuilder: (_, __, ___) =>
-                        const Icon(Icons.g_mobiledata, size: 22),
+                            const Icon(Icons.g_mobiledata, size: 22),
                       ),
-                      label: const Text("Continue with Google",
-                          style: TextStyle(fontWeight: FontWeight.w500)),
+                      label: const Text(
+                        "Continue with Google",
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -281,20 +308,30 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Don't have an account? ",
-                          style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+                      Text(
+                        "Don't have an account? ",
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 13,
+                        ),
+                      ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.pop(context);
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => RegisterScreen()));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => RegisterScreen()),
+                          );
                         },
                         // onTap: _goToRegister,
-                        child: const Text("Create account",
-                            style: TextStyle(
-                              color: Color(0xFF1D9E75),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            )),
+                        child: const Text(
+                          "Create account",
+                          style: TextStyle(
+                            color: Color(0xFF1D9E75),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ],
                   ),

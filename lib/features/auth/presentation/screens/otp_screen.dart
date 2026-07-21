@@ -9,9 +9,6 @@ import '../../data/models/auth_models.dart';
 import '../providers/auth_providers.dart';
 
 class _Palette {
-  static const bgTop = Color(0xFF0B1120);
-  static const bgMid = Color(0xFF182447);
-  static const bgBottom = Color(0xFF2D1B4E);
   static const gold = Color(0xFFF2B705);
   static const goldDeep = Color(0xFFCB8A00);
   static const goldText = Color(0xFF231A00);
@@ -21,15 +18,10 @@ class _Palette {
 }
 
 class OtpScreen extends ConsumerStatefulWidget {
-
   final String email;
   final OtpFlow flow;
 
-  const OtpScreen({
-    super.key,
-    required this.email,
-    required this.flow,
-  });
+  const OtpScreen({super.key, required this.email, required this.flow});
 
   @override
   ConsumerState<OtpScreen> createState() => _OtpScreenState();
@@ -142,24 +134,21 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
         Navigator.pushNamedAndRemoveUntil(
           context,
           '/divicenav',
-              (route) => false,
+          (route) => false,
           arguments: {'verified': true},
         );
-      }
-      else if (widget.flow == OtpFlow.forgotPassword) {
+      } else if (widget.flow == OtpFlow.forgotPassword) {
         Navigator.pushReplacementNamed(
           context,
           '/newPassword',
-          arguments: {
-            'email': widget.email,
-            'code': _otpCode,
-          },
+          arguments: {'email': widget.email, 'code': _otpCode},
         );
       }
     } else {
       _showSnack(state.error ?? 'Invalid OTP', isError: true);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(authControllerProvider);
@@ -196,7 +185,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
           // Main card
           SizedBox.expand(
             child: Padding(
-              padding: const EdgeInsets.symmetric( vertical: 0,horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
               child: SafeArea(
                 child: FadeTransition(
                   opacity: _fadeAnim,
@@ -211,7 +200,12 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                           child: BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
                             child: Container(
-                              padding: const EdgeInsets.fromLTRB(26, 30, 26, 26),
+                              padding: const EdgeInsets.fromLTRB(
+                                26,
+                                30,
+                                26,
+                                26,
+                              ),
                               decoration: BoxDecoration(
                                 color: _Palette.glass,
                                 borderRadius: BorderRadius.circular(28),
@@ -249,7 +243,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: _Palette.gold.withOpacity(0.4),
+                                              color: _Palette.gold.withOpacity(
+                                                0.4,
+                                              ),
                                               blurRadius: 18,
                                               spreadRadius: 1,
                                             ),
@@ -263,7 +259,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                       ),
                                     ),
                                     const SizedBox(height: 10),
-                                
+
                                     // Step indicator — step 2 of 2, both filled
                                     Row(
                                       children: [
@@ -271,7 +267,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                           child: Container(
                                             height: 4,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(2),
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
                                               color: _Palette.gold,
                                             ),
                                           ),
@@ -281,7 +278,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                           child: Container(
                                             height: 4,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(2),
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
                                               color: _Palette.gold,
                                             ),
                                           ),
@@ -299,7 +297,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                       ),
                                     ),
                                     const SizedBox(height: 10),
-                                
+
                                     const Text(
                                       'Verify your email',
                                       style: TextStyle(
@@ -327,12 +325,14 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                       ),
                                     ),
                                     const SizedBox(height: 16),
-                                
+
                                     // OTP boxes
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: List.generate(_otpLength, (index) {
+                                      children: List.generate(_otpLength, (
+                                        index,
+                                      ) {
                                         final isFilled =
                                             _controllers[index].text.isNotEmpty;
                                         return SizedBox(
@@ -340,12 +340,14 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                           height: 58,
                                           child: KeyboardListener(
                                             focusNode: FocusNode(),
-                                            onKeyEvent: (e) => _onKeyEvent(index, e),
+                                            onKeyEvent: (e) =>
+                                                _onKeyEvent(index, e),
                                             child: TextFormField(
                                               controller: _controllers[index],
                                               focusNode: _focusNodes[index],
                                               textAlign: TextAlign.center,
-                                              keyboardType: TextInputType.number,
+                                              keyboardType:
+                                                  TextInputType.number,
                                               maxLength: _otpLength,
                                               inputFormatters: [
                                                 FilteringTextInputFormatter
@@ -361,30 +363,43 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                                 counterText: '',
                                                 filled: true,
                                                 fillColor: isFilled
-                                                    ? Colors.white.withOpacity(0.18)
-                                                    : Colors.white.withOpacity(0.06),
-                                                enabledBorder: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(
-                                                    14,
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    color: isFilled
-                                                        ? _Palette.gold
-                                                        : Colors.white.withOpacity(
-                                                            0.14,
+                                                    ? Colors.white.withOpacity(
+                                                        0.18,
+                                                      )
+                                                    : Colors.white.withOpacity(
+                                                        0.06,
+                                                      ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            14,
                                                           ),
-                                                    width: isFilled ? 1.6 : 1,
-                                                  ),
-                                                ),
-                                                focusedBorder: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(
-                                                    14,
-                                                  ),
-                                                  borderSide: const BorderSide(
-                                                    color: _Palette.gold,
-                                                    width: 1.6,
-                                                  ),
-                                                ),
+                                                      borderSide: BorderSide(
+                                                        color: isFilled
+                                                            ? _Palette.gold
+                                                            : Colors.white
+                                                                  .withOpacity(
+                                                                    0.14,
+                                                                  ),
+                                                        width: isFilled
+                                                            ? 1.6
+                                                            : 1,
+                                                      ),
+                                                    ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            14,
+                                                          ),
+                                                      borderSide:
+                                                          const BorderSide(
+                                                            color:
+                                                                _Palette.gold,
+                                                            width: 1.6,
+                                                          ),
+                                                    ),
                                                 contentPadding: EdgeInsets.zero,
                                               ),
                                               onChanged: (v) =>
@@ -395,13 +410,15 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                       }),
                                     ),
                                     const SizedBox(height: 16),
-                                
+
                                     // Verify button
                                     SizedBox(
                                       width: double.infinity,
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(16),
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
                                           gradient: _isComplete
                                               ? const LinearGradient(
                                                   colors: [
@@ -418,9 +435,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                           boxShadow: _isComplete
                                               ? [
                                                   BoxShadow(
-                                                    color: _Palette.gold.withOpacity(
-                                                      0.35,
-                                                    ),
+                                                    color: _Palette.gold
+                                                        .withOpacity(0.35),
                                                     blurRadius: 16,
                                                     offset: const Offset(0, 6),
                                                   ),
@@ -430,18 +446,22 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                         child: Material(
                                           color: Colors.transparent,
                                           child: InkWell(
-                                            borderRadius: BorderRadius.circular(16),
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
                                             onTap: (isLoading || !_isComplete)
                                                 ? null
                                                 : () => _verify(controller),
                                             child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                vertical: 15,
-                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 15,
+                                                  ),
                                               child: Center(
                                                 child: isLoading
                                                     ? const SpinKitDualRing(
-                                                        color: _Palette.goldText,
+                                                        color:
+                                                            _Palette.goldText,
                                                         size: 22,
                                                         lineWidth: 3,
                                                       )
@@ -449,13 +469,15 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                                         'Verify code',
                                                         style: TextStyle(
                                                           color: _isComplete
-                                                              ? _Palette.goldText
+                                                              ? _Palette
+                                                                    .goldText
                                                               : Colors.white
                                                                     .withOpacity(
                                                                       0.35,
                                                                     ),
                                                           fontSize: 16,
-                                                          fontWeight: FontWeight.w700,
+                                                          fontWeight:
+                                                              FontWeight.w700,
                                                           letterSpacing: 0.3,
                                                         ),
                                                       ),
@@ -466,15 +488,18 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                       ),
                                     ),
                                     const SizedBox(height: 1),
-                                
+
                                     // Resend row
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           "Didn't receive the code? ",
                                           style: TextStyle(
-                                            color: Colors.white.withOpacity(0.6),
+                                            color: Colors.white.withOpacity(
+                                              0.6,
+                                            ),
                                             fontSize: 13,
                                           ),
                                         ),
@@ -482,12 +507,15 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                           style: TextButton.styleFrom(
                                             padding: EdgeInsets.zero,
                                             minimumSize: const Size(0, 0),
-                                            tapTargetSize:
-                                                MaterialTapTargetSize.shrinkWrap,
+                                            tapTargetSize: MaterialTapTargetSize
+                                                .shrinkWrap,
                                           ),
                                           onPressed: () async {
                                             final success = await ref
-                                                .read(authControllerProvider.notifier)
+                                                .read(
+                                                  authControllerProvider
+                                                      .notifier,
+                                                )
                                                 .resendOtp(widget.email);
                                             if (!mounted) return;
                                             _showSnack(

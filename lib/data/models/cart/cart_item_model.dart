@@ -1,44 +1,3 @@
-/*
-import '../product_model_eshop.dart';
-
-class CartItem {
-  final int id;
-  final ProductSku productSku;
-  final String name;
-  int quantity;
-  final List<String> mainImage;
-
-  CartItem({
-    required this.id,
-    required this.productSku,
-    required this.name,
-    required this.quantity,
-    required this.mainImage,
-  });
-  double get totalPrice => (productSku.price * quantity).toDouble();
-
-
-  static List<String> extractImages(String raw) {
-    final regex = RegExp(r'https?://[^,\]\s]+');
-    return regex
-        .allMatches(raw)
-        .map((e) => e.group(0)!)
-        .toList();
-  }
-
-  factory CartItem.fromJson(Map<String, dynamic> json) {
-    final rawImage = json['image']?.toString() ?? '';
-
-    return CartItem(
-      id: json['id'] ?? 0,
-      productSku: ProductSku.fromJson(json['productSku']),
-      name: json['name'] ?? '',
-      quantity: json['quantity'] ?? 0,
-      mainImage: extractImages(rawImage), // 🔥 IMPORTANT FIX
-    );
-  }
-}*/
-
 import '../product_model_eshop.dart';
 
 class CartItem {
@@ -89,7 +48,6 @@ class CartItem {
       name: json['name'] ?? '',
       quantity: json['quantity'] ?? 0,
 
-      // ✅ TAKE IMAGE FROM SKU (NOT ROOT)
       mainImage:
           (sku?['main_image'] as List<dynamic>?)
               ?.map((e) => e.toString())

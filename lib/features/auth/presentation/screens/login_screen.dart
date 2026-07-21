@@ -1,17 +1,14 @@
 import 'package:e_shop/data/repositories/auth/auth_repository.dart';
-import 'package:e_shop/features/auth/presentation/screens/login_button_sheet.dart' show LoginBottomSheet1;
+import 'package:e_shop/features/auth/presentation/screens/login_button_sheet.dart'
+    show LoginBottomSheet1;
 import 'package:flutter/material.dart';
-
-import '../../../../Presentation/screen/auth/login/login_screen.dart' hide LoginBottomSheet;
 
 class LoginScreen extends StatefulWidget {
   final AuthRepository repository;
 
   static const routelogin = '/login1';
 
-  const LoginScreen({
-    required this.repository,
-    super.key});
+  const LoginScreen({required this.repository, super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -40,7 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-    );
+    return const Scaffold();
   }
 }

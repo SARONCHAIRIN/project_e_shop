@@ -1,6 +1,4 @@
 import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
-import 'package:e_shop/Presentation/controllers/payment/payment_controller.dart';
-import 'package:e_shop/Presentation/screen/auth/signup/signup_screen.dart';
 import 'package:e_shop/Presentation/screen/order/order_history_screen.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/device_profile_gate.dart';
 import 'package:e_shop/core/constants/otp_flow.dart';
@@ -11,21 +9,16 @@ import 'package:e_shop/features/auth/presentation/screens/reset_password_screen.
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 
 // Auth
-import 'Presentation/controllers/cart/cart_controller.dart';
 import 'Presentation/screen/order/trackOrder.dart';
 import 'core/network/api_client.dart';
 import 'core/storage/token_storage.dart';
-import 'data/datasources/cart/cart_service.dart';
 import 'data/datasources/user_auth_service.dart';
-import 'data/repositories/cart/cart_repo.dart';
 import 'data/repositories/user_auth_repository.dart';
 
 // Screens
 import 'Presentation/screen/Splash_Screen_Page/slpash_screen.dart';
-import 'features/auth/presentation/screens/login_screen.dart' show LoginScreen;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +29,6 @@ void main() async {
   // Initialize token storage & read token
   final tokenStorage = TokenStorage();
   final token = await tokenStorage.readToken();
-  final userId = await tokenStorage.readUserId() ?? 0;
 
   // Initialize API & Auth
   final apiClient = ApiClient();
@@ -46,27 +38,7 @@ void main() async {
     storage: tokenStorage,
   );
   // Initialize Cart Service & Repository
-  final cartService = CartService();
-  final cartRepo = CartRepository(cartService);
 
-  // runApp(
-  //   MultiProvider(
-  //     providers: [
-  //       //cart controller
-  //       ChangeNotifierProvider(
-  //         create: (_) => CartController(repository: cartRepo),
-  //       ),
-  //
-  //       ChangeNotifierProvider(create: (_) => PaymentController()),
-  //
-  //       //order controller
-  //     ],
-  //     child: MyApp(
-  //       authRepository: authRepository,
-  //       initialScreen: token == null ? 'splashscreen' : 'home',
-  //     ),
-  //   ),
-  // );
   runApp(
     ProviderScope(
       child: MyApp(
@@ -112,10 +84,9 @@ class MyApp extends StatelessWidget {
         if (settings.name == '/otp-verify') {
           final email = settings.arguments as String;
 
-          return MaterialPageRoute(builder: (_) => OtpScreen(
-            email: email,
-            flow: OtpFlow.register,
-          ));
+          return MaterialPageRoute(
+            builder: (_) => OtpScreen(email: email, flow: OtpFlow.register),
+          );
         }
 
         if (settings.name == '/newPassword') {
