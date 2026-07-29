@@ -2,6 +2,7 @@ import 'package:e_shop/Presentation/screen/payment/bakong_qr_screen.dart';
 import 'package:e_shop/Presentation/screen/payment/payment_processing_screen.dart';
 import 'package:e_shop/core/widgets/animation_widgets.dart';
 import 'package:e_shop/data/datasources/adress/adress_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/storage/token_storage.dart';
@@ -85,7 +86,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
         final token = await _storage.readToken();
         if (userId == null || token == null) {
           if (mounted) {
-            _showError('Session expired. Please login again.');
+            _showError('session_expired'.tr());
             Future.delayed(const Duration(seconds: 2), () {
               if (mounted) Navigator.pop(context);
             });
@@ -111,7 +112,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
     final total = cartState.cart?.totalPrice ?? 0;
     if (_selectedPaymentMethod == null) {
       _shakeKey.currentState?.shake(); // ← button shake!
-      _showError('Please select a payment method');
+      _showError('please_select_payment_method'.tr());
       return;
     }
 
@@ -170,7 +171,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
           if (bakongQrString.isEmpty ||
               bakongMd5 == null ||
               bakongMd5.isEmpty) {
-            _showError('Bakong service unavailable. Please try again later.');
+            _showError('bakong_service_unavailable'.tr());
             return;
           }
 
@@ -210,7 +211,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
             context: context,
             message: e.toString().replaceFirst('Exception: ', ''),
             onRetry: _handleContinue,
-            retryLabel: 'Try Again',
+            retryLabel: 'try_again'.tr(),
           );
         }
       } finally {
@@ -224,7 +225,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        title: const Text('Select Payment Method'),
+        title: Text('select_payment_method'.tr()),
         backgroundColor: Colors.white,
         elevation: 0.5,
       ),
@@ -233,8 +234,8 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
       body: LoadingOverlay(
         isLoading: _isLoading,
         message: _selectedPaymentMethod == 'bakong'
-            ? 'Creating QR Code...'
-            : 'Creating Order',
+            ? 'creating_qr_code'.tr()
+            : 'creating_order'.tr(),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,8 +250,8 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Payment Method',
+                    Text(
+                      'payment_method'.tr(),
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -266,8 +267,8 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
                         children: [
                           PaymentMethodTile(
                             icon: Icons.local_atm,
-                            title: 'Cash on Delivery',
-                            description: 'Pay when you receive your order',
+                            title: "cash_on_delivery".tr(),
+                            description: 'pay_when_receive_order'.tr(),
                             isSelected: _selectedPaymentMethod == 'cod',
                             onTap: () => setState(() {
                               _selectedPaymentMethod = 'cod';
@@ -280,8 +281,9 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
 
                           PaymentMethodTile(
                             icon: Icons.qr_code,
-                            title: 'Bakong QR Code',
-                            description: 'Scan QR and pay instantly',
+                            title: 'bakong_qr_code'.tr(),
+
+                            description: 'scan_qr_pay_instantly'.tr(),
                             isSelected: _selectedPaymentMethod == 'bakong',
                             onTap: () => setState(() {
                               _selectedPaymentMethod = 'bakong';
@@ -351,7 +353,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Delivery Address',
+              'delivery_address'.tr(),
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -379,9 +381,9 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (_loadingAddress)
-                        const Text('Loading address...')
+                        Text('loading_address'.tr())
                       else if (_address == null)
-                        const Text('No address found')
+                        Text('no_address_found'.tr())
                       else ...[
                         Text(
                           _address!.addressline1,
@@ -426,7 +428,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Order Summary',
+                'order_summary'.tr(),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -435,8 +437,8 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
               ),
               TextButton(
                 onPressed: () {},
-                child: const Text(
-                  'Edit Cart',
+                child:  Text(
+                  'edit_cart'.tr(),
                   style: TextStyle(fontSize: 12, color: Colors.blue),
                 ),
               ),
@@ -449,7 +451,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Total Amount',
+              'total_amount'.tr(),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -503,8 +505,8 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
-                : const Text(
-                    'Continue to Payment',
+                :  Text(
+              'continue_to_payment'.tr(),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:e_shop/Presentation/screen/order/orderSuccessScreen.dart';
 import 'package:e_shop/core/widgets/animation_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
@@ -104,7 +105,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
 
     if (widget.bakongQrString.isEmpty || widget.bakongMd5.isEmpty) {
       setState(() {
-        _error = 'QR data is missing.';
+        _error = "qr_data_missing".tr();
         _loading = false;
       });
       return;
@@ -379,7 +380,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
         if (!mounted) return;
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text("Permission denied")));
+        ).showSnackBar(SnackBar(content: Text("permission_denied".tr())));
         return;
       }
 
@@ -388,13 +389,13 @@ class _BakongQrScreenState extends State<BakongQrScreen>
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("QR saved to gallery")));
+      ).showSnackBar(SnackBar(content: Text('qr_saved'.tr())));
     } catch (e) {
       debugPrint("Save QR error: $e");
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Failed to save QR")));
+      ).showSnackBar(SnackBar(content: Text('failed_save_qr'.tr())));
     }
   }
 
@@ -443,7 +444,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => PaymentFailedScreen(reason: 'Order cancelled'),
+          builder: (_) => PaymentFailedScreen(reason: 'order_cancelled'.tr()),
         ),
       );
     } catch (e) {
@@ -452,7 +453,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
         setState(() => _cancelling = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Failed to cancel order'),
+            content: Text('failed_cancel_order'.tr()),
             backgroundColor: _red,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -500,8 +501,8 @@ class _BakongQrScreenState extends State<BakongQrScreen>
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Cancel Payment?',
+                Text(
+                  'cancel_payment'.tr(),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
@@ -510,8 +511,8 @@ class _BakongQrScreenState extends State<BakongQrScreen>
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'This will cancel your order and\nthe QR code will be invalidated.',
+                Text(
+                  'cancel_description'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14, color: _muted, height: 1.5),
                 ),
@@ -528,8 +529,8 @@ class _BakongQrScreenState extends State<BakongQrScreen>
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: const Text(
-                          'Keep Paying',
+                        child: Text(
+                          'keep_paying'.tr(),
                           style: TextStyle(
                             color: _ink,
                             fontWeight: FontWeight.w600,
@@ -550,8 +551,8 @@ class _BakongQrScreenState extends State<BakongQrScreen>
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: const Text(
-                          'Yes, Cancel',
+                        child: Text(
+                          'yes_cancel'.tr(),
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
@@ -623,14 +624,14 @@ class _BakongQrScreenState extends State<BakongQrScreen>
   }
 
   Widget _buildLoading() {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SpinKitFadingCircle(color: _blue, size: 48),
           SizedBox(height: 20),
           Text(
-            'Generating QR Code...',
+            'generating_qr'.tr(),
             style: TextStyle(
               color: _muted,
               fontSize: 15,
@@ -659,8 +660,8 @@ class _BakongQrScreenState extends State<BakongQrScreen>
               child: const Icon(Icons.wifi_off_rounded, color: _red, size: 38),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Something went wrong',
+            Text(
+              'something_wrong'.tr(),
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -670,7 +671,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              _error ?? 'Unknown error occurred',
+              _error ?? 'unknown_error'.tr(),
               textAlign: TextAlign.center,
               style: const TextStyle(color: _muted, fontSize: 14, height: 1.5),
             ),
@@ -681,7 +682,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
               child: ElevatedButton.icon(
                 onPressed: _prepareQr,
                 icon: const Icon(Icons.refresh_rounded, size: 18),
-                label: const Text('Try Again'),
+                label: Text('try_again'.tr()),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _blue,
                   foregroundColor: Colors.white,
@@ -828,11 +829,12 @@ class _BakongQrScreenState extends State<BakongQrScreen>
     final orderCode = widget.orderCode ?? 'ORD-${widget.orderId}';
     final date = widget.orderDate ?? DateTime.now();
     final dateStr = DateFormat('dd MMM yyyy  •  hh:mm a').format(date);
-    final note = widget.note ?? 'Thank you for shopping with E Shop!';
+    final note = widget.note ?? 'thank_you'.tr();
 
     return Column(
       children: [
         const SizedBox(height: 8),
+        _buildHeader(),
         _buildHeader(),
         const SizedBox(height: 20),
         _buildBakongBadge(),
@@ -879,8 +881,8 @@ class _BakongQrScreenState extends State<BakongQrScreen>
                         ),
                       ),
                       const SizedBox(width: 7),
-                      const Text(
-                        'Open Bakong app → Scan QR to pay',
+                      Text(
+                        'open_bakong_scan'.tr(),
                         style: TextStyle(
                           color: _blue,
                           fontSize: 12.5,
@@ -982,23 +984,23 @@ class _BakongQrScreenState extends State<BakongQrScreen>
                       children: [
                         _infoRow(
                           Icons.person_outline_rounded,
-                          'Customer Name',
+                          'customer_name'.tr(),
                           customerName,
                         ),
                         _infoDivider(),
                         _infoRow(
                           Icons.description_outlined,
-                          'Order ID',
+                          'order_id'.tr(),
                           orderCode,
                         ),
                         _infoDivider(),
                         _infoRow(
                           Icons.calendar_today_outlined,
-                          'Date',
+                          'date'.tr(),
                           dateStr,
                         ),
                         _infoDivider(),
-                        _infoRow(Icons.notes_outlined, 'Note', note),
+                        _infoRow(Icons.notes_outlined, 'note'.tr(), note),
                       ],
                     ),
                   ),
@@ -1027,7 +1029,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        'Expires in',
+                        'expires_in'.tr(),
                         style: TextStyle(
                           fontSize: 13,
                           color: isUrgent ? _red : _muted,
@@ -1093,9 +1095,9 @@ class _BakongQrScreenState extends State<BakongQrScreen>
             children: [
               PulsingDot(color: _green, size: 10),
               const SizedBox(width: 10),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Waiting for payment confirmation...',
+                  'waiting_payment'.tr(),
                   style: TextStyle(
                     color: _ink,
                     fontSize: 13.5,
@@ -1109,8 +1111,8 @@ class _BakongQrScreenState extends State<BakongQrScreen>
                   color: _green.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: const Text(
-                  'LIVE',
+                child: Text(
+                  'live'.tr(),
                   style: TextStyle(
                     color: _green,
                     fontSize: 10,
@@ -1152,11 +1154,11 @@ class _BakongQrScreenState extends State<BakongQrScreen>
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.cancel_outlined, size: 18),
                       SizedBox(width: 6),
                       Text(
-                        'Cancel Order',
+                        'cancel_order'.tr(),
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -1206,8 +1208,8 @@ class _BakongQrScreenState extends State<BakongQrScreen>
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Text(
-                  'Open Bakong to Pay',
+                Text(
+                  'open_bakong_pay'.tr(),
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                 ),
               ],
@@ -1224,7 +1226,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
           child: ElevatedButton.icon(
             onPressed: _saveQrToGallery,
             icon: const Icon(Icons.download_rounded),
-            label: const Text('Save QR to Gallery'),
+            label: Text('save_qr_gallery'.tr()),
             style: ElevatedButton.styleFrom(
               backgroundColor: _green,
               foregroundColor: Colors.white,
@@ -1294,11 +1296,11 @@ class _BakongQrScreenState extends State<BakongQrScreen>
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children:  [
             Icon(Icons.verified_user_outlined, size: 15, color: _muted),
             SizedBox(width: 6),
             Text(
-              'Secure Payment',
+              'secure_payment'.tr(),
               style: TextStyle(
                 fontSize: 12.5,
                 color: _muted,
@@ -1311,8 +1313,8 @@ class _BakongQrScreenState extends State<BakongQrScreen>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Powered by ',
+             Text(
+              '${'powered_by'.tr()} ',
               style: TextStyle(fontSize: 11.5, color: _muted),
             ),
             Container(
@@ -1360,9 +1362,9 @@ class _BakongQrScreenState extends State<BakongQrScreen>
 
   Widget _buildStepsGuide() {
     final steps = [
-      (Icons.phone_android_rounded, 'Open Bakong app'),
-      (Icons.qr_code_scanner_rounded, 'Tap Scan QR'),
-      (Icons.check_circle_outline_rounded, 'Confirm payment'),
+      (Icons.phone_android_rounded, 'bakong_payment.open_bakong_app'.tr()),
+      (Icons.qr_code_scanner_rounded, 'bakong_payment.tap_scan_qr'.tr()),
+      (Icons.check_circle_outline_rounded, 'bakong_payment.confirm_payment'.tr(), ),
     ];
 
     return Row(

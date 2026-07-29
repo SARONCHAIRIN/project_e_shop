@@ -1,5 +1,6 @@
 import 'package:e_shop/Presentation/screen/search/product_search.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide SearchController;
 
@@ -51,7 +52,7 @@ class ButtonInAppBar extends StatelessWidget implements PreferredSizeWidget {
                     isDense: true,
                     filled: true,
                     fillColor: Colors.white,
-                    hintText: 'Search product',
+                    hintText: "search_product".tr(),
                     hintStyle: TextStyle(
                       color: Colors.grey.shade400,
                       fontSize: 16,

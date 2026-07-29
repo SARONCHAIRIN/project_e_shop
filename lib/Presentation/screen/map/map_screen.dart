@@ -14,7 +14,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   // Mapbox access token (replace with your real token)
-  // final String tokenMap = Env.mapboxToken;
+  final String tokenMap = Env.mapboxToken;
 
   // Available Mapbox styles
   final Map<String, String> mapStyles = {
@@ -90,7 +90,7 @@ class _MapScreenState extends State<MapScreen> {
                 urlTemplate:
                     "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
                 additionalOptions: {
-                  // "accessToken": tokenMap,
+                  "accessToken": tokenMap,
                   "id": mapStyles[currentStyle]!,
                 },
               ),

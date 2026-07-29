@@ -9,6 +9,7 @@ import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/datasources/adress/adress_service.dart';
 import 'package:e_shop/data/models/user/get_user_model.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -41,7 +42,7 @@ class _ProfilepageState extends State<Profilepage> {
   int _wishlistCount = 0;
 
   int _coinBalance = 0;
-  String _tierName = 'Bronze';
+  String _tierName = "bronze".tr();
   int _tierPoints = 0;
 
   final serviceaddress = AddressService();
@@ -65,7 +66,9 @@ class _ProfilepageState extends State<Profilepage> {
 
       final name = await storage.readUsername();
       final storedEmail = await storage.readUserEmail();
-      final emailToShow = (storedEmail?.isNotEmpty == true) ? storedEmail : name;
+      final emailToShow = (storedEmail?.isNotEmpty == true)
+          ? storedEmail
+          : name;
 
       if (mounted) {
         setState(() {
@@ -99,7 +102,7 @@ class _ProfilepageState extends State<Profilepage> {
           MaterialPageRoute(
             builder: (_) => LoginScreen(authRepository: widget.authRepository),
           ),
-              (route) => false,
+          (route) => false,
         );
         return;
       }
@@ -108,7 +111,8 @@ class _ProfilepageState extends State<Profilepage> {
         final data = jsonDecode(response.body);
         final userData = data['data'];
 
-        if (userData['image'] != null && userData['image'].toString().isNotEmpty) {
+        if (userData['image'] != null &&
+            userData['image'].toString().isNotEmpty) {
           await TokenStorage().writeUserImage(userData['image']);
           if (mounted) setState(() => _uploadedImageUrl = userData['image']);
         }
@@ -189,7 +193,9 @@ class _ProfilepageState extends State<Profilepage> {
         Uri.parse('YOUR_API_URL/user/$userId'),
       );
       request.headers['Authorization'] = 'Bearer $token';
-      request.files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+      request.files.add(
+        await http.MultipartFile.fromPath('image', imageFile.path),
+      );
 
       var response = await request.send();
 
@@ -215,12 +221,12 @@ class _ProfilepageState extends State<Profilepage> {
             children: [
               ListTile(
                 leading: const Icon(Icons.photo_library),
-                title: const Text('Gallery'),
+                title: Text("gallery".tr()),
                 onTap: () => Navigator.pop(context, ImageSource.gallery),
               ),
               ListTile(
                 leading: const Icon(Icons.camera_alt),
-                title: const Text('Camera'),
+                title: Text("camera".tr()),
                 onTap: () => Navigator.pop(context, ImageSource.camera),
               ),
             ],
@@ -264,61 +270,68 @@ class _ProfilepageState extends State<Profilepage> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
-          onRefresh: () async {
-            await fetchUser();
-            await _loadAddressCount();
-          },
-          child: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: [
-              // ── everything that was your old body ──
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildHeaderRow(),
-                      const SizedBox(height: 20),
-                      _buildStatsRow(),
-                      const SizedBox(height: 24),
-                      _buildOrdersCard(),
-                    ],
-                  ),
-                ),
-              ),
-
-              // ── Recommended For You section header ──
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 28, 16, 10),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.favorite, size: 18, color: Colors.redAccent),
-                      const SizedBox(width: 6),
-                      const Text(
-                        'Recommended For You',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
+                onRefresh: () async {
+                  await fetchUser();
+                  await _loadAddressCount();
+                },
+                child: CustomScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    // ── everything that was your old body ──
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildHeaderRow(),
+                            const SizedBox(height: 20),
+                            _buildStatsRow(),
+                            const SizedBox(height: 24),
+                            _buildOrdersCard(),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+
+                    // ── Recommended For You section header ──
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 28, 16, 10),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.favorite,
+                              size: 18,
+                              color: Colors.redAccent,
+                            ),
+                            const SizedBox(width: 6),
+                            const Text(
+                              'Recommended For You',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // ── the sliver grid itself ──
+                    SubcategoryWithProduct(
+                      categoryName: null,
+                      repository: widget.authRepository,
+                    ),
+
+                    const SliverToBoxAdapter(child: SizedBox(height: 100)),
+                  ],
                 ),
               ),
-
-              // ── the sliver grid itself ──
-              SubcategoryWithProduct(
-                categoryName: null,
-                repository: widget.authRepository,
-              ),
-
-              const SliverToBoxAdapter(child: SizedBox(height: 100)),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -372,7 +385,7 @@ class _ProfilepageState extends State<Profilepage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                username?.isNotEmpty == true ? username! : 'User',
+                username?.isNotEmpty == true ? username! : 'User'.tr(),
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -426,7 +439,8 @@ class _ProfilepageState extends State<Profilepage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SettingPage(authRepository: widget.authRepository),
+                builder: (context) =>
+                    SettingPage(authRepository: widget.authRepository),
               ),
             );
           },
@@ -483,11 +497,12 @@ class _ProfilepageState extends State<Profilepage> {
             icon: Icons.location_on_outlined,
             iconColor: Colors.teal,
             count: _addressCount,
-            label: 'Addresses',
+            label: "addresses".tr(),
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => AddressListPage(repo: repoaddress, storage: storage),
+                builder: (_) =>
+                    AddressListPage(repo: repoaddress, storage: storage),
               ),
             ),
           ),
@@ -495,21 +510,21 @@ class _ProfilepageState extends State<Profilepage> {
             icon: Icons.local_offer_outlined,
             iconColor: Colors.green,
             count: _couponCount,
-            label: 'Coupons',
+            label: "coupons".tr(),
             onTap: () {},
           ),
           _statItem(
             icon: Icons.groups_outlined,
             iconColor: Colors.indigo,
             count: _followingCount,
-            label: 'Following',
+            label: "following".tr(),
             onTap: () {},
           ),
           _statItem(
             icon: Icons.favorite_border,
             iconColor: Colors.redAccent,
             count: _wishlistCount,
-            label: 'Wishlist',
+            label: "wishlist".tr(),
             onTap: () {},
           ),
         ],
@@ -533,9 +548,15 @@ class _ProfilepageState extends State<Profilepage> {
           children: [
             Icon(icon, color: iconColor, size: 22),
             const SizedBox(height: 6),
-            Text('$count', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+            Text(
+              '$count',
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 2),
-            Text(label, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+            Text(
+              label,
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+            ),
           ],
         ),
       ),
@@ -563,7 +584,10 @@ class _ProfilepageState extends State<Profilepage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('My Orders', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+              Text(
+                "my_orders".tr(),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              ),
               TextButton(
                 onPressed: () => _goToOrderHistory(),
                 style: TextButton.styleFrom(
@@ -572,9 +596,15 @@ class _ProfilepageState extends State<Profilepage> {
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 child: Row(
-                  children: const [
-                    Text('View All',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.orange)),
+                  children: [
+                    Text(
+                      "view_all".tr(),
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.orange,
+                      ),
+                    ),
                     Icon(Icons.chevron_right, size: 16, color: Colors.orange),
                   ],
                 ),
@@ -589,35 +619,35 @@ class _ProfilepageState extends State<Profilepage> {
                 icon: Icons.receipt_long_outlined,
                 background: Colors.amber.shade50,
                 iconColor: Colors.amber.shade700,
-                label: 'Pending',
+                label: "pending".tr(),
                 onTap: () => _goToOrderHistory(statusFilter: 'PENDING'),
               ),
               _orderStatusItem(
                 icon: Icons.inventory_2_outlined,
                 background: Colors.indigo.shade50,
                 iconColor: Colors.indigo,
-                label: 'Processing',
+                label: "processing".tr(),
                 onTap: () => _goToOrderHistory(statusFilter: 'PROCESSING'),
               ),
               _orderStatusItem(
                 icon: Icons.local_shipping_outlined,
                 background: Colors.teal.shade50,
                 iconColor: Colors.teal,
-                label: 'Shipped',
+                label: "shipped".tr(),
                 onTap: () => _goToOrderHistory(statusFilter: 'SHIPPED'),
               ),
               _orderStatusItem(
                 icon: Icons.check_circle_outline,
                 background: Colors.green.shade50,
                 iconColor: Colors.green,
-                label: 'Delivered',
+                label: "delivered".tr(),
                 onTap: () => _goToOrderHistory(statusFilter: 'DELIVERED'),
               ),
               _orderStatusItem(
                 icon: Icons.cancel_outlined,
                 background: Colors.red.shade50,
                 iconColor: Colors.red,
-                label: 'Cancelled',
+                label: "cancelled".tr(),
                 onTap: () => _goToOrderHistory(statusFilter: 'CANCELLED'),
               ),
             ],
@@ -642,11 +672,17 @@ class _ProfilepageState extends State<Profilepage> {
           Container(
             width: 46,
             height: 46,
-            decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(
+              color: background,
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: Icon(icon, color: iconColor, size: 22),
           ),
           const SizedBox(height: 6),
-          Text(label, style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
+          Text(
+            label,
+            style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
+          ),
         ],
       ),
     );
@@ -657,7 +693,8 @@ class _ProfilepageState extends State<Profilepage> {
       return Image.file(_image!, width: size, height: size, fit: BoxFit.cover);
     } else if (_uploadedImageUrl != null) {
       return CachedNetworkImage(
-        imageUrl: "${_uploadedImageUrl!}?v=${DateTime.now().millisecondsSinceEpoch}",
+        imageUrl:
+            "${_uploadedImageUrl!}?v=${DateTime.now().millisecondsSinceEpoch}",
         width: size,
         height: size,
         fit: BoxFit.cover,
@@ -669,15 +706,27 @@ class _ProfilepageState extends State<Profilepage> {
             child: SizedBox(
               width: 18,
               height: 18,
-              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
-        errorWidget: (context, url, error) =>
-            Center(child: Text(_initial(), style: const TextStyle(fontSize: 24, color: Colors.white))),
+        errorWidget: (context, url, error) => Center(
+          child: Text(
+            _initial(),
+            style: const TextStyle(fontSize: 24, color: Colors.white),
+          ),
+        ),
       );
     } else {
-      return Center(child: Text(_initial(), style: const TextStyle(fontSize: 24, color: Colors.white)));
+      return Center(
+        child: Text(
+          _initial(),
+          style: const TextStyle(fontSize: 24, color: Colors.white),
+        ),
+      );
     }
   }
 

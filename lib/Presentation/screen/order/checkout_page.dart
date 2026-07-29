@@ -3,6 +3,7 @@ import 'package:e_shop/Presentation/screen/order/checkoutStepIndicator_page.dart
 import 'package:e_shop/Presentation/screen/payment/payment_method_screen.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -83,8 +84,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
               ),
               Spacer(),
 
-              const Text(
-                "Checkout",
+               Text(
+                "checkout".tr(),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               ),
               SizedBox(width: 30),

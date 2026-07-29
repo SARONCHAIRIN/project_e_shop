@@ -6,6 +6,7 @@ import 'package:e_shop/data/models/category%20/category_model.dart';
 import 'package:e_shop/provider/category_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -141,9 +142,9 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: const [
+        children:  [
           Text(
-            "See All",
+            "see_all".tr(),
             style: TextStyle(
               color: _accent,
               fontSize: 12.5,
@@ -153,6 +154,114 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
           SizedBox(width: 2),
           Icon(Icons.chevron_right, size: 15, color: _accent),
         ],
+      ),
+    );
+  }
+
+  //=====translate khmer <=> english
+  Widget _translate() {
+    final isKhmer = context.locale.languageCode == 'km';
+
+    return Material(
+      color: Colors.transparent,
+      child: PopupMenuButton<Locale>(
+        padding: EdgeInsets.zero,
+        offset: const Offset(0, 44),
+        elevation: 1,
+        color: Theme.of(context).colorScheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+          ),
+        ),
+        initialValue: context.locale,
+        onSelected: (Locale locale) => context.setLocale(locale),
+        itemBuilder: (context) => [
+          _languageMenuItem(context,
+              locale: const Locale('en'), flag: '🇬🇧', label: 'English', isSelected: !isKhmer),
+          _languageMenuItem(context,
+              locale: const Locale('km'), flag: '🇰🇭', label: 'ខ្មែរ', isSelected: isKhmer),
+        ],
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Colors.grey.shade300,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(isKhmer ? '🇰🇭' : '🇬🇧', style: const TextStyle(fontSize: 16)),
+              const SizedBox(width: 6),
+              Text(
+                isKhmer ? 'KM' : 'EN',
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(width: 4),
+              Icon(Icons.keyboard_arrow_down_rounded,
+                  size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  PopupMenuItem<Locale> _languageMenuItem(
+      BuildContext context, {
+        required Locale locale,
+        required String flag,
+        required String label,
+        required bool isSelected,
+      }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return PopupMenuItem(
+      value: locale,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: Container(
+        width: 160,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? colorScheme.surfaceVariant.withOpacity(0.6)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Text(flag, style: const TextStyle(fontSize: 20)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+            ),
+            if (isSelected)
+              Container(
+                width: 25,
+                height: 25,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white
+                ),
+                child: Icon(
+                  Icons.check_rounded,
+                  size: 15,
+                  color: Colors.blueGrey,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -345,10 +454,12 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
               children: [
                 const SizedBox(height: 14),
                 _sectionHeader(
-                  title: 'Trending Categories',
+                  title: 'trending_categories'.tr(),
                   icon: Icons.local_fire_department_rounded,
+                  trailing: _translate(),
                 ),
                 const SizedBox(height: 10),
+
               ],
             ),
           ),
@@ -360,7 +471,7 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
               children: [
                 const SizedBox(height: 22),
                 _sectionHeader(
-                  title: 'Popular Products',
+                  title: 'popular_products'.tr(),
                   icon: Icons.trending_up_rounded,
                   trailing: _seeAllButton(() {
                     Navigator.push(

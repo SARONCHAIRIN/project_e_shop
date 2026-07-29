@@ -48,7 +48,7 @@ class OrderService {
   }) async {
     try {
       final response = await _dio.post(
-        '$_baseUrl/orders/user/from-cart',
+        '$_baseUrl_server/orders/user/from-cart',
         // '$_baseUrllocalwifi/orders/user/from-cart',
         queryParameters: {'userId': userId},
         data: {
@@ -95,7 +95,7 @@ class OrderService {
       debugPrint('Address ID: $addressId');
 
       // final url = '$_baseUrllocalwifi/orders/user/from-cart/bakong';
-      final url = '$_baseUrl/orders/user/from-cart/bakong';
+      final url = '$_baseUrl_server/orders/user/from-cart/bakong';
       debugPrint(' STEP 2: URL => $url');
 
       final body = {
@@ -171,7 +171,7 @@ class OrderService {
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
-    debugPrint("ORDER URL => $_baseUrl/orders");
+    debugPrint("ORDER URL => $_baseUrl_server/orders");
 
     if (response.statusCode == 200) {
       return response.data; // pageable format

@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+
 // Auth
 import 'Presentation/screen/order/trackOrder.dart';
 import 'core/network/api_client.dart';
@@ -40,14 +42,29 @@ void main() async {
   // Initialize Cart Service & Repository
 
   runApp(
-    ProviderScope(
-      child: MyApp(
-        authRepository: authRepository,
-        initialScreen: token == null ? 'splashscreen' : 'home',
+      EasyLocalization(
+        supportedLocales: const [
+          Locale('en'),
+          Locale('km'),
+        ],
+        path: 'assets/translations',
+
+        fallbackLocale: const Locale('en'),
+
+        // First language
+
+        startLocale: const Locale('en'),
+
+        child: ProviderScope(
+          child: MyApp(
+            authRepository: authRepository,
+            initialScreen: token == null ? 'splashscreen' : 'home',
+          ),
+        ),
+
       ),
-    ),
-  );
-}
+      );
+  }
 
 class MyApp extends StatelessWidget {
   final User_AuthRepository authRepository;
@@ -67,6 +84,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+
+      // EasyLocalization configuration
+
+      localizationsDelegates: context.localizationDelegates,
+
+      supportedLocales: context.supportedLocales,
+
+      locale: context.locale,
+
+      title: 'E-Shop',
+
+      theme: ThemeData(
+
+        primarySwatch: Colors.green,
+
+      ),
 
       onGenerateRoute: (settings) {
         if (settings.name == '/homemainppage') {
@@ -115,10 +148,11 @@ class MyApp extends StatelessWidget {
         if (settings.name == '/orderHistory') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
-            builder: (_) => OrderHistoryScreen(
-              userId: args['userId'] as int,
-              token: args['token'] as String,
-            ),
+            builder: (_) =>
+                OrderHistoryScreen(
+                  userId: args['userId'] as int,
+                  token: args['token'] as String,
+                ),
           );
         }
 
@@ -133,7 +167,8 @@ class MyApp extends StatelessWidget {
 
           if (args == null) {
             return MaterialPageRoute(
-              builder: (_) => const Scaffold(
+              builder: (_) =>
+              const Scaffold(
                 body: Center(child: Text('Missing route arguments')),
               ),
             );
@@ -145,25 +180,27 @@ class MyApp extends StatelessWidget {
 
           if (orderId == null || userId == null || token == null) {
             return MaterialPageRoute(
-              builder: (_) => const Scaffold(
+              builder: (_) =>
+              const Scaffold(
                 body: Center(child: Text('Invalid order data')),
               ),
             );
           }
 
           return MaterialPageRoute(
-            builder: (_) => TrackOrderPage(
-              orderId: orderId as int,
-              userId: userId as int,
-              token: token as String,
-            ),
+            builder: (_) =>
+                TrackOrderPage(
+                  orderId: orderId as int,
+                  userId: userId as int,
+                  token: token as String,
+                ),
           );
         }
         return null;
       },
 
-      title: 'E-Shop',
-      theme: ThemeData(primarySwatch: Colors.green),
+      // title: 'E-Shop',
+      // theme: ThemeData(primarySwatch: Colors.green),
       home: Builder(
         builder: (context) {
           // Decide initial screen

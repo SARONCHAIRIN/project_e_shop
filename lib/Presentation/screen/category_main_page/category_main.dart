@@ -1,5 +1,6 @@
 import 'package:e_shop/Presentation/screen/sub_category_screen/icon_sub_with_product/iconCategoryPageSubPro.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/subcategory_with_product.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart' hide SearchController;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
@@ -194,9 +195,9 @@ class _CategoryMainState extends ConsumerState<CategoryMain> {
 
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: const Text(
-              'Products',
+            padding:  EdgeInsets.symmetric(horizontal: 12),
+            child:  Text(
+              'products'.tr(),
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:e_shop/Presentation/screen/order/checkout_page.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/datasources/adress/adress_service.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -45,7 +46,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             backgroundColor: Colors.white,
             centerTitle: true,
 
-            title: const Text("Cart"),
+            title:  Text("cart".tr(),),
             actions: [
               IconButton(
                 icon: const Icon(Icons.refresh, color: Colors.blueAccent),
@@ -104,11 +105,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                     top: 0,
                                     bottom: 0,
                                     child: Row(
-                                      children: const [
+                                      children: [
                                         Icon(Icons.delete, color: Colors.white),
                                         SizedBox(width: 8),
                                         Text(
-                                          "Delete",
+                                          "delete".tr(),
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -250,7 +251,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Subtotal',
+                          'subtotal'.tr(),
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -273,7 +274,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Shipping',
+                          'shipping'.tr(),
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
@@ -282,7 +283,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ),
 
                         Text(
-                          "FREE",
+                          "free".tr(),
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -302,7 +303,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Total',
+                          'total'.tr(),
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -336,7 +337,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   }
 
   Widget _buildError({
-    String message = "Something went wrong",
     VoidCallback? onRetry,
   }) {
     return Center(
@@ -355,7 +355,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             const SizedBox(height: 10),
 
             Text(
-              message,
+              "something_went_wrong".tr(),
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
@@ -365,7 +365,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label: const Text("Retry"),
+              label:  Text("retry".tr()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
                 foregroundColor: Colors.white,
@@ -394,7 +394,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         SizedBox(height: 20),
 
         Text(
-          "Cart is empty",
+          "cart_is_empty".tr(),
           style: TextStyle(
             color: Colors.blueAccent,
             fontSize: 18,
@@ -444,8 +444,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Proceed to Checkout",
+            Text(
+              "proceed_to_checkout".tr(),
               overflow: TextOverflow.visible,
               style: TextStyle(
                 fontSize: 16,

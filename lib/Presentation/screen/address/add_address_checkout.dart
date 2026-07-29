@@ -3,6 +3,7 @@ import 'package:e_shop/Presentation/screen/payment/payment_method_screen.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 import 'package:e_shop/data/models/address/address_model.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../../data/repositories/order_repository.dart';
@@ -32,7 +33,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
   FocusNode zipcodeFocusNode = FocusNode();
 
   final OrderRepository _orderRepository = OrderRepository();
-   double? totalPrice;
+  double? totalPrice;
 
   @override
   void initState() {
@@ -88,7 +89,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
 
       if (userId == null || token == null) {
         if (!mounted) return;
-        _showSnackBar('Session expired. Please login again.', isError: true);
+        _showSnackBar('session_expired'.tr(), isError: true);
         return;
       }
 
@@ -98,7 +99,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
           citycontroller.text.isEmpty ||
           zipcodecontroller.text.isEmpty) {
         if (!mounted) return;
-        _showSnackBar('Please fill all fields', isError: true);
+        _showSnackBar('please_fill_all_fields'.tr(), isError: true);
         setState(() => is_loading = false);
         return;
       }
@@ -143,7 +144,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
             context,
             MaterialPageRoute(
               builder: (_) => PaymentMethodScreen(
-                totalPrice: totalPrice?? 0.0,
+                totalPrice: totalPrice ?? 0.0,
                 addressId: savedAddress.id!,
               ),
             ),
@@ -153,7 +154,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
     } catch (e) {
       debugPrint('Error: $e');
       if (!mounted) return;
-      _showSnackBar('Failed!!', isError: true);
+      _showSnackBar( 'failed'.tr(), isError: true);
     } finally {
       if (mounted) setState(() => is_loading = false);
     }
@@ -210,7 +211,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
               Padding(
                 padding: EdgeInsets.only(left: 5),
                 child: Text(
-                  _isEditingMode ? 'Update Address' : 'New Address',
+                  _isEditingMode ? "update_address".tr() : "new_address".tr(),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
@@ -227,7 +228,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
               Padding(
                 padding: EdgeInsets.only(left: 5),
                 child: Text(
-                  'ADDRESS LINE 1 ',
+                  "address_line_1".tr(),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 12,
@@ -244,7 +245,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
               Padding(
                 padding: EdgeInsets.only(left: 5),
                 child: Text(
-                  'COUNTRY  ',
+                  "country".tr(),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 12,
@@ -309,7 +310,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
 
         decoration: InputDecoration(
           fillColor: Colors.blue,
-          hintText: '123 Precision Way',
+          hintText: 'address_example'.tr(),
           hintStyle: TextStyle(
             color: Colors.grey,
             fontSize: 16,
@@ -355,7 +356,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
         ),
 
         decoration: InputDecoration(
-          hintText: 'Cambodia',
+          hintText:'cambodia'.tr(),
           hintStyle: TextStyle(
             color: Colors.grey,
             fontSize: 16,
@@ -384,7 +385,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
               Padding(
                 padding: const EdgeInsets.only(left: 5),
                 child: Text(
-                  'CITY  ',
+                  "city".tr(),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 12,
@@ -417,7 +418,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                     fontWeight: FontWeight.w400,
                   ),
                   decoration: InputDecoration(
-                    hintText: 'PHNOM PENH',
+                    hintText:'phnom_penh'.tr(),
                     hintStyle: TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
@@ -445,7 +446,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
               Padding(
                 padding: const EdgeInsets.only(left: 5),
                 child: Text(
-                  'ZIP CODE',
+                  "zip_code".tr(),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 11,
@@ -478,7 +479,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
                   ),
 
                   decoration: InputDecoration(
-                    hintText: '10110',
+                    hintText: 'zip_code_example'.tr(),
                     hintStyle: TextStyle(
                       color: Colors.grey,
                       fontSize: 12,
@@ -525,7 +526,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
           SpinKitCircle(color: Colors.blue, size: 30),
           SizedBox(width: 10),
           Text(
-            _isEditingMode ? "Updating..." : "Saving...",
+            _isEditingMode ? "updating".tr() : "saving".tr(),
             style: TextStyle(
               fontSize: 18,
               color: Colors.white,
@@ -551,7 +552,7 @@ class _AddAddressCheckoutState extends State<AddAddressCheckout> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       child: Text(
-        _isEditingMode ? "Update Address" : "Save Address",
+        _isEditingMode ? "update_address".tr() : "save_address".tr(),
         style: TextStyle(
           color: Colors.white,
           fontSize: 16,

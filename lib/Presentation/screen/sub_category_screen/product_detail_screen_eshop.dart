@@ -122,7 +122,6 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                 .where((text) => text.isNotEmpty)
                 .join(" - ");
 
-
             return GestureDetector(
               onTap: () {
                 setState(() {
@@ -153,9 +152,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                         fontWeight: isSelected
                             ? FontWeight.bold
                             : FontWeight.w500,
-                        color: isSelected
-                            ? Colors.blueAccent
-                            : Colors.black,
+                        color: isSelected ? Colors.blueAccent : Colors.black,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -187,7 +184,6 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
           }).toList(),
         ),
       ],
-
     );
   }
 
@@ -195,6 +191,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   Widget build(BuildContext context) {
     final product = widget.product;
     final images = getDisplayImages();
+    final List<ProductAttribute> attributes;
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
@@ -325,6 +322,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       const SizedBox(height: 20),
 
                       _buildSkuSelector(),
+                      SizedBox(height: 5),
 
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -338,6 +336,10 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
+                      Text(
+                        product.description,
+                        style: TextStyle(color: Colors.black, fontSize: 14),
+                      ),
 
                       Text(
                         selectedSku != null &&
@@ -351,6 +353,124 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                             : TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                       ),
+
+                      const SizedBox(height: 16),
+
+                      // Attributes
+                      if (selectedSku != null &&
+                          selectedSku!.attributes != null)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                          children: [
+                            const SizedBox(height: 16),
+
+                            // =========================
+
+                            // ATTRIBUTES
+
+                            // =========================
+                            if (selectedSku != null &&
+                                selectedSku!.attributes.isNotEmpty) ...[
+                              const Text(
+                                'Attributes',
+
+                                style: TextStyle(
+                                  fontSize: 18,
+
+                                  fontWeight: FontWeight.bold,
+
+                                  color: Colors.black,
+                                ),
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              ...selectedSku!.attributes.map((attribute) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+
+                                    children: [
+                                      // Attribute name
+                                      SizedBox(
+                                        width: 100,
+
+                                        child: Text(
+                                          attribute.name,
+
+                                          style: const TextStyle(
+                                            fontSize: 15,
+
+                                            fontWeight: FontWeight.w600,
+
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ),
+
+                                      const Text(
+                                        ': ',
+
+                                        style: TextStyle(
+                                          fontSize: 15,
+
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+
+                                      // Attribute values
+                                      Expanded(
+                                        child: Wrap(
+                                          spacing: 6,
+
+                                          runSpacing: 6,
+
+                                          children: attribute.values.map((
+                                            value,
+                                          ) {
+                                            return Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 10,
+
+                                                    vertical: 5,
+                                                  ),
+
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey.shade100,
+
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+
+                                                border: Border.all(
+                                                  color: Colors.grey.shade300,
+                                                ),
+                                              ),
+
+                                              child: Text(
+                                                value.value,
+
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+
+                                                  color: Colors.black87,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                            ],
+                          ],
+                        ),
 
                       TextButton(
                         onPressed: () {

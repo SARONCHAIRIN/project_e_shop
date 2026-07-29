@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class CheckoutStepIndicator extends StatefulWidget {
@@ -14,7 +15,7 @@ class CheckoutStepIndicator extends StatefulWidget {
 }
 
 class _CheckoutStepIndicatorState extends State<CheckoutStepIndicator> {
-  final steps = ['ADDRESS', 'PAYMENT'];
+  final steps = ['address', 'payment'];
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class _CheckoutStepIndicatorState extends State<CheckoutStepIndicator> {
                         ),
                       ),
                       Text(
-                        steps[i],
+                        steps[i].tr(),
                         style: TextStyle(
                           fontSize: 10,
                           color: isCurrent

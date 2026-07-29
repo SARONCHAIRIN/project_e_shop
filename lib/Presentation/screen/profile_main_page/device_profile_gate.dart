@@ -1,6 +1,8 @@
+import 'package:e_shop/Presentation/screen/profile_main_page/setting_page.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/sub_profile.dart';
 import 'package:e_shop/features/auth/presentation/screens/login_button_sheet.dart';
 import 'package:e_shop/features/auth/presentation/screens/reset_password_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
@@ -34,15 +36,15 @@ class _DeviceProfileGateState extends State<DeviceProfileGate> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(body: Center(child: SpinKitCircle(color: Colors.grey,size: 20,)));
+      return const Scaffold(
+        body: Center(child: SpinKitCircle(color: Colors.grey, size: 20)),
+      );
     }
     if (userId == null || userId == 0) {
-      return  _GuestProfilePage(repository: widget.repository);
+      return _GuestProfilePage(repository: widget.repository);
     }
     return Profilepage(authRepository: widget.repository);
     // return Profilepage(authRepository: widget.repository);
@@ -60,7 +62,6 @@ class _GuestProfilePage extends StatefulWidget {
 }
 
 class _GuestProfilePageState extends State<_GuestProfilePage> {
-
   void _showLoginSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -69,9 +70,10 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
       enableDrag: true,
       backgroundColor: Colors.transparent,
       // builder: (_) =>LoginBottomSheet(authRepository: widget.repository),
-      builder: (_) =>LoginBottomSheet1(),
+      builder: (_) => LoginBottomSheet1(),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +89,6 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
                 padding: const EdgeInsets.only(bottom: 100),
                 child: Column(
                   children: [
-
                     _GuestHero(context),
                     const SizedBox(height: 8),
                     _GuestMenuSection(),
@@ -99,7 +100,6 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
         ),
       ),
     );
-
   }
 
   Widget _TopBar() => Padding(
@@ -108,16 +108,25 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Profile',
+          'profile'.tr(),
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
-        Icon(Icons.settings_outlined, color: Colors.grey[500]),
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => SettingPage(authRepository: widget.repository),
+              ),
+            );
+          },
+          icon: Icon(Icons.settings, color: Colors.grey, size: 20),
+        ),
       ],
     ),
   );
 
-  Widget _GuestHero(BuildContext context) =>
-      Container(
+  Widget _GuestHero(BuildContext context) => Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
       color: Colors.white,
@@ -141,31 +150,31 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
           ),
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Sign in to your account',
+        Text(
+          'signInToAccount'.tr(),
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 6),
         Text(
-          'Access your orders, wishlist,\nand exclusive deals',
+          'guestHeroSubtitle'.tr(),
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 13, color: Colors.grey[500], height: 1.5),
         ),
-         SizedBox(height: 28),
+        SizedBox(height: 28),
         SizedBox(
           width: double.infinity,
           height: 50,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor:  Color(0xFF1A1A2E),
+              backgroundColor: Color(0xFF1A1A2E),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
               elevation: 0,
             ),
             onPressed: () => _showLoginSheet(context),
-            child:  Text(
-              'Sign in',
+            child: Text(
+              'signIn'.tr(),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 15,
@@ -185,11 +194,8 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
               ),
               side: BorderSide(color: Colors.grey[300]!),
             ),
-            onPressed: () => Navigator.pushNamed(
-              context,
-              '/register',
-            ),
-            child: const Text('Create account', style: TextStyle(fontSize: 15)),
+            onPressed: () => Navigator.pushNamed(context, '/register'),
+            child: Text('createAccount'.tr(), style: TextStyle(fontSize: 15)),
           ),
         ),
       ],
@@ -218,7 +224,7 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
           child: Text(
-            'Browse as guest',
+            'browseAsGuest'.tr(),
             style: TextStyle(fontSize: 14, color: Colors.grey[500]),
           ),
         ),
@@ -226,36 +232,34 @@ class _GuestProfilePageState extends State<_GuestProfilePage> {
           icon: Icons.inventory_2_outlined,
           iconBg: const Color(0xFFE6F1FB),
           iconColor: const Color(0xFF185FA5),
-          title: 'Track order',
-          subtitle: 'Enter order ID to track',
+          title: 'trackOrder'.tr(),
+          subtitle: 'trackOrderSubtitle'.tr(),
           onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('Track Order'),
-                  content: Text('Please enter your order ID to track your order.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('Close'),
-                    ),
-                  ],
-                ),
-              );
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Track Order'),
+                content: Text('trackOrderDialogBody'.tr()),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('close'.tr()),
+                  ),
+                ],
+              ),
+            );
           },
         ),
         _MenuTile(
           icon: Icons.headset_mic_outlined,
           iconBg: const Color(0xFFE1F5EE),
           iconColor: const Color(0xFF0F6E56),
-          title: 'Help & support',
-          subtitle: 'Chat, call or email us',
+          title: 'helpAndSupport'.tr(),
+          subtitle: 'helpAndSupportSubtitle'.tr(),
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => ResetPasswordScreen(),
-              ),
+              MaterialPageRoute(builder: (_) => ResetPasswordScreen()),
             );
           },
         ),

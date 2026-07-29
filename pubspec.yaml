@@ -72,6 +72,7 @@ dependencies:
   path_provider: ^2.1.4
   gal: ^2.3.0
   flutter_svg: ^2.2.0
+  easy_localization: ^3.0.8
 
 
 
@@ -96,7 +97,9 @@ flutter:
     - assets/images/
     - assets/animations/
     - assets/models/
+    - assets/translations/
     - .env
+
     # ---------- Top-level flutter_native_splash ----------
 #flutter_native_splash:
 #  color: "#ffffff"                     # Background color

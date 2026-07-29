@@ -1,9 +1,11 @@
 import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../core/storage/token_storage.dart';
+import 'language_bottom_sheet.dart';
 
 class SettingPage extends StatefulWidget {
   final authRepository;
@@ -24,7 +26,7 @@ class _SettingPageState extends State<SettingPage> {
 
   // TODO: wire to real loyalty data if you have it.
   int _coinBalance = 0;
-  String _tierName = 'Bronze';
+  String _tierName = "bronze".tr();
   int _tierPoints = 0;
 
   @override
@@ -48,6 +50,24 @@ class _SettingPageState extends State<SettingPage> {
     }
   }
 
+  void _showLanguageSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        return LanguageBottomSheet(
+          currentLocale: context.locale,
+          onSelected: (locale) {
+            context.setLocale(locale);
+            Navigator.pop(sheetContext);
+            setState(() {}); // refresh trailingText immediately
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,8 +81,8 @@ class _SettingPageState extends State<SettingPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.black87),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Settings',
+        title: Text(
+          'setting'.tr(),
           style: TextStyle(
             color: Colors.black,
             fontSize: 17,
@@ -79,13 +99,13 @@ class _SettingPageState extends State<SettingPage> {
             const SizedBox(height: 24),
 
             //account
-            _sectionLabel('ACCOUNT'),
+            _sectionLabel('account'.tr()),
             _buildCardGroup([
               _settingRow(
                 icon: Icons.person_outline,
                 iconBg: Colors.blue.shade50,
                 iconColor: Colors.indigoAccent,
-                title: 'Edit Profile',
+                title: "editProfile".tr(),
                 onTap: () async {
                   try {
                     final tokenStorage = TokenStorage();
@@ -116,7 +136,7 @@ class _SettingPageState extends State<SettingPage> {
                 icon: Icons.location_on_outlined,
                 iconBg: Colors.blue.shade50,
                 iconColor: Colors.indigoAccent,
-                title: 'Shipping Address',
+                title: "shippingAddress".tr(),
                 onTap: () {
                   // TODO: navigate to shipping address screen
                 },
@@ -126,7 +146,7 @@ class _SettingPageState extends State<SettingPage> {
                 icon: Icons.payments_outlined,
                 iconBg: Colors.blue.shade50,
                 iconColor: Colors.indigoAccent,
-                title: 'Payment Methods',
+                title: "paymentMethods".tr(),
                 onTap: () {
                   // TODO: navigate to payment methods screen
                 },
@@ -135,14 +155,14 @@ class _SettingPageState extends State<SettingPage> {
             const SizedBox(height: 24),
 
             //notification
-            _sectionLabel('NOTIFICATION'),
+            _sectionLabel('notification'.tr()),
             _buildCardGroup([
               _switchRow(
                 icon: Icons.notifications_active_outlined,
                 iconBg: Colors.blue.shade50,
                 iconColor: Colors.indigoAccent,
-                title: 'Push Notifications',
-                subtitle: 'Order update and offers',
+                title: "pushNotifications".tr(),
+                subtitle: "pushNotificationsSubtitle".tr(),
                 value: ison_notification,
                 onChanged: (v) => setState(() => ison_notification = v),
               ),
@@ -151,8 +171,8 @@ class _SettingPageState extends State<SettingPage> {
                 icon: Icons.email_outlined,
                 iconBg: Colors.blue.shade50,
                 iconColor: Colors.indigoAccent,
-                title: 'Email Alerts',
-                subtitle: 'Newsletter and daily deals',
+                title: "emailAlerts".tr(),
+                subtitle: "emailAlertsSubtitle".tr(),
                 value: ison_email,
                 onChanged: (v) => setState(() => ison_email = v),
               ),
@@ -160,25 +180,23 @@ class _SettingPageState extends State<SettingPage> {
             const SizedBox(height: 24),
 
             //preferences
-            _sectionLabel('PREFERENCES'),
+            _sectionLabel('preferences'.tr()),
             _buildCardGroup([
               _settingRow(
                 icon: Icons.language,
                 iconBg: Colors.blue.shade50,
                 iconColor: Colors.indigoAccent,
-                title: 'Language',
-                trailingText: 'English (US)',
-                onTap: () {
-                  // TODO: open language picker
-                },
+                title: 'language'.tr(),
+                trailingText: "languageEnglishUs".tr(),
+                onTap: () => _showLanguageSheet(context),
               ),
               _divider(),
               _settingRow(
                 icon: Icons.currency_exchange_outlined,
                 iconBg: Colors.blue.shade50,
                 iconColor: Colors.indigoAccent,
-                title: 'Currency',
-                trailingText: 'USD (\$)',
+                title: "currency".tr(),
+                trailingText: "currencyUsd".tr(),
                 onTap: () {
                   // TODO: open currency picker
                 },
@@ -187,13 +205,13 @@ class _SettingPageState extends State<SettingPage> {
             const SizedBox(height: 24),
 
             //legal
-            _sectionLabel('LEGAL'),
+            _sectionLabel('legal'.tr()),
             _buildCardGroup([
               _settingRow(
                 icon: Icons.privacy_tip_outlined,
                 iconBg: Colors.blue.shade50,
                 iconColor: Colors.indigoAccent,
-                title: 'Privacy Policy',
+                title: "privacyPolicy".tr(),
                 onTap: () {
                   // TODO: navigate to privacy policy screen
                 },
@@ -203,7 +221,7 @@ class _SettingPageState extends State<SettingPage> {
                 icon: Icons.text_snippet_outlined,
                 iconBg: Colors.blue.shade50,
                 iconColor: Colors.indigoAccent,
-                title: 'Terms of Service',
+                title: "termsOfService".tr(),
                 onTap: () {
                   // TODO: navigate to terms of service screen
                 },
@@ -511,13 +529,13 @@ class _SettingPageState extends State<SettingPage> {
                   size: 48,
                   color: Colors.redAccent,
                 ),
-                title: const Text(
-                  'Logout Account',
+                title: Text(
+                  "logoutAccount".tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
                 ),
-                content: const Text(
-                  'Are you sure you want to logout?',
+                content: Text(
+                  "logoutConfirmation".tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.black54, fontSize: 14),
                 ),
@@ -526,7 +544,7 @@ class _SettingPageState extends State<SettingPage> {
                   TextButton(
                     onPressed: () => Navigator.pop(context, false),
                     child: Text(
-                      'Cancel',
+                      'cancel'.tr(),
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontWeight: FontWeight.w500,
@@ -542,8 +560,8 @@ class _SettingPageState extends State<SettingPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text(
-                      'Logout',
+                    child: Text(
+                      "logout".tr(),
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -566,14 +584,15 @@ class _SettingPageState extends State<SettingPage> {
           );
         },
         icon: const Icon(Icons.logout, size: 20),
-        label: const Text(
-          'Logout',
+        label: Text(
+          'logout'.tr(),
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red.shade50,
+          backgroundColor: Colors.white,
           foregroundColor: Colors.redAccent,
-          elevation: 0,
+          elevation: 1,
+          shadowColor: Colors.red,
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),

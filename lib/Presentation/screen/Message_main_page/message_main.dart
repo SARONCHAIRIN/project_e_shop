@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -67,8 +68,8 @@ class _MessageMainState extends State<MessageMain> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          "Support Center",
+        title: Text(
+          "support_center".tr(),
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
         ),
         centerTitle: true,
@@ -94,17 +95,16 @@ class _MessageMainState extends State<MessageMain> {
               ),
             ),
             const SizedBox(height: 30),
-            const Text(
-              "How can we help you?",
+            Text(
+              "how_can_we_help".tr(),
 
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 10),
 
-            const Text(
-              "Contact our support team via Telegram",
-
+            Text(
+              "contact_support_telegram".tr(),
               textAlign: TextAlign.center,
 
               style: TextStyle(color: Colors.grey),
@@ -115,8 +115,7 @@ class _MessageMainState extends State<MessageMain> {
             ListTile(
               leading: const Icon(Icons.telegram, color: Colors.blue),
 
-              title: const Text("Chat on Telegram"),
-
+              title: Text("chat_on_telegram".tr()),
               trailing: const Icon(Icons.arrow_forward_ios),
 
               onTap: openTelegram,
@@ -129,8 +128,8 @@ class _MessageMainState extends State<MessageMain> {
               child: ElevatedButton.icon(
                 onPressed: _openTelegram,
                 icon: const Icon(Icons.telegram, size: 25, color: Colors.white),
-                label: const Text(
-                  "Contact via Telegram",
+                label:  Text(
+                  "contact_via_telegram".tr(),
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
