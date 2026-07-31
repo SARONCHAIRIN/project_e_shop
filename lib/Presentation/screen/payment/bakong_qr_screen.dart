@@ -581,32 +581,32 @@ class _BakongQrScreenState extends State<BakongQrScreen>
 
     return Scaffold(
       backgroundColor: _bg,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              size: 16,
-              color: _ink,
-            ),
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0,
+      //   leading: IconButton(
+      //     icon: Container(
+      //       padding: const EdgeInsets.all(8),
+      //       decoration: BoxDecoration(
+      //         color: Colors.white,
+      //         borderRadius: BorderRadius.circular(12),
+      //         boxShadow: [
+      //           BoxShadow(
+      //             color: Colors.black.withOpacity(0.06),
+      //             blurRadius: 8,
+      //             offset: const Offset(0, 2),
+      //           ),
+      //         ],
+      //       ),
+      //       child: const Icon(
+      //         Icons.arrow_back_ios_new_rounded,
+      //         size: 16,
+      //         color: _ink,
+      //       ),
+      //     ),
+      //     onPressed: () => Navigator.pop(context),
+      //   ),
+      // ),
       body: SafeArea(
         child: _loading
             ? _buildLoading()
@@ -703,6 +703,31 @@ class _BakongQrScreenState extends State<BakongQrScreen>
   Widget _buildHeader() {
     return Column(
       children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: IconButton(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 16,
+                color: _ink,
+              ),
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -741,23 +766,6 @@ class _BakongQrScreenState extends State<BakongQrScreen>
           ],
         ),
         const SizedBox(height: 4),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _dot(),
-            const SizedBox(width: 6),
-            Text(
-              'Easy Shopping, Happy Living',
-              style: TextStyle(
-                color: _muted,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(width: 6),
-            _dot(),
-          ],
-        ),
       ],
     );
   }
@@ -771,7 +779,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
   // ---------- Bakong Pay pill badge ----------
   Widget _buildBakongBadge() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         gradient: const LinearGradient(colors: [_blue, _blueLight]),
         borderRadius: BorderRadius.circular(30),
@@ -787,20 +795,17 @@ class _BakongQrScreenState extends State<BakongQrScreen>
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 22,
-            height: 22,
+            width: 35,
+            height: 35,
+            padding: const EdgeInsets.all(3),
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white,
             ),
-            child: const Center(
-              child: Text(
-                'B',
-                style: TextStyle(
-                  color: _blue,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
-                ),
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/logo_bakong.png',
+                // fit: BoxFit.cover,
               ),
             ),
           ),
@@ -835,10 +840,9 @@ class _BakongQrScreenState extends State<BakongQrScreen>
       children: [
         const SizedBox(height: 8),
         _buildHeader(),
-        _buildHeader(),
-        const SizedBox(height: 20),
-        _buildBakongBadge(),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
+        // _buildBakongBadge(),
+        // const SizedBox(height: 16),
 
         // Main receipt-style card (captured for screenshot / save-to-gallery)
         Screenshot(
@@ -932,22 +936,16 @@ class _BakongQrScreenState extends State<BakongQrScreen>
                         child: Row(
                           children: [
                             Container(
-                              width: 18,
-                              height: 18,
+                              width: 20,
+                              height: 20,
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  colors: [_blue, _blueLight],
-                                ),
+                                color: Colors.white,
                               ),
-                              child: const Center(
-                                child: Text(
-                                  'B',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                              child: ClipOval(
+                                child: Image.asset(
+                                  'assets/images/logo_bakong.png',
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
@@ -1296,7 +1294,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:  [
+          children: [
             Icon(Icons.verified_user_outlined, size: 15, color: _muted),
             SizedBox(width: 6),
             Text(
@@ -1313,7 +1311,7 @@ class _BakongQrScreenState extends State<BakongQrScreen>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-             Text(
+            Text(
               '${'powered_by'.tr()} ',
               style: TextStyle(fontSize: 11.5, color: _muted),
             ),
@@ -1362,9 +1360,9 @@ class _BakongQrScreenState extends State<BakongQrScreen>
 
   Widget _buildStepsGuide() {
     final steps = [
-      (Icons.phone_android_rounded, 'bakong_payment.open_bakong_app'.tr()),
-      (Icons.qr_code_scanner_rounded, 'bakong_payment.tap_scan_qr'.tr()),
-      (Icons.check_circle_outline_rounded, 'bakong_payment.confirm_payment'.tr(), ),
+      (Icons.phone_android_rounded, 'open_bakong_app'.tr()),
+      (Icons.qr_code_scanner_rounded, 'tap_scan_qr'.tr()),
+      (Icons.check_circle_outline_rounded, 'confirm_payment'.tr()),
     ];
 
     return Row(

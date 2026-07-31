@@ -8,7 +8,7 @@ class OrderService {
   static const String _baseUrl_server =
       'https://e-shop-1-m034.onrender.com/api/v1';
 
-  // static const String _baseUrl = 'http://localhost:8080/api/v1';
+  static const String _baseUrl = 'http://localhost:8080/api/v1';
 
   // angkor home wifi
   // static const String _baseUrl = 'http://192.168.1.45:8080/api/v1';
@@ -18,7 +18,7 @@ class OrderService {
   //     'https://e-shop-1-m034.onrender.com/api/v1';
 
   //ip rupp
-  static const String _baseUrl = 'http://10.1.116.245:8080/api/v1';
+  // static const String _baseUrl = 'http://10.1.116.245:8080/api/v1';
 
   OrderService({Dio? dio})
     : _dio =
@@ -95,7 +95,7 @@ class OrderService {
       debugPrint('Address ID: $addressId');
 
       // final url = '$_baseUrllocalwifi/orders/user/from-cart/bakong';
-      final url = '$_baseUrl_server/orders/user/from-cart/bakong';
+      final url = '$_baseUrl/orders/user/from-cart/bakong';
       debugPrint(' STEP 2: URL => $url');
 
       final body = {
