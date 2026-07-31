@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+
+# e_shop
+>>>>>>> 0760afca32424f03bfd44fd2c41c85a671a33421
 
 
 
@@ -7,6 +12,7 @@
 
 # 🛍️ E Shop
 
+<<<<<<< HEAD
 ### A modern Flutter marketplace — buy & sell, beautifully.
 
 <p>
@@ -541,3 +547,9 @@ The application follows a clean layered design pattern to ensure high maintainab
 │                                               │
 │                  Database                     │
 └───────────────────────────────────────────────┘
+=======
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
+
+>>>>>>> 0760afca32424f03bfd44fd2c41c85a671a33421
