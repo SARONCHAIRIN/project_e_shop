@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-=======
-
-# e_shop
->>>>>>> 0760afca32424f03bfd44fd2c41c85a671a33421
-
-
 
 <div align="center">
 
@@ -12,7 +5,7 @@
 
 # 🛍️ E Shop
 
-<<<<<<< HEAD
+
 ### A modern Flutter marketplace — buy & sell, beautifully.
 
 <p>
