@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../Presentation/screen/profile_main_page/setting_page.dart';
 import '../models/navigation_item.dart';
 
 class TabletNavigationRail extends StatelessWidget {
@@ -122,6 +123,61 @@ class TabletNavigationRail extends StatelessWidget {
                   ),
                 );
               },
+            ),
+          ),
+
+          // Settings Button Section with updated padding
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+            child: Material(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(14),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingPage(authRepository: null),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: const Color(0xFFEFE5DC)),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.settings_outlined,
+                          size: 20,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Settings',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1A1A2E),
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ],

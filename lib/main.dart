@@ -224,15 +224,10 @@ class MyApp extends StatelessWidget {
 
 //new responsive
 
-import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
-
 import 'package:e_shop/Presentation/screen/Splash_Screen_Page/slpash_screen.dart';
 
 import 'package:e_shop/Presentation/screen/order/order_history_screen.dart';
 import 'package:e_shop/Presentation/screen/order/trackOrder.dart';
-
-import 'package:e_shop/Presentation/screen/profile_main_page/device_profile_gate.dart';
-
 import 'package:e_shop/core/constants/otp_flow.dart';
 
 import 'package:e_shop/features/auth/presentation/screens/new_password.dart';
@@ -258,6 +253,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'Divice_Bottom_nav/Divices_Nav/nav_divices.dart';
+import 'Presentation/screen/profile_main_page/profile_gate.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -403,7 +399,8 @@ class MyApp extends StatelessWidget {
 
           case '/deviceProfile':
             return MaterialPageRoute(
-              builder: (_) => DeviceProfileGate(repository: authRepository),
+              // builder: (_) => DeviceProfileGate(repository: authRepository),
+              builder: (_) => ProfileGate(repository: authRepository),
             );
 
           // ======================
