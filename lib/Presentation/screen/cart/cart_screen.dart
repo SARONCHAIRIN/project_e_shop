@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../core/responsive/responsive.dart';
 import '../../../data/models/cart/cart_item_model.dart';
 import '../../../provider/cart_provider.dart';
+import '../sub_category_screen/subcategory_with_product.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   final int userId;
@@ -38,307 +40,335 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     final cartController = ref.read(cartControllerProvider.notifier);
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Colors.grey.shade100,
 
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: Colors.white,
-            centerTitle: true,
-
-            title:  Text("cart".tr(),),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.refresh, color: Colors.blueAccent),
-                onPressed: () async {
-                  await cartController.fetchCart(); // your refresh method
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete_forever, color: Colors.redAccent),
-                onPressed: () => cartController.clearCart(),
-              ),
-            ],
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: Responsive.isMobile(context) ? double.infinity : 900,
           ),
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                backgroundColor: Colors.white,
+                centerTitle: true,
+                //redias
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(20),
+                  ),
+                ),
 
-          // Show loading indicator while fetching cart
-          if (cartState.isLoading)
-            SliverToBoxAdapter(child: _buildCartShimmer())
-          // Show empty state if cart is empty
-          else if (cartState.cart == null || cartState.cart!.items.isEmpty)
-            SliverFillRemaining(hasScrollBody: false, child: _buildEmptyCart())
-          else
-            SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final item = cartState.cart!.items[index];
+                title: Text("cart".tr()),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.refresh, color: Colors.blueAccent),
+                    onPressed: () async {
+                      await cartController.fetchCart(); // your refresh method
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.delete_forever,
+                      color: Colors.redAccent,
+                    ),
+                    onPressed: () => cartController.clearCart(),
+                  ),
+                ],
+              ),
 
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      child: Dismissible(
-                        key: Key(item.id.toString()),
-                        direction: DismissDirection.endToStart,
+              // Show loading indicator while fetching cart
+              if (cartState.isLoading)
+                SliverToBoxAdapter(child: _buildCartShimmer())
+              // Show empty state if cart is empty
+              else if (cartState.cart == null || cartState.cart!.items.isEmpty)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: _buildEmptyCart(),
+                )
+              else
+                SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final item = cartState.cart!.items[index];
 
-                        onDismissed: (direction) {
-                          cartController.deleteItem(item.id);
-                        },
-
-                        background: LayoutBuilder(
-                          builder: (context, constraints) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(vertical: 6),
-                              decoration: BoxDecoration(
-                                color: Colors.redAccent,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Stack(
-                                children: [
-                                  //  Slide animation icon
-                                  AnimatedPositioned(
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeOut,
-                                    right: 20,
-                                    top: 0,
-                                    bottom: 0,
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.delete, color: Colors.white),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          "delete".tr(),
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-
-                        child: Card(
-                          margin: const EdgeInsets.symmetric(vertical: 6),
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Responsive.pagePadding(context),
+                            vertical: 5,
                           ),
-                          elevation: 0.001,
+                          child: Dismissible(
+                            key: Key(item.id.toString()),
+                            direction: DismissDirection.endToStart,
 
-                          child: ListTile(
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: cartImage(item),
+                            onDismissed: (direction) {
+                              cartController.deleteItem(item.id);
+                            },
+
+                            background: LayoutBuilder(
+                              builder: (context, constraints) {
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.redAccent,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      //  Slide animation icon
+                                      AnimatedPositioned(
+                                        duration: const Duration(
+                                          milliseconds: 300,
+                                        ),
+                                        curve: Curves.easeOut,
+                                        right: 20,
+                                        top: 0,
+                                        bottom: 0,
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                            SizedBox(width: 8),
+                                            Text(
+                                              "delete".tr(),
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
 
-                            title: Text(
-                              item.name,
-                              maxLines: 1,
+                            child: Card(
+                              margin: const EdgeInsets.symmetric(vertical: 6),
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 0.001,
+
+                              child: ListTile(
+                                leading: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: cartImage(item),
+                                ),
+
+                                title: Text(
+                                  item.name,
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+
+                                subtitle: Text(
+                                  " Qty: ${item.quantity} "
+                                  "\n \$${item.totalPrice.toStringAsFixed(2)}",
+                                ),
+
+                                trailing: Container(
+                                  height: 35,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 1,
+                                        blurStyle: BlurStyle.outer,
+                                        offset: const Offset(
+                                          0,
+                                          1,
+                                        ), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.remove,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: item.quantity > 1
+                                            ? () => cartController.updateItem(
+                                                item.id, // cartItemId
+                                                item.productSku.id, // productId
+                                                item.quantity - 1,
+                                              )
+                                            : null,
+                                      ),
+
+                                      Text(
+                                        '${item.quantity}',
+                                        style: const TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.add,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () =>
+                                            cartController.updateItem(
+                                              item.id, // cartItemId
+                                              item.productSku.id, // productId
+                                              item.quantity + 1,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }, childCount: cartState.cart?.items.length ?? 0),
+                ),
+
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  child: Container(
+                    width: double.infinity,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade100,
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          blurStyle: BlurStyle.outer,
+                          offset: const Offset(
+                            0,
+                            1,
+                          ), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.only(
+                      top: 10,
+                      left: 20,
+                      right: 20,
+                      bottom: 10,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'subtotal'.tr(),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
-                                fontStyle: FontStyle.italic,
+                                color: Colors.grey,
                               ),
                             ),
 
-                            subtitle: Text(
-                              " Qty: ${item.quantity} "
-                              "\n \$${item.totalPrice.toStringAsFixed(2)}",
-                            ),
-
-                            trailing: Container(
-                              height: 35,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 1,
-                                    blurRadius: 1,
-                                    blurStyle: BlurStyle.outer,
-                                    offset: const Offset(
-                                      0,
-                                      1,
-                                    ), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.remove,
-                                      color: Colors.black,
-                                    ),
-                                    onPressed: item.quantity > 1
-                                        ? () => cartController.updateItem(
-                                            item.id, // cartItemId
-                                            item.productSku.id, // productId
-                                            item.quantity - 1,
-                                          )
-                                        : null,
-                                  ),
-
-                                  Text(
-                                    '${item.quantity}',
-                                    style: const TextStyle(
-                                      color: Colors.blue,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.add,
-                                      color: Colors.black,
-                                    ),
-                                    onPressed: () => cartController.updateItem(
-                                      item.id, // cartItemId
-                                      item.productSku.id, // productId
-                                      item.quantity + 1,
-                                    ),
-                                  ),
-                                ],
+                            Text(
+                              "\$${cartState.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.blueAccent,
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }, childCount: cartState.cart?.items.length ?? 0),
-            ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              child: Container(
-                width: double.infinity,
-                height: 120,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade100,
-                      spreadRadius: 1,
-                      blurRadius: 1,
-                      blurStyle: BlurStyle.outer,
-                      offset: const Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.only(
-                  top: 10,
-                  left: 20,
-                  right: 20,
-                  bottom: 10,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'subtotal'.tr(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey,
-                          ),
+                          ],
                         ),
 
-                        Text(
-                          "\$${cartState.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.blueAccent,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'shipping'.tr(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+
+                            Text(
+                              "free".tr(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.greenAccent,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Divider(
+                          color: Colors.grey.withOpacity(0.2),
+                          thickness: 1,
+                          height: 1,
+                        ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'total'.tr(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+
+                            Text(
+                              "\$${cartState.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'shipping'.tr(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-
-                        Text(
-                          "free".tr(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.greenAccent,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    Divider(
-                      color: Colors.grey.withOpacity(0.2),
-                      thickness: 1,
-                      height: 1,
-                    ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'total'.tr(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-
-                        Text(
-                          "\$${cartState.cart?.totalPrice.toStringAsFixed(2) ?? '0.00'}",
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.redAccent,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
 
-          SliverToBoxAdapter(
-            child: _buildcheckoutButton(context, cartController, cartState),
-          ),
+              SliverToBoxAdapter(
+                child: _buildcheckoutButton(context, cartController, cartState),
+              ),
 
-          SliverToBoxAdapter(child: SizedBox(height: 100)),
-        ],
+              SliverToBoxAdapter(child: SizedBox(height: 100)),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildError({
-    VoidCallback? onRetry,
-  }) {
+  Widget _buildError({VoidCallback? onRetry}) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -365,7 +395,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label:  Text("retry".tr()),
+              label: Text("retry".tr()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
                 foregroundColor: Colors.white,

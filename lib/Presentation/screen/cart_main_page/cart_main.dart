@@ -3,6 +3,7 @@ import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:e_shop/features/auth/presentation/screens/login_button_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import '../../../core/responsive/responsive.dart';
 import '../../../core/storage/token_storage.dart';
 
 class CartMain extends StatefulWidget {
@@ -91,33 +92,62 @@ class _CartMainState extends State<CartMain> {
 
   //userid && token =  null = empty
   Widget _buildEmptyCart() => Center(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _buildlogiregister(),
-        SizedBox(height: 20),
+    child: SingleChildScrollView(
+      child: Container(
+        width: Responsive.isMobile(context)
+            ? double.infinity
+            : 600,
 
-        Center(
-          child: Lottie.asset(
-            'assets/animations/empty.json',
-            width: 200,
-            height: 200,
-            repeat: true,
-            animate: true,
-          ),
+        padding: EdgeInsets.all(
+          Responsive.isMobile(context)
+              ? 20
+              : 40,
         ),
-        SizedBox(height: 20),
 
-        Text(
-          "Cart is empty",
-          style: TextStyle(
-            color: Colors.blueAccent,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildLoginRegister(),
+
+            SizedBox(
+              height: Responsive.isMobile(context)
+                  ? 20
+                  : 30,
+            ),
+
+            Lottie.asset(
+              'assets/animations/empty.json',
+
+              width: Responsive.isMobile(context)
+                  ? 200
+                  : 280,
+
+              height: Responsive.isMobile(context)
+                  ? 200
+                  : 280,
+
+              repeat: true,
+            ),
+
+            const SizedBox(height: 20),
+
+            Text(
+              "Cart is empty",
+
+              style: TextStyle(
+                color: Colors.blueAccent,
+
+                fontSize:
+                Responsive.isMobile(context)
+                    ? 18
+                    : 24,
+
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: 30),
-      ],
+      ),
     ),
   );
 
@@ -167,4 +197,95 @@ class _CartMainState extends State<CartMain> {
       ],
     ),
   );
+
+  Widget _buildLoginRegister() {
+    return Card(
+      elevation: 2,
+
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+
+      child: Padding(
+        padding: EdgeInsets.all(
+          Responsive.isMobile(context)
+              ? 24
+              : 40,
+        ),
+
+        child: Column(
+          children: [
+
+            Text(
+              'Sign in to your account',
+
+              style: TextStyle(
+                fontSize:
+                Responsive.isMobile(context)
+                    ? 17
+                    : 22,
+
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+
+            const SizedBox(height: 8),
+
+
+            Text(
+              'Access your orders, wishlist,\nand exclusive deals',
+
+              textAlign: TextAlign.center,
+
+              style: TextStyle(
+                fontSize:
+                Responsive.isMobile(context)
+                    ? 13
+                    : 16,
+
+                color: Colors.grey,
+                height: 1.5,
+              ),
+            ),
+
+
+            const SizedBox(height: 28),
+
+
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+
+              child: ElevatedButton(
+                onPressed: () =>
+                    _showLoginSheet(context),
+
+                style:
+                ElevatedButton.styleFrom(
+                  backgroundColor:
+                  const Color(0xFF1A1A2E),
+
+                  shape:
+                  RoundedRectangleBorder(
+                    borderRadius:
+                    BorderRadius.circular(12),
+                  ),
+                ),
+
+                child: const Text(
+                  'Sign in / Register',
+
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
