@@ -1,3 +1,4 @@
+import 'package:e_shop/Main_App_Bar/app_bar.dart';
 import 'package:e_shop/Presentation/screen/category_main_page/see_all_category.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/icon_sub_with_product/icon_sub_with_product.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/subcategory_with_product.dart';
@@ -11,7 +12,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../Main_App_Bar/App_Bar/sliver_main_app_bar.dart';
 import '../../../data/models/user_model.dart';
 
 class HomeMainPage extends ConsumerStatefulWidget {
@@ -444,7 +444,11 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
         physics: const ClampingScrollPhysics(),
         controller: _scrollController,
         slivers: [
-          SliverMainAppBar(
+          // SliverMainAppBar(
+          //   showBars: showBars,
+          //   authRepository: widget.authRepository,
+          // ),
+          MainAppBar(
             showBars: showBars,
             authRepository: widget.authRepository,
           ),
@@ -501,3 +505,5 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
     );
   }
 }
+
+

@@ -15,6 +15,89 @@ import '../../../core/storage/token_storage.dart';
 import '../../../provider/cart_provider.dart';
 import '../cart/cart_screen.dart';
 
+/// Screen-specific responsive sizing. Same idea as the sub-category
+/// carousel widget: compute everything from width once, breakpoints
+/// mobile / tablet / desktop / wide.
+enum _Device { mobile, tablet, desktop, wide }
+
+class _Responsive {
+  final _Device device;
+  final double maxContentWidth;
+  final int crossAxisCount;
+  final double childAspectRatio;
+  final double gridSpacing;
+  final double horizontalPadding;
+  final double cardTitleFontSize;
+  final double cardPriceFontSize;
+  final double appBarTitleFontSize;
+
+  const _Responsive({
+    required this.device,
+    required this.maxContentWidth,
+    required this.crossAxisCount,
+    required this.childAspectRatio,
+    required this.gridSpacing,
+    required this.horizontalPadding,
+    required this.cardTitleFontSize,
+    required this.cardPriceFontSize,
+    required this.appBarTitleFontSize,
+  });
+
+  factory _Responsive.of(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+
+    if (width < 600) {
+      return const _Responsive(
+        device: _Device.mobile,
+        maxContentWidth: double.infinity,
+        crossAxisCount: 2,
+        childAspectRatio: 0.60,
+        gridSpacing: 10,
+        horizontalPadding: 10,
+        cardTitleFontSize: 14,
+        cardPriceFontSize: 15,
+        appBarTitleFontSize: 16,
+      );
+    } else if (width < 1024) {
+      return const _Responsive(
+        device: _Device.tablet,
+        maxContentWidth: 960,
+        crossAxisCount: 3,
+        childAspectRatio: 0.66,
+        gridSpacing: 14,
+        horizontalPadding: 16,
+        cardTitleFontSize: 15,
+        cardPriceFontSize: 16,
+        appBarTitleFontSize: 18,
+      );
+    } else if (width < 1440) {
+      return const _Responsive(
+        device: _Device.desktop,
+        maxContentWidth: 1280,
+        crossAxisCount: 4,
+        childAspectRatio: 0.70,
+        gridSpacing: 18,
+        horizontalPadding: 24,
+        cardTitleFontSize: 15,
+        cardPriceFontSize: 17,
+        appBarTitleFontSize: 19,
+      );
+    } else {
+      return const _Responsive(
+        device: _Device.wide,
+        maxContentWidth: 1560,
+        crossAxisCount: 5,
+        childAspectRatio: 0.72,
+        gridSpacing: 20,
+        horizontalPadding: 32,
+        cardTitleFontSize: 16,
+        cardPriceFontSize: 18,
+        appBarTitleFontSize: 20,
+      );
+    }
+  }
+}
+
 class ProductScreen_sub extends ConsumerStatefulWidget {
   final int subcategoryId;
   final String subcategoryName;
@@ -45,7 +128,8 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
   // Map to store keys for each product's cart button
   final Map<int, GlobalKey> _productCartButtonKeys = {};
 
-  Future<List<Product>>? _productsFuture; // <-- ADD HERE
+  Future<List<Product>>? _productsFuture;
+
   @override
   void initState() {
     super.initState();
@@ -100,27 +184,34 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
 
   @override
   Widget build(BuildContext context) {
+    final sizes = _Responsive.of(context);
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF7F7F9),
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0.5,
+        surfaceTintColor: Colors.white,
+        shape: Border(
+          bottom: BorderSide(color: Colors.grey.shade200, width: 1),
+        ),
         title: Text(
           overflow: TextOverflow.ellipsis,
           widget.subcategoryName,
           style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w800,
-            fontStyle: FontStyle.italic,
+            fontSize: sizes.appBarTitleFontSize,
+            fontWeight: FontWeight.w700,
+            color: Colors.black87,
           ),
         ),
-
         actions: [
           // Cart icon with badge
           Consumer(
             builder: (context, ref, _) {
               final cartState = ref.watch(cartControllerProvider);
-
               final itemCount = cartState.cart?.totalItems ?? 0;
 
               return Padding(
@@ -129,7 +220,6 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
                   key: _cartIconKey,
                   onTap: () async {
                     final storage = TokenStorage();
-
                     final userId = await storage.getUserId();
                     final token = await storage.getToken();
 
@@ -148,19 +238,23 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
                       itemCount.toString(),
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: 11,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    badgeStyle: const badges.BadgeStyle(
+                      badgeColor: Color(0xFFFF4D4D),
+                      padding: EdgeInsets.all(5),
                     ),
                     badgeAnimation: const badges.BadgeAnimation.scale(
                       animationDuration: Duration(milliseconds: 300),
                     ),
                     showBadge: itemCount > 0,
-                    position: badges.BadgePosition.topEnd(top: -10, end: -10),
-                    child: const Icon(
+                    position: badges.BadgePosition.topEnd(top: -8, end: -8),
+                    child: Icon(
                       CupertinoIcons.cart,
-                      size: 28,
-                      color: Colors.blue,
+                      size: 26,
+                      color: theme.colorScheme.primary,
                     ),
                   ),
                 ),
@@ -176,7 +270,7 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
             builder: (context, snapshot) {
               /// ================= LOADING =================
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return _buildShimmerPopular();
+                return _buildShimmerPopular(sizes);
               }
 
               /// ================= ERROR =================
@@ -189,7 +283,6 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 70),
-
                           child: Lottie.asset(
                             'assets/animations/Error_404.json',
                             repeat: true,
@@ -198,12 +291,9 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
                             width: 150,
                           ),
                         ),
-
                         const SizedBox(height: 10),
-
                         const Text(
                           "Something went wrong",
-
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -220,14 +310,11 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
                 return Center(
                   child: SizedBox(
                     height: 350,
-
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 70),
-
                           child: Lottie.asset(
                             'assets/animations/empty.json',
                             repeat: true,
@@ -236,9 +323,7 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
                             width: 140,
                           ),
                         ),
-
                         const SizedBox(height: 10),
-
                         const Text(
                           "No products found",
                           style: TextStyle(
@@ -246,12 +331,9 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-
                         const SizedBox(height: 6),
-
                         const Text(
                           "Try a different keyword",
-
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
@@ -262,325 +344,49 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
 
               final products = snapshot.data!;
 
-              return GridView.builder(
-                padding: const EdgeInsets.all(10),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.60,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
-                ),
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  final product = products[index];
-
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductDetailScreen(
-                            product: product,
-                            subcategoryId: widget.subcategoryId,
-                            subcategoryName: widget.subcategoryName,
-                            repository: widget.repository,
-                          ),
+              // Center + cap width on tablet/desktop/web so the grid
+              // doesn't stretch into absurdly wide cards.
+              return Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: sizes.maxContentWidth),
+                  child: GridView.builder(
+                    padding: EdgeInsets.all(sizes.horizontalPadding),
+                    gridDelegate:
+                    SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: sizes.crossAxisCount,
+                      childAspectRatio: sizes.childAspectRatio,
+                      crossAxisSpacing: sizes.gridSpacing,
+                      mainAxisSpacing: sizes.gridSpacing,
+                    ),
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+                      return _ProductCard(
+                        product: product,
+                        sizes: sizes,
+                        selectedSku: selectedSku,
+                        onTapCard: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductDetailScreen(
+                                product: product,
+                                subcategoryId: widget.subcategoryId,
+                                subcategoryName: widget.subcategoryName,
+                                repository: widget.repository,
+                              ),
+                            ),
+                          );
+                        },
+                        cartButtonKey: _productCartButtonKeys.putIfAbsent(
+                          product.id,
+                              () => GlobalKey(),
                         ),
+                        onAddToCart: () => _handleAddToCart(context, product),
                       );
                     },
-                    child: Stack(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Card(
-                            color: Colors.white,
-                            elevation: 0.3,
-                            shadowColor: Colors.grey.shade200,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                top: 30,
-                                left: 10,
-                                right: 2,
-                                bottom: 5,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(8),
-                                      ),
-                                      child: product.mainImage.isEmpty
-                                          ? Image.asset(
-                                              'assets/images/default_image.png',
-                                              fit: BoxFit.fill,
-                                              width: double.infinity,
-                                            )
-                                          : Image.network(
-                                              // product.mainImage,
-                                              product.mainImage.isNotEmpty
-                                                  ? product.mainImage.first
-                                                  : "",
-                                              width: double.infinity,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                    return Image.asset(
-                                                      'assets/images/default_image.png',
-                                                      fit: BoxFit.fill,
-                                                    );
-                                                  },
-                                              loadingBuilder:
-                                                  (
-                                                    context,
-                                                    child,
-                                                    loadingProgress,
-                                                  ) {
-                                                    if (loadingProgress == null)
-                                                      return child;
-                                                    return Container(
-                                                      color: Colors.grey[200],
-                                                      child: const Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                              strokeWidth: 2,
-                                                            ),
-                                                      ),
-                                                    );
-                                                  },
-                                            ),
-                                    ),
-                                  ),
-
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(height: 3),
-                                        Divider(
-                                          height: 1,
-                                          thickness: 0.9,
-                                          color: Colors.grey.shade200,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            product.name,
-                                            maxLines: 2,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: 2,
-                                            right: 5,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                selectedSku != null
-                                                    ? "\$${selectedSku!.price.toStringAsFixed(2)}"
-                                                    : "\$${product.lowestPrice.toStringAsFixed(2)}",
-                                                style: const TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.green,
-                                                  shadows: [
-                                                    BoxShadow(
-                                                      color:
-                                                          Colors.yellowAccent,
-                                                      blurStyle:
-                                                          BlurStyle.outer,
-                                                      blurRadius: 3,
-                                                      spreadRadius: 0.4,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: SizedBox(width: 1),
-                                              ),
-
-                                              Container(
-                                                width: 30,
-                                                height: 30,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors
-                                                          .blueAccent
-                                                          .shade100,
-                                                      spreadRadius: 1,
-                                                      blurStyle:
-                                                          BlurStyle.outer,
-                                                      blurRadius: 1,
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: IconButton(
-                                                  key: _productCartButtonKeys
-                                                      .putIfAbsent(
-                                                        product.id,
-                                                        () => GlobalKey(),
-                                                      ),
-                                                  onPressed: () async {
-                                                    // Store references before async operation
-                                                    final storage =
-                                                        TokenStorage();
-                                                    final cartController = ref
-                                                        .read(
-                                                          cartControllerProvider
-                                                              .notifier,
-                                                        );
-                                                    final scaffoldMessenger =
-                                                        ScaffoldMessenger.of(
-                                                          context,
-                                                        );
-
-                                                    try {
-                                                      // Verify token and userId exist
-                                                      final token =
-                                                          await storage
-                                                              .readToken();
-                                                      final userId =
-                                                          await storage
-                                                              .readUserId();
-
-                                                      if (userId == null ||
-                                                          token == null) {
-                                                        _showLoginSheet(
-                                                          context,
-                                                        );
-                                                      }
-
-                                                      if (token == null ||
-                                                          token.isEmpty) {
-                                                        if (mounted) {
-                                                          scaffoldMessenger
-                                                              .showSnackBar(
-                                                                const SnackBar(
-                                                                  content: Text(
-                                                                    'Please login first',
-                                                                  ),
-                                                                  duration:
-                                                                      Duration(
-                                                                        seconds:
-                                                                            1,
-                                                                      ),
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .orange,
-                                                                ),
-                                                              );
-                                                        }
-                                                        if (mounted) {}
-                                                        return;
-                                                      }
-
-                                                      if (userId == null ||
-                                                          userId <= 0) {
-                                                        if (mounted) {
-                                                          scaffoldMessenger
-                                                              .showSnackBar(
-                                                                const SnackBar(
-                                                                  content: Text(
-                                                                    'User session invalid. Please login again',
-                                                                  ),
-                                                                  duration:
-                                                                      Duration(
-                                                                        seconds:
-                                                                            1,
-                                                                      ),
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .orange,
-                                                                ),
-                                                              );
-                                                        }
-                                                        return;
-                                                      }
-
-                                                      // Get product icon button position
-                                                      final GlobalKey iconKey =
-                                                          _productCartButtonKeys[product
-                                                              .id]!;
-                                                      final RenderBox? iconBox =
-                                                          iconKey.currentContext
-                                                                  ?.findRenderObject()
-                                                              as RenderBox?;
-
-                                                      if (iconBox == null) {
-                                                        debugPrint(
-                                                          'Error: Could not find icon button render box',
-                                                        );
-                                                        return;
-                                                      }
-
-                                                      final productPosition =
-                                                          iconBox.localToGlobal(
-                                                            Offset.zero,
-                                                          );
-
-                                                      // Create flying animation
-                                                      if (mounted) {
-                                                        _createFlyingAnimation(
-                                                          productPosition,
-                                                          product.id,
-                                                        );
-                                                      }
-
-                                                      // Add to cart
-                                                      debugPrint(
-                                                        'Adding product ${product.id} to cart for user $userId',
-                                                      );
-
-                                                      await cartController
-                                                          .addItem(
-                                                            product.id,
-                                                            1,
-                                                          );
-                                                    } catch (e, stackTrace) {
-                                                      debugPrint(
-                                                        'Error adding to cart: $e',
-                                                      );
-                                                      debugPrint(
-                                                        'Stack trace: $stackTrace',
-                                                      );
-                                                    }
-                                                  },
-                                                  icon: Icon(
-                                                    CupertinoIcons.cart,
-                                                    color: Colors.blue,
-                                                    size: 15,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                  ),
+                ),
               );
             },
           ),
@@ -591,147 +397,226 @@ class _ProductScreen_subState extends ConsumerState<ProductScreen_sub>
     );
   }
 
-  Widget _buildShimmerPopular() => CustomScrollView(
-    slivers: [
-      SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        sliver: SliverMasonryGrid.count(
-          crossAxisCount: 2,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childCount: 6,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.only(
-                top: index % 1 == 0 ? 0 : 30,
-                bottom: index % 1 == 0 ? 20 : 0,
+  Future<void> _handleAddToCart(BuildContext context, Product product) async {
+    final storage = TokenStorage();
+    final cartController = ref.read(cartControllerProvider.notifier);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      final token = await storage.readToken();
+      final userId = await storage.readUserId();
+
+      if (userId == null || token == null) {
+        _showLoginSheet(context);
+      }
+
+      if (token == null || token.isEmpty) {
+        if (mounted) {
+          scaffoldMessenger.showSnackBar(
+            const SnackBar(
+              content: Text('Please login first'),
+              duration: Duration(seconds: 1),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        return;
+      }
+
+      if (userId == null || userId <= 0) {
+        if (mounted) {
+          scaffoldMessenger.showSnackBar(
+            const SnackBar(
+              content: Text('User session invalid. Please login again'),
+              duration: Duration(seconds: 1),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        return;
+      }
+
+      final GlobalKey iconKey = _productCartButtonKeys[product.id]!;
+      final RenderBox? iconBox =
+      iconKey.currentContext?.findRenderObject() as RenderBox?;
+
+      if (iconBox == null) {
+        debugPrint('Error: Could not find icon button render box');
+        return;
+      }
+
+      final productPosition = iconBox.localToGlobal(Offset.zero);
+
+      if (mounted) {
+        _createFlyingAnimation(productPosition, product.id);
+      }
+
+      debugPrint('Adding product ${product.id} to cart for user $userId');
+
+      await cartController.addItem(product.id, 1);
+    } catch (e, stackTrace) {
+      debugPrint('Error adding to cart: $e');
+      debugPrint('Stack trace: $stackTrace');
+    }
+  }
+
+  Widget _buildShimmerPopular(_Responsive sizes) => Center(
+    child: ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: sizes.maxContentWidth),
+      child: GridView.builder(
+        padding: EdgeInsets.all(sizes.horizontalPadding),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: sizes.crossAxisCount,
+          childAspectRatio: sizes.childAspectRatio,
+          crossAxisSpacing: sizes.gridSpacing,
+          mainAxisSpacing: sizes.gridSpacing,
+        ),
+        itemCount: sizes.crossAxisCount * 3,
+        itemBuilder: (context, index) => _ProductCardShimmer(sizes: sizes),
+      ),
+    ),
+  );}
+
+/// Modernized product card: flat elevation replaced with a soft shadow,
+/// clean typography, no glow effects, and a filled circular cart button.
+class _ProductCard extends StatelessWidget {
+  final Product product;
+  final _Responsive sizes;
+  final ProductSku? selectedSku;
+  final VoidCallback onTapCard;
+  final GlobalKey cartButtonKey;
+  final VoidCallback onAddToCart;
+
+  const _ProductCard({
+    required this.product,
+    required this.sizes,
+    required this.selectedSku,
+    required this.onTapCard,
+    required this.cartButtonKey,
+    required this.onAddToCart,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final price = selectedSku != null
+        ? selectedSku!.price
+        : product.lowestPrice;
+
+    return GestureDetector(
+      onTap: onTapCard,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Image ─────────────────────────────
+            Expanded(
+              child: SizedBox(
+                width: double.infinity,
+                child: product.mainImage.isEmpty
+                    ? Image.asset(
+                  'assets/images/default_image.png',
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                )
+                    : Image.network(
+                  product.mainImage.isNotEmpty
+                      ? product.mainImage.first
+                      : "",
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'assets/images/default_image.png',
+                      fit: BoxFit.cover,
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: Colors.grey[100],
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
+            ),
 
+            // ── Details ───────────────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade50,
-
-                    child: Container(
-                      constraints: const BoxConstraints(minHeight: 200),
-
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-
-                      child: Padding(
-                        padding: const EdgeInsets.all(5),
-
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 130,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade400,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-
-                            const SizedBox(height: 12),
-
-                            Container(
-                              height: 16,
-                              width: 120,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade400,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-
-                            const SizedBox(height: 10),
-
-                            Container(
-                              height: 12,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade400,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-
-                            const SizedBox(height: 8),
-
-                            Container(
-                              height: 12,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade400,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  Text(
+                    product.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: sizes.cardTitleFontSize,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                      height: 1.2,
                     ),
                   ),
-
-                  const SizedBox(height: 10),
-
-                  Container(
-                    height: 10,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-
                   const SizedBox(height: 8),
-
-                  Container(
-                    height: 10,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 10,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(4),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "\$${price.toStringAsFixed(2)}",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: sizes.cardPriceFontSize,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF1FAA59),
                           ),
                         ),
-
-                        Expanded(child: SizedBox(width: 5)),
-
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey.shade300,
+                      ),
+                      const SizedBox(width: 6),
+                      Material(
+                        color: theme.colorScheme.primary,
+                        shape: const CircleBorder(),
+                        child: InkWell(
+                          key: cartButtonKey,
+                          customBorder: const CircleBorder(),
+                          onTap: onAddToCart,
+                          child: const Padding(
+                            padding: EdgeInsets.all(7),
+                            child: Icon(
+                              CupertinoIcons.cart_fill,
+                              color: Colors.white,
+                              size: 15,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
-    ],
-  );
+    );
+  }
 }
 
 // Flying cart animation widget
@@ -796,12 +681,10 @@ class _FlyingCartAnimation extends StatelessWidget {
                 height: 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Color.fromARGB(204, 63, 81, 181),
-                  // Blue with ~80% opacity
+                  color: const Color.fromARGB(204, 63, 81, 181),
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(128, 63, 81, 181),
-                      // Blue with ~50% opacity
+                      color: const Color.fromARGB(128, 63, 81, 181),
                       blurRadius: 8,
                       spreadRadius: 2,
                     ),
@@ -817,6 +700,90 @@ class _FlyingCartAnimation extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+
+class _ProductCardShimmer extends StatelessWidget {
+  final _Responsive sizes;
+
+  const _ProductCardShimmer({required this.sizes});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Image block ─────────────────────
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                color: Colors.grey.shade300,
+              ),
+            ),
+
+            // ── Details block ────────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: sizes.cardTitleFontSize,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    height: sizes.cardTitleFontSize,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: sizes.cardPriceFontSize,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Container(
+                        width: 29,
+                        height: 29,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

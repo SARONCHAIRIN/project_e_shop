@@ -1,7 +1,8 @@
 PODS:
   - file_selector_macos (0.0.1):
     - FlutterMacOS
-  - flutter_secure_storage_macos (6.1.3):
+  - flutter_secure_storage_darwin (10.0.0):
+    - Flutter
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
   - gal (1.0.0):
@@ -21,7 +22,7 @@ PODS:
 
 DEPENDENCIES:
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
-  - flutter_secure_storage_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_macos/macos`)
+  - flutter_secure_storage_darwin (from `Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_darwin/darwin`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - gal (from `Flutter/ephemeral/.symlinks/plugins/gal/darwin`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -32,8 +33,8 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   file_selector_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
-  flutter_secure_storage_macos:
-    :path: Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_macos/macos
+  flutter_secure_storage_darwin:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_darwin/darwin
   FlutterMacOS:
     :path: Flutter/ephemeral
   gal:
@@ -49,7 +50,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   file_selector_macos: 3e56eaea051180007b900eacb006686fd54da150
-  flutter_secure_storage_macos: c2754d3483d20bb207bb9e5a14f1b8e771abcdb9
+  flutter_secure_storage_darwin: 557817588b80e60213cbecb573c45c76b788018d
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
   gal: 6a522c75909f1244732d4596d11d6a2f86ff37a5
   shared_preferences_foundation: 5086985c1d43c5ba4d5e69a4e8083a389e2909e6

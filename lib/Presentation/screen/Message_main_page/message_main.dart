@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/responsive/responsive.dart';
+
 class MessageMain extends StatefulWidget {
   const MessageMain({super.key});
 
@@ -77,70 +79,132 @@ class _MessageMainState extends State<MessageMain> {
         elevation: 0,
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            Container(
-              padding: const EdgeInsets.all(25),
-              decoration: BoxDecoration(
-                color: Colors.blueAccent.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.support_agent,
-                size: 60,
-                color: Colors.blueAccent,
-              ),
-            ),
-            const SizedBox(height: 30),
-            Text(
-              "how_can_we_help".tr(),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            width: Responsive.isMobile(context)
+                ? double.infinity
+                : 700,
 
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            padding: EdgeInsets.all(
+              Responsive.isMobile(context) ? 20 : 40,
             ),
 
-            const SizedBox(height: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
 
-            Text(
-              "contact_support_telegram".tr(),
-              textAlign: TextAlign.center,
+                Container(
+                  padding: EdgeInsets.all(
+                    Responsive.isMobile(context) ? 25 : 35,
+                  ),
 
-              style: TextStyle(color: Colors.grey),
-            ),
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
 
-            const SizedBox(height: 30),
-
-            ListTile(
-              leading: const Icon(Icons.telegram, color: Colors.blue),
-
-              title: Text("chat_on_telegram".tr()),
-              trailing: const Icon(Icons.arrow_forward_ios),
-
-              onTap: openTelegram,
-            ),
-            SizedBox(height: 20),
-
-            SizedBox(
-              width: double.infinity,
-              height: 40,
-              child: ElevatedButton.icon(
-                onPressed: _openTelegram,
-                icon: const Icon(Icons.telegram, size: 25, color: Colors.white),
-                label:  Text(
-                  "contact_via_telegram".tr(),
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  child: Icon(
+                    Icons.support_agent,
+                    size: Responsive.isMobile(context) ? 60 : 80,
+                    color: Colors.blueAccent,
                   ),
                 ),
-              ),
+
+
+                const SizedBox(height: 30),
+
+
+                Text(
+                  "how_can_we_help".tr(),
+                  textAlign: TextAlign.center,
+
+                  style: TextStyle(
+                    fontSize: Responsive.isMobile(context)
+                        ? 20
+                        : 28,
+
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+
+                const SizedBox(height: 10),
+
+
+                Text(
+                  "contact_support_telegram".tr(),
+                  textAlign: TextAlign.center,
+
+                  style: TextStyle(
+                    fontSize: Responsive.isMobile(context)
+                        ? 14
+                        : 18,
+
+                    color: Colors.grey,
+                  ),
+                ),
+
+
+                const SizedBox(height: 30),
+
+
+                Card(
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.telegram,
+                      color: Colors.blue,
+                    ),
+
+                    title: Text(
+                      "chat_on_telegram".tr(),
+                    ),
+
+                    trailing:
+                    const Icon(Icons.arrow_forward_ios),
+
+                    onTap: openTelegram,
+                  ),
+                ),
+
+
+                const SizedBox(height: 20),
+
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 45,
+
+                  child: ElevatedButton.icon(
+                    onPressed: _openTelegram,
+
+                    icon: const Icon(
+                      Icons.telegram,
+                      color: Colors.white,
+                    ),
+
+                    label: Text(
+                      "contact_via_telegram".tr(),
+
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                        BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

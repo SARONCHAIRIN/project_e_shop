@@ -8,16 +8,6 @@ import '../../../Main_App_Bar/App_Bar/sliver_main_app_bar.dart';
 import '../../../data/models/category /category_model.dart';
 import '../../../provider/category_provider.dart';
 
-/// Two-pane category screen:
-///  - LEFT  : vertical list of parent/top-level categories (Featured, Beauty & Health, ...)
-///  - RIGHT : scrollable panel with sub-category circles for the selected
-///            parent category, followed by the product grid.
-///
-/// NOTE: This assumes `CategoryModel` can represent both parent categories
-/// (the left list) and sub-categories (the circles). If your API returns
-/// sub-categories nested inside a parent (e.g. `category.subCategories`),
-/// swap the `_subCategoriesFor()` helper below to read that field instead
-/// of re-using the flat `categories` list.
 class CategoryMain extends ConsumerStatefulWidget {
   final authRepository;
 
