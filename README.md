@@ -1,12 +1,10 @@
-
 <div align="center">
 
 <img src="https://raw.githubusercontent.com/SARONCHAIRIN/project_e_shop/main/assets/images/eshop_logo.png" alt="E Shop Logo" width="100" style="border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); margin-bottom: 12px;"/>
 
 # 🛍️ E Shop
 
-
-### A modern Flutter marketplace — buy & sell, beautifully.
+### A modern Flutter marketplace — buy & sell, beautifully. Fully responsive across every platform.
 
 <p>
   <img src="https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white"/>
@@ -19,8 +17,16 @@
   <img src="https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white"/>
   <img src="https://img.shields.io/badge/iOS-000000?style=flat-square&logo=apple&logoColor=white"/>
   <img src="https://img.shields.io/badge/Web-4285F4?style=flat-square&logo=googlechrome&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Windows-0078D6?style=flat-square&logo=windows&logoColor=white"/>
+  <img src="https://img.shields.io/badge/macOS-000000?style=flat-square&logo=macos&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=black"/>
+</p>
+
+<p>
   <img src="https://img.shields.io/github/stars/SARONCHAIRIN/project_e_shop?style=flat-square&color=yellow"/>
   <img src="https://img.shields.io/github/last-commit/SARONCHAIRIN/project_e_shop?style=flat-square"/>
+  <img src="https://img.shields.io/github/languages/top/SARONCHAIRIN/project_e_shop?style=flat-square"/>
+  <img src="https://img.shields.io/badge/Responsive-All%20Platforms-8E24AA?style=flat-square"/>
 </p>
 
 <br/>
@@ -41,6 +47,8 @@
   <strong>Flutter E-Commerce Application</strong>
   <br/>
   Built with Flutter • Dart • Riverpod • REST API • Spring Boot
+  <br/>
+  One codebase. Six platforms. Fully responsive, adaptive UI everywhere.
 </p>
 
 </div>
@@ -52,6 +60,7 @@
 ### 🚀 Quick Navigation
 
 **[✨ Overview](#-overview)** •
+**[📲 Platform Support](#-platform-support)** •
 **[📱 Screenshots](#-screenshots)** •
 **[🚀 Features](#-features)** •
 **[🛠️ Tech Stack](#️-tech-stack)** •
@@ -63,7 +72,7 @@
 
 # ✨ Overview
 
-**E Shop** is a modern full-featured e-commerce marketplace application built with **Flutter**.
+**E Shop** is a modern, full-featured e-commerce marketplace application built with **Flutter**, engineered with a **fully responsive, adaptive UI** that scales seamlessly from a phone screen to a desktop window.
 
 The application provides a complete shopping experience including:
 
@@ -81,7 +90,26 @@ The application provides a complete shopping experience including:
 - 👤 Profile management
 - 🌍 Khmer & English localization
 
-The project follows a scalable architecture with REST API integration and a modern Flutter UI.
+The project follows a scalable architecture with REST API integration and a modern, responsive Flutter UI that adapts its layout, navigation, and components to any screen size or input method.
+
+---
+
+# 📲 Platform Support
+
+<div align="center">
+
+| Platform | Status | Layout Behavior |
+|---|:---:|---|
+| 🤖 **Android** | ✅ Supported | Compact, mobile-first navigation |
+| 🍎 **iOS** | ✅ Supported | Compact, mobile-first navigation |
+| 🌐 **Web** | ✅ Supported | Adaptive grid, expands to wide layouts |
+| 🪟 **Windows** | ✅ Supported | Desktop-optimized, resizable window |
+| 💻 **macOS** | ✅ Supported | Desktop-optimized, resizable window |
+| 🐧 **Linux** | ✅ Supported | Desktop-optimized, resizable window |
+
+</div>
+
+E Shop uses a single responsive codebase with breakpoint-aware layouts, adaptive navigation (bottom nav on mobile, rail/drawer on tablet & desktop), and flexible grids so the experience feels native on every screen size — phone, tablet, web browser, or desktop window.
 
 ---
 
@@ -197,7 +225,7 @@ The project follows a scalable architecture with REST API integration and a mode
 <img
   src="https://raw.githubusercontent.com/SARONCHAIRIN/project_e_shop/main/docs/screenshots/paymentMethod.png"
   width="100%"
-  alt="Payment Method" 
+  alt="Payment Method"
   style="display: block;"
 />
 </div>
@@ -440,15 +468,17 @@ The project follows a scalable architecture with REST API integration and a mode
 
 ### 🌍 Localization
 - Full bilingual switching:
-    - 🇬🇧 English
-    - 🇰🇭 Khmer
+  - 🇬🇧 English
+  - 🇰🇭 Khmer
 - Powered by `easy_localization`
 
-### 🎨 UI / UX Polish
+### 📲 Responsive & Adaptive UI
+- Breakpoint-based layouts (mobile / tablet / desktop)
+- Adaptive navigation (bottom bar ↔ nav rail ↔ drawer)
+- Fluid grids that reflow across screen sizes
 - Shimmer loading skeletons
 - Engaging Lottie animations
 - Efficient image caching
-- Fully responsive design layouts
 
 </td>
 
@@ -482,7 +512,7 @@ The project follows a scalable architecture with REST API integration and a mode
 
 | Layer | Technology |
 |---|---|
-| **Framework** | Flutter |
+| **Framework** | Flutter (Android, iOS, Web, Windows, macOS, Linux) |
 | **Language** | Dart 3.11+ |
 | **State Management** | Riverpod · Provider |
 | **Routing** | go_router |
@@ -496,6 +526,7 @@ The project follows a scalable architecture with REST API integration and a mode
 | **Media Handling** | image_picker · cached_network_image |
 | **Animations** | Lottie · Shimmer |
 | **Localization** | easy_localization |
+| **Responsive UI** | LayoutBuilder · Breakpoints · Adaptive Widgets |
 | **Code Generation** | Freezed · JSON Serializable |
 | **Testing** | Flutter Test · Mocktail |
 | **Version Control** | Git · GitHub |
@@ -504,45 +535,53 @@ The project follows a scalable architecture with REST API integration and a mode
 
 # 🏗️ Architecture
 
-The application follows a clean layered design pattern to ensure high maintainability, testability, and scalability across modules.
+The application follows a clean layered design pattern to ensure high maintainability, testability, and scalability across modules and platforms.
 
 ```text
-┌───────────────────────────────────────────────┐
-│                  Presentation                 │
-│                                               │
-│    Screens • Widgets • Providers • Routing    │
-└───────────────────────┬───────────────────────┘
-                        │
-                        ▼
-┌───────────────────────────────────────────────┐
-│                     Data                      │
-│                                               │
-│    Repositories • Data Sources • Models       │
-└───────────────────────┬───────────────────────┘
-                        │
-                        ▼
-┌───────────────────────────────────────────────┐
-│                    Network                    │
-│                                               │
-│          Dio • REST API • JWT                 │
-└───────────────────────┬───────────────────────┘
-                        │
-                        ▼
-┌───────────────────────────────────────────────┐
-│                  Spring Boot                  │
-│                                               │
-│         REST API • Business Logic             │
-└───────────────────────┬───────────────────────┘
-                        │
-                        ▼
-┌───────────────────────────────────────────────┐
-│                  PostgreSQL                   │
-│                                               │
-│                  Database                     │
-└───────────────────────────────────────────────┘
-=======
+┌─────────────────────────────────────────────────────────┐
+│                       Presentation                      │
+│                                                          │
+│  Screens • Widgets • Providers • Routing • Responsive    │
+│  Layouts (Mobile / Tablet / Web / Desktop)               │
+└───────────────────────────┬──────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────┐
+│                          Data                            │
+│                                                            │
+│      Repositories • Data Sources • Models                 │
+└───────────────────────────┬──────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────┐
+│                        Network                           │
+│                                                            │
+│               Dio • REST API • JWT                        │
+└───────────────────────────┬──────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────┐
+│                      Spring Boot                          │
+│                                                            │
+│           REST API • Business Logic                       │
+└───────────────────────────┬──────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────┐
+│                      PostgreSQL                            │
+│                                                            │
+│                      Database                               │
+└─────────────────────────────────────────────────────────┘
+```
+
+The **Presentation** layer is fully responsive: every screen adapts its layout, spacing, and navigation pattern based on the available screen width — from a single-column mobile view to a multi-column desktop/web layout — using the same shared codebase across Android, iOS, Web, Windows, macOS, and Linux.
+
+---
+
+<div align="center">
+
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
->>>>>>> 0760afca32424f03bfd44fd2c41c85a671a33421
+</div>
