@@ -60,7 +60,6 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
         .animate(
           CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
         );
-    // Forward AFTER both animations are assigned
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _animController.forward();
     });
@@ -156,76 +155,78 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
     final isLoading = state.isLoading;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background photo
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/back_image.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          // Brand-tinted scrim
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xE00B1120),
-                    Color(0xD2182447),
-                    Color(0xE62D1B4E),
-                  ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isDesktop = constraints.maxWidth >= 900;
+
+          return Stack(
+            children: [
+              // Background photo
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/back_image.png',
+                  fit: BoxFit.cover,
                 ),
               ),
-            ),
-          ),
+              // Brand-tinted scrim
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xE00B1120),
+                        Color(0xD2182447),
+                        Color(0xE62D1B4E),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
 
-          // Main card
-          SizedBox.expand(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              child: SafeArea(
-                child: FadeTransition(
-                  opacity: _fadeAnim,
-                  child: SlideTransition(
-                    position: _slideAnim,
-                    child: SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 400),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(28),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(
-                                26,
-                                30,
-                                26,
-                                26,
-                              ),
-                              decoration: BoxDecoration(
-                                color: _Palette.glass,
-                                borderRadius: BorderRadius.circular(28),
-                                border: Border.all(
-                                  color: _Palette.glassBorder,
-                                  width: 1.2,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.28),
-                                    blurRadius: 30,
-                                    offset: const Offset(0, 14),
+              // Main responsive layout
+              SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isDesktop ? 24 : 16,
+                      vertical: 24,
+                    ),
+                    child: FadeTransition(
+                      opacity: _fadeAnim,
+                      child: SlideTransition(
+                        position: _slideAnim,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: isDesktop ? 460 : 400,
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(28),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                              child: Container(
+                                padding: EdgeInsets.all(isDesktop ? 32 : 26),
+                                decoration: BoxDecoration(
+                                  color: _Palette.glass,
+                                  borderRadius: BorderRadius.circular(28),
+                                  border: Border.all(
+                                    color: _Palette.glassBorder,
+                                    width: 1.2,
                                   ),
-                                ],
-                              ),
-                              child: IntrinsicHeight(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.28),
+                                      blurRadius: 30,
+                                      offset: const Offset(0, 14),
+                                    ),
+                                  ],
+                                ),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    SizedBox(height: 20),
+                                    const SizedBox(height: 10),
                                     // Badge
                                     Center(
                                       child: Container(
@@ -258,9 +259,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 10),
+                                    const SizedBox(height: 16),
 
-                                    // Step indicator — step 2 of 2, both filled
+                                    // Step indicator
                                     Row(
                                       children: [
                                         Expanded(
@@ -286,7 +287,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 10),
+                                    const SizedBox(height: 12),
                                     const Text(
                                       'STEP 2 OF 2 · VERIFY EMAIL',
                                       style: TextStyle(
@@ -296,7 +297,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                         letterSpacing: 1.1,
                                       ),
                                     ),
-                                    const SizedBox(height: 10),
+                                    const SizedBox(height: 12),
 
                                     const Text(
                                       'Verify your email',
@@ -306,7 +307,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                         fontWeight: FontWeight.w800,
                                       ),
                                     ),
-                                    const SizedBox(height: 5),
+                                    const SizedBox(height: 6),
                                     Text(
                                       'We sent a 6-digit code to',
                                       style: TextStyle(
@@ -314,7 +315,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                         fontSize: 13.5,
                                       ),
                                     ),
-                                    const SizedBox(height: 3),
+                                    const SizedBox(height: 4),
                                     Text(
                                       widget.email,
                                       style: const TextStyle(
@@ -324,7 +325,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                         letterSpacing: 0.3,
                                       ),
                                     ),
-                                    const SizedBox(height: 16),
+                                    const SizedBox(height: 24),
 
                                     // OTP boxes
                                     Row(
@@ -336,8 +337,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                         final isFilled =
                                             _controllers[index].text.isNotEmpty;
                                         return SizedBox(
-                                          width: 46,
-                                          height: 58,
+                                          width: 44,
+                                          height: 56,
                                           child: KeyboardListener(
                                             focusNode: FocusNode(),
                                             onKeyEvent: (e) =>
@@ -409,7 +410,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                         );
                                       }),
                                     ),
-                                    const SizedBox(height: 16),
+                                    const SizedBox(height: 24),
 
                                     // Verify button
                                     SizedBox(
@@ -487,7 +488,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 1),
+                                    const SizedBox(height: 20),
 
                                     // Resend row
                                     Row(
@@ -547,41 +548,43 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                   ),
                 ),
               ),
-            ),
-          ),
 
-          // Back button
-          Positioned(
-            top: 20,
-            left: 20,
-            child: SafeArea(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                  child: Container(
-                    width: 42,
-                    height: 42,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Colors.white.withOpacity(0.2)),
-                    ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        Icons.arrow_back_ios_new,
-                        size: 17,
-                        color: Colors.white,
+              // Back button
+              Positioned(
+                top: 20,
+                left: 20,
+                child: SafeArea(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.2),
+                          ),
+                        ),
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(
+                            Icons.arrow_back_ios_new,
+                            size: 17,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:e_shop/Presentation/screen/Message_main_page/message_main.dart';
 import 'package:e_shop/Presentation/screen/cart_main_page/cart_main.dart';
 import 'package:e_shop/Presentation/screen/category_main_page/category_route_page.dart';
 import 'package:e_shop/Presentation/screen/profile_main_page/device_profile_gate.dart';
+import 'package:e_shop/Presentation/screen/profile_main_page/profile_gate.dart';
 
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
 
@@ -66,7 +67,8 @@ class _DivicesNavState extends State<DivicesNav> {
 
       CartMain(repository: widget.authRepository),
 
-      DeviceProfileGate(repository: widget.authRepository),
+      // DeviceProfileGate(repository: widget.authRepository),
+      ProfileGate(repository: widget.authRepository),
     ];
   }
 

@@ -55,4 +55,9 @@ class Responsive {
 
     return 160;
   }
+  static bool isWeb(BuildContext context) {
+
+    return width(context) >= Breakpoints.wide;
+
+  }
 }
