@@ -9,7 +9,7 @@ import 'bakong_qr_screen.dart';
 import 'payment_failed_screen.dart';
 
 /// Screen that handles creating orders for COD and Bakong and directs to the
-/// appropriate follow-up screen.
+/// appropriate follow-up screen with a modern, high-end loading UX.
 class PaymentProcessingScreen extends StatefulWidget {
   final int addressId;
   final double totalPrice;
@@ -35,14 +35,25 @@ class _PaymentProcessingScreenState extends State<PaymentProcessingScreen> {
   bool _isLoading = false;
   String? _error;
 
-  // ✅ NEW: rotating status message so the user knows this can take a while
-  String _statusMessage = 'Processing your order...';
+  String _statusMessage = 'Securing your transaction...';
+  String _statusSubtitle =
+      'Please keep this window open while we set up your order.';
+
+  // Modern design tokens
+  static const Color _primaryBlue = Color(0xFF0066FF);
+  static const Color _bgScreen = Color(0xFFF7F9FC);
+  static const Color _cardBg = Colors.white;
+  static const Color _textDark = Color(0xFF1A1A2E);
+  static const Color _textMuted = Color(0xFF7A7A9D);
+  static const Color _borderColor = Color(0xFFE2E8F0);
 
   Future<void> _start() async {
     setState(() {
       _isLoading = true;
       _error = null;
-      _statusMessage = 'Processing your order...';
+      _statusMessage = 'Securing your transaction...';
+      _statusSubtitle =
+          'Please keep this window open while we set up your order.';
     });
 
     try {
@@ -66,20 +77,10 @@ class _PaymentProcessingScreenState extends State<PaymentProcessingScreen> {
         Navigator.push(
           context,
           FadeSlideRoute(
-            page: OrderSuccessScreen(
-              paymentMethod: 'COD', // ✅ FIXED: was hardcoded 'BAKONG'
-              orderId: order.id,
-            ),
+            page: OrderSuccessScreen(paymentMethod: 'COD', orderId: order.id),
           ),
         );
       } else if (widget.paymentMethod.toUpperCase() == 'BAKONG') {
-        // ✅ CHANGED: single call now returns qr_code + payment info directly.
-        // No more separate initiateBakongPayment() call — that was
-        // redundant and doubled the request time, which is what caused
-        // the client-side timeouts.
-
-        // Give the user a heads-up after a few seconds since the backend
-        // can take 1-3 minutes to respond (Render free-tier cold starts).
         _showSlowServerHintAfterDelay();
 
         final order = await widget.orderRepository.createBakongOrder(
@@ -127,22 +128,22 @@ class _PaymentProcessingScreenState extends State<PaymentProcessingScreen> {
     }
   }
 
-  /// Updates the status text if the request is still running after a delay,
-  /// so the user doesn't think the app has frozen.
   void _showSlowServerHintAfterDelay() {
     Future.delayed(const Duration(seconds: 8), () {
       if (mounted && _isLoading) {
         setState(() {
-          _statusMessage =
-          'Still working... this can take a minute or two.';
+          _statusMessage = 'Connecting to Payment Gateway...';
+          _statusSubtitle =
+              'This can take a moment depending on network speed.';
         });
       }
     });
     Future.delayed(const Duration(seconds: 40), () {
       if (mounted && _isLoading) {
         setState(() {
-          _statusMessage =
-          'Almost there — waking up the payment server, please wait.';
+          _statusMessage = 'Finalizing secure connection...';
+          _statusSubtitle =
+              'Waking up secure servers, thank you for your patience.';
         });
       }
     });
@@ -151,49 +152,143 @@ class _PaymentProcessingScreenState extends State<PaymentProcessingScreen> {
   @override
   void initState() {
     super.initState();
-    // start on next frame to let build show initial UI
     WidgetsBinding.instance.addPostFrameCallback((_) => _start());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Processing Payment')),
-      body: Center(
-        child: _isLoading
-            ? Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SpinKitCircle(color: Colors.blue, size: 48),
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Text(
-                _statusMessage,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        )
-            : _error != null
-            ? Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Error: $_error',
-                style: const TextStyle(color: Colors.red),
-              ),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                onPressed: _start,
-                child: const Text('Retry'),
-              ),
-            ],
+      backgroundColor: _bgScreen,
+      appBar: AppBar(
+        backgroundColor: _bgScreen,
+        elevation: 0,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Processing Payment',
+          style: TextStyle(
+            color: _textDark,
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
           ),
-        )
-            : const SizedBox.shrink(),
+        ),
+      ),
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 480),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Container(
+            padding: const EdgeInsets.all(40),
+            decoration: BoxDecoration(
+              color: _cardBg,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 24,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+              border: Border.all(color: _borderColor.withOpacity(0.6)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (_isLoading) ...[
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: _primaryBlue.withOpacity(0.06),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const SpinKitFadingCircle(
+                      color: _primaryBlue,
+                      size: 48,
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  Text(
+                    _statusMessage,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: _textDark,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    _statusSubtitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: _textMuted,
+                      fontSize: 13.5,
+                      height: 1.5,
+                    ),
+                  ),
+                ] else if (_error != null) ...[
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.redAccent.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.error_outline_rounded,
+                      color: Colors.redAccent,
+                      size: 40,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Transaction Failed',
+                    style: TextStyle(
+                      color: _textDark,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _error ?? 'An unexpected error occurred.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: _textMuted,
+                      fontSize: 13,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: _start,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _primaryBlue,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: const Text(
+                        'Try Again',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                ] else ...[
+                  const SizedBox.shrink(),
+                ],
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

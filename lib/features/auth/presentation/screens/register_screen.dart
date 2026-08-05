@@ -194,7 +194,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
               // Background photo
               Positioned.fill(
                 child: Image.asset(
-                  'assets/images/back_image.png',
+                  'assets/images/back1_orange.jpg',
                   fit: BoxFit.fill,
                 ),
               ),

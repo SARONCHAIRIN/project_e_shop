@@ -164,7 +164,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
               // Background photo
               Positioned.fill(
                 child: Image.asset(
-                  'assets/images/back_image.png',
+                  'assets/images/back1_orange.jpg',
                   fit: BoxFit.cover,
                 ),
               ),

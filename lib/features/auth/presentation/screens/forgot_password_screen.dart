@@ -128,7 +128,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
         children: [
           // Background photo
           Positioned.fill(
-            child: Image.asset('assets/images/back_image.png', fit: BoxFit.cover),
+            child: Image.asset('assets/images/back1_orange.jpg', fit: BoxFit.fill),
           ),
           // Brand-tinted scrim
           Positioned.fill(
