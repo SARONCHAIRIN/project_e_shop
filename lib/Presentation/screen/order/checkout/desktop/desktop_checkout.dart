@@ -9,6 +9,8 @@ import 'package:e_shop/provider/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../data/models/address/address_model.dart';
+
 class DesktopCheckout extends ConsumerStatefulWidget {
   final int userId;
   final String token;
@@ -122,7 +124,10 @@ class _DesktopCheckoutState extends ConsumerState<DesktopCheckout> {
                 children: [
                   IconButton(
                     onPressed: () => Navigator.maybePop(context),
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 18,
+                    ),
                     style: IconButton.styleFrom(
                       backgroundColor: Colors.white,
                       padding: const EdgeInsets.all(12),
@@ -258,7 +263,9 @@ class _DesktopCheckoutState extends ConsumerState<DesktopCheckout> {
                   ),
                   const SizedBox(width: 14),
                   Text(
-                    editingAddress ? "Shipping Address" : "New Shipping Address",
+                    editingAddress
+                        ? "Shipping Address"
+                        : "New Shipping Address",
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
@@ -495,31 +502,28 @@ class _DesktopCheckoutState extends ConsumerState<DesktopCheckout> {
               ),
               child: loading
                   ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2.5,
-                ),
-              )
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2.5,
+                      ),
+                    )
                   : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Proceed to Pay \$${total.toStringAsFixed(2)}",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.2,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Proceed to Pay \$${total.toStringAsFixed(2)}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.arrow_forward_rounded, size: 18),
+                      ],
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 18,
-                  ),
-                ],
-              ),
             ),
           ),
         ],
@@ -554,9 +558,7 @@ class _DesktopCheckoutState extends ConsumerState<DesktopCheckout> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isSelected
-                    ? _primaryBlue.withOpacity(0.12)
-                    : _bgScreen,
+                color: isSelected ? _primaryBlue.withOpacity(0.12) : _bgScreen,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: iconWidget,
@@ -637,10 +639,7 @@ class _DesktopCheckoutState extends ConsumerState<DesktopCheckout> {
                 const SizedBox(height: 2),
                 Text(
                   "Your personal and financial data is encrypted and protected.",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: _textMuted,
-                  ),
+                  style: TextStyle(fontSize: 12, color: _textMuted),
                 ),
               ],
             ),
@@ -673,7 +672,10 @@ class _DesktopCheckoutState extends ConsumerState<DesktopCheckout> {
         prefixIcon: Icon(icon, color: _textMuted, size: 20),
         filled: true,
         fillColor: _bgScreen,
-        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
@@ -688,6 +690,58 @@ class _DesktopCheckoutState extends ConsumerState<DesktopCheckout> {
         ),
       ),
     );
+  }
+
+  //======address section logic=========
+  Future<int?> _saveAddress() async {
+    final addressLine = addressController.text.trim();
+    final city = cityController.text.trim();
+    final country = countryController.text.trim();
+    final zip = zipController.text.trim();
+
+    if (addressLine.isEmpty || city.isEmpty || country.isEmpty || zip.isEmpty) {
+      _showMessage("Please complete all address fields", isError: true);
+      return null;
+    }
+
+    final address = AddressModel(
+      id: addressId,
+      addressline1: addressLine,
+      city: city,
+      country: country,
+      zipcode: zip,
+      isdefault: true,
+    );
+
+    try {
+      if (editingAddress && addressId != null) {
+        await widget.repo.updateAddress(
+          userId: widget.userId,
+          token: widget.token,
+          addressId: addressId!,
+          address: address,
+        );
+
+        return addressId;
+      } else {
+        final result = await widget.repo.addAddress(
+          userId: widget.userId,
+          token: widget.token,
+          address: address,
+        );
+
+        setState(() {
+          addressId = result.id;
+          editingAddress = true;
+        });
+
+        return result.id;
+      }
+    } catch (e) {
+      debugPrint("Save address error: $e");
+      _showMessage("Unable to save address", isError: true);
+      return null;
+    }
   }
 
   // ================= PAY NOW LOGIC =================
@@ -713,6 +767,15 @@ class _DesktopCheckoutState extends ConsumerState<DesktopCheckout> {
     setState(() => loading = true);
 
     try {
+      final savedAddressId = await _saveAddress();
+
+      if (savedAddressId == null) {
+        setState(() => loading = false);
+
+        return;
+      }
+
+      addressId = savedAddressId;
       final cartState = ref.read(cartControllerProvider);
       final total = cartState.cart?.totalPrice ?? 0;
 
