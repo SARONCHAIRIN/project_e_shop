@@ -1,4 +1,3 @@
-/*
 import 'package:e_shop/Presentation/controllers/cart/cart_controller.dart';
 import 'package:e_shop/Presentation/screen/order/checkout_page.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
@@ -9,22 +8,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../core/responsive/responsive.dart';
-import '../../../data/models/cart/cart_item_model.dart';
-import '../../../provider/cart_provider.dart';
-import '../sub_category_screen/subcategory_with_product.dart';
 
-class CartScreen extends ConsumerStatefulWidget {
+import '../../../../core/responsive/responsive.dart';
+import '../../../../data/models/cart/cart_item_model.dart';
+import '../../../../provider/cart_provider.dart' show cartControllerProvider;
+import '../../order/checkout/checkout_page_controll.dart';
+
+class TabletCart extends ConsumerStatefulWidget {
   final int userId;
   final String token;
 
-  const CartScreen({super.key, required this.userId, required this.token});
+  const TabletCart({super.key, required this.userId, required this.token});
 
   @override
-  ConsumerState<CartScreen> createState() => _CartScreenState();
+  ConsumerState<TabletCart> createState() => _CartScreenState();
 }
 
-class _CartScreenState extends ConsumerState<CartScreen> {
+class _CartScreenState extends ConsumerState<TabletCart> {
   @override
   void initState() {
     super.initState();
@@ -724,38 +724,4 @@ Widget cartImage(CartItem item) {
       );
     },
   );
-}
-*/
-
-import 'package:flutter/material.dart';
-
-import '../../../core/responsive/responsive.dart';
-
-import 'mobile/mobile_cart.dart';
-import 'tablet/tablet_cart.dart';
-import '../cart/desktop/desktop_cart.dart';
-import '../cart/web/web_cart.dart';
-
-class CartScreen extends StatelessWidget {
-  final int userId;
-  final String token;
-
-  const CartScreen({super.key, required this.userId, required this.token});
-
-  @override
-  Widget build(BuildContext context) {
-    if (Responsive.isMobile(context)) {
-      return MobileScreen(userId: userId, token: token);
-    }
-
-    if (Responsive.isTablet(context)) {
-      return TabletCart(userId: userId, token: token);
-    }
-
-    if (Responsive.isDesktop(context)) {
-      return DesktopCart(userId: userId, token: token);
-    }
-
-    return WebCart(userId: userId, token: token);
-  }
 }

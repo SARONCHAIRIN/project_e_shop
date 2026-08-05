@@ -93,7 +93,7 @@ class _WebHomeBodyState extends ConsumerState<WebHomeBody> {
     return TextButton(
       onPressed: onTap,
       style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         minimumSize: const Size(0, 0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
@@ -104,7 +104,7 @@ class _WebHomeBodyState extends ConsumerState<WebHomeBody> {
             "see_all".tr(),
             style: const TextStyle(
               color: _accent,
-              fontSize: 15,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -134,10 +134,20 @@ class _WebHomeBodyState extends ConsumerState<WebHomeBody> {
         initialValue: context.locale,
         onSelected: (Locale locale) => context.setLocale(locale),
         itemBuilder: (context) => [
-          _languageMenuItem(context,
-              locale: const Locale('en'), flag: '🇬🇧', label: 'English', isSelected: !isKhmer),
-          _languageMenuItem(context,
-              locale: const Locale('km'), flag: '🇰🇭', label: 'ខ្មែរ', isSelected: isKhmer),
+          _languageMenuItem(
+            context,
+            locale: const Locale('en'),
+            flag: '🇬🇧',
+            label: 'English',
+            isSelected: !isKhmer,
+          ),
+          _languageMenuItem(
+            context,
+            locale: const Locale('km'),
+            flag: '🇰🇭',
+            label: 'ខ្មែរ',
+            isSelected: isKhmer,
+          ),
         ],
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -156,15 +166,24 @@ class _WebHomeBodyState extends ConsumerState<WebHomeBody> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(isKhmer ? '🇰🇭' : '🇬🇧', style: const TextStyle(fontSize: 18)),
+              Text(
+                isKhmer ? '🇰🇭' : '🇬🇧',
+                style: const TextStyle(fontSize: 18),
+              ),
               const SizedBox(width: 8),
               Text(
                 isKhmer ? 'KM' : 'EN',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(width: 6),
-              Icon(Icons.keyboard_arrow_down_rounded,
-                  size: 18, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              Icon(
+                Icons.keyboard_arrow_down_rounded,
+                size: 18,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ],
           ),
         ),
@@ -173,12 +192,12 @@ class _WebHomeBodyState extends ConsumerState<WebHomeBody> {
   }
 
   PopupMenuItem<Locale> _languageMenuItem(
-      BuildContext context, {
-        required Locale locale,
-        required String flag,
-        required String label,
-        required bool isSelected,
-      }) {
+    BuildContext context, {
+    required Locale locale,
+    required String flag,
+    required String label,
+    required bool isSelected,
+  }) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return PopupMenuItem(
@@ -323,19 +342,19 @@ class _WebHomeBodyState extends ConsumerState<WebHomeBody> {
             ),
             boxShadow: isSelected
                 ? [
-              BoxShadow(
-                color: _accent.withOpacity(0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 5),
-              ),
-            ]
+                    BoxShadow(
+                      color: _accent.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 5),
+                    ),
+                  ]
                 : [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.03),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.03),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -352,19 +371,22 @@ class _WebHomeBodyState extends ConsumerState<WebHomeBody> {
                     padding: const EdgeInsets.all(5),
                     child: iconUrl.toLowerCase().endsWith('.svg')
                         ? SvgPicture.network(
-                      iconUrl,
-                      fit: BoxFit.contain,
-                      placeholderBuilder: (context) => const SizedBox.shrink(),
-                    )
+                            iconUrl,
+                            fit: BoxFit.contain,
+                            placeholderBuilder: (context) =>
+                                const SizedBox.shrink(),
+                          )
                         : Image.network(
-                      iconUrl,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => Icon(
-                        Icons.category,
-                        size: 14,
-                        color: isSelected ? _accent : Colors.grey.shade600,
-                      ),
-                    ),
+                            iconUrl,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) => Icon(
+                              Icons.category,
+                              size: 14,
+                              color: isSelected
+                                  ? _accent
+                                  : Colors.grey.shade600,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -408,9 +430,7 @@ class _WebHomeBodyState extends ConsumerState<WebHomeBody> {
 
             // Fixed: IconSubWithProduct returns a sliver/sliver-compatible layout,
             // so we do NOT wrap it in a SliverToBoxAdapter to avoid the crash.
-            IconSubWithProduct(
-              repository: widget.args.authRepository,
-            ),
+            IconSubWithProduct(repository: widget.args.authRepository),
 
             const SliverToBoxAdapter(child: SizedBox(height: 48)),
             SliverToBoxAdapter(
@@ -441,9 +461,7 @@ class _WebHomeBodyState extends ConsumerState<WebHomeBody> {
               categoryName: selectedCategory?.name,
             ),
 
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 100),
-            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 100)),
           ],
         ),
       ),
