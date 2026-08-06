@@ -19,7 +19,7 @@ class DesktopShell extends StatelessWidget {
           Expanded(
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1280),
+                constraints: const BoxConstraints(maxWidth: 1600),
 
                 child: child,
               ),

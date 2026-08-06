@@ -6,11 +6,13 @@ import '../../../core/storage/token_storage.dart';
 import '../models/navigation_item.dart';
 import '../nav_divices.dart';
 
-class DesktopSidebar extends StatelessWidget {
+class DesktopSidebar extends StatefulWidget {
   final int currentIndex;
   final List<NavigationItem> items;
   final ValueChanged<int> onTap;
   final dynamic authRepository;
+  final bool isExpanded;
+  final VoidCallback? onToggleExpand;
 
   const DesktopSidebar({
     super.key,
@@ -18,72 +20,147 @@ class DesktopSidebar extends StatelessWidget {
     required this.items,
     required this.onTap,
     this.authRepository,
+    this.isExpanded = true,
+    this.onToggleExpand,
   });
 
   @override
+  State<DesktopSidebar> createState() => _DesktopSidebarState();
+}
+
+class _DesktopSidebarState extends State<DesktopSidebar> {
+  late bool _internalExpanded;
+
+  @override
+  void initState() {
+    super.initState();
+    _internalExpanded = widget.isExpanded;
+  }
+
+  void _toggleSidebar() {
+    if (widget.onToggleExpand != null) {
+      widget.onToggleExpand!();
+    } else {
+      setState(() {
+        _internalExpanded = !_internalExpanded;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 272,
+    final expanded = widget.onToggleExpand != null ? widget.isExpanded : _internalExpanded;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
+      width: expanded ? 210 : 80,
       decoration: const BoxDecoration(
         color: Color(0xFFFDF8F2),
-        // Premium cream tone matching the layout design
         border: Border(right: BorderSide(color: Color(0xFFEFE5DC), width: 1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // ── E-Commerce Brand Header ──────────────────────────────
+          // ── Header & Toggle Button ──────────────────────────────
           Padding(
-            padding: const EdgeInsets.fromLTRB(22, 28, 22, 20),
+            padding: EdgeInsets.fromLTRB(expanded ? 22 : 16, 28, expanded ? 22 : 16, 20),
             child: Row(
+              mainAxisAlignment: expanded ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
               children: [
-                Container(
-                  width: 42,
-                  height: 42,
-                  decoration: BoxDecoration(
-                    color: Colors.orangeAccent,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.orangeAccent.withOpacity(0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.storefront_rounded,
-                    color: Colors.white,
-                    size: 22,
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "E-Shop Central",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1A1A2E),
-                        letterSpacing: -0.2,
-                      ),
+                if (expanded)
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 42,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: Colors.orangeAccent,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.orangeAccent.withOpacity(0.3),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          alignment: Alignment.center,
+                          child: const Icon(
+                            Icons.storefront_rounded,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "E-Shop Central",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  color: Color(0xFF1A1A2E),
+                                  letterSpacing: -0.2,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                "Manager Dashboard",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 2),
-                    Text(
-                      "Manager Dashboard",
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  )
+                else
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: Colors.orangeAccent,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.orangeAccent.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.storefront_rounded,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  ),
+
+
               ],
             ),
+          ),
+          // Collapse/Expand Toggle Icon Button
+          IconButton(
+            onPressed: _toggleSidebar,
+            icon: Icon(
+              expanded ? Icons.menu_open_outlined : Icons.menu_rounded,
+              color: const Color(0xFF1A1A2E),
+              size: 20,
+            ),
+            splashRadius: 20,
+            tooltip: expanded ? "Collapse Sidebar" : "Expand Sidebar",
           ),
 
           const Padding(
@@ -94,44 +171,45 @@ class DesktopSidebar extends StatelessWidget {
           // ── Main Navigation List ──────────────────────────────────
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              itemCount: items.length,
+              padding: EdgeInsets.symmetric(horizontal: expanded ? 16 : 10, vertical: 12),
+              itemCount: widget.items.length,
               itemBuilder: (context, index) {
-                final item = items[index];
+                final item = widget.items[index];
                 return _SidebarDestination(
                   icon: item.icon,
                   label: item.label,
-                  selected: index == currentIndex,
-                  onTap: () => onTap(index),
+                  selected: index == widget.currentIndex,
+                  isExpanded: expanded,
+                  onTap: () => widget.onTap(index),
                 );
               },
             ),
           ),
 
-          // ===setting
+          // === Settings Footer Item
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+            padding: EdgeInsets.fromLTRB(expanded ? 16 : 10, 8, expanded ? 16 : 10, 10),
             child: Material(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
               child: InkWell(
                 borderRadius: BorderRadius.circular(14),
                 onTap: () {
-                  // Handle settings tap
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SettingPage(authRepository: null),
+                      builder: (context) => SettingPage(authRepository: widget.authRepository),
                     ),
                   );
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(expanded ? 12 : 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: const Color(0xFFEFE5DC)),
                   ),
                   child: Row(
+                    mainAxisAlignment: expanded ? MainAxisAlignment.start : MainAxisAlignment.center,
                     children: [
                       Container(
                         padding: const EdgeInsets.all(8),
@@ -145,37 +223,39 @@ class DesktopSidebar extends StatelessWidget {
                           color: Colors.orange,
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Settings',
-                              style: TextStyle(
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1A1A2E),
+                      if (expanded) ...[
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Settings',
+                                style: TextStyle(
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1A1A2E),
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              'App preferences & account',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey,
+                              SizedBox(height: 2),
+                              Text(
+                                'App preferences & account',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        size: 14,
-                        color: Colors.grey,
-                      ),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 14,
+                          color: Colors.grey,
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -183,32 +263,31 @@ class DesktopSidebar extends StatelessWidget {
             ),
           ),
 
+          // === Logout Footer Item
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+            padding: EdgeInsets.fromLTRB(expanded ? 16 : 10, 0, expanded ? 16 : 10, 10),
             child: Material(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
               child: InkWell(
                 borderRadius: BorderRadius.circular(14),
                 onTap: () async {
-                  // Logout
                   final tokenStorage = TokenStorage();
-
                   await tokenStorage.clearAll();
-
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     '/login',
-                    (route) => false,
+                        (route) => false,
                   );
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(expanded ? 12 : 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: const Color(0xFFEFE5DC)),
                   ),
                   child: Row(
+                    mainAxisAlignment: expanded ? MainAxisAlignment.start : MainAxisAlignment.center,
                     children: [
                       Container(
                         padding: const EdgeInsets.all(8),
@@ -222,108 +301,46 @@ class DesktopSidebar extends StatelessWidget {
                           color: Colors.red,
                         ),
                       ),
-
-                      const SizedBox(width: 12),
-
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Logout',
-                              style: TextStyle(
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1A1A2E),
+                      if (expanded) ...[
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Logout',
+                                style: TextStyle(
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1A1A2E),
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              'Sign out from your account',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey,
+                              SizedBox(height: 2),
+                              Text(
+                                'Sign out from your account',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-
-                      const Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        size: 14,
-                        color: Colors.grey,
-                      ),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 14,
+                          color: Colors.grey,
+                        ),
+                      ],
                     ],
                   ),
                 ),
               ),
             ),
           ),
-          // _buildLogoutButton(context),
         ],
-      ),
-    );
-  }
-
-  Widget _buildLogoutButton(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(16),
-
-      onTap: () async {
-        final confirm = await showDialog<bool>(
-          context: context,
-
-          builder: (context) {
-            return AlertDialog(
-              title: Text("logoutAccount".tr()),
-
-              content: Text("logoutConfirmation".tr()),
-
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-
-                  child: Text("cancel".tr()),
-                ),
-
-                ElevatedButton(
-                  onPressed: () => Navigator.pop(context, true),
-
-                  child: Text("logout".tr()),
-                ),
-              ],
-            );
-          },
-        );
-
-        if (confirm != true) return;
-
-        await authRepository.logout();
-
-        Navigator.pushAndRemoveUntil(
-          context,
-
-          MaterialPageRoute(
-            builder: (_) => DivicesNav(authRepository: authRepository),
-          ),
-
-          (route) => false,
-        );
-      },
-
-      child: Container(
-        padding: const EdgeInsets.all(16),
-
-        decoration: BoxDecoration(
-          color: Colors.white,
-
-          borderRadius: BorderRadius.circular(16),
-        ),
-
-        child: const Row(
-          children: [Icon(Icons.logout), SizedBox(width: 12), Text("Logout")],
-        ),
       ),
     );
   }
@@ -333,12 +350,14 @@ class _SidebarDestination extends StatefulWidget {
   final IconData icon;
   final String label;
   final bool selected;
+  final bool isExpanded;
   final VoidCallback onTap;
 
   const _SidebarDestination({
     required this.icon,
     required this.label,
     required this.selected,
+    required this.isExpanded,
     required this.onTap,
   });
 
@@ -376,37 +395,45 @@ class _SidebarDestinationState extends State<_SidebarDestination> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 180),
             curve: Curves.easeOut,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            padding: EdgeInsets.symmetric(
+              horizontal: widget.isExpanded ? 14 : 12,
+              vertical: 12,
+            ),
             decoration: BoxDecoration(
               color: background,
               borderRadius: BorderRadius.circular(12),
               boxShadow: widget.selected
                   ? [
-                      BoxShadow(
-                        color: Colors.orangeAccent.withOpacity(0.35),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
-                      ),
-                    ]
+                BoxShadow(
+                  color: Colors.orangeAccent.withOpacity(0.35),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ]
                   : [],
             ),
             child: Row(
+              mainAxisAlignment: widget.isExpanded
+                  ? MainAxisAlignment.start
+                  : MainAxisAlignment.center,
               children: [
                 Icon(widget.icon, size: 20, color: foreground),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Text(
-                    widget.label,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 13.5,
-                      color: foreground,
-                      fontWeight: widget.selected
-                          ? FontWeight.w700
-                          : FontWeight.w500,
+                if (widget.isExpanded) ...[
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      widget.label,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        color: foreground,
+                        fontWeight: widget.selected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                      ),
                     ),
                   ),
-                ),
+                ],
               ],
             ),
           ),

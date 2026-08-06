@@ -3,7 +3,6 @@ import 'package:e_shop/data/datasources/adress/adress_service.dart';
 import 'package:e_shop/data/repositories/address/address_repository.dart';
 import 'package:e_shop/provider/cart_provider.dart';
 import 'package:e_shop/Presentation/controllers/cart/cart_controller.dart';
-import 'package:e_shop/Presentation/screen/order/checkout_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,6 +60,7 @@ class _DesktopCartState extends ConsumerState<DesktopCart> {
             children: [
               // Header Row with Back Option and Cart Title
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconButton(
                     onPressed: () => Navigator.maybePop(context),

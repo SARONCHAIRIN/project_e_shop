@@ -1,4 +1,5 @@
 import 'package:e_shop/Main_App_Bar/app_bar.dart';
+import 'package:e_shop/Main_App_Bar/web/web_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
@@ -15,11 +16,11 @@ class DesktopCategoryBody extends ConsumerStatefulWidget {
   const DesktopCategoryBody({super.key, required this.authRepository});
 
   @override
-  ConsumerState<DesktopCategoryBody> createState() => _DesktopCategoryBodyState();
+  ConsumerState<DesktopCategoryBody> createState() =>
+      _DesktopCategoryBodyState();
 }
 
 class _DesktopCategoryBodyState extends ConsumerState<DesktopCategoryBody> {
-
   ScrollController _rightScrollController = ScrollController();
   int selectedIndex = 0; // 0 = "Featured" / All
   List<CategoryModel> categories = [];
@@ -142,12 +143,12 @@ class _DesktopCategoryBodyState extends ConsumerState<DesktopCategoryBody> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: isSelected
                       ? [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
                       : [],
                 ),
                 child: Column(
@@ -196,8 +197,7 @@ class _DesktopCategoryBodyState extends ConsumerState<DesktopCategoryBody> {
       controller: _rightScrollController,
       slivers: [
         // 1. App Bar Sliver
-        MainAppBar(showBars: true, authRepository: widget.authRepository),
-
+        WebAppBar(showBars: true, authRepository: widget.authRepository),
         // 2. Icon Categories Sliver Padding
         const SliverPadding(
           padding: EdgeInsets.all(16.0),
@@ -210,7 +210,7 @@ class _DesktopCategoryBodyState extends ConsumerState<DesktopCategoryBody> {
         ),
 
         // Make sure SubcategoryIconPage returns a Sliver (e.g., SliverGrid)
-        SubcategoryIconPage(categoryName:  _selectedCategoryName),
+        SubcategoryIconPage(categoryName: _selectedCategoryName),
 
         // 3. Products Sliver Padding
         const SliverPadding(
