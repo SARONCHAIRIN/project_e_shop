@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../ tablet/tablet_nav.dart';
+import '../mobiles/mobile_nav.dart';
 import '../models/navigation_item.dart';
 
 import 'web_shell.dart';
@@ -25,24 +27,43 @@ class WebNav extends StatelessWidget {
     required this.onTap,
     this.authRepository,
   });
-
   @override
   Widget build(BuildContext context) {
-    // Alternatively, if you use Provider/Riverbloc/etc., you can fetch it safely here:
-    // final repository = authRepository ?? context.read<User_AuthRepository>();
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
 
-    return WebShell(
-      topBar: const SizedBox.shrink(),
-      // topBar: WebTopBar(
-      //   showBars: true,
-      //   authRepository: authRepository, // Pass it down, or use the fetched one above
-      // ),
-      sidebar: WebSidebar(
-        currentIndex: currentIndex,
-        items: items,
-        onTap: onTap,
-      ),
-      child: screens[currentIndex],
+        // Phone Browser
+        if (width < 600) {
+          return MobileNav(
+            currentIndex: currentIndex,
+            screens: screens,
+            items: items,
+            onTap: onTap,
+          );
+        }
+
+        // Tablet Browser
+        if (width < 1024) {
+          return TabletNav(
+            currentIndex: currentIndex,
+            screens: screens,
+            items: items,
+            onTap: onTap,
+          );
+        }
+
+        // Desktop Browser
+        return WebShell(
+          topBar: const SizedBox.shrink(),
+          sidebar: WebSidebar(
+            currentIndex: currentIndex,
+            items: items,
+            onTap: onTap,
+          ),
+          child: screens[currentIndex],
+        );
+      },
     );
   }
 }

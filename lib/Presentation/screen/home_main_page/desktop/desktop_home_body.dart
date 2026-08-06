@@ -1,5 +1,5 @@
-import 'package:e_shop/Main_App_Bar/app_bar.dart';
 import 'package:e_shop/Main_App_Bar/desktop/desktop_app_bar.dart';
+import 'package:e_shop/Main_App_Bar/web/web_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -397,7 +397,7 @@ class _DesktopHomeBodyState extends ConsumerState<DesktopHomeBody> {
               physics: const BouncingScrollPhysics(),
               slivers: [
 
-               DesktopAppBar(
+                WebAppBar(
                   showBars: true,
                   authRepository: widget.args.authRepository,
                 ),
@@ -406,7 +406,6 @@ class _DesktopHomeBodyState extends ConsumerState<DesktopHomeBody> {
                   child: _sectionHeader(
                     title: 'trending_categories'.tr(),
                     icon: Icons.local_fire_department_rounded,
-                    trailing: _translate(),
                   ),
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 20)),

@@ -1,4 +1,3 @@
-import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
 import 'package:flutter/material.dart';
 import '../../../Divice_Bottom_nav/Divices_Nav/nav_divices.dart';
 import 'login/login_screen.dart';

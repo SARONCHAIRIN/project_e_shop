@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
-import 'package:e_shop/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:e_shop/features/auth/presentation/providers/auth_providers.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
 

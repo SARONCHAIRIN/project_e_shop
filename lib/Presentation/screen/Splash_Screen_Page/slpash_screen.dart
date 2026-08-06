@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:e_shop/Divice_Bottom_nav/Divices_Nav/divices_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../../../Divice_Bottom_nav/Divices_Nav/nav_divices.dart';

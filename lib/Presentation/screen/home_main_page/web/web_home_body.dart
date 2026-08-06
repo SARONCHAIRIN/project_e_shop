@@ -423,7 +423,6 @@ class _WebHomeBodyState extends ConsumerState<WebHomeBody> {
               child: _sectionHeader(
                 title: 'trending_categories'.tr(),
                 icon: Icons.local_fire_department_rounded,
-                trailing: _translate(),
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
