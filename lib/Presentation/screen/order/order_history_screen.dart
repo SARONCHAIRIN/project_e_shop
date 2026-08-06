@@ -388,6 +388,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 1024;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
@@ -417,14 +419,24 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
               ),
           ],
         ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            size: 18,
-            color: Color(0xFF1A1A2E),
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(
+        //     Icons.arrow_back_ios_new,
+        //     size: 18,
+        //     color: Color(0xFF1A1A2E),
+        //   ),
+        //   onPressed: () => Navigator.pop(context),
+        // ),
+        leading: isDesktop
+            ? null
+            : IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 18,
+                  color: Color(0xFF1A1A2E),
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh, size: 22, color: Color(0xFF1A1A2E)),

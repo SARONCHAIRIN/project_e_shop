@@ -1,10 +1,8 @@
 import 'package:e_shop/Presentation/screen/profile_main_page/setting_page.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/storage/token_storage.dart';
 import '../models/navigation_item.dart';
-import '../nav_divices.dart';
 
 class DesktopSidebar extends StatefulWidget {
   final int currentIndex;
@@ -49,7 +47,9 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
 
   @override
   Widget build(BuildContext context) {
-    final expanded = widget.onToggleExpand != null ? widget.isExpanded : _internalExpanded;
+    final expanded = widget.onToggleExpand != null
+        ? widget.isExpanded
+        : _internalExpanded;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
@@ -64,9 +64,16 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
         children: [
           // ── Header & Toggle Button ──────────────────────────────
           Padding(
-            padding: EdgeInsets.fromLTRB(expanded ? 22 : 16, 28, expanded ? 22 : 16, 20),
+            padding: EdgeInsets.fromLTRB(
+              expanded ? 22 : 16,
+              28,
+              expanded ? 22 : 16,
+              20,
+            ),
             child: Row(
-              mainAxisAlignment: expanded ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+              mainAxisAlignment: expanded
+                  ? MainAxisAlignment.spaceBetween
+                  : MainAxisAlignment.center,
               children: [
                 if (expanded)
                   Expanded(
@@ -146,8 +153,6 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                       size: 22,
                     ),
                   ),
-
-
               ],
             ),
           ),
@@ -171,7 +176,10 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
           // ── Main Navigation List ──────────────────────────────────
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: expanded ? 16 : 10, vertical: 12),
+              padding: EdgeInsets.symmetric(
+                horizontal: expanded ? 16 : 10,
+                vertical: 12,
+              ),
               itemCount: widget.items.length,
               itemBuilder: (context, index) {
                 final item = widget.items[index];
@@ -188,7 +196,12 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
 
           // === Settings Footer Item
           Padding(
-            padding: EdgeInsets.fromLTRB(expanded ? 16 : 10, 8, expanded ? 16 : 10, 10),
+            padding: EdgeInsets.fromLTRB(
+              expanded ? 16 : 10,
+              8,
+              expanded ? 16 : 10,
+              10,
+            ),
             child: Material(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
@@ -198,7 +211,8 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SettingPage(authRepository: widget.authRepository),
+                      builder: (context) =>
+                          SettingPage(authRepository: widget.authRepository),
                     ),
                   );
                 },
@@ -209,7 +223,9 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                     border: Border.all(color: const Color(0xFFEFE5DC)),
                   ),
                   child: Row(
-                    mainAxisAlignment: expanded ? MainAxisAlignment.start : MainAxisAlignment.center,
+                    mainAxisAlignment: expanded
+                        ? MainAxisAlignment.start
+                        : MainAxisAlignment.center,
                     children: [
                       Container(
                         padding: const EdgeInsets.all(8),
@@ -265,7 +281,12 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
 
           // === Logout Footer Item
           Padding(
-            padding: EdgeInsets.fromLTRB(expanded ? 16 : 10, 0, expanded ? 16 : 10, 10),
+            padding: EdgeInsets.fromLTRB(
+              expanded ? 16 : 10,
+              0,
+              expanded ? 16 : 10,
+              10,
+            ),
             child: Material(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14),
@@ -277,7 +298,7 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     '/login',
-                        (route) => false,
+                    (route) => false,
                   );
                 },
                 child: Container(
@@ -287,7 +308,9 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                     border: Border.all(color: const Color(0xFFEFE5DC)),
                   ),
                   child: Row(
-                    mainAxisAlignment: expanded ? MainAxisAlignment.start : MainAxisAlignment.center,
+                    mainAxisAlignment: expanded
+                        ? MainAxisAlignment.start
+                        : MainAxisAlignment.center,
                     children: [
                       Container(
                         padding: const EdgeInsets.all(8),
@@ -404,12 +427,12 @@ class _SidebarDestinationState extends State<_SidebarDestination> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: widget.selected
                   ? [
-                BoxShadow(
-                  color: Colors.orangeAccent.withOpacity(0.35),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ]
+                      BoxShadow(
+                        color: Colors.orangeAccent.withOpacity(0.35),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ]
                   : [],
             ),
             child: Row(

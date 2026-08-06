@@ -38,30 +38,38 @@ class _WebAppBarState extends State<WebAppBar> {
         color: colorScheme.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          side: BorderSide(color: colorScheme.outline.withOpacity(0.1)),
+          side: BorderSide(
+            color: colorScheme.outline.withOpacity(0.1),
+          ),
         ),
         initialValue: context.locale,
-        onSelected: (Locale locale) => context.setLocale(locale),
+          onSelected: (locale) async {
+            await context.setLocale(locale);
+
+            if (mounted) {
+              setState(() {});
+            }
+          },
         itemBuilder: (context) => [
           _languageMenuItem(
             context,
-            locale: const Locale('en', 'US'),
+            locale: const Locale('en'),
             flag: '🇬🇧',
             label: 'English',
-            isSelected: !isKhmer,
+            isSelected: context.locale.languageCode == 'en',
           ),
           _languageMenuItem(
             context,
-            locale: const Locale('km', 'KH'),
+            locale: const Locale('km'),
             flag: '🇰🇭',
             label: 'ខ្មែរ',
-            isSelected: isKhmer,
+            isSelected: context.locale.languageCode == 'km',
           ),
         ],
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Colors.grey.shade300),
             boxShadow: [
@@ -148,9 +156,11 @@ class _WebAppBarState extends State<WebAppBar> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+
     return SliverAppBar(
       pinned: true,
       floating: true,
+
       expandedHeight: 85,
       backgroundColor: Colors.orangeAccent,
       elevation: 2,
@@ -239,6 +249,7 @@ class _WebAppBarState extends State<WebAppBar> {
                           key: _cartIconKey,
                           onTap: () async {
                             final storage = TokenStorage();
+
                             final userId = await storage.getUserId();
                             final token = await storage.getToken();
 
@@ -247,7 +258,10 @@ class _WebAppBarState extends State<WebAppBar> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      CartScreen(userId: userId, token: token),
+                                      CartScreen(
+                                        userId: userId,
+                                        token: token,
+                                      ),
                                 ),
                               );
                             }

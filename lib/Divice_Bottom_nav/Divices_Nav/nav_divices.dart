@@ -36,8 +36,6 @@ class DivicesNav extends StatefulWidget {
 class _DivicesNavState extends State<DivicesNav> {
   late int _currentIndex;
 
-  late final List<Widget> _screens;
-
   final List<NavigationItem> navigationItems = const [
     NavigationItem(icon: Icons.home, label: "Home"),
 
@@ -55,20 +53,6 @@ class _DivicesNavState extends State<DivicesNav> {
     super.initState();
 
     _currentIndex = widget.initialIndex;
-
-    _screens = [
-      HomeMainPage(authRepository: widget.authRepository),
-
-      // CategoryMain(authRepository: widget.authRepository),
-      CategoryMain(authRepository: widget.authRepository),
-
-      MessageMain(),
-
-      CartMain(repository: widget.authRepository),
-
-      // DeviceProfileGate(repository: widget.authRepository),
-      ProfileGate(repository: widget.authRepository),
-    ];
   }
 
   void _onTabTapped(int index) {
@@ -83,11 +67,22 @@ class _DivicesNavState extends State<DivicesNav> {
 
   @override
   Widget build(BuildContext context) {
+    final screens = [
+      HomeMainPage(authRepository: widget.authRepository),
+
+      CategoryMain(authRepository: widget.authRepository),
+
+      MessageMain(),
+
+      CartMain(repository: widget.authRepository),
+
+      ProfileGate(repository: widget.authRepository),
+    ];
     return AdaptiveBuilder(
       mobile: MobileNav(
         currentIndex: _currentIndex,
 
-        screens: _screens,
+        screens: screens,
 
         items: navigationItems,
 
@@ -97,7 +92,7 @@ class _DivicesNavState extends State<DivicesNav> {
       tablet: TabletNav(
         currentIndex: _currentIndex,
 
-        screens: _screens,
+        screens: screens,
 
         items: navigationItems,
 
@@ -107,7 +102,7 @@ class _DivicesNavState extends State<DivicesNav> {
       desktop: DesktopNav(
         currentIndex: _currentIndex,
 
-        screens: _screens,
+        screens: screens,
 
         items: navigationItems,
 
@@ -117,7 +112,7 @@ class _DivicesNavState extends State<DivicesNav> {
       web: WebNav(
         currentIndex: _currentIndex,
 
-        screens: _screens,
+        screens: screens,
 
         items: navigationItems,
 
