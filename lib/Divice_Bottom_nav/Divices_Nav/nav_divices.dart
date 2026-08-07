@@ -8,6 +8,7 @@ import 'package:e_shop/Presentation/screen/category_main_page/category_route_pag
 import 'package:e_shop/Presentation/screen/profile_main_page/profile_gate.dart';
 
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter/material.dart';
 
@@ -36,17 +37,6 @@ class DivicesNav extends StatefulWidget {
 class _DivicesNavState extends State<DivicesNav> {
   late int _currentIndex;
 
-  final List<NavigationItem> navigationItems = const [
-    NavigationItem(icon: Icons.home, label: "Home"),
-
-    NavigationItem(icon: Icons.category, label: "Category"),
-
-    NavigationItem(icon: Icons.message, label: "Message"),
-
-    NavigationItem(icon: Icons.shopping_cart, label: "Cart"),
-
-    NavigationItem(icon: Icons.person, label: "Profile"),
-  ];
 
   @override
   void initState() {
@@ -67,6 +57,20 @@ class _DivicesNavState extends State<DivicesNav> {
 
   @override
   Widget build(BuildContext context) {
+    final navigationItems = [
+
+      NavigationItem(icon: Icons.home, label: "home".tr()),
+
+      NavigationItem(icon: Icons.category, label: "category".tr()),
+
+      NavigationItem(icon: Icons.message, label: "message".tr()),
+
+      NavigationItem(icon: Icons.shopping_cart, label: "cart".tr()),
+
+      NavigationItem(icon: Icons.person, label: "profile".tr()),
+
+    ];
+
     final screens = [
       HomeMainPage(authRepository: widget.authRepository),
 

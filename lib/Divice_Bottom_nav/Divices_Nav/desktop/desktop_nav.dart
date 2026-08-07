@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../Presentation/screen/order/order_history_screen.dart';
@@ -62,7 +63,7 @@ class _DesktopNavState extends State<DesktopNav> {
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: Text("No data"));
+          return  Center(child: Text("no_data".tr()));
         }
 
         final int? userId = snapshot.data![0] as int?;
@@ -84,11 +85,11 @@ class _DesktopNavState extends State<DesktopNav> {
         final width = constraints.maxWidth;
         final deskItem = [
           ...widget.items,
-          const NavigationItem(icon: Icons.shopping_bag, label: "Order"),
-          const NavigationItem(
+           NavigationItem(icon: Icons.shopping_bag, label: "order".tr()),
+           NavigationItem(
             icon: Icons.settings_outlined,
 
-            label: "Settings",
+            label: "setting".tr(),
           ),
         ];
 

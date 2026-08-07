@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -66,7 +67,9 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
     );
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _slideAnim = Tween<Offset>(begin: const Offset(0, 0.04), end: Offset.zero)
-        .animate(CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic));
+        .animate(
+          CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+        );
     _animController.forward();
   }
 
@@ -132,14 +135,16 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
     if (!_regFormKey.currentState!.validate()) return;
 
     try {
-      final success = await ref.read(authControllerProvider.notifier).register(
-        RegisterRequest(
-          username: _regUsernameController.text.trim(),
-          email: _regEmailController.text.trim(),
-          phone: _regPhoneController.text.trim(),
-          password: _regPasswordController.text.trim(),
-        ),
-      );
+      final success = await ref
+          .read(authControllerProvider.notifier)
+          .register(
+            RegisterRequest(
+              username: _regUsernameController.text.trim(),
+              email: _regEmailController.text.trim(),
+              phone: _regPhoneController.text.trim(),
+              password: _regPasswordController.text.trim(),
+            ),
+          );
 
       if (!mounted) return;
 
@@ -150,7 +155,8 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
           arguments: _regEmailController.text.trim(),
         );
       } else {
-        final error = ref.read(authControllerProvider).error ?? 'Registration failed';
+        final error =
+            ref.read(authControllerProvider).error ?? 'Registration failed';
         _showSnack(error, isError: true);
       }
     } catch (e) {
@@ -241,12 +247,18 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(28),
                               child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                                filter: ImageFilter.blur(
+                                  sigmaX: 24,
+                                  sigmaY: 24,
+                                ),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: _Palette.glass,
                                     borderRadius: BorderRadius.circular(28),
-                                    border: Border.all(color: _Palette.glassBorder, width: 1.2),
+                                    border: Border.all(
+                                      color: _Palette.glassBorder,
+                                      width: 1.2,
+                                    ),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.35),
@@ -260,15 +272,22 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
                                   // the unconstrained height of SingleChildScrollView + Column.
                                   child: useSideBySide
                                       ? IntrinsicHeight(
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: _panels(isLoading, compact: false),
-                                    ),
-                                  )
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            children: _panels(
+                                              isLoading,
+                                              compact: false,
+                                            ),
+                                          ),
+                                        )
                                       : Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: _panels(isLoading, compact: true),
-                                  ),
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: _panels(
+                                            isLoading,
+                                            compact: true,
+                                          ),
+                                        ),
                                 ),
                               ),
                             ),
@@ -288,15 +307,17 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
 
   List<Widget> _panels(bool isLoading, {required bool compact}) {
     final info = _infoPanel(
-      title: _isSignUpMode ? 'Welcome Back!' : 'Hello, Friend!',
+      title: _isSignUpMode ? 'welcome_back'.tr() : 'hello_friend'.tr(),
       subtitle: _isSignUpMode
-          ? 'To keep connected with us please login with your personal info'
-          : 'Enter your personal details and start your journey with us',
-      buttonLabel: _isSignUpMode ? 'SIGN IN' : 'SIGN UP',
+          ? 'keep_connected'.tr()
+          : 'start_your_journey'.tr(),
+      buttonLabel: _isSignUpMode ? 'sign_in'.tr() : 'sign_up'.tr(),
       onPressed: _toggleMode,
       compact: compact,
     );
-    final form = _isSignUpMode ? _registerPanel(isLoading, compact: compact) : _loginPanel(isLoading, compact: compact);
+    final form = _isSignUpMode
+        ? _registerPanel(isLoading, compact: compact)
+        : _loginPanel(isLoading, compact: compact);
 
     if (compact) {
       return [info, form];
@@ -326,33 +347,60 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
               end: Alignment.bottomRight,
             ),
             boxShadow: [
-              BoxShadow(color: _Palette.gold.withOpacity(0.4), blurRadius: 18, spreadRadius: 1),
+              BoxShadow(
+                color: _Palette.gold.withOpacity(0.4),
+                blurRadius: 18,
+                spreadRadius: 1,
+              ),
             ],
           ),
-          child: Icon(Icons.shopping_bag_outlined, color: _Palette.goldText, size: compact ? 22 : 28),
+          child: Icon(
+            Icons.shopping_bag_outlined,
+            color: _Palette.goldText,
+            size: compact ? 22 : 28,
+          ),
         ),
         SizedBox(height: compact ? 14 : 24),
         Text(
           title,
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white, fontSize: compact ? 22 : 30, fontWeight: FontWeight.w800),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: compact ? 22 : 30,
+            fontWeight: FontWeight.w800,
+          ),
         ),
         SizedBox(height: compact ? 8 : 14),
         Text(
           subtitle,
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: compact ? 13 : 14.5, height: 1.5),
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.7),
+            fontSize: compact ? 13 : 14.5,
+            height: 1.5,
+          ),
         ),
         SizedBox(height: compact ? 18 : 32),
         OutlinedButton(
           style: OutlinedButton.styleFrom(
             foregroundColor: _Palette.gold,
             side: const BorderSide(color: _Palette.gold, width: 1.5),
-            padding: EdgeInsets.symmetric(horizontal: compact ? 36 : 48, vertical: compact ? 12 : 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            padding: EdgeInsets.symmetric(
+              horizontal: compact ? 36 : 48,
+              vertical: compact ? 12 : 16,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
           ),
           onPressed: onPressed,
-          child: Text(buttonLabel, style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+          child: Text(
+            buttonLabel,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+            ),
+          ),
         ),
       ],
     );
@@ -378,26 +426,41 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
 
   Widget _loginPanel(bool isLoading, {required bool compact}) {
     final form = Padding(
-      padding: EdgeInsets.symmetric(horizontal: compact ? 28 : 48, vertical: compact ? 28 : 24),
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 28 : 48,
+        vertical: compact ? 28 : 24,
+      ),
       child: Form(
         key: _loginFormKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'STEP 1 OF 1 · SIGN IN',
-              style: TextStyle(color: _Palette.gold, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.1),
+            Text(
+              'step_sign_in'.tr(),
+              style: TextStyle(
+                color: _Palette.gold,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.1,
+              ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Sign in to E-Shop',
-              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w800),
+            Text(
+              'sign_in_shop'.tr(),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+              ),
             ),
             const SizedBox(height: 6),
             Text(
-              'Welcome back — we kept your cart just as you left it.',
-              style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 13.5),
+              'welcome_cart'.tr(),
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.65),
+                fontSize: 13.5,
+              ),
             ),
             const SizedBox(height: 22),
 
@@ -411,15 +474,24 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
               ],
             ),
             const SizedBox(height: 14),
-            Text('or use your email account:', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.5)),
+            Text(
+              'use_email_account'.tr(),
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 12.5,
+              ),
+            ),
             const SizedBox(height: 20),
 
             TextFormField(
               controller: _loginEmailController,
               cursorColor: _Palette.gold,
               style: const TextStyle(color: Colors.white, fontSize: 16),
-              decoration: _decoration(label: 'Email or Username', icon: Icons.mail_outline),
-              validator: (v) => v!.isEmpty ? 'Required' : null,
+              decoration: _decoration(
+                label: 'email_or_username'.tr(),
+                icon: Icons.mail_outline,
+              ),
+              validator: (v) => v!.isEmpty ? 'required'.tr() : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -428,43 +500,76 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
               cursorColor: _Palette.gold,
               style: const TextStyle(color: Colors.white, fontSize: 16),
               decoration: _decoration(
-                label: 'Password',
+                label: 'password'.tr(),
                 icon: Icons.lock_outline,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _obscureLoginPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                    _obscureLoginPassword
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
                     color: Colors.white60,
                     size: 20,
                   ),
-                  onPressed: () => setState(() => _obscureLoginPassword = !_obscureLoginPassword),
+                  onPressed: () => setState(
+                    () => _obscureLoginPassword = !_obscureLoginPassword,
+                  ),
                 ),
               ),
-              validator: (v) => v!.isEmpty ? 'Required' : null,
+              validator: (v) => v!.isEmpty ? 'required'.tr() : null,
             ),
 
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => ResetPasswordScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => ResetPasswordScreen()),
+                  );
                 },
-                child: Text('Forgot your password?', style: TextStyle(color: Colors.white.withOpacity(0.55), fontSize: 12)),
+                child: Text(
+                  'forgot_password'.tr(),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.55),
+                    fontSize: 12,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 8),
 
-            _goldButton(label: 'SIGN IN', isLoading: isLoading, onTap: _handleLogin),
+            _goldButton(
+              label: 'sign_in'.tr(),
+              isLoading: isLoading,
+              onTap: _handleLogin,
+            ),
 
             if (compact) ...[
               const SizedBox(height: 18),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account? ", style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13)),
+                  Text(
+                    'no_account'.tr(),
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.6),
+                      fontSize: 13,
+                    ),
+                  ),
                   TextButton(
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 0)),
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: const Size(0, 0),
+                    ),
                     onPressed: _toggleMode,
-                    child: const Text('Sign up', style: TextStyle(color: _Palette.gold, fontSize: 13, fontWeight: FontWeight.w700)),
+                    child: Text(
+                      'sign_up'.tr(),
+                      style: TextStyle(
+                        color: _Palette.gold,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -475,31 +580,52 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
     );
 
     // FIX: Wrapped in Expanded so it correctly fills available space inside IntrinsicHeight + Row
-    return compact ? form : Expanded(flex: 6, child: Center(child: SingleChildScrollView(child: form)));
+    return compact
+        ? form
+        : Expanded(
+            flex: 6,
+            child: Center(child: SingleChildScrollView(child: form)),
+          );
   }
 
   Widget _registerPanel(bool isLoading, {required bool compact}) {
     final form = Padding(
-      padding: EdgeInsets.symmetric(horizontal: compact ? 28 : 48, vertical: compact ? 28 : 24),
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 28 : 48,
+        vertical: compact ? 28 : 24,
+      ),
       child: Form(
         key: _regFormKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'STEP 1 OF 2 · CREATE ACCOUNT',
-              style: TextStyle(color: _Palette.gold, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 1.1),
+            Text(
+              'step_create_account'.tr(),
+              style: TextStyle(
+                color: _Palette.gold,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.1,
+              ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Create your account',
-              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w800),
+            Text(
+              'step_create_account'.tr(),
+
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+              ),
             ),
             const SizedBox(height: 6),
             Text(
-              'Save items, track orders, and check out faster.',
-              style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 13.5),
+              'save_track_checkout'.tr(),
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.65),
+                fontSize: 13.5,
+              ),
             ),
             const SizedBox(height: 22),
 
@@ -513,15 +639,24 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
               ],
             ),
             const SizedBox(height: 14),
-            Text('or use your email for registration:', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.5)),
+            Text(
+              'use_email_registration'.tr(),
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 12.5,
+              ),
+            ),
             const SizedBox(height: 20),
 
             TextFormField(
               controller: _regUsernameController,
               cursorColor: _Palette.gold,
               style: const TextStyle(color: Colors.white, fontSize: 16),
-              decoration: _decoration(label: 'Full name', icon: Icons.person_outline),
-              validator: (v) => v!.isEmpty ? 'Required' : null,
+              decoration: _decoration(
+                label: 'full_name'.tr(),
+                icon: Icons.person_outline,
+              ),
+              validator: (v) => v!.isEmpty ? 'requited'.tr() : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -529,8 +664,11 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
               keyboardType: TextInputType.emailAddress,
               cursorColor: _Palette.gold,
               style: const TextStyle(color: Colors.white, fontSize: 16),
-              decoration: _decoration(label: 'Email', icon: Icons.mail_outline),
-              validator: (v) => v!.contains('@') ? null : 'Invalid email',
+              decoration: _decoration(
+                label: 'email'.tr(),
+                icon: Icons.mail_outline,
+              ),
+              validator: (v) => v!.contains('@') ? null : 'invalid_email'.tr(),
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -538,43 +676,71 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
               keyboardType: TextInputType.phone,
               cursorColor: _Palette.gold,
               style: const TextStyle(color: Colors.white, fontSize: 16),
-              decoration: _decoration(label: 'Phone number', icon: Icons.phone_iphone_outlined),
-              validator: (v) => v!.isEmpty ? 'Required' : null,
+              decoration: _decoration(
+                label: 'phone_number'.tr(),
+                icon: Icons.phone_iphone_outlined,
+              ),
+              validator: (v) => v!.isEmpty ? 'required'.tr() : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _regPasswordController,
               obscureText: _obscureRegPassword,
               cursorColor: _Palette.gold,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
+              style: TextStyle(color: Colors.white, fontSize: 16),
               decoration: _decoration(
-                label: 'Password',
+                label: 'password'.tr(),
                 icon: Icons.lock_outline,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _obscureRegPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                    _obscureRegPassword
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
                     color: Colors.white60,
                     size: 20,
                   ),
-                  onPressed: () => setState(() => _obscureRegPassword = !_obscureRegPassword),
+                  onPressed: () => setState(
+                    () => _obscureRegPassword = !_obscureRegPassword,
+                  ),
                 ),
               ),
-              validator: (v) => v!.length >= 6 ? null : 'Min 6 chars',
+
+              validator: (v) => v!.length >= 6 ? null : 'min_password'.tr(),
             ),
             const SizedBox(height: 22),
 
-            _goldButton(label: 'SIGN UP', isLoading: isLoading, onTap: _handleRegister),
+            _goldButton(
+              label: "sign_up".tr(),
+              isLoading: isLoading,
+              onTap: _handleRegister,
+            ),
 
             if (compact) ...[
               const SizedBox(height: 18),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Already have an account? ', style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13)),
+                  Text(
+                    'have_account'.tr(),
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.6),
+                      fontSize: 13,
+                    ),
+                  ),
                   TextButton(
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 0)),
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: const Size(0, 0),
+                    ),
                     onPressed: _toggleMode,
-                    child: const Text('Log in', style: TextStyle(color: _Palette.gold, fontSize: 13, fontWeight: FontWeight.w700)),
+                    child: Text(
+                      'log_in'.tr(),
+                      style: TextStyle(
+                        color: _Palette.gold,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -585,10 +751,19 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
     );
 
     // FIX: Wrapped in Expanded so it correctly fills available space inside IntrinsicHeight + Row
-    return compact ? form : Expanded(flex: 6, child: Center(child: SingleChildScrollView(child: form)));
+    return compact
+        ? form
+        : Expanded(
+            flex: 6,
+            child: Center(child: SingleChildScrollView(child: form)),
+          );
   }
 
-  Widget _goldButton({required String label, required bool isLoading, required VoidCallback onTap}) {
+  Widget _goldButton({
+    required String label,
+    required bool isLoading,
+    required VoidCallback onTap,
+  }) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -598,7 +773,11 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
           end: Alignment.centerRight,
         ),
         boxShadow: [
-          BoxShadow(color: _Palette.gold.withOpacity(0.35), blurRadius: 16, offset: const Offset(0, 6)),
+          BoxShadow(
+            color: _Palette.gold.withOpacity(0.35),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
         ],
       ),
       child: Material(
@@ -610,16 +789,20 @@ class _TabletGuestProfileState extends ConsumerState<TabletGuestProfile>
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Center(
               child: isLoading
-                  ? const SpinKitDualRing(color: _Palette.goldText, size: 22, lineWidth: 3)
+                  ? const SpinKitDualRing(
+                      color: _Palette.goldText,
+                      size: 22,
+                      lineWidth: 3,
+                    )
                   : Text(
-                label,
-                style: const TextStyle(
-                  color: _Palette.goldText,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.2,
-                ),
-              ),
+                      label,
+                      style: const TextStyle(
+                        color: _Palette.goldText,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
             ),
           ),
         ),

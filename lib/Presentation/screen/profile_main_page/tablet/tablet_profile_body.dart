@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/profile_avatar.dart';
@@ -18,7 +19,7 @@ class TabletProfileBody extends StatelessWidget {
 
       child: Column(
         children: [
-          ProfileTopBar(title: "Profile", onSettingPressed: () {}),
+          ProfileTopBar(title: "profile".tr(), onSettingPressed: () {}),
 
           const SizedBox(height: 20),
 

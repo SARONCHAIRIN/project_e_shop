@@ -1,6 +1,7 @@
 import 'package:e_shop/Presentation/screen/cart/cart_screen.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
 import 'package:e_shop/features/auth/presentation/screens/login_button_sheet.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../../../core/responsive/responsive.dart';
@@ -68,7 +69,7 @@ class _CartMainState extends State<CartMain> {
           centerTitle: true,
           backgroundColor: Colors.white,
           title: Text(
-            'Cart',
+            'cart'.tr(),
             style: TextStyle(
               color: Colors.black,
               fontSize: 21,
@@ -107,7 +108,7 @@ class _CartMainState extends State<CartMain> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildLoginRegister(),
+            _buildlogiregister(),
 
             SizedBox(
               height: Responsive.isMobile(context)
@@ -132,7 +133,7 @@ class _CartMainState extends State<CartMain> {
             const SizedBox(height: 20),
 
             Text(
-              "Cart is empty",
+              'cart_empty'.tr(),
 
               style: TextStyle(
                 color: Colors.blueAccent,
@@ -160,13 +161,13 @@ class _CartMainState extends State<CartMain> {
     padding: EdgeInsets.fromLTRB(24, 40, 24, 32),
     child: Column(
       children: [
-        const Text(
-          'Sign in to your account',
+         Text(
+          'sign_in_account'.tr(),
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 6),
         Text(
-          'Access your orders, wishlist,\nand exclusive deals',
+          'access_orders'.tr(),
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 13, color: Colors.grey[500], height: 1.5),
         ),
@@ -184,8 +185,8 @@ class _CartMainState extends State<CartMain> {
             ),
             onPressed: () => _showLoginSheet(context),
 
-            child: const Text(
-              'Sign in/ Register',
+            child:  Text(
+              'sign_in_register'.tr(),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 15,
@@ -198,94 +199,5 @@ class _CartMainState extends State<CartMain> {
     ),
   );
 
-  Widget _buildLoginRegister() {
-    return Card(
-      elevation: 2,
 
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-
-      child: Padding(
-        padding: EdgeInsets.all(
-          Responsive.isMobile(context)
-              ? 24
-              : 40,
-        ),
-
-        child: Column(
-          children: [
-
-            Text(
-              'Sign in to your account',
-
-              style: TextStyle(
-                fontSize:
-                Responsive.isMobile(context)
-                    ? 17
-                    : 22,
-
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-
-
-            const SizedBox(height: 8),
-
-
-            Text(
-              'Access your orders, wishlist,\nand exclusive deals',
-
-              textAlign: TextAlign.center,
-
-              style: TextStyle(
-                fontSize:
-                Responsive.isMobile(context)
-                    ? 13
-                    : 16,
-
-                color: Colors.grey,
-                height: 1.5,
-              ),
-            ),
-
-
-            const SizedBox(height: 28),
-
-
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-
-              child: ElevatedButton(
-                onPressed: () =>
-                    _showLoginSheet(context),
-
-                style:
-                ElevatedButton.styleFrom(
-                  backgroundColor:
-                  const Color(0xFF1A1A2E),
-
-                  shape:
-                  RoundedRectangleBorder(
-                    borderRadius:
-                    BorderRadius.circular(12),
-                  ),
-                ),
-
-                child: const Text(
-                  'Sign in / Register',
-
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

@@ -1,4 +1,5 @@
 import 'package:e_shop/Presentation/screen/profile_main_page/setting_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/storage/token_storage.dart';
@@ -101,12 +102,12 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                           ),
                         ),
                         const SizedBox(width: 14),
-                        const Expanded(
+                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "E-Shop Central",
+                                "eshop_central".tr(),
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w800,
@@ -117,7 +118,7 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                               ),
                               SizedBox(height: 2),
                               Text(
-                                "Manager Dashboard",
+                                "manager_dashboard".tr(),
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: Colors.grey,
@@ -165,7 +166,7 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
               size: 20,
             ),
             splashRadius: 20,
-            tooltip: expanded ? "Collapse Sidebar" : "Expand Sidebar",
+            tooltip: expanded ? "collapse_sidebar".tr(): "expand_sidebar".tr(),
           ),
 
           const Padding(
@@ -241,12 +242,12 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                       ),
                       if (expanded) ...[
                         const SizedBox(width: 12),
-                        const Expanded(
+                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Logout',
+                                "logout".tr(),
                                 style: TextStyle(
                                   fontSize: 13.5,
                                   fontWeight: FontWeight.bold,
@@ -256,7 +257,7 @@ class _DesktopSidebarState extends State<DesktopSidebar> {
                               ),
                               SizedBox(height: 2),
                               Text(
-                                'Sign out from your account',
+                                'sign_out_account'.tr(),
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: Colors.grey,
