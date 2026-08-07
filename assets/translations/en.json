@@ -153,5 +153,7 @@
   "trackOrderDialogBody": "Please enter your order ID to track your order.",
   "close": "Close",
   "helpAndSupport": "Help & support",
-  "helpAndSupportSubtitle": "Chat, call or email us"
+  "helpAndSupportSubtitle": "Chat, call or email us",
+  "brandIcons": "Brand Icons",
+  "brandAndProduct": "Brand & product"
 }

@@ -1,4 +1,5 @@
 import 'package:e_shop/Main_App_Bar/app_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
@@ -59,15 +60,27 @@ class _TabletCategoryBodyState extends ConsumerState<TabletCategoryBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.only(top: kToolbarHeight + 50),
-            child: _buildSidebar(),
+          // Full-width app bar on top
+          CustomScrollView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            slivers: [
+              MainAppBar(showBars: true, authRepository: widget.authRepository),
+            ],
           ),
-          Expanded(child: _buildRightPanel()),
+
+          // Sidebar + content below the app bar
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildSidebar(),
+                Expanded(child: _buildRightPanel()),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -192,15 +205,12 @@ class _TabletCategoryBodyState extends ConsumerState<TabletCategoryBody> {
     return CustomScrollView(
       controller: _rightScrollController,
       slivers: [
-        // 1. App Bar Sliver
-        MainAppBar(showBars: true, authRepository: widget.authRepository),
-
         // 2. Icon Categories Sliver Padding
-        const SliverPadding(
+         SliverPadding(
           padding: EdgeInsets.all(16.0),
           sliver: SliverToBoxAdapter(
             child: Text(
-              "Brand Icons",
+              "brandIcons".tr(),
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
@@ -210,11 +220,11 @@ class _TabletCategoryBodyState extends ConsumerState<TabletCategoryBody> {
         SubcategoryIconPage(categoryName: _selectedCategoryName),
 
         // 3. Products Sliver Padding
-        const SliverPadding(
+         SliverPadding(
           padding: EdgeInsets.fromLTRB(16, 24, 16, 16),
           sliver: SliverToBoxAdapter(
             child: Text(
-              "Brand & Products",
+              "brandAndProduct".tr(),
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
