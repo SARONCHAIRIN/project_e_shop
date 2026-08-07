@@ -1,5 +1,3 @@
-
-
 import 'package:e_shop/Presentation/screen/sub_category_screen/product_screen_eshop.dart';
 import 'package:e_shop/core/responsive/responsive.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
@@ -48,18 +46,18 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
   void didUpdateWidget(SubcategoryWithProduct oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.categoryName != widget.categoryName) {
-     setState(() {
-       _loadData();
-     });
-
+      setState(() {
+        _loadData();
+      });
     }
   }
 
   void _loadData() {
     final id = widget.categoryName;
     if (id != null) {
-      _futureSubcategories =
-          apiService.fetchSubcategoriesByCategoryName(widget.categoryName ?? 'ALL');
+      _futureSubcategories = apiService.fetchSubcategoriesByCategoryName(
+        widget.categoryName ?? 'ALL',
+      );
     } else {
       _futureSubcategories = apiService.fetchSubcategories();
     }
@@ -125,8 +123,7 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
   }
 
   Widget _buildErrorState() {
-    return SliverFillRemaining(
-      hasScrollBody: false,
+    return SliverToBoxAdapter(
       child: MediaQuery.removePadding(
         context: context,
         removeTop: true,
@@ -145,7 +142,11 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
             const SizedBox(height: 12),
             const Text(
               "Something went wrong",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Color(0xFF1A1A2E)),
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF1A1A2E),
+              ),
             ),
             const SizedBox(height: 4),
             Text(
@@ -156,7 +157,10 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
             TextButton(
               onPressed: _refresh,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   color: const Color(0xFF1E88E5).withOpacity(0.08),
@@ -186,8 +190,7 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
   }
 
   Widget _buildEmptyState() {
-    return SliverFillRemaining(
-      hasScrollBody: false,
+    return SliverToBoxAdapter(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -202,7 +205,11 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
           const SizedBox(height: 12),
           const Text(
             "No products found",
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Color(0xFF1A1A2E)),
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF1A1A2E),
+            ),
           ),
           const SizedBox(height: 4),
           Text(
@@ -216,9 +223,8 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
   }
 
   Widget _buildShimmerPopular() => SliverPadding(
-    padding: EdgeInsets.symmetric(
-      horizontal: Responsive.pagePadding(context),
-    ),    sliver: SliverMasonryGrid.count(
+    padding: EdgeInsets.symmetric(horizontal: Responsive.pagePadding(context)),
+    sliver: SliverMasonryGrid.count(
       crossAxisCount: 2,
       mainAxisSpacing: 14,
       crossAxisSpacing: 14,
@@ -242,7 +248,9 @@ class _SubcategoryWithProductState extends State<SubcategoryWithProduct> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.grey.shade300,
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(18),
+                        ),
                       ),
                     ),
                   ),
@@ -303,7 +311,10 @@ class _SubcategoryCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10),),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.shade50,
@@ -371,7 +382,10 @@ class _SubcategoryCard extends StatelessWidget {
                   top: 10,
                   left: 10,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       gradient: LinearGradient(colors: gradient),
@@ -436,7 +450,11 @@ class _SubcategoryCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 3),
-                      Icon(Icons.arrow_forward_rounded, size: 13, color: gradient.last),
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 13,
+                        color: gradient.last,
+                      ),
                     ],
                   ),
                 ],

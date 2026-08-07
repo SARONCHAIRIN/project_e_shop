@@ -102,7 +102,7 @@ class _TabletNavState extends State<TabletNav> {
           body: Row(
             children: [
               TabletNavigationRail(
-                currentIndex: widget.currentIndex,
+                currentIndex: _currentTabletIndex,
 
                 items: tabletItem,
 

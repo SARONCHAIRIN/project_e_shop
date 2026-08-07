@@ -69,6 +69,7 @@ class _SubcategoryIconPageState extends ConsumerState<SubcategoryIconPage> {
           padding: const EdgeInsets.symmetric(horizontal: 12),
 
           sliver: SliverGrid(
+
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
               mainAxisSpacing: 16,

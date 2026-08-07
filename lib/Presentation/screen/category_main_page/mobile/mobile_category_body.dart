@@ -55,26 +55,35 @@ class _MobileCategoryBodyState extends ConsumerState<MobileCategoryBody> {
       setState(() => isLoadingCategory = false);
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.only(top: kToolbarHeight + 50),
-            child: _buildSidebar(),
+          // Full-width app bar on top
+          CustomScrollView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            slivers: [
+              MainAppBar(showBars: true, authRepository: widget.authRepository),
+            ],
           ),
-          // Expanded(child: MobileCategoryBody(authRepository: widget.authRepository)),
-          Expanded(child: _buildRightPanel()),
+
+          // Sidebar + content below the app bar
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildSidebar(),
+                Expanded(child: _buildRightPanel()),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
-
   Widget _buildSidebarShimmer() {
     return Container(
       width: _sidebarWidth,
@@ -164,9 +173,19 @@ class _MobileCategoryBodyState extends ConsumerState<MobileCategoryBody> {
     return CustomScrollView(
       controller: _rightScrollController,
       slivers: [
-        MainAppBar(showBars: true, authRepository: widget.authRepository),
+        // MainAppBar(showBars: true, authRepository: widget.authRepository),
 
         const SliverToBoxAdapter(child: SizedBox(height: 12)),
+
+        SliverPadding(
+          padding: EdgeInsets.all(16.0),
+          sliver: SliverToBoxAdapter(
+            child: Text(
+              "brandIcons".tr(),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
 
         // Subcategory icons
         SubcategoryIconPage(categoryName: _selectedCategoryName),
@@ -194,5 +213,9 @@ class _MobileCategoryBodyState extends ConsumerState<MobileCategoryBody> {
         const SliverToBoxAdapter(child: SizedBox(height: 100)),
       ],
     );
+  }
+
+  Widget _mainAppBar() {
+    return MainAppBar(showBars: true, authRepository: widget.authRepository);
   }
 }
