@@ -1,5 +1,6 @@
 import 'package:e_shop/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:e_shop/features/auth/presentation/screens/register_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/storage/token_storage.dart' show TokenStorage;
@@ -64,7 +65,7 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(state.error ?? "Invalid credentials"),
+          content: Text(state.error ?? "invalid_credentials".tr()),
           backgroundColor: Colors.redAccent,
         ),
       );
@@ -111,13 +112,13 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
               ),
             ),
 
-            const Text(
-              "Welcome back",
+             Text(
+              "welcome_back".tr(),
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 4),
             Text(
-              "Sign in to your account to continue",
+              "sign_in_continue".tr(),
               style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
             ),
             const SizedBox(height: 24),
@@ -131,7 +132,7 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      hintText: "Email or username",
+                      hintText:"email_or_username".tr(),
                       prefixIcon: const Icon(Icons.mail_outline),
                       filled: true,
                       fillColor: Colors.grey.shade50,
@@ -145,7 +146,7 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                       ),
                     ),
                     validator: (v) =>
-                        v == null || v.isEmpty ? "Required" : null,
+                        v == null || v.isEmpty ? "required".tr(): null,
                   ),
                   const SizedBox(height: 14),
 
@@ -154,7 +155,7 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                     controller: _passwordController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                      hintText: "Password",
+                      hintText:"password".tr(),
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -178,7 +179,7 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                       ),
                     ),
                     validator: (v) =>
-                        v != null && v.length >= 6 ? null : "Min 6 chars",
+                        v != null && v.length >= 6 ? null : "min_6_chars".tr(),
                   ),
 
                   // Error
@@ -214,12 +215,12 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                             setState(() => _rememberMe = v ?? false),
                         activeColor: const Color(0xFF1D9E75),
                       ),
-                      const Text("Remember me", style: TextStyle(fontSize: 13)),
+                       Text("remember_me".tr(), style: TextStyle(fontSize: 13)),
                       const Spacer(),
                       TextButton(
                         onPressed: _forgotPassword,
-                        child: const Text(
-                          "Forgot password?",
+                        child:  Text(
+                          "forgot_password".tr(),
                           style: TextStyle(
                             color: Color(0xFF1D9E75),
                             fontSize: 13,
@@ -253,7 +254,10 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                               ),
                             )
                           : const Icon(Icons.login),
-                      label: Text(state.isLoading ? "Signing in…" : "Sign in"),
+                      label: Text(state.isLoading
+                          ? "signing_in".tr()
+                          : "sign_in".tr(),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 18),
@@ -265,7 +269,7 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: Text(
-                          "or continue with",
+                          "or_continue_with".tr(),
                           style: TextStyle(
                             color: Colors.grey.shade500,
                             fontSize: 13,
@@ -296,8 +300,8 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                         errorBuilder: (_, __, ___) =>
                             const Icon(Icons.g_mobiledata, size: 22),
                       ),
-                      label: const Text(
-                        "Continue with Google",
+                      label:  Text(
+                        "continue_google".tr(),
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -309,7 +313,7 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an account? ",
+                        "dont_have_account".tr(),
                         style: TextStyle(
                           color: Colors.grey.shade600,
                           fontSize: 13,
@@ -324,8 +328,8 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
                           );
                         },
                         // onTap: _goToRegister,
-                        child: const Text(
-                          "Create account",
+                        child:  Text(
+                          "create_account".tr(),
                           style: TextStyle(
                             color: Color(0xFF1D9E75),
                             fontSize: 13,

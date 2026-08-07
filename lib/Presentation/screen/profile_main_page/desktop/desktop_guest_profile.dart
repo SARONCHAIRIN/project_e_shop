@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -335,11 +336,16 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
 
   // ── Info / brand panel — gold-on-navy gradient, slides across the card ──
   Widget _infoPanelSliding() {
-    final title = _isSignUpMode ? 'Welcome Back!' : 'Hello, Friend!';
+    final title = _isSignUpMode  ? 'welcome_back'.tr()
+
+        : 'hello_friend'.tr();
     final subtitle = _isSignUpMode
-        ? 'To keep connected with us please login with your personal info'
-        : 'Enter your personal details and start your journey with us';
-    final buttonLabel = _isSignUpMode ? 'SIGN IN' : 'SIGN UP';
+        ? 'keep_connected'.tr()
+
+        : 'start_your_journey'.tr();
+    final buttonLabel = _isSignUpMode ?  'sign_in'.tr()
+
+        : 'sign_up'.tr();
 
     return Container(
       decoration: const BoxDecoration(
@@ -422,8 +428,8 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  'STEP 1 OF 1 · SIGN IN',
+                 Text(
+            'step_sign_in'.tr(),
                   style: TextStyle(
                     color: _Palette.gold,
                     fontSize: 11,
@@ -432,13 +438,13 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Sign in to E-Shop',
+                 Text(
+                    'sign_in_shop'.tr(),
                   style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Welcome back — we kept your cart just as you left it.',
+                  'welcome_cart'.tr(),
                   style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 13.5),
                 ),
                 const SizedBox(height: 24),
@@ -454,7 +460,7 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'or use your email account:',
+                  'use_email_account'.tr(),
                   style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.5),
                 ),
                 const SizedBox(height: 24),
@@ -463,17 +469,17 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                   controller: _loginEmailController,
                   cursorColor: _Palette.gold,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
-                  decoration: _decoration(label: 'Email or Username', icon: Icons.mail_outline),
-                  validator: (v) => v!.isEmpty ? 'Required' : null,
+                  decoration: _decoration(label: 'email_username'.tr(), icon: Icons.mail_outline),
+                  validator: (v) => v!.isEmpty ? 'required'.tr() : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _loginPasswordController,
                   obscureText: _obscureLoginPassword,
                   cursorColor: _Palette.gold,
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  style:  TextStyle(color: Colors.white, fontSize: 16),
                   decoration: _decoration(
-                    label: 'Password',
+                    label: 'password'.tr(),
                     icon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -484,7 +490,7 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                       onPressed: () => setState(() => _obscureLoginPassword = !_obscureLoginPassword),
                     ),
                   ),
-                  validator: (v) => v!.isEmpty ? 'Required' : null,
+                  validator: (v) => v!.isEmpty ? 'required'.tr() : null,
                 ),
 
                 Align(
@@ -497,7 +503,7 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                       );
                     },
                     child: Text(
-                      'Forgot your password?',
+                        'email_username'.tr(),
                       style: TextStyle(color: Colors.white.withOpacity(0.55), fontSize: 12),
                     ),
                   ),
@@ -505,7 +511,7 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                 const SizedBox(height: 10),
 
                 _goldButton(
-                  label: 'SIGN IN',
+                  label: 'sign_in'.tr(),
                   isLoading: isLoading,
                   onTap: _handleLogin,
                 ),
@@ -529,8 +535,8 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  'STEP 1 OF 2 · CREATE ACCOUNT',
+                 Text(
+            'step_create_account'.tr(),
                   style: TextStyle(
                     color: _Palette.gold,
                     fontSize: 11,
@@ -539,13 +545,13 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Create your account',
+                 Text(
+                    'create_account'.tr(),
                   style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Save items, track orders, and check out faster.',
+                    'save_track_checkout'.tr(),
                   style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 13.5),
                 ),
                 const SizedBox(height: 24),
@@ -561,7 +567,7 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'or use your email for registration:',
+                    'use_email_registration'.tr(),
                   style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.5),
                 ),
                 const SizedBox(height: 24),
@@ -570,8 +576,8 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                   controller: _regUsernameController,
                   cursorColor: _Palette.gold,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
-                  decoration: _decoration(label: 'Full name', icon: Icons.person_outline),
-                  validator: (v) => v!.isEmpty ? 'Required' : null,
+                  decoration: _decoration(label:  'full_name'.tr(), icon: Icons.person_outline),
+                  validator: (v) => v!.isEmpty ? 'required'.tr() : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -579,8 +585,8 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                   keyboardType: TextInputType.emailAddress,
                   cursorColor: _Palette.gold,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
-                  decoration: _decoration(label: 'Email', icon: Icons.mail_outline),
-                  validator: (v) => v!.contains('@') ? null : 'Invalid email',
+                  decoration: _decoration(label: 'email'.tr(), icon: Icons.mail_outline),
+                  validator: (v) => v!.contains('@') ? null : 'invalid_email'.tr(),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -588,8 +594,8 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                   keyboardType: TextInputType.phone,
                   cursorColor: _Palette.gold,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
-                  decoration: _decoration(label: 'Phone number', icon: Icons.phone_iphone_outlined),
-                  validator: (v) => v!.isEmpty ? 'Required' : null,
+                  decoration: _decoration(label:  'phone_number'.tr(), icon: Icons.phone_iphone_outlined),
+                  validator: (v) => v!.isEmpty ? 'required'.tr() : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -598,7 +604,7 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                   cursorColor: _Palette.gold,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
                   decoration: _decoration(
-                    label: 'Password',
+                    label: 'password'.tr(),
                     icon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -609,12 +615,12 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                       onPressed: () => setState(() => _obscureRegPassword = !_obscureRegPassword),
                     ),
                   ),
-                  validator: (v) => v!.length >= 6 ? null : 'Min 6 chars',
+                  validator: (v) => v!.length >= 6 ? null : 'min_6_characters'.tr(),
                 ),
                 const SizedBox(height: 24),
 
                 _goldButton(
-                  label: 'SIGN UP',
+                  label: 'sign_up'.tr(),
                   isLoading: isLoading,
                   onTap: _handleRegister,
                 ),

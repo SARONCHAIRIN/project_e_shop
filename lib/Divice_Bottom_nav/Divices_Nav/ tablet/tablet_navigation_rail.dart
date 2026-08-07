@@ -1,6 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../../Presentation/screen/profile_main_page/setting_page.dart';
 import '../models/navigation_item.dart';
 
 class TabletNavigationRail extends StatelessWidget {
@@ -20,13 +20,9 @@ class TabletNavigationRail extends StatelessWidget {
     return Container(
       width: 100, // Matched width to your category sidebar layout
       decoration: const BoxDecoration(
-        color: Color(0xFFFDF8F2), // Soft cream/peach sidebar tone matching reference UI
-        border: Border(
-          right: BorderSide(
-            color: Color(0xFFEFE5DC),
-            width: 1,
-          ),
-        ),
+        color: Color(0xFFFDF8F2),
+        // Soft cream/peach sidebar tone matching reference UI
+        border: Border(right: BorderSide(color: Color(0xFFEFE5DC), width: 1)),
       ),
       child: Column(
         children: [
@@ -55,8 +51,8 @@ class TabletNavigationRail extends StatelessWidget {
               ),
             ),
           ),
-          const Text(
-            "Central",
+           Text(
+            "central".tr(),
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
@@ -83,18 +79,21 @@ class TabletNavigationRail extends StatelessWidget {
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: isSelected ? Colors.white : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: isSelected
                             ? [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.04),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ]
                             : [],
                       ),
                       child: Column(
@@ -102,7 +101,9 @@ class TabletNavigationRail extends StatelessWidget {
                         children: [
                           Icon(
                             item.icon,
-                            color: isSelected ? Colors.orange : Colors.grey.shade600,
+                            color: isSelected
+                                ? Colors.orange
+                                : Colors.grey.shade600,
                             size: 22,
                           ),
                           const SizedBox(height: 6),
@@ -113,8 +114,12 @@ class TabletNavigationRail extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 11,
-                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                              color: isSelected ? Colors.orange.shade800 : Colors.grey.shade700,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              color: isSelected
+                                  ? Colors.orange.shade800
+                                  : Colors.grey.shade700,
                             ),
                           ),
                         ],
@@ -127,7 +132,6 @@ class TabletNavigationRail extends StatelessWidget {
           ),
 
           // Settings Button Section with updated padding
-
         ],
       ),
     );
