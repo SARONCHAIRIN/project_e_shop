@@ -1,17 +1,22 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../Presentation/screen/profile_main_page/setting_page.dart';
 import '../../../core/storage/token_storage.dart';
+import '../../../data/repositories/user_auth_repository.dart';
 import '../models/navigation_item.dart';
+import '../nav_divices.dart';
 
 class WebSidebar extends StatefulWidget {
   final int currentIndex;
   final List<NavigationItem> items;
+  final User_AuthRepository authRepository;
   final ValueChanged<int> onTap;
 
   const WebSidebar({
     super.key,
     required this.currentIndex,
     required this.items,
+    required this.authRepository,
     required this.onTap,
   });
 
@@ -338,85 +343,158 @@ class _WebSidebarState extends State<WebSidebar> {
           // === Logout
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: _isExpanded ? 16 : 8,
+              horizontal: _isExpanded ? 12 : 8,
               vertical: 6,
             ),
-            child: Material(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              child: Tooltip(
-                message: _isExpanded ? '' : 'Logout',
+            child: Tooltip(
+              message: _isExpanded ? '' : 'logout'.tr(),
+              child: Material(
+                color: Colors.transparent,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(16),
+
+                  // IMPORTANT: use onTap directly
                   onTap: () async {
+                    debugPrint('========== LOGOUT CLICK ==========');
+
                     final bool? confirm = await showDialog<bool>(
                       context: context,
-                      barrierDismissible: false,
-                      builder: (context) {
+                      barrierDismissible: true,
+                      builder: (dialogContext) {
+                        debugPrint('========== DIALOG CREATED ==========');
+
                         return AlertDialog(
+                          backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          title: const Row(
+
+                          title: Row(
                             children: [
-                              Icon(Icons.logout_rounded, color: Colors.red),
-                              SizedBox(width: 10),
-                              Text('Logout'),
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.withOpacity(0.1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.logout_rounded,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'logout_title'.tr(),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w800,
+                                    color: Color(0xFF1A1A2E),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                          content: const Text(
-                            'Are you sure you want to sign out of your account?',
-                            style: TextStyle(height: 1.5),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: const Text('Cancel'),
+
+                          content: Text(
+                            'logout_description'.tr(),
+                            style: TextStyle(
+                              fontSize: 14,
+                              height: 1.5,
+                              color: Colors.grey.shade600,
                             ),
+                          ),
+
+                          actionsPadding: const EdgeInsets.fromLTRB(
+                            20,
+                            0,
+                            20,
+                            20,
+                          ),
+
+                          actions: [
+                            OutlinedButton(
+                              onPressed: () {
+                                debugPrint('LOGOUT CANCEL');
+                                Navigator.of(dialogContext).pop(false);
+                              },
+                              style: OutlinedButton.styleFrom(
+                                minimumSize: const Size(110, 45),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: Text('cancel'.tr()),
+                            ),
+
+                            const SizedBox(width: 8),
+
                             ElevatedButton.icon(
+                              onPressed: () {
+                                debugPrint('LOGOUT CONFIRMED');
+                                Navigator.of(dialogContext).pop(true);
+                              },
+                              icon: const Icon(Icons.logout_rounded, size: 18),
+                              label: Text('logout'.tr()),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
                                 foregroundColor: Colors.white,
+                                elevation: 0,
+                                minimumSize: const Size(120, 45),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
-                              icon: const Icon(Icons.logout),
-                              label: const Text('Logout'),
-                              onPressed: () => Navigator.pop(context, true),
                             ),
                           ],
                         );
                       },
                     );
 
-                    if (confirm != true) return;
+                    debugPrint('DIALOG RESULT = $confirm');
 
-                    final tokenStorage = TokenStorage();
-                    await tokenStorage.clearAll();
+                    if (confirm != true) {
+                      debugPrint('LOGOUT CANCELLED');
+                      return;
+                    }
 
-                    if (!context.mounted) return;
+                    // Clear login data ONLY ONCE
+                    debugPrint('CLEARING TOKEN...');
 
-                    Navigator.pushNamedAndRemoveUntil(
+                    await TokenStorage().clearAll();
+
+                    if (!mounted) return;
+
+                    debugPrint('TOKEN CLEARED');
+                    debugPrint('GOING TO GUEST NAVIGATION');
+
+                    Navigator.pushAndRemoveUntil(
                       context,
-                      '/login',
-                      (_) => false,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            DivicesNav(authRepository: widget.authRepository),
+                      ),
+                      (route) => false,
                     );
                   },
-                  child: Container(
+
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeOutCubic,
                     padding: EdgeInsets.all(_isExpanded ? 12 : 10),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFFEFE5DC)),
+                      color: Colors.red.withOpacity(0.055),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.red.withOpacity(0.12)),
                     ),
                     child: Row(
-                      mainAxisSize: MainAxisSize.max,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(8),
+                          width: 40,
+                          height: 40,
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.red.withOpacity(0.10),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(
                             Icons.logout_rounded,
@@ -424,41 +502,43 @@ class _WebSidebarState extends State<WebSidebar> {
                             color: Colors.red,
                           ),
                         ),
+
                         if (_isExpanded) ...[
                           const SizedBox(width: 12),
+
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
-                              children: const [
+                              children: [
                                 Text(
-                                  'Logout',
-                                  style: TextStyle(
+                                  'logout'.tr(),
+                                  style: const TextStyle(
                                     fontSize: 13.5,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w700,
                                     color: Color(0xFF1A1A2E),
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(height: 2),
+
+                                const SizedBox(height: 3),
+
                                 Text(
-                                  'Sign out from account',
+                                  'logout_subtitle'.tr(),
                                   style: TextStyle(
                                     fontSize: 11,
-                                    color: Colors.grey,
+                                    color: Colors.grey.shade500,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(width: 4),
-                          const Icon(
+
+                          const SizedBox(width: 6),
+
+                          Icon(
                             Icons.arrow_forward_ios_rounded,
-                            size: 14,
-                            color: Colors.grey,
+                            size: 13,
+                            color: Colors.grey.shade400,
                           ),
                         ],
                       ],

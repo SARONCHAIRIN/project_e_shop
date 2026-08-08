@@ -37,7 +37,6 @@ class DivicesNav extends StatefulWidget {
 class _DivicesNavState extends State<DivicesNav> {
   late int _currentIndex;
 
-
   @override
   void initState() {
     super.initState();
@@ -58,7 +57,6 @@ class _DivicesNavState extends State<DivicesNav> {
   @override
   Widget build(BuildContext context) {
     final navigationItems = [
-
       NavigationItem(icon: Icons.home, label: "home".tr()),
 
       NavigationItem(icon: Icons.category, label: "category".tr()),
@@ -68,7 +66,6 @@ class _DivicesNavState extends State<DivicesNav> {
       NavigationItem(icon: Icons.shopping_cart, label: "cart".tr()),
 
       NavigationItem(icon: Icons.person, label: "profile".tr()),
-
     ];
 
     final screens = [
@@ -111,6 +108,7 @@ class _DivicesNavState extends State<DivicesNav> {
         items: navigationItems,
 
         onTap: _onTabTapped,
+        repository: widget.authRepository,
       ),
 
       web: WebNav(

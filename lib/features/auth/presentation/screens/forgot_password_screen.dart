@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:e_shop/features/auth/presentation/screens/otp_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -75,23 +76,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
     );
   }
 
-  // Future<void> _submit(AuthController controller) async {
-  //   if (!_formKey.currentState!.validate()) return;
-  //
-  //   final email = _emailController.text.trim();
-  //
-  //   final success = await controller.forgotPassword(
-  //     ForgotPasswordRequest(email: email),
-  //   );
-  //
-  //   if (!mounted) return;
-  //
-  //   if (success) {
-  //     setState(() => _sent = true);
-  //   } else {
-  //     _showSnack('Something went wrong! Try again.', isError: true);
-  //   }
-  // }
+
 
   Future<void> _submit(AuthController controller) async {
     if (!_formKey.currentState!.validate()) return;
@@ -107,7 +92,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
     if (success) {
       setState(() => _sent = true);
     } else {
-      _showSnack('Something went wrong! Try again.', isError: true);
+      _showSnack('something_wrong'.tr(), isError: true);
     }
   }
   @override
@@ -209,8 +194,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                                   if (!mounted) return;
                                   _showSnack(
                                     success
-                                        ? 'Reset code sent again'
-                                        : 'Failed to resend code',
+                                        ? 'reset_code_sent_again'.tr()
+
+                                        : 'failed_resend_code'.tr(),
                                     isError: !success,
                                   );
                                 },
@@ -348,8 +334,8 @@ class _FormView extends StatelessWidget {
         ),
         const SizedBox(height: 14),
 
-        const Text(
-          'RESET YOUR PASSWORD',
+         Text(
+          'reset_your_password'.tr(),
           style: TextStyle(
             color: _Palette.gold,
             fontSize: 11,
@@ -359,8 +345,8 @@ class _FormView extends StatelessWidget {
         ),
         const SizedBox(height: 10),
 
-        const Text(
-          'Forgot password?',
+         Text(
+          'forgot_password'.tr(),
           style: TextStyle(
             color: Colors.white,
             fontSize: 25,
@@ -369,7 +355,7 @@ class _FormView extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          "No worries! Enter your registered email and we'll send you a reset code.",
+          'forgot_password_description'.tr(),
           style: TextStyle(
             color: Colors.white.withOpacity(0.65),
             fontSize: 13.5,
@@ -385,15 +371,15 @@ class _FormView extends StatelessWidget {
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
             cursorColor: _Palette.gold,
-            style: const TextStyle(color: Colors.white, fontSize: 16),
+            style:  TextStyle(color: Colors.white, fontSize: 16),
             decoration: _decoration(
-              label: 'Email address',
+              label: 'email_address'.tr(),
               icon: Icons.mail_outline,
             ),
             validator: (v) {
-              if (v == null || v.trim().isEmpty) return 'Email is required';
+              if (v == null || v.trim().isEmpty) return 'email_required'.tr();
               if (!v.contains('@') || !v.contains('.')) {
-                return 'Enter a valid email';
+                return 'valid_email'.tr();
               }
               return null;
             },
@@ -434,8 +420,8 @@ class _FormView extends StatelessWidget {
                       size: 22,
                       lineWidth: 3,
                     )
-                        : const Text(
-                      'Send reset code',
+                        :  Text(
+                      'send_reset_code'.tr(),
                       style: TextStyle(
                         color: _Palette.goldText,
                         fontSize: 16,
@@ -462,7 +448,7 @@ class _FormView extends StatelessWidget {
             ),
             icon: Icon(Icons.arrow_back_ios, size: 13, color: Colors.white.withOpacity(0.6)),
             label: Text(
-              'Back to login',
+              'back_to_login'.tr(),
               style: TextStyle(
                 color: Colors.white.withOpacity(0.6),
                 fontSize: 13,
@@ -528,8 +514,8 @@ class _SuccessView extends StatelessWidget {
         ),
         const SizedBox(height: 14),
 
-        const Text(
-          'CODE SENT',
+         Text(
+          'code_sent'.tr(),
           style: TextStyle(
             color: _Palette.mint,
             fontSize: 11,
@@ -539,8 +525,8 @@ class _SuccessView extends StatelessWidget {
         ),
         const SizedBox(height: 10),
 
-        const Text(
-          'Check your email',
+         Text(
+          'check_your_email'.tr(),
           style: TextStyle(
             color: Colors.white,
             fontSize: 25,
@@ -549,7 +535,7 @@ class _SuccessView extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'We sent a reset code to',
+          'reset_code_sent_to'.tr(),
           style: TextStyle(
             color: Colors.white.withOpacity(0.65),
             fontSize: 13.5,
@@ -567,7 +553,7 @@ class _SuccessView extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          'Enter it on the next screen to reset your password.',
+          'enter_code_next_screen'.tr(),
           style: TextStyle(
             color: Colors.white.withOpacity(0.55),
             fontSize: 13,
@@ -600,11 +586,11 @@ class _SuccessView extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: onContinue,
-                child: const Padding(
+                child:  Padding(
                   padding: EdgeInsets.symmetric(vertical: 15),
                   child: Center(
                     child: Text(
-                      'Enter reset code',
+                      'enter_reset_code'.tr(),
                       style: TextStyle(
                         color: _Palette.goldText,
                         fontSize: 16,
@@ -625,7 +611,7 @@ class _SuccessView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Didn't receive it? ",
+              'didnt_receive'.tr(),
               style: TextStyle(
                 color: Colors.white.withOpacity(0.6),
                 fontSize: 13,
@@ -633,8 +619,8 @@ class _SuccessView extends StatelessWidget {
             ),
             GestureDetector(
               onTap: onResend,
-              child: const Text(
-                'Resend',
+              child:  Text(
+                'resend'.tr(),
                 style: TextStyle(
                   color: _Palette.gold,
                   fontSize: 13,

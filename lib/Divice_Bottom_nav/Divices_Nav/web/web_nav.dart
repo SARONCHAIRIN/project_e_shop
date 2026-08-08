@@ -125,6 +125,7 @@ class _WebNavState extends State<WebNav> {
         return WebShell(
           topBar: const SizedBox.shrink(),
           sidebar: WebSidebar(
+            authRepository: widget.authRepository,
             currentIndex: _currentWebIndex,
             items: webItems,
             onTap: (index) {

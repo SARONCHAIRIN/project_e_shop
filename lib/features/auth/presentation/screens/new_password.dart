@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -86,9 +87,9 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
 
   String _strengthLabel(double s) {
     if (s == 0) return '';
-    if (s < 0.34) return 'Weak';
-    if (s < 0.7) return 'Fair';
-    return 'Strong';
+    if (s < 0.34) return 'password_strength_weak'.tr();
+    if (s < 0.7) return 'password_strength_fair'.tr();
+    return 'password_strength_strong'.tr();
   }
 
   bool get _lengthOk => _password.text.length >= 6;
@@ -114,7 +115,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
     if (!mounted)
       return;
     else {
-      _showSnack('Failed to reset password. Try again.', isError: true);
+      _showSnack( 'failed_reset_password'.tr(), isError: true);
     }
   }
 
@@ -290,8 +291,8 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                     ),
                                     const SizedBox(height: 14),
 
-                                    const Text(
-                                      'SET A NEW PASSWORD',
+                                     Text(
+                                      'set_new_password'.tr(),
                                       style: TextStyle(
                                         color: _Palette.gold,
                                         fontSize: 11,
@@ -301,8 +302,8 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                     ),
                                     const SizedBox(height: 10),
 
-                                    const Text(
-                                      'Create new password',
+                                     Text(
+                                      'create_new_password'.tr(),
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 25,
@@ -311,7 +312,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                     ),
                                     const SizedBox(height: 6),
                                     Text(
-                                      'Your new password must be different from previously used passwords.',
+                                      'new_password_description'.tr(),
                                       style: TextStyle(
                                         color: Colors.white.withOpacity(0.65),
                                         fontSize: 13.5,
@@ -330,7 +331,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                         fontSize: 16,
                                       ),
                                       decoration: _decoration(
-                                        label: 'New password',
+                                        label: 'new_password'.tr(),
                                         icon: Icons.lock_outline,
                                         suffixIcon: IconButton(
                                           icon: Icon(
@@ -349,7 +350,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                       validator: (v) =>
                                           v != null && v.length >= 6
                                           ? null
-                                          : 'Use at least 6 characters',
+                                          : 'use_at_least_6_characters'.tr(),
                                     ),
 
                                     // Strength meter
@@ -404,7 +405,7 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                         fontSize: 16,
                                       ),
                                       decoration: _decoration(
-                                        label: 'Confirm password',
+                                        label:  'confirm_password'.tr(),
                                         icon: Icons.lock_outline,
                                         suffixIcon: IconButton(
                                           icon: Icon(
@@ -422,17 +423,17 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                       ),
                                       validator: (v) => v == _password.text
                                           ? null
-                                          : 'Passwords do not match',
+                                          : 'passwords_do_not_match'.tr(),
                                       onChanged: (_) => setState(() {}),
                                     ),
                                     const SizedBox(height: 16),
 
                                     // Checklist
                                     _checklistRow(
-                                      'At least 6 characters',
+                                      'at_least_6_characters'.tr(),
                                       _lengthOk,
                                     ),
-                                    _checklistRow('Passwords match', _matchOk),
+                                    _checklistRow('passwords_match'.tr(), _matchOk),
                                     const SizedBox(height: 12),
 
                                     // Submit button
@@ -483,8 +484,8 @@ class _NewPasswordScreenState extends ConsumerState<NewPasswordScreen>
                                                         size: 22,
                                                         lineWidth: 3,
                                                       )
-                                                    : const Text(
-                                                        'Reset password',
+                                                    :  Text(
+                                                  'reset_password'.tr(),
                                                         style: TextStyle(
                                                           color:
                                                               _Palette.goldText,

@@ -207,5 +207,270 @@
   "use_email_account": "or use your email account:",
   "save_track_checkout": "Save items, track orders, and check out faster.",
   "use_email_registration": "or use your email for registration:",
-  "email": "Email"
+  "email": "Email",
+  "reset_your_password": "RESET YOUR PASSWORD",
+
+  "forgot_password": "Forgot password?",
+
+  "forgot_password_description": "No worries! Enter your registered email and we'll send you a reset code.",
+
+  "email_address": "Email address",
+
+  "email_required": "Email is required",
+
+  "valid_email": "Enter a valid email",
+
+  "send_reset_code": "Send reset code",
+
+  "back_to_login": "Back to login",
+
+  "code_sent": "CODE SENT",
+
+  "check_your_email": "Check your email",
+
+  "reset_code_sent_to": "We sent a reset code to",
+
+  "enter_code_next_screen": "Enter it on the next screen to reset your password.",
+
+  "enter_reset_code": "Enter reset code",
+
+  "didnt_receive": "Didn't receive it?",
+
+  "resend": "Resend",
+
+  "something_wrong": "Something went wrong! Try again.",
+
+  "reset_code_sent_again": "Reset code sent again",
+
+  "failed_resend_code": "Failed to resend code",
+  "otp_step": "STEP 2 OF 2 · VERIFY EMAIL",
+
+  "verify_your_email": "Verify your email",
+
+  "otp_sent_to": "We sent a 6-digit code to",
+
+  "verify_code": "Verify code",
+
+  "didnt_receive_code": "Didn't receive the code?",
+
+  "resend": "Resend",
+
+  "otp_sent_successfully": "OTP sent successfully",
+
+  "failed_resend_otp": "Failed to resend OTP",
+
+  "invalid_otp": "Invalid OTP",
+  "set_new_password": "SET A NEW PASSWORD",
+
+  "create_new_password": "Create new password",
+
+  "new_password_description": "Your new password must be different from previously used passwords.",
+
+  "new_password": "New password",
+
+  "use_at_least_6_characters": "Use at least 6 characters",
+
+  "password_strength_weak": "Weak",
+
+  "password_strength_fair": "Fair",
+
+  "password_strength_strong": "Strong",
+
+  "confirm_password": "Confirm password",
+
+  "passwords_do_not_match": "Passwords do not match",
+
+  "at_least_6_characters": "At least 6 characters",
+
+  "passwords_match": "Passwords match",
+
+  "reset_password": "Reset password",
+
+  "failed_reset_password": "Failed to reset password. Try again.",
+  "reset_password_step": "STEP 2 OF 2 · RESET PASSWORD",
+
+  "reset_your_password": "Reset your password",
+
+  "reset_password_description": "Enter the OTP sent to your email and choose a new password.",
+
+  "email": "Email",
+
+  "otp_code": "OTP code",
+
+  "enter_6_digit_code": "Enter the 6-digit code",
+
+  "new_password": "New password",
+
+  "use_at_least_6_characters": "Use at least 6 characters",
+
+  "confirm_password": "Confirm password",
+
+  "passwords_do_not_match": "Passwords do not match",
+
+  "password_strength_weak": "Weak",
+
+  "password_strength_fair": "Fair",
+
+  "password_strength_strong": "Strong",
+
+  "reset_password": "Reset password",
+
+  "remembered_it": "Remembered it?",
+
+  "log_in": "Log in",
+
+  "password_reset_successfully": "Password reset successfully",
+  "create_account": "Create your account",
+
+  "step_create_account": "STEP 1 OF 2 · CREATE ACCOUNT",
+
+  "description": "Save items, track orders, and check out faster.",
+
+  "full_name": "Full name",
+
+  "email": "Email",
+
+  "phone_number": "Phone number",
+
+  "password": "Password",
+
+  "confirm_password": "Confirm password",
+
+  "create_account_button": "Create account",
+
+  "already_have_account": "Already have an account?",
+
+  "login": "Log in",
+
+  "terms_message": "I agree to the {terms} and {privacy}.",
+
+  "terms_of_service": "Terms of Service",
+
+  "privacy_policy": "Privacy Policy",
+
+  "required": "Required",
+
+  "valid_email": "Enter a valid email",
+
+  "phone_required": "Phone number is required",
+
+  "password_min": "Use at least 6 characters",
+
+  "password_match": "Passwords do not match",
+
+  "agree_terms": "Please agree to the Terms of Service and Privacy Policy to continue.",
+
+  "registration_failed": "Registration failed",
+
+  "weak": "Weak",
+
+  "fair": "Fair",
+
+  "strong": "Strong",
+
+  "verify_email": "Verify your email",
+
+  "step_verify": "STEP 2 OF 2 · VERIFY EMAIL",
+
+  "sent_code": "We sent a 6-digit code to",
+
+  "verify_code": "Verify code",
+
+  "resend_question": "Didn't receive the code?",
+
+  "resend": "Resend",
+
+  "otp_sent": "OTP sent successfully",
+
+  "resend_failed": "Failed to resend OTP",
+
+  "invalid_otp": "Invalid OTP",
+
+  "set_new": "SET A NEW PASSWORD",
+
+  "create_new": "Create new password",
+
+  "new_password_description": "Your new password must be different from previously used passwords.",
+
+  "reset_password": "Reset password",
+
+  "at_least_six": "At least 6 characters",
+
+  "passwords_match": "Passwords match",
+
+  "remembered": "Remembered it?",
+
+  "failed_reset": "Failed to reset password. Try again.",
+
+  "success_reset": "Password reset successfully",
+
+  "reset_step": "STEP 2 OF 2 · RESET PASSWORD",
+
+  "reset_title": "Reset your password",
+
+  "reset_description": "Enter the OTP sent to your email and choose a new password.",
+
+  "otp_code": "OTP code",
+
+  "enter_otp": "Enter the 6-digit code",
+  "order_guest_title": "Welcome to your orders",
+
+  "order_guest_description": "Sign in or create an account to view and manage your orders.",
+
+  "order_guest_step": "ORDER HISTORY",
+
+  "order_login_title": "Sign in to view your orders",
+
+  "order_login_description": "Access your order history, track your orders, and manage your purchases.",
+
+  "welcome_back": "Welcome Back!",
+
+  "keep_connected": "Sign in to stay connected with your account.",
+
+  "sign_in": "Sign In",
+
+  "sign_up": "Sign Up",
+
+  "email_or_username": "Email or Username",
+
+  "password": "Password",
+
+  "forgot_password": "Forgot password?",
+
+  "required": "Required",
+
+  "valid_email": "Enter a valid email",
+
+  "phone_required": "Phone number is required",
+
+  "password_min": "Use at least 6 characters",
+
+  "create_account": "Create your account",
+
+  "step_create_account": "STEP 1 OF 2 · CREATE ACCOUNT",
+
+  "description": "Save items, track orders, and check out faster.",
+
+  "full_name": "Full name",
+
+  "email": "Email",
+
+  "phone_number": "Phone number",
+
+  "login_success": "Login successful",
+
+  "invalid_credentials": "Invalid email/username or password",
+
+  "registration_failed": "Registration failed",
+
+  "no_data": "No data available",
+  "logout": "Logout",
+
+  "logout_title": "Sign out?",
+
+  "logout_description": "Are you sure you want to sign out of your account?",
+
+  "logout_subtitle": "Sign out from your account",
+
+  "cancel": "Cancel"
 }

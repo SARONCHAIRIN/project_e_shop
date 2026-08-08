@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -144,7 +145,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
         );
       }
     } else {
-      _showSnack(state.error ?? 'Invalid OTP', isError: true);
+      _showSnack(state.error ??'invalid_otp'.tr(), isError: true);
     }
   }
 
@@ -288,8 +289,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                       ],
                                     ),
                                     const SizedBox(height: 12),
-                                    const Text(
-                                      'STEP 2 OF 2 · VERIFY EMAIL',
+                                     Text(
+                                      'otp_step'.tr(),
                                       style: TextStyle(
                                         color: _Palette.gold,
                                         fontSize: 11,
@@ -299,8 +300,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                     ),
                                     const SizedBox(height: 12),
 
-                                    const Text(
-                                      'Verify your email',
+                                     Text(
+                                      'verify_your_email'.tr(),
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 25,
@@ -309,7 +310,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                     ),
                                     const SizedBox(height: 6),
                                     Text(
-                                      'We sent a 6-digit code to',
+                                      'otp_sent_to'.tr(),
                                       style: TextStyle(
                                         color: Colors.white.withOpacity(0.65),
                                         fontSize: 13.5,
@@ -467,7 +468,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                                         lineWidth: 3,
                                                       )
                                                     : Text(
-                                                        'Verify code',
+                                                  'verify_code'.tr(),
                                                         style: TextStyle(
                                                           color: _isComplete
                                                               ? _Palette
@@ -496,7 +497,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "Didn't receive the code? ",
+                                          'didnt_receive_code'.tr(),
                                           style: TextStyle(
                                             color: Colors.white.withOpacity(
                                               0.6,
@@ -521,13 +522,14 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                             if (!mounted) return;
                                             _showSnack(
                                               success
-                                                  ? 'OTP sent successfully'
-                                                  : 'Failed to resend OTP',
+                                                  ? 'otp_sent_successfully'.tr()
+
+                                                  : 'failed_resend_otp'.tr(),
                                               isError: !success,
                                             );
                                           },
-                                          child: const Text(
-                                            'Resend',
+                                          child:  Text(
+                                            'resend'.tr(),
                                             style: TextStyle(
                                               color: _Palette.gold,
                                               fontSize: 13,
