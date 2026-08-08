@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -99,9 +100,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
 
   String _strengthLabel(double s) {
     if (s == 0) return '';
-    if (s < 0.34) return 'Weak';
-    if (s < 0.7) return 'Fair';
-    return 'Strong';
+    if (s < 0.34) return 'password_strength_weak'.tr();
+    if (s < 0.7) return 'password_strength_fair'.tr();
+    return 'password_strength_strong'.tr();
   }
 
   void _showSnack(String message, {bool isError = false}) {
@@ -166,7 +167,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
         return;
       }
 
-      _showSnack('Password reset successfully');
+      _showSnack('password_reset_successfully'.tr());
 
       Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
     } catch (e) {
@@ -313,8 +314,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                       ],
                                     ),
                                     const SizedBox(height: 5),
-                                    const Text(
-                                      'STEP 2 OF 2 · RESET PASSWORD',
+                                     Text(
+                                      'reset_password_step'.tr(),
                                       style: TextStyle(
                                         color: _Palette.gold,
                                         fontSize: 11,
@@ -324,8 +325,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                     ),
                                     const SizedBox(height: 10),
 
-                                    const Text(
-                                      'Reset your password',
+                                     Text(
+                                      'reset_your_password'.tr(),
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 25,
@@ -334,7 +335,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                     ),
                                     const SizedBox(height: 6),
                                     Text(
-                                      'Enter the OTP sent to your email and choose a new password.',
+                                      'reset_password_description'.tr(),
                                       style: TextStyle(
                                         color: Colors.white.withOpacity(0.65),
                                         fontSize: 13.5,
@@ -352,7 +353,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                         fontSize: 16,
                                       ),
                                       decoration: _decoration(
-                                        label: 'Email',
+                                        label:'email'.tr(),
                                         icon: Icons.mail_outline,
                                       ),
                                     ),
@@ -368,12 +369,12 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                         fontSize: 16,
                                       ),
                                       decoration: _decoration(
-                                        label: 'OTP code',
+                                        label: 'otp_code'.tr(),
                                         icon: Icons.password_outlined,
                                       ),
                                       validator: (v) {
                                         if (v == null || v.trim().length != 6) {
-                                          return 'Enter the 6-digit code';
+                                          return  'enter_6_digit_code'.tr();
                                         }
                                         return null;
                                       },
@@ -390,7 +391,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                         fontSize: 16,
                                       ),
                                       decoration: _decoration(
-                                        label: 'New password',
+                                        label:  'new_password'.tr(),
                                         icon: Icons.lock_outline,
                                         suffixIcon: IconButton(
                                           icon: Icon(
@@ -409,7 +410,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                       validator: (v) =>
                                           v != null && v.trim().length >= 6
                                           ? null
-                                          : 'Use at least 6 characters',
+                                          : 'use_at_least_6_characters'.tr(),
                                     ),
 
                                     // Strength meter — only shown once typing starts
@@ -477,7 +478,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                         fontSize: 16,
                                       ),
                                       decoration: _decoration(
-                                        label: 'Confirm password',
+                                        label: 'confirm_password'.tr(),
                                         icon: Icons.lock_outline,
                                         suffixIcon: IconButton(
                                           icon: Icon(
@@ -496,7 +497,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                       validator: (v) =>
                                           v == passwordController.text
                                           ? null
-                                          : 'Passwords do not match',
+                                          : 'passwords_do_not_match'.tr(),
                                     ),
                                     const SizedBox(height: 20),
 
@@ -548,8 +549,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                                         size: 22,
                                                         lineWidth: 3,
                                                       )
-                                                    : const Text(
-                                                        'Reset password',
+                                                    :  Text(
+                                                  'reset_password'.tr(),
                                                         style: TextStyle(
                                                           color:
                                                               _Palette.goldText,
@@ -572,7 +573,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Remembered it? ',
+                                          'remembered_it'.tr(),
                                           style: TextStyle(
                                             color: Colors.white.withOpacity(
                                               0.6,
@@ -594,8 +595,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                               (_) => false,
                                             );
                                           },
-                                          child: const Text(
-                                            'Log in',
+                                          child:  Text(
+                                            'log_in'.tr(),
                                             style: TextStyle(
                                               color: _Palette.gold,
                                               fontSize: 13,

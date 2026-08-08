@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -90,9 +91,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
 
   String _strengthLabel(double s) {
     if (s == 0) return '';
-    if (s < 0.34) return 'Weak';
-    if (s < 0.7) return 'Fair';
-    return 'Strong';
+    if (s < 0.34) return'weak'.tr();
+    if (s < 0.7) return 'fair'.tr();
+    return 'strong'.tr();
   }
 
   void _showSnack(String message, {bool isError = false}) {
@@ -110,7 +111,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
     if (!_formKey.currentState!.validate()) return;
     if (!_agreedToTerms) {
       _showSnack(
-        'Please agree to the Terms of Service and Privacy Policy to continue.',
+        'agree_terms'.tr(),
         isError: true,
       );
       return;
@@ -138,7 +139,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
         );
       } else {
         final error =
-            ref.read(authControllerProvider).error ?? 'Registration failed';
+            ref.read(authControllerProvider).error ??  'registration_failed'.tr();
         _showSnack(error, isError: true);
       }
     } catch (e) {
@@ -323,8 +324,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                         ],
                                       ),
                                       const SizedBox(height: 12),
-                                      const Text(
-                                        'STEP 1 OF 2 · CREATE ACCOUNT',
+                                       Text(
+                                        'step_create_account'.tr(),
                                         style: TextStyle(
                                           color: _Palette.gold,
                                           fontSize: 11,
@@ -334,8 +335,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                       ),
                                       const SizedBox(height: 10),
 
-                                      const Text(
-                                        'Create your account',
+                                       Text(
+                                         'create_account'.tr(),
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 25,
@@ -344,7 +345,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                       ),
                                       const SizedBox(height: 6),
                                       Text(
-                                        'Save items, track orders, and check out faster.',
+                                        'description'.tr(),
                                         style: TextStyle(
                                           color: Colors.white.withOpacity(0.65),
                                           fontSize: 13.5,
@@ -361,13 +362,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                           fontSize: 16,
                                         ),
                                         decoration: _decoration(
-                                          label: 'Full name',
+                                          label:   'full_name'.tr(),
                                           icon: Icons.person_outline,
                                         ),
                                         validator: (v) =>
                                             v != null && v.trim().isNotEmpty
                                             ? null
-                                            : 'Required',
+                                            : 'required'.tr(),
                                       ),
                                       const SizedBox(height: 16),
 
@@ -382,13 +383,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                           fontSize: 16,
                                         ),
                                         decoration: _decoration(
-                                          label: 'Email',
+                                          label: 'email'.tr(),
                                           icon: Icons.mail_outline,
                                         ),
                                         validator: (v) =>
                                             v != null && v.contains('@')
                                             ? null
-                                            : 'Enter a valid email',
+                                            : 'valid_email'.tr(),
                                       ),
                                       const SizedBox(height: 16),
 
@@ -402,12 +403,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                           fontSize: 16,
                                         ),
                                         decoration: _decoration(
-                                          label: 'Phone number',
+                                          label: 'phone_number'.tr(),
                                           icon: Icons.phone_iphone_outlined,
                                         ),
                                         validator: (v) {
                                           if (v == null || v.trim().isEmpty) {
-                                            return 'Phone number is required';
+                                            return 'phone_required'.tr();
                                           }
                                           return null;
                                         },
@@ -424,7 +425,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                           fontSize: 16,
                                         ),
                                         decoration: _decoration(
-                                          label: 'Password',
+                                          label:  'password'.tr(),
                                           icon: Icons.lock_outline,
                                           suffixIcon: IconButton(
                                             icon: Icon(
@@ -444,7 +445,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                         validator: (v) =>
                                             v != null && v.length >= 6
                                             ? null
-                                            : 'Use at least 6 characters',
+                                            :'password_min'.tr(),
                                       ),
 
                                       // Strength meter
@@ -514,7 +515,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                           fontSize: 16,
                                         ),
                                         decoration: _decoration(
-                                          label: 'Confirm password',
+                                          label: 'confirm_password'.tr(),
                                           icon: Icons.lock_outline,
                                           suffixIcon: IconButton(
                                             icon: Icon(
@@ -533,7 +534,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                         ),
                                         validator: (v) => v == password.text
                                             ? null
-                                            : 'Passwords do not match',
+                                            :  'password_match'.tr(),
                                       ),
                                       const SizedBox(height: 16),
 
@@ -578,12 +579,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                                     fontSize: 12.5,
                                                     height: 1.4,
                                                   ),
-                                                  children: const [
+                                                  children:  [
                                                     TextSpan(
-                                                      text: 'I agree to the ',
+                                                      text: 'terms_message'.tr(),
                                                     ),
                                                     TextSpan(
-                                                      text: 'Terms of Service',
+                                                      text: 'terms_of_service'.tr(),
                                                       style: TextStyle(
                                                         color: _Palette.gold,
                                                         fontWeight:
@@ -592,7 +593,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                                     ),
                                                     TextSpan(text: ' and '),
                                                     TextSpan(
-                                                      text: 'Privacy Policy',
+                                                      text: 'privacy_policy'.tr(),
                                                       style: TextStyle(
                                                         color: _Palette.gold,
                                                         fontWeight:
@@ -655,8 +656,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                                           size: 22,
                                                           lineWidth: 3,
                                                         )
-                                                      : const Text(
-                                                          'Create account',
+                                                      :  Text(
+                                                    'create_account'.tr(),
                                                           style: TextStyle(
                                                             color: _Palette
                                                                 .goldText,
@@ -679,7 +680,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'Already have an account? ',
+                                            'already_have_account'.tr(),
                                             style: TextStyle(
                                               color: Colors.white.withOpacity(
                                                 0.6,
@@ -700,8 +701,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                                 Navigator.pop(context);
                                               }
                                             },
-                                            child: const Text(
-                                              'Log in',
+                                            child:  Text(
+                                              'login'.tr(),
                                               style: TextStyle(
                                                 color: _Palette.gold,
                                                 fontSize: 13,

@@ -1,101 +1,112 @@
 import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:e_shop/data/repositories/user_auth_repository.dart';
-import 'package:e_shop/features/auth/presentation/screens/reset_password_screen.dart';
-import 'package:e_shop/features/auth/presentation/providers/auth_providers.dart';
-import 'package:e_shop/core/storage/token_storage.dart';
 
-import '../../../../features/auth/data/models/auth_models.dart';
+import '../../../../core/storage/token_storage.dart';
+import '../../../data/repositories/user_auth_repository.dart';
+import '../../../features/auth/data/models/auth_models.dart';
+import '../../../features/auth/presentation/providers/auth_providers.dart';
+import '../../../features/auth/presentation/screens/forgot_password_screen.dart';
 
-/// Shared brand tokens — matches RegisterScreen / WebGuestProfile so the whole
-/// auth flow reads as one product: frosted glass over a navy-to-violet
-/// gradient, single gold accent color, muted supporting colors for state.
 class _Palette {
   static const gold = Color(0xFFF2B705);
   static const goldDeep = Color(0xFFCB8A00);
   static const goldText = Color(0xFF231A00);
 
-  static const glass = Color(0x14FFFFFF); // white @ ~8%
-  static const glassBorder = Color(0x2EFFFFFF); // white @ ~18%
+  static const glass = Color(0x14FFFFFF);
+  static const glassBorder = Color(0x2EFFFFFF);
 
   static const coral = Color(0xFFFF6B6B);
-  static const mint = Color(0xFF35D07F);
-  static const amber = Color(0xFFFFB020);
 
   static const bg = Color(0xFF0B1120);
 }
 
-class DesktopGuestProfile extends ConsumerStatefulWidget {
+class WebGuestOrder extends ConsumerStatefulWidget {
   final User_AuthRepository repository;
+  final VoidCallback? onLoginSuccess;
 
-  const DesktopGuestProfile({super.key, required this.repository});
+  const WebGuestOrder({
+    super.key,
+    required this.repository,
+    this.onLoginSuccess,
+  });
 
   @override
-  ConsumerState<DesktopGuestProfile> createState() => _DesktopGuestProfileState();
+  ConsumerState<WebGuestOrder> createState() => _WebGuestOrderState();
 }
 
-class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
+class _WebGuestOrderState extends ConsumerState<WebGuestOrder>
     with SingleTickerProviderStateMixin {
-  // Toggle true for "Create Account", false for "Sign In"
   bool _isSignUpMode = false;
 
-  // Controllers for Login
   final _loginEmailController = TextEditingController();
   final _loginPasswordController = TextEditingController();
-  final _loginFormKey = GlobalKey<FormState>();
 
-  // Controllers for Register
   final _regUsernameController = TextEditingController();
   final _regEmailController = TextEditingController();
   final _regPhoneController = TextEditingController();
   final _regPasswordController = TextEditingController();
+
+  final _loginFormKey = GlobalKey<FormState>();
   final _regFormKey = GlobalKey<FormState>();
 
   bool _obscureLoginPassword = true;
   bool _obscureRegPassword = true;
 
-  // Page-entrance animation (fade + slight rise) — separate from the
-  // sign-in/sign-up toggle animation below, which uses implicit widgets.
-  late final AnimationController _entranceController;
-  late final Animation<double> _fadeAnim;
-  late final Animation<Offset> _slideAnim;
+  late final AnimationController _animationController;
+  late final Animation<double> _fadeAnimation;
+  late final Animation<Offset> _slideAnimation;
 
-  // Tuning for the toggle "smoothie" — slide is slower/eased so the panel
-  // glides, content fade is quicker so text doesn't lag behind the motion.
   static const _slideDuration = Duration(milliseconds: 650);
-  static const _slideCurve = Curves.easeInOutCubic;
   static const _contentFadeDuration = Duration(milliseconds: 320);
 
   @override
   void initState() {
     super.initState();
-    _entranceController = AnimationController(
+
+    _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 450),
     );
-    _fadeAnim = CurvedAnimation(parent: _entranceController, curve: Curves.easeOut);
-    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.04), end: Offset.zero)
-        .animate(CurvedAnimation(parent: _entranceController, curve: Curves.easeOutCubic));
-    _entranceController.forward();
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOut,
+    );
+
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.04), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
+
+    _animationController.forward();
   }
 
   @override
   void dispose() {
     _loginEmailController.dispose();
     _loginPasswordController.dispose();
+
     _regUsernameController.dispose();
     _regEmailController.dispose();
     _regPhoneController.dispose();
     _regPasswordController.dispose();
-    _entranceController.dispose();
+
+    _animationController.dispose();
+
     super.dispose();
   }
 
   void _toggleMode() {
-    setState(() => _isSignUpMode = !_isSignUpMode);
+    setState(() {
+      _isSignUpMode = !_isSignUpMode;
+    });
   }
 
   void _showSnack(String message, {bool isError = false}) {
@@ -109,10 +120,17 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
     );
   }
 
+  // ============================================================
+  // LOGIN
+  // ============================================================
+
   Future<void> _handleLogin() async {
-    if (!_loginFormKey.currentState!.validate()) return;
+    if (!_loginFormKey.currentState!.validate()) {
+      return;
+    }
 
     final controller = ref.read(authControllerProvider.notifier);
+
     await controller.login(
       LoginRequest(
         identifier: _loginEmailController.text.trim(),
@@ -121,29 +139,47 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
     );
 
     if (!mounted) return;
+
     final state = ref.read(authControllerProvider);
 
     if (state.error == null && state.data != null) {
-      await TokenStorage().saveUserId(state.data!.userId!);
+      final userId = state.data!.userId;
+
+      if (userId != null) {
+        await TokenStorage().saveUserId(userId);
+      }
+
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/divicenav');
+
+      // Tell DesktopNav that login succeeded.
+      widget.onLoginSuccess?.call();
+
+      _showSnack('login_success'.tr());
     } else {
-      _showSnack(state.error ?? "Invalid credentials", isError: true);
+      _showSnack(state.error ?? 'invalid_credentials'.tr(), isError: true);
     }
   }
 
+  // ============================================================
+  // REGISTER
+  // ============================================================
+
   Future<void> _handleRegister() async {
-    if (!_regFormKey.currentState!.validate()) return;
+    if (!_regFormKey.currentState!.validate()) {
+      return;
+    }
 
     try {
-      final success = await ref.read(authControllerProvider.notifier).register(
-        RegisterRequest(
-          username: _regUsernameController.text.trim(),
-          email: _regEmailController.text.trim(),
-          phone: _regPhoneController.text.trim(),
-          password: _regPasswordController.text.trim(),
-        ),
-      );
+      final success = await ref
+          .read(authControllerProvider.notifier)
+          .register(
+            RegisterRequest(
+              username: _regUsernameController.text.trim(),
+              email: _regEmailController.text.trim(),
+              phone: _regPhoneController.text.trim(),
+              password: _regPasswordController.text.trim(),
+            ),
+          );
 
       if (!mounted) return;
 
@@ -154,23 +190,34 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
           arguments: _regEmailController.text.trim(),
         );
       } else {
-        final error = ref.read(authControllerProvider).error ?? 'Registration failed';
+        final error =
+            ref.read(authControllerProvider).error ??
+            'registration_failed'.tr();
+
         _showSnack(error, isError: true);
       }
     } catch (e) {
-      if (mounted) _showSnack(e.toString(), isError: true);
+      if (mounted) {
+        _showSnack(e.toString(), isError: true);
+      }
     }
   }
+
+  // ============================================================
+  // INPUT DECORATION
+  // ============================================================
 
   InputDecoration _decoration({
     required String label,
     required IconData icon,
     Widget? suffixIcon,
   }) {
-    OutlineInputBorder border(Color color, double width) => OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14),
-      borderSide: BorderSide(color: color, width: width),
-    );
+    OutlineInputBorder border(Color color, double width) {
+      return OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: color, width: width),
+      );
+    }
 
     return InputDecoration(
       labelText: label,
@@ -193,6 +240,10 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
     );
   }
 
+  // ============================================================
+  // BUILD
+  // ============================================================
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(authControllerProvider);
@@ -202,16 +253,16 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
       backgroundColor: _Palette.bg,
       body: Stack(
         children: [
-          // Background photo (falls back gracefully if asset missing)
           Positioned.fill(
             child: Image.asset(
               'assets/images/back1_orange.jpg',
-              fit: BoxFit.fill,
-              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) {
+                return const SizedBox.shrink();
+              },
             ),
           ),
 
-          // Brand-tinted scrim — same navy/violet wash as RegisterScreen
           Positioned.fill(
             child: DecoratedBox(
               decoration: const BoxDecoration(
@@ -231,13 +282,15 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
           SafeArea(
             child: Center(
               child: FadeTransition(
-                opacity: _fadeAnim,
+                opacity: _fadeAnimation,
                 child: SlideTransition(
-                  position: _slideAnim,
+                  position: _slideAnimation,
                   child: ConstrainedBox(
-                    // Fixed height (not just maxHeight) so the sliding Stack
-                    // below has a bounded, stable area to animate within.
-                    constraints: const BoxConstraints(maxWidth: 1100, minHeight: 620, maxHeight: 620),
+                    constraints: const BoxConstraints(
+                      maxWidth: 1100,
+                      minHeight: 650,
+                      maxHeight: 700,
+                    ),
                     child: Container(
                       margin: const EdgeInsets.all(24),
                       child: ClipRRect(
@@ -248,7 +301,10 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                             decoration: BoxDecoration(
                               color: _Palette.glass,
                               borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: _Palette.glassBorder, width: 1.2),
+                              border: Border.all(
+                                color: _Palette.glassBorder,
+                                width: 1.2,
+                              ),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.35),
@@ -260,18 +316,19 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                             child: LayoutBuilder(
                               builder: (context, constraints) {
                                 final totalWidth = constraints.maxWidth;
-                                // ~45/55 split, matching the old flex 5:6 ratio.
+
                                 final overlayWidth = totalWidth * (5 / 11);
+
                                 final formWidth = totalWidth - overlayWidth;
 
                                 return Stack(
                                   children: [
-                                    // Form panel: slides between the left
-                                    // slot (sign-in) and right slot
-                                    // (sign-up), crossfading its content.
+                                    // ==================================================
+                                    // FORM
+                                    // ==================================================
                                     AnimatedPositioned(
                                       duration: _slideDuration,
-                                      curve: _slideCurve,
+                                      curve: Curves.easeInOutCubic,
                                       top: 0,
                                       bottom: 0,
                                       left: _isSignUpMode ? overlayWidth : 0,
@@ -279,42 +336,34 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                                       child: ClipRect(
                                         child: AnimatedSwitcher(
                                           duration: _contentFadeDuration,
-                                          switchInCurve: Curves.easeOut,
-                                          switchOutCurve: Curves.easeIn,
-                                          transitionBuilder: (child, animation) {
-                                            final offset = Tween<Offset>(
-                                              begin: const Offset(0, 0.06),
-                                              end: Offset.zero,
-                                            ).animate(animation);
-                                            return FadeTransition(
-                                              opacity: animation,
-                                              child: SlideTransition(position: offset, child: child),
-                                            );
-                                          },
                                           child: _isSignUpMode
                                               ? KeyedSubtree(
-                                            key: const ValueKey('register-form'),
-                                            child: _registerFormBody(isLoading),
-                                          )
+                                                  key: const ValueKey(
+                                                    'register',
+                                                  ),
+                                                  child: _registerPanel(
+                                                    isLoading,
+                                                  ),
+                                                )
                                               : KeyedSubtree(
-                                            key: const ValueKey('login-form'),
-                                            child: _loginFormBody(isLoading),
-                                          ),
+                                                  key: const ValueKey('login'),
+                                                  child: _loginPanel(isLoading),
+                                                ),
                                         ),
                                       ),
                                     ),
 
-                                    // Overlay/info panel: slides the
-                                    // opposite direction, revealing the
-                                    // form as it glides across.
+                                    // ==================================================
+                                    // INFO PANEL
+                                    // ==================================================
                                     AnimatedPositioned(
                                       duration: _slideDuration,
-                                      curve: _slideCurve,
+                                      curve: Curves.easeInOutCubic,
                                       top: 0,
                                       bottom: 0,
                                       left: _isSignUpMode ? 0 : formWidth,
                                       width: overlayWidth,
-                                      child: _infoPanelSliding(),
+                                      child: _infoPanel(),
                                     ),
                                   ],
                                 );
@@ -334,18 +383,20 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
     );
   }
 
-  // ── Info / brand panel — gold-on-navy gradient, slides across the card ──
-  Widget _infoPanelSliding() {
-    final title = _isSignUpMode  ? 'welcome_back'.tr()
+  // ============================================================
+  // INFO PANEL
+  // ============================================================
 
-        : 'hello_friend'.tr();
+  Widget _infoPanel() {
+    final title = _isSignUpMode
+        ? 'welcome_back'.tr()
+        : 'order_guest_title'.tr();
+
     final subtitle = _isSignUpMode
         ? 'keep_connected'.tr()
+        : 'order_guest_description'.tr();
 
-        : 'start_your_journey'.tr();
-    final buttonLabel = _isSignUpMode ?  'sign_in'.tr()
-
-        : 'sign_up'.tr();
+    final buttonLabel = _isSignUpMode ? 'sign_in'.tr() : 'sign_up'.tr();
 
     return Container(
       decoration: const BoxDecoration(
@@ -355,58 +406,83 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
           end: Alignment.bottomRight,
         ),
       ),
-      padding: const EdgeInsets.all(40),
+      padding: const EdgeInsets.all(48),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            width: 60,
-            height: 60,
+            width: 70,
+            height: 70,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: const LinearGradient(
                 colors: [_Palette.gold, _Palette.goldDeep],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
               ),
               boxShadow: [
-                BoxShadow(color: _Palette.gold.withOpacity(0.4), blurRadius: 18, spreadRadius: 1),
+                BoxShadow(
+                  color: _Palette.gold.withOpacity(0.4),
+                  blurRadius: 18,
+                ),
               ],
             ),
-            child: const Icon(Icons.shopping_bag_outlined, color: _Palette.goldText, size: 28),
+            child: const Icon(
+              Icons.shopping_bag_outlined,
+              color: _Palette.goldText,
+              size: 32,
+            ),
           ),
-          const SizedBox(height: 24),
-          // Fade the copy in place while the panel itself glides — keeps
-          // text legible instead of smearing sideways during the slide.
+
+          const SizedBox(height: 26),
+
           AnimatedSwitcher(
             duration: _contentFadeDuration,
-            transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
             child: Column(
               key: ValueKey(_isSignUpMode),
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
+
                 const SizedBox(height: 14),
+
                 Text(
                   subtitle,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14, height: 1.55),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 14.5,
+                    height: 1.55,
+                  ),
                 ),
-                const SizedBox(height: 30),
+
+                const SizedBox(height: 32),
+
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     foregroundColor: _Palette.gold,
                     side: const BorderSide(color: _Palette.gold, width: 1.5),
-                    padding: const EdgeInsets.symmetric(horizontal: 44, vertical: 15),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 48,
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
                   onPressed: _toggleMode,
-                  child: Text(buttonLabel, style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                  child: Text(
+                    buttonLabel,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -416,8 +492,11 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
     );
   }
 
-  // ── Sign in form body (positioned/sized by the sliding Stack above) ──
-  Widget _loginFormBody(bool isLoading) {
+  // ============================================================
+  // LOGIN PANEL
+  // ============================================================
+
+  Widget _loginPanel(bool isLoading) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 24),
       child: Center(
@@ -425,72 +504,83 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
           child: Form(
             key: _loginFormKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                 Text(
-            'step_sign_in'.tr(),
-                  style: TextStyle(
+                Text(
+                  'order_guest_step'.tr(),
+                  style: const TextStyle(
                     color: _Palette.gold,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1.1,
                   ),
                 ),
-                const SizedBox(height: 10),
-                 Text(
-                    'sign_in_shop'.tr(),
-                  style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w800),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'welcome_cart'.tr(),
-                  style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 13.5),
-                ),
-                const SizedBox(height: 24),
 
-                Row(
-                  children: [
-                    _socialIcon(Icons.facebook),
-                    const SizedBox(width: 12),
-                    _socialIcon(Icons.g_mobiledata),
-                    const SizedBox(width: 12),
-                    _socialIcon(Icons.work_outline),
-                  ],
-                ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
+
                 Text(
-                  'use_email_account'.tr(),
-                  style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.5),
+                  'order_login_title'.tr(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
+
+                const SizedBox(height: 6),
+
+                Text(
+                  'order_login_description'.tr(),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.65),
+                    fontSize: 13.5,
+                  ),
+                ),
+
                 const SizedBox(height: 24),
 
                 TextFormField(
                   controller: _loginEmailController,
                   cursorColor: _Palette.gold,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
-                  decoration: _decoration(label: 'email_or_username'.tr(), icon: Icons.mail_outline),
-                  validator: (v) => v!.isEmpty ? 'required'.tr() : null,
+                  decoration: _decoration(
+                    label: 'email_or_username'.tr(),
+                    icon: Icons.mail_outline,
+                  ),
+                  validator: (v) {
+                    return v == null || v.trim().isEmpty
+                        ? 'required'.tr()
+                        : null;
+                  },
                 ),
+
                 const SizedBox(height: 16),
+
                 TextFormField(
                   controller: _loginPasswordController,
                   obscureText: _obscureLoginPassword,
                   cursorColor: _Palette.gold,
-                  style:  TextStyle(color: Colors.white, fontSize: 16),
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
                   decoration: _decoration(
                     label: 'password'.tr(),
                     icon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscureLoginPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                        _obscureLoginPassword
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
                         color: Colors.white60,
-                        size: 20,
                       ),
-                      onPressed: () => setState(() => _obscureLoginPassword = !_obscureLoginPassword),
+                      onPressed: () {
+                        setState(() {
+                          _obscureLoginPassword = !_obscureLoginPassword;
+                        });
+                      },
                     ),
                   ),
-                  validator: (v) => v!.isEmpty ? 'required'.tr() : null,
+                  validator: (v) {
+                    return v == null || v.isEmpty ? 'required'.tr() : null;
+                  },
                 ),
 
                 Align(
@@ -499,15 +589,21 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => ResetPasswordScreen()),
+                        MaterialPageRoute(
+                          builder: (_) => ForgotPasswordScreen(),
+                        ),
                       );
                     },
                     child: Text(
-                        'email_or_username'.tr(),
-                      style: TextStyle(color: Colors.white.withOpacity(0.55), fontSize: 12),
+                      'forgot_password'.tr(),
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.55),
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 10),
 
                 _goldButton(
@@ -523,8 +619,11 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
     );
   }
 
-  // ── Register form body (positioned/sized by the sliding Stack above) ──
-  Widget _registerFormBody(bool isLoading) {
+  // ============================================================
+  // REGISTER PANEL
+  // ============================================================
+
+  Widget _registerPanel(bool isLoading) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 24),
       child: Center(
@@ -532,72 +631,94 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
           child: Form(
             key: _regFormKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                 Text(
-            'step_create_account'.tr(),
-                  style: TextStyle(
+                Text(
+                  'step_create_account'.tr(),
+                  style: const TextStyle(
                     color: _Palette.gold,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1.1,
                   ),
                 ),
-                const SizedBox(height: 10),
-                 Text(
-                    'create_account'.tr(),
-                  style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w800),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                    'save_track_checkout'.tr(),
-                  style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 13.5),
-                ),
-                const SizedBox(height: 24),
 
-                Row(
-                  children: [
-                    _socialIcon(Icons.facebook),
-                    const SizedBox(width: 12),
-                    _socialIcon(Icons.g_mobiledata),
-                    const SizedBox(width: 12),
-                    _socialIcon(Icons.work_outline),
-                  ],
-                ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
+
                 Text(
-                    'use_email_registration'.tr(),
-                  style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12.5),
+                  'create_account'.tr(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
+
+                const SizedBox(height: 6),
+
+                Text(
+                  'description'.tr(),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.65),
+                    fontSize: 13.5,
+                  ),
+                ),
+
                 const SizedBox(height: 24),
 
                 TextFormField(
                   controller: _regUsernameController,
                   cursorColor: _Palette.gold,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
-                  decoration: _decoration(label:  'full_name'.tr(), icon: Icons.person_outline),
-                  validator: (v) => v!.isEmpty ? 'required'.tr() : null,
+                  decoration: _decoration(
+                    label: 'full_name'.tr(),
+                    icon: Icons.person_outline,
+                  ),
+                  validator: (v) {
+                    return v == null || v.trim().isEmpty
+                        ? 'required'.tr()
+                        : null;
+                  },
                 ),
+
                 const SizedBox(height: 16),
+
                 TextFormField(
                   controller: _regEmailController,
                   keyboardType: TextInputType.emailAddress,
                   cursorColor: _Palette.gold,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
-                  decoration: _decoration(label: 'email'.tr(), icon: Icons.mail_outline),
-                  validator: (v) => v!.contains('@') ? null : 'invalid_email'.tr(),
+                  decoration: _decoration(
+                    label: 'email'.tr(),
+                    icon: Icons.mail_outline,
+                  ),
+                  validator: (v) {
+                    return v != null && v.contains('@')
+                        ? null
+                        : 'valid_email'.tr();
+                  },
                 ),
+
                 const SizedBox(height: 16),
+
                 TextFormField(
                   controller: _regPhoneController,
                   keyboardType: TextInputType.phone,
                   cursorColor: _Palette.gold,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
-                  decoration: _decoration(label:  'phone_number'.tr(), icon: Icons.phone_iphone_outlined),
-                  validator: (v) => v!.isEmpty ? 'required'.tr() : null,
+                  decoration: _decoration(
+                    label: 'phone_number'.tr(),
+                    icon: Icons.phone_iphone_outlined,
+                  ),
+                  validator: (v) {
+                    return v == null || v.trim().isEmpty
+                        ? 'phone_required'.tr()
+                        : null;
+                  },
                 ),
+
                 const SizedBox(height: 16),
+
                 TextFormField(
                   controller: _regPasswordController,
                   obscureText: _obscureRegPassword,
@@ -608,15 +729,25 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
                     icon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscureRegPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                        _obscureRegPassword
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
                         color: Colors.white60,
-                        size: 20,
                       ),
-                      onPressed: () => setState(() => _obscureRegPassword = !_obscureRegPassword),
+                      onPressed: () {
+                        setState(() {
+                          _obscureRegPassword = !_obscureRegPassword;
+                        });
+                      },
                     ),
                   ),
-                  validator: (v) => v!.length >= 6 ? null : 'min_6_characters'.tr(),
+                  validator: (v) {
+                    return v != null && v.length >= 6
+                        ? null
+                        : 'password_min'.tr();
+                  },
                 ),
+
                 const SizedBox(height: 24),
 
                 _goldButton(
@@ -632,18 +763,27 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
     );
   }
 
-  // ── Shared pieces ──
-  Widget _goldButton({required String label, required bool isLoading, required VoidCallback onTap}) {
+  // ============================================================
+  // GOLD BUTTON
+  // ============================================================
+
+  Widget _goldButton({
+    required String label,
+    required bool isLoading,
+    required VoidCallback onTap,
+  }) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: const LinearGradient(
           colors: [_Palette.gold, _Palette.goldDeep],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
         ),
         boxShadow: [
-          BoxShadow(color: _Palette.gold.withOpacity(0.35), blurRadius: 16, offset: const Offset(0, 6)),
+          BoxShadow(
+            color: _Palette.gold.withOpacity(0.35),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
         ],
       ),
       child: Material(
@@ -655,32 +795,24 @@ class _DesktopGuestProfileState extends ConsumerState<DesktopGuestProfile>
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Center(
               child: isLoading
-                  ? const SpinKitDualRing(color: _Palette.goldText, size: 22, lineWidth: 3)
+                  ? const SpinKitDualRing(
+                      color: _Palette.goldText,
+                      size: 22,
+                      lineWidth: 3,
+                    )
                   : Text(
-                label,
-                style: const TextStyle(
-                  color: _Palette.goldText,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.2,
-                ),
-              ),
+                      label,
+                      style: const TextStyle(
+                        color: _Palette.goldText,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _socialIcon(IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white.withOpacity(0.06),
-        border: Border.all(color: Colors.white.withOpacity(0.16)),
-      ),
-      child: Icon(icon, size: 20, color: Colors.white70),
     );
   }
 }
