@@ -119,6 +119,7 @@ class _DivicesNavState extends State<DivicesNav> {
         items: navigationItems,
 
         onTap: _onTabTapped,
+        authRepository: widget.authRepository,
       ),
     );
   }

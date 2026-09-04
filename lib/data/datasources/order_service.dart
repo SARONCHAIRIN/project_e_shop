@@ -95,7 +95,7 @@ class OrderService {
       debugPrint('Address ID: $addressId');
 
       // final url = '$_baseUrllocalwifi/orders/user/from-cart/bakong';
-      final url = '$_baseUrl/orders/user/from-cart/bakong';
+      final url = '$_baseUrl_server/orders/user/from-cart/bakong';
       debugPrint(' STEP 2: URL => $url');
 
       final body = {
