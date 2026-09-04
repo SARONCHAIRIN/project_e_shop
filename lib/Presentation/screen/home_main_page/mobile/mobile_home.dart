@@ -11,6 +11,8 @@ class MobileHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: MobileHomeBody(args: args));
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: MobileHomeBody(args: args));
   }
 }

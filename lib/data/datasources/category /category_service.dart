@@ -19,7 +19,7 @@ class CategoryService {
   }
 
   // ==========================================
-  // ទាញយក CATEGORIES ទាំងអស់ (query params, មិនមែន body)
+  // ទាញយក CATEGORIES ALL (query params, ALL body)
   // ==========================================
   Future<List<CategoryModel>> fetchCategories({
     int page = 0,
@@ -36,7 +36,7 @@ class CategoryService {
 
     final response = await http.post(url, headers: await _getHeaders());
 
-    print("CATEGORY STATUS: ${response.statusCode}");
+    print("CATEGORY STATUS============================================================================: ${response.statusCode}");
     print("CATEGORY BODY: ${response.body}");
 
     if (response.statusCode == 200) {

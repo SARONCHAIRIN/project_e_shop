@@ -2,7 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
+import 'dart:typed_data';
 
 import '../../../../data/models/category /category_model.dart';
 import '../../../../data/models/user_model.dart';
@@ -14,6 +16,7 @@ import '../../../../Main_App_Bar/mobile/mobile_app_bar.dart';
 
 import '../../sub_category_screen/icon_sub_with_product/icon_sub_with_product.dart';
 
+import '../../sub_category_screen/subcategory_with_product.dart';
 import '../../sub_category_screen/subcategory_with_product.dart';
 
 class MobileHomeBody extends ConsumerStatefulWidget {
@@ -399,57 +402,34 @@ class _MobileHomeBodyState extends ConsumerState<MobileHomeBody> {
           ),
           boxShadow: isSelected
               ? [
-                  BoxShadow(
-                    color: _accent.withOpacity(0.25),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
+            BoxShadow(
+              color: _accent.withOpacity(0.25),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ]
               : [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.03),
-                    blurRadius: 4,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 4,
+              offset: const Offset(0, 1),
+            ),
+          ],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (iconUrl != null) ...[
+            if (iconUrl != null && iconUrl.isNotEmpty) ...[
               Container(
                 width: 22,
                 height: 22,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isSelected
-                      ? Colors.white.withOpacity(1)
-                      : Colors.blue.shade300,
+                  color: isSelected ? Colors.white : Colors.grey.shade50,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(3),
-                  child: iconUrl.toLowerCase().endsWith('.svg')
-                      ? SvgPicture.network(
-                          iconUrl,
-                          fit: BoxFit.contain,
-                          placeholderBuilder: (context) =>
-                              const SizedBox.shrink(),
-                        )
-                      : Image.network(
-                          iconUrl,
-                          fit: BoxFit.contain,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const SizedBox.shrink();
-                          },
-                          errorBuilder: (context, error, stackTrace) => Icon(
-                            Icons.category,
-                            size: 13,
-                            color: isSelected
-                                ? Colors.white
-                                : Colors.grey.shade500,
-                          ),
-                        ),
+                  child: _buildCategoryIcon(iconUrl, isSelected),
                 ),
               ),
               const SizedBox(width: 7),
@@ -457,7 +437,7 @@ class _MobileHomeBodyState extends ConsumerState<MobileHomeBody> {
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.grey.shade700,
+                color: isSelected ? Colors.white : Colors.blue.shade700,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
               ),
@@ -465,6 +445,69 @@ class _MobileHomeBodyState extends ConsumerState<MobileHomeBody> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCategoryIcon(
+      String iconUrl,
+      bool isSelected,
+      )
+  {
+    return FutureBuilder<Widget>(
+      future: _loadCategoryIcon(iconUrl, isSelected),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox.shrink();
+        }
+
+        if (snapshot.hasError || !snapshot.hasData) {
+          return Icon(
+            Icons.category,
+            size: 13,
+            color: isSelected
+                ? Colors.white
+                : Colors.grey.shade500,
+          );
+        }
+
+        return snapshot.data!;
+      },
+    );
+  }
+
+  Future<Widget> _loadCategoryIcon(
+      String url,
+      bool isSelected,
+      ) async
+  {
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        'Failed to load icon: ${response.statusCode}',
+      );
+    }
+
+    final contentType =
+        response.headers['content-type']?.toLowerCase() ?? '';
+
+    debugPrint('ICON URL: $url');
+    debugPrint('CONTENT TYPE: $contentType');
+
+    // SVG
+    if (contentType.contains('image/svg+xml')) {
+      final svgString = response.body;
+
+      return SvgPicture.string(
+        svgString,
+        fit: BoxFit.contain,
+      );
+    }
+
+    // PNG / JPG / WEBP
+    return Image.memory(
+      Uint8List.fromList(response.bodyBytes),
+      fit: BoxFit.contain,
     );
   }
 }

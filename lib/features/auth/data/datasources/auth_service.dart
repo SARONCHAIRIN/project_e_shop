@@ -60,7 +60,7 @@ class AuthService {
       print("URL: $_base/register");
       print("BODY: ${request.toJson()}");
 
-      final res = await localDio.post(
+      final res = await serverDio.post(
         // "http://localhost:8080/api/v1/public/register",
         "/api/v1/public/register",
         data: request.toJson(),

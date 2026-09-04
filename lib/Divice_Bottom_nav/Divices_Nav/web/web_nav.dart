@@ -28,7 +28,7 @@ class WebNav extends StatefulWidget {
     required this.screens,
     required this.items,
     required this.onTap,
-    this.authRepository,
+    required this.authRepository,
   });
 
   @override
