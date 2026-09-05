@@ -30,7 +30,6 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
 /coverage/
 
 # Symbolication related
@@ -50,3 +49,9 @@ google-services.json
 
 # 🔐 Environment variables
 .env
+.vercel
+.env*
+
+/build/*
+!/build/web/
+!/build/web/**

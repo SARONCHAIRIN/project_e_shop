@@ -1,0 +1,476 @@
+{
+  "home": "Home",
+  "category": "Category",
+  "cart": "Cart",
+  "profile": "Profile",
+  "message": "Message",
+  "change_language": "Change Language",
+  "trending_categories": "Trending Categories",
+  "popular_products": "Popular Products",
+  "see_all": "See All",
+  "all": "All",
+  "search_product": "Search product",
+  "products": "Products",
+  "support_center": "Support Center",
+  "how_can_we_help": "How can we help you?",
+  "contact_support_telegram": "Contact our support team via Telegram",
+  "chat_on_telegram": "Chat on Telegram",
+  "contact_via_telegram": "Contact via Telegram",
+  "cart": "Cart",
+  "delete": "Delete",
+  "qty": "Qty",
+  "subtotal": "Subtotal",
+  "shipping": "Shipping",
+  "free": "FREE",
+  "total": "Total",
+  "cart_is_empty": "Cart is empty",
+  "proceed_to_checkout": "Proceed to Checkout",
+  "retry": "Retry",
+  "proceed_to_checkout": "Proceed to Checkout",
+  "something_went_wrong": "Something went wrong",
+  "user": "User",
+  "recommended_for_you": "Recommended For You",
+  "addresses": "Addresses",
+  "coupons": "Coupons",
+  "following": "Following",
+  "wishlist": "Wishlist",
+  "my_orders": "My Orders",
+  "view_all": "View All",
+  "pending": "Pending",
+  "processing": "Processing",
+  "shipped": "Shipped",
+  "delivered": "Delivered",
+  "cancelled": "Cancelled",
+  "gallery": "Gallery",
+  "camera": "Camera",
+  "bronze": "Bronze",
+  "checkout": "Checkout",
+  "address": "ADDRESS",
+  "payment": "PAYMENT",
+  "update_address": "Update Address",
+  "new_address": "New Address",
+  "address_line_1": "ADDRESS LINE 1",
+  "country": "COUNTRY",
+  "city": "CITY",
+  "zip_code": "ZIP CODE",
+  "address_example": "123 Precision Way",
+  "cambodia": "Cambodia",
+  "phnom_penh": "PHNOM PENH",
+  "zip_code_example": "10110",
+  "session_expired": "Session expired. Please login again.",
+  "please_fill_all_fields": "Please fill all fields",
+  "failed": "Failed!!",
+  "updating": "Updating...",
+  "saving": "Saving...",
+  "save_address": "Save Address",
+  "select_payment_method": "Select Payment Method",
+  "cash_on_delivery": "Cash on Delivery",
+  "pay_when_receive_order": "Pay when you receive your order",
+  "bakong_qr_code": "Bakong QR Code",
+  "scan_qr_pay_instantly": "Scan QR and pay instantly",
+  "payment_method": "Payment Method",
+  "delivery_address": "Delivery Address",
+  "loading_address": "Loading address...",
+  "no_address_found": "No address found",
+  "order_summary": "Order Summary",
+  "edit_cart": "Edit Cart",
+  "total_amount": "Total Amount",
+  "continue_to_payment": "Continue to Payment",
+  "creating_qr_code": "Creating QR Code...",
+  "creating_order": "Creating Order",
+  "session_expired": "Session expired. Please login again.",
+  "failed_initialize": "Failed to initialize",
+  "please_select_payment_method": "Please select a payment method",
+  "bakong_service_unavailable": "Bakong service unavailable. Please try again later.",
+  "try_again": "Try Again",
+  "qr_data_missing": "QR data is missing.",
+  "generating_qr": "Generating QR Code...",
+  "something_wrong": "Something went wrong",
+  "unknown_error": "Unknown error occurred",
+  "try_again": "Try Again",
+  "open_bakong_scan": "Open Bakong app → Scan QR to pay",
+  "bakong_pay": "BAKONG PAY",
+  "bakong_khqr": "Bakong KHQR",
+  "customer_name": "Customer Name",
+  "order_id": "Order ID",
+  "date": "Date",
+  "note": "Note",
+  "thank_you": "Thank you for shopping with E Shop!",
+  "expires_in": "Expires in",
+  "waiting_payment": "Waiting for payment confirmation...",
+  "live": "LIVE",
+  "cancel_payment": "Cancel Payment?",
+  "cancel_description": "This will cancel your order and\nthe QR code will be invalidated.",
+  "keep_paying": "Keep Paying",
+  "yes_cancel": "Yes, Cancel",
+  "cancel_order": "Cancel Order",
+  "open_bakong_pay": "Open Bakong to Pay",
+  "save_qr_gallery": "Save QR to Gallery",
+  "secure_payment": "Secure Payment",
+  "powered_by": "Powered by",
+  "open_bakong_app": "Open Bakong app",
+  "tap_scan_qr": "Tap Scan QR",
+  "confirm_payment": "Confirm payment",
+  "permission_denied": "Permission denied",
+  "qr_saved": "QR saved to gallery",
+  "failed_save_qr": "Failed to save QR",
+  "failed_cancel_order": "Failed to cancel order",
+  "order_cancelled": "Order cancelled",
+  "setting": "Settings",
+  "account": "ACCOUNT",
+  "notification": "NOTIFICATION",
+  "preferences": "PREFERENCES",
+  "legal": "LEGAL",
+  "editProfile": "Edit Profile",
+  "shippingAddress": "Shipping Address",
+  "paymentMethods": "Payment Methods",
+  "pushNotifications": "Push Notifications",
+  "pushNotificationsSubtitle": "Order updates and special offers",
+  "emailAlerts": "Email Alerts",
+  "emailAlertsSubtitle": "Newsletter and daily deals",
+  "language": "Language",
+  "languageEnglishUs": "English (US)",
+  "currency": "Currency",
+  "currencyUsd": "USD ($)",
+  "privacyPolicy": "Privacy Policy",
+  "termsOfService": "Terms of Service",
+  "logout": "Logout",
+  "logoutAccount": "Logout Account",
+  "logoutConfirmation": "Are you sure you want to log out?",
+  "cancel": "Cancel",
+  "user": "User",
+  "userEmail": "user@email.com",
+  "bronze": "Bronze",
+  "points": "pts",
+  "profile": "Profile",
+  "signInToAccount": "Sign in to your account",
+  "guestHeroSubtitle": "Access your orders, wishlist,\nand exclusive deals",
+  "signIn": "Sign in",
+  "createAccount": "Create account",
+  "browseAsGuest": "Browse as guest",
+  "trackOrder": "Track order",
+  "trackOrderSubtitle": "Enter order ID to track",
+  "trackOrderDialogBody": "Please enter your order ID to track your order.",
+  "close": "Close",
+  "helpAndSupport": "Help & support",
+  "helpAndSupportSubtitle": "Chat, call or email us",
+  "brandIcons": "Brand Icons",
+  "brandAndProduct": "Brand & product",
+  "sign_in_account": "Sign in to your account",
+  "access_orders": "Access your orders, wishlist,\nand exclusive deals",
+  "sign_in_register": "Sign in / Register",
+  "welcome_back": "Welcome back",
+  "sign_in_continue": "Sign in to your account to continue",
+  "email_or_username": "Email or username",
+  "password": "Password",
+  "required": "Required",
+  "min_6_chars": "Minimum 6 characters",
+  "remember_me": "Remember me",
+  "forgot_password": "Forgot password?",
+  "sign_in": "Sign in",
+  "signing_in": "Signing in...",
+  "or_continue_with": "or continue with",
+  "or_continue_with": "or continue with",
+  "continue_google": "Continue with Google",
+  "dont_have_account": "Don't have an account?",
+  "create_account": "Create account",
+  "invalid_credentials": "Invalid credentials",
+  "cart_empty": "Cart is Empty",
+  "central": "Central",
+  "no_data": "No data",
+  "order": "Order",
+  "sign_out_account": "Sign out from your account",
+  "collapse_sidebar": "Collapse Sidebar",
+  "expand_sidebar": "Expand Sidebar",
+  "eshop_central": "E-Shop Central",
+  "manager_dashboard": "Manager Dashboard",
+  "welcome_back": "Welcome Back!",
+  "hello_friend": "Hello, Friend!",
+  "sign_in_shop": "Sign in to E-Shop",
+  "create_account": "Create your account",
+  "forgot_password": "Forgot your password?",
+  "sign_up": "Sign up",
+  "log_in": "Log in",
+  "full_name": "Full name",
+  "phone_number": "Phone number",
+  "password": "Password",
+  "no_account": "Don't have an account?",
+  "create_account": "Create your account",
+  "sign_in": "SIGN IN",
+  "log_in": "Log in",
+  "required": "Required",
+  "invalid_email": "Invalid email",
+  "min_password": "Min 6 chars",
+  "keep_connected": "To keep connected with us please login with your personal info",
+  "start_your_journey": "Enter your personal details and start your journey with us",
+  "welcome_cart": "Welcome back — we kept your cart just as you left it.",
+  "use_email_account": "or use your email account:",
+  "save_track_checkout": "Save items, track orders, and check out faster.",
+  "use_email_registration": "or use your email for registration:",
+  "email": "Email",
+  "reset_your_password": "RESET YOUR PASSWORD",
+
+  "forgot_password": "Forgot password?",
+
+  "forgot_password_description": "No worries! Enter your registered email and we'll send you a reset code.",
+
+  "email_address": "Email address",
+
+  "email_required": "Email is required",
+
+  "valid_email": "Enter a valid email",
+
+  "send_reset_code": "Send reset code",
+
+  "back_to_login": "Back to login",
+
+  "code_sent": "CODE SENT",
+
+  "check_your_email": "Check your email",
+
+  "reset_code_sent_to": "We sent a reset code to",
+
+  "enter_code_next_screen": "Enter it on the next screen to reset your password.",
+
+  "enter_reset_code": "Enter reset code",
+
+  "didnt_receive": "Didn't receive it?",
+
+  "resend": "Resend",
+
+  "something_wrong": "Something went wrong! Try again.",
+
+  "reset_code_sent_again": "Reset code sent again",
+
+  "failed_resend_code": "Failed to resend code",
+  "otp_step": "STEP 2 OF 2 · VERIFY EMAIL",
+
+  "verify_your_email": "Verify your email",
+
+  "otp_sent_to": "We sent a 6-digit code to",
+
+  "verify_code": "Verify code",
+
+  "didnt_receive_code": "Didn't receive the code?",
+
+  "resend": "Resend",
+
+  "otp_sent_successfully": "OTP sent successfully",
+
+  "failed_resend_otp": "Failed to resend OTP",
+
+  "invalid_otp": "Invalid OTP",
+  "set_new_password": "SET A NEW PASSWORD",
+
+  "create_new_password": "Create new password",
+
+  "new_password_description": "Your new password must be different from previously used passwords.",
+
+  "new_password": "New password",
+
+  "use_at_least_6_characters": "Use at least 6 characters",
+
+  "password_strength_weak": "Weak",
+
+  "password_strength_fair": "Fair",
+
+  "password_strength_strong": "Strong",
+
+  "confirm_password": "Confirm password",
+
+  "passwords_do_not_match": "Passwords do not match",
+
+  "at_least_6_characters": "At least 6 characters",
+
+  "passwords_match": "Passwords match",
+
+  "reset_password": "Reset password",
+
+  "failed_reset_password": "Failed to reset password. Try again.",
+  "reset_password_step": "STEP 2 OF 2 · RESET PASSWORD",
+
+  "reset_your_password": "Reset your password",
+
+  "reset_password_description": "Enter the OTP sent to your email and choose a new password.",
+
+  "email": "Email",
+
+  "otp_code": "OTP code",
+
+  "enter_6_digit_code": "Enter the 6-digit code",
+
+  "new_password": "New password",
+
+  "use_at_least_6_characters": "Use at least 6 characters",
+
+  "confirm_password": "Confirm password",
+
+  "passwords_do_not_match": "Passwords do not match",
+
+  "password_strength_weak": "Weak",
+
+  "password_strength_fair": "Fair",
+
+  "password_strength_strong": "Strong",
+
+  "reset_password": "Reset password",
+
+  "remembered_it": "Remembered it?",
+
+  "log_in": "Log in",
+
+  "password_reset_successfully": "Password reset successfully",
+  "create_account": "Create your account",
+
+  "step_create_account": "STEP 1 OF 2 · CREATE ACCOUNT",
+
+  "description": "Save items, track orders, and check out faster.",
+
+  "full_name": "Full name",
+
+  "email": "Email",
+
+  "phone_number": "Phone number",
+
+  "password": "Password",
+
+  "confirm_password": "Confirm password",
+
+  "create_account_button": "Create account",
+
+  "already_have_account": "Already have an account?",
+
+  "login": "Log in",
+
+  "terms_message": "I agree to the {terms} and {privacy}.",
+
+  "terms_of_service": "Terms of Service",
+
+  "privacy_policy": "Privacy Policy",
+
+  "required": "Required",
+
+  "valid_email": "Enter a valid email",
+
+  "phone_required": "Phone number is required",
+
+  "password_min": "Use at least 6 characters",
+
+  "password_match": "Passwords do not match",
+
+  "agree_terms": "Please agree to the Terms of Service and Privacy Policy to continue.",
+
+  "registration_failed": "Registration failed",
+
+  "weak": "Weak",
+
+  "fair": "Fair",
+
+  "strong": "Strong",
+
+  "verify_email": "Verify your email",
+
+  "step_verify": "STEP 2 OF 2 · VERIFY EMAIL",
+
+  "sent_code": "We sent a 6-digit code to",
+
+  "verify_code": "Verify code",
+
+  "resend_question": "Didn't receive the code?",
+
+  "resend": "Resend",
+
+  "otp_sent": "OTP sent successfully",
+
+  "resend_failed": "Failed to resend OTP",
+
+  "invalid_otp": "Invalid OTP",
+
+  "set_new": "SET A NEW PASSWORD",
+
+  "create_new": "Create new password",
+
+  "new_password_description": "Your new password must be different from previously used passwords.",
+
+  "reset_password": "Reset password",
+
+  "at_least_six": "At least 6 characters",
+
+  "passwords_match": "Passwords match",
+
+  "remembered": "Remembered it?",
+
+  "failed_reset": "Failed to reset password. Try again.",
+
+  "success_reset": "Password reset successfully",
+
+  "reset_step": "STEP 2 OF 2 · RESET PASSWORD",
+
+  "reset_title": "Reset your password",
+
+  "reset_description": "Enter the OTP sent to your email and choose a new password.",
+
+  "otp_code": "OTP code",
+
+  "enter_otp": "Enter the 6-digit code",
+  "order_guest_title": "Welcome to your orders",
+
+  "order_guest_description": "Sign in or create an account to view and manage your orders.",
+
+  "order_guest_step": "ORDER HISTORY",
+
+  "order_login_title": "Sign in to view your orders",
+
+  "order_login_description": "Access your order history, track your orders, and manage your purchases.",
+
+  "welcome_back": "Welcome Back!",
+
+  "keep_connected": "Sign in to stay connected with your account.",
+
+  "sign_in": "Sign In",
+
+  "sign_up": "Sign Up",
+
+  "email_or_username": "Email or Username",
+
+  "password": "Password",
+
+  "forgot_password": "Forgot password?",
+
+  "required": "Required",
+
+  "valid_email": "Enter a valid email",
+
+  "phone_required": "Phone number is required",
+
+  "password_min": "Use at least 6 characters",
+
+  "create_account": "Create your account",
+
+  "step_create_account": "STEP 1 OF 2 · CREATE ACCOUNT",
+
+  "description": "Save items, track orders, and check out faster.",
+
+  "full_name": "Full name",
+
+  "email": "Email",
+
+  "phone_number": "Phone number",
+
+  "login_success": "Login successful",
+
+  "invalid_credentials": "Invalid email/username or password",
+
+  "registration_failed": "Registration failed",
+
+  "no_data": "No data available",
+  "logout": "Logout",
+
+  "logout_title": "Sign out?",
+
+  "logout_description": "Are you sure you want to sign out of your account?",
+
+  "logout_subtitle": "Sign out from your account",
+
+  "cancel": "Cancel"
+}
