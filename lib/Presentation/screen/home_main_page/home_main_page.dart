@@ -3,7 +3,6 @@ import 'package:e_shop/Presentation/screen/category_main_page/see_all_category.d
 import 'package:e_shop/Presentation/screen/sub_category_screen/icon_sub_with_product/icon_sub_with_product.dart';
 import 'package:e_shop/Presentation/screen/sub_category_screen/subcategory_with_product.dart';
 import 'package:e_shop/core/storage/token_storage.dart';
-import 'package:e_shop/data/models/category%20/category_model.dart';
 import 'package:e_shop/provider/category_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../data/models/category/category_model.dart';
 import '../../../data/models/user_model.dart';
 
 class HomeMainPage extends ConsumerStatefulWidget {

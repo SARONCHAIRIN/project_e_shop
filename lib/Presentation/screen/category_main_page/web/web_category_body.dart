@@ -5,7 +5,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../../Main_App_Bar/app_bar.dart';
 import '../../../../Main_App_Bar/web/web_app_bar.dart';
-import '../../../../data/models/category /category_model.dart';
+import '../../../../data/models/category/category_model.dart';
 import '../../../../provider/category_provider.dart';
 import '../../sub_category_screen/icon_sub_with_product/iconCategoryPageSubPro.dart';
 

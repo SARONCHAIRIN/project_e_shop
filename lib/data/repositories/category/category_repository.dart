@@ -1,6 +1,6 @@
 
-import '../../datasources/category /category_service.dart';
-import '../../models/category /category_model.dart';
+import '../../datasources/category/category_service.dart';
+import '../../models/category/category_model.dart';
 
 class CategoryRepository {
   final CategoryService _service;

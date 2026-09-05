@@ -1,4 +1,4 @@
-import '../../../data/models/category /category_model.dart';
+import '../../../data/models/category/category_model.dart';
 
 class HomeViewArgs {
   final dynamic authRepository;

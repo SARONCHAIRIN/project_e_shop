@@ -5,7 +5,7 @@ import 'package:flutter/material.dart' hide SearchController;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../Main_App_Bar/App_Bar/sliver_main_app_bar.dart';
-import '../../../data/models/category /category_model.dart';
+import '../../../data/models/category/category_model.dart';
 import '../../../provider/category_provider.dart';
 
 class CategoryMain extends ConsumerStatefulWidget {

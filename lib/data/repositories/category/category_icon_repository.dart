@@ -1,5 +1,5 @@
-import '../../datasources/category /category_icon_service.dart';
-import '../../models/category /category_icon_model.dart';
+import '../../datasources/category/category_icon_service.dart';
+import '../../models/category/category_icon_model.dart';
 
 class CategoryIconRepository {
   final CategoryIconService service;

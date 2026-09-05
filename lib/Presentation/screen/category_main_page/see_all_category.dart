@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../../../data/models/category /category_model.dart';
+import '../../../data/models/category/category_model.dart';
 import '../../../provider/category_provider.dart';
 
 class SeeAllCategory extends ConsumerStatefulWidget {

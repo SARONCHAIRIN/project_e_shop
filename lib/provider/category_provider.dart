@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/datasources/category /category_service.dart';
-import '../data/models/category /category_model.dart';
+import '../data/datasources/category/category_service.dart';
+import '../data/models/category/category_model.dart';
 import '../data/repositories/category/category_repository.dart';
 
 final categoryServiceProvider = Provider<CategoryService>((ref) {

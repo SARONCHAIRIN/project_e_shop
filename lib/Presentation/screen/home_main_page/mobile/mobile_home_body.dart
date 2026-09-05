@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'dart:typed_data';
 
-import '../../../../data/models/category /category_model.dart';
+import '../../../../data/models/category/category_model.dart';
 import '../../../../data/models/user_model.dart';
 import '../../../../provider/category_provider.dart';
 import '../../category_main_page/see_all_category.dart';

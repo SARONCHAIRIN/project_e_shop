@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../core/storage/token_storage.dart';
-import '../../models/category /category_model.dart';
+import '../../models/category/category_model.dart';
 
 class CategoryService {
   static String baseUrl = "https://e-shop-1-m034.onrender.com/api/v1";

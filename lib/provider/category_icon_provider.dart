@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
 
-import '../data/datasources/category /category_icon_service.dart';
+import '../data/datasources/category/category_icon_service.dart';
 import '../data/repositories/category/category_icon_repository.dart';
 
 final dioProvider = Provider<Dio>((ref) {

@@ -1,4 +1,4 @@
-import 'package:e_shop/data/models/category /category_model.dart';
+import 'package:e_shop/data/models/category/category_model.dart';
 import 'package:e_shop/data/repositories/user_auth_repository.dart';
 
 class CategoryViewArgs {

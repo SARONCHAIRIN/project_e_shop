@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../data/models/category /category_model.dart';
+import '../../../../data/models/category/category_model.dart';
 import '../../../../provider/category_provider.dart';
 import '../../category_main_page/see_all_category.dart';
 import '../home_view_args.dart';

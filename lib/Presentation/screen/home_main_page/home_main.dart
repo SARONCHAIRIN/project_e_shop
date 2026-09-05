@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/responsive/responsive.dart';
-import '../../../data/models/category /category_model.dart';
+import '../../../data/models/category/category_model.dart';
 import '../../../provider/category_provider.dart';
 import 'desktop/desktop_home.dart';
 import 'home_view_args.dart';
