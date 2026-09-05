@@ -19,6 +19,17 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Create .env
+        shell: pwsh
+        run: |
+          @"
+          APP_NAME=My E Shop
+          APP_ENV=production
+          API_BASE_URL=https://e-shop-1-m034.onrender.com/api/v1
+          TIMEOUT=30
+          MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }}
+          "@ | Out-File -FilePath .env -Encoding utf8
+
       - name: Build Windows
         run: flutter build windows --release
 

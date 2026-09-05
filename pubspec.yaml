@@ -96,7 +96,6 @@ flutter:
   assets:
     - assets/images/
     - assets/animations/
-    - assets/models/
     - assets/translations/
     - .env
 
