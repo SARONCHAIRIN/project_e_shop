@@ -55,3 +55,4 @@ google-services.json
 /build/*
 !/build/web/
 !/build/web/**
+build/
