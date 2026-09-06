@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'package:e_shop/data/models/search%20/search_product_model.dart';
 import 'package:http/http.dart' as http;
+
+import '../../models/search/search_product_model.dart';
 
 class SearchService {
 

@@ -12,197 +12,225 @@ class MessageMain extends StatefulWidget {
 }
 
 class _MessageMainState extends State<MessageMain> {
-  final String telegramUsername =
-      "https://t.me/contact/1777776159:KLGkumcFEo4vzzuz";
   final String username = "chairin312007";
 
   Future<void> _openTelegram() async {
     final Uri appUrl = Uri.parse("tg://resolve?domain=$username");
     final Uri webUrl = Uri.parse("https://t.me/$username");
 
-    // Try open Telegram app
-    if (await canLaunchUrl(appUrl)) {
-      await launchUrl(appUrl);
-    }
-    // fallback to browser
-    else {
+    try {
+      if (await canLaunchUrl(appUrl)) {
+        await launchUrl(appUrl);
+        return;
+      }
       await launchUrl(webUrl, mode: LaunchMode.externalApplication);
-    }
-  }
-
-  Future<void> openTelegram() async {
-    final Uri url = Uri.parse("https://t.me/chairin312007");
-    await launchUrl(url, mode: LaunchMode.externalApplication);
-  }
-
-  void openSupportMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.telegram, color: Colors.blue),
-              title: const Text("Telegram"),
-              onTap: openTelegram,
-            ),
-          ],
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("could_not_open_telegram".tr())),
         );
-      },
-    );
+      }
+    }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // Message page show in console
-    print('|=================================================|');
-    print('|              MessageMain loaded                 |');
-    print('|=================================================|');
+    debugPrint('MessageMain loaded');
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = Responsive.isMobile(context);
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF6F8FB),
       appBar: AppBar(
         title: Text(
           "support_center".tr(),
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
+        surfaceTintColor: Colors.white,
       ),
-
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            width: Responsive.isMobile(context)
-                ? double.infinity
-                : 700,
-
-            padding: EdgeInsets.all(
-              Responsive.isMobile(context) ? 20 : 40,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              vertical: isMobile ? 24 : 48,
+              horizontal: isMobile ? 20 : 0,
             ),
-
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-
-                Container(
-                  padding: EdgeInsets.all(
-                    Responsive.isMobile(context) ? 25 : 35,
-                  ),
-
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-
-                  child: Icon(
-                    Icons.support_agent,
-                    size: Responsive.isMobile(context) ? 60 : 80,
-                    color: Colors.blueAccent,
-                  ),
-                ),
-
-
-                const SizedBox(height: 30),
-
-
-                Text(
-                  "how_can_we_help".tr(),
-                  textAlign: TextAlign.center,
-
-                  style: TextStyle(
-                    fontSize: Responsive.isMobile(context)
-                        ? 20
-                        : 28,
-
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-
-                const SizedBox(height: 10),
-
-
-                Text(
-                  "contact_support_telegram".tr(),
-                  textAlign: TextAlign.center,
-
-                  style: TextStyle(
-                    fontSize: Responsive.isMobile(context)
-                        ? 14
-                        : 18,
-
-                    color: Colors.grey,
-                  ),
-                ),
-
-
-                const SizedBox(height: 30),
-
-
-                Card(
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.telegram,
-                      color: Colors.blue,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: isMobile ? double.infinity : 640),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // --- Hero icon with soft gradient glow ---
+                  Container(
+                    padding: EdgeInsets.all(isMobile ? 22 : 30),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.blueAccent.withOpacity(0.18),
+                          Colors.lightBlue.withOpacity(0.08),
+                        ],
+                      ),
                     ),
-
-                    title: Text(
-                      "chat_on_telegram".tr(),
+                    child: Icon(
+                      Icons.support_agent_rounded,
+                      size: isMobile ? 56 : 72,
+                      color: Colors.blueAccent,
                     ),
-
-                    trailing:
-                    const Icon(Icons.arrow_forward_ios),
-
-                    onTap: openTelegram,
                   ),
-                ),
 
+                  const SizedBox(height: 28),
 
-                const SizedBox(height: 20),
+                  Text(
+                    "how_can_we_help".tr(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: isMobile ? 21 : 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
 
+                  const SizedBox(height: 8),
 
-                SizedBox(
-                  width: double.infinity,
-                  height: 45,
+                  Text(
+                    "contact_support_telegram".tr(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: isMobile ? 14 : 16,
+                      color: Colors.black54,
+                      height: 1.4,
+                    ),
+                  ),
 
-                  child: ElevatedButton.icon(
-                    onPressed: _openTelegram,
+                  const SizedBox(height: 28),
 
-                    icon: const Icon(
-                      Icons.telegram,
+                  // --- Contact card ---
+                  Container(
+                    decoration: BoxDecoration(
                       color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.04),
+                          blurRadius: 16,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
                     ),
-
-                    label: Text(
-                      "contact_via_telegram".tr(),
-
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.circular(12),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: _openTelegram,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 16,
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF29A9EA).withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.telegram,
+                                  color: Color(0xFF29A9EA),
+                                  size: 26,
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "chat_on_telegram".tr(),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      "@$username",
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.black45,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 16,
+                                color: Colors.black38,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+
+                  const SizedBox(height: 20),
+
+                  // --- Primary CTA button ---
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton.icon(
+                      onPressed: _openTelegram,
+                      icon: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
+                      label: Text(
+                        "contact_via_telegram".tr(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  Text(
+                    "support_response_time".tr(),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 12.5,
+                      color: Colors.black38,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
