@@ -1,11 +1,14 @@
-name: Build Windows
+name: Deploy Flutter Web to Vercel
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -16,32 +19,24 @@ jobs:
         with:
           channel: stable
 
+      - name: Flutter version
+        run: flutter --version
+
       - name: Install dependencies
         run: flutter pub get
 
       - name: Create .env
-        shell: pwsh
         run: |
-          @"
+          cat > .env <<EOF
           APP_NAME=My E Shop
           APP_ENV=production
           API_BASE_URL=https://e-shop-1-m034.onrender.com/api/v1
           TIMEOUT=30
           MAPBOX_TOKEN=${{ secrets.MAPBOX_TOKEN }}
-          "@ | Out-File -FilePath .env -Encoding utf8
+          EOF
 
-      - name: Build Windows
-        run: flutter build windows --release
+      - name: Build Flutter Web
+        run: flutter build web --release
 
-      - name: Create ZIP
-        shell: pwsh
-        run: |
-          Compress-Archive `
-            -Path build/windows/x64/runner/Release/* `
-            -DestinationPath E-Shop-v1.0.0-Windows.zip
-
-      - name: Upload Windows build
-        uses: actions/upload-artifact@v4
-        with:
-          name: E-Shop-Windows
-          path: E-Shop-v1.0.0-Windows.zip
+      - name: Deploy to Vercel
+        run: npx vercel deploy build/web --prod --yes --token="${{ secrets.VERCEL_TOKEN }}"
