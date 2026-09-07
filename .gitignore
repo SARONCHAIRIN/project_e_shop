@@ -52,8 +52,5 @@ google-services.json
 .vercel
 .env*
 
-/build/*
-!/build/web/
-!/build/web/**
 build/
 *.dmg
