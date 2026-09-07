@@ -56,3 +56,4 @@ google-services.json
 !/build/web/
 !/build/web/**
 build/
+*.dmg
