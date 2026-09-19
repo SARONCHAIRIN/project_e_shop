@@ -27,6 +27,27 @@ pipeline {
             }
         }
 
+        stage('Setup Environment') {
+            steps {
+                withCredentials([
+                    file(credentialsId: 'eshop-env', variable: 'ENV_FILE')
+                ]) {
+                    sh '''
+                        echo "===== Setup Environment ====="
+
+                        test -f "$ENV_FILE"
+                        echo "Jenkins credential file exists"
+
+                        cp "$ENV_FILE" .env
+
+                        test -f .env
+                        echo "Workspace .env exists"
+                        ls -la .env
+                    '''
+                }
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 sh '''
@@ -78,6 +99,7 @@ pipeline {
         }
 
         always {
+            sh 'rm -f .env'
             echo '===== Jenkins Flutter CI Finished ====='
         }
     }
