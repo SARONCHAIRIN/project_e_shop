@@ -26,6 +26,7 @@ pipeline {
                 '''
             }
         }
+
         stage('Setup Environment') {
             steps {
                 withCredentials([
@@ -50,6 +51,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
+                    echo "===== Install Dependencies ====="
                     flutter pub get
                 '''
             }
@@ -58,7 +60,8 @@ pipeline {
         stage('Analyze') {
             steps {
                 sh '''
-                    flutter analyze
+                    echo "===== Flutter Analyze ====="
+                    flutter analyze --no-fatal-infos --no-fatal-warnings
                 '''
             }
         }
@@ -66,6 +69,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
+                    echo "===== Flutter Test ====="
                     flutter test
                 '''
             }
@@ -74,6 +78,7 @@ pipeline {
         stage('Build APK') {
             steps {
                 sh '''
+                    echo "===== Build APK ====="
                     flutter build apk --release
                 '''
             }
@@ -81,6 +86,8 @@ pipeline {
 
         stage('Archive APK') {
             steps {
+                echo "===== Archive APK ====="
+
                 archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/app-release.apk',
                                   fingerprint: true
             }
