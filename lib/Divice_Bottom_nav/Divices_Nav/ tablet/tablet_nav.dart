@@ -81,7 +81,6 @@ class _TabletNavState extends State<TabletNav> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final width = constraints.maxWidth;
         final tabletItem = [
           ...widget.items,
            NavigationItem(icon: Icons.shopping_bag, label: "order".tr()),

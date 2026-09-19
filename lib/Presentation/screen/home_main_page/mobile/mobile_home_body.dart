@@ -5,18 +5,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'dart:typed_data';
-
 import '../../../../data/models/category/category_model.dart';
 import '../../../../data/models/user_model.dart';
 import '../../../../provider/category_provider.dart';
 import '../../category_main_page/see_all_category.dart';
 import '../home_view_args.dart';
-
 import '../../../../Main_App_Bar/mobile/mobile_app_bar.dart';
-
 import '../../sub_category_screen/icon_sub_with_product/icon_sub_with_product.dart';
-
-import '../../sub_category_screen/subcategory_with_product.dart';
 import '../../sub_category_screen/subcategory_with_product.dart';
 
 class MobileHomeBody extends ConsumerStatefulWidget {

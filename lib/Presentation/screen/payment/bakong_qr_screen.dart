@@ -770,59 +770,54 @@ class _BakongQrScreenState extends State<BakongQrScreen>
     );
   }
 
-  Widget _dot() => Container(
-    width: 4,
-    height: 4,
-    decoration: const BoxDecoration(shape: BoxShape.circle, color: _muted),
-  );
 
   // ---------- Bakong Pay pill badge ----------
-  Widget _buildBakongBadge() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [_blue, _blueLight]),
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: _blue.withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 35,
-            height: 35,
-            padding: const EdgeInsets.all(3),
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                'assets/images/logo_bakong.png',
-                // fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          const Text(
-            'BAKONG PAY',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 14,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildBakongBadge() {
+  //   return Container(
+  //     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+  //     decoration: BoxDecoration(
+  //       gradient: const LinearGradient(colors: [_blue, _blueLight]),
+  //       borderRadius: BorderRadius.circular(30),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: _blue.withOpacity(0.3),
+  //           blurRadius: 12,
+  //           offset: const Offset(0, 4),
+  //         ),
+  //       ],
+  //     ),
+  //     child: Row(
+  //       mainAxisSize: MainAxisSize.min,
+  //       children: [
+  //         Container(
+  //           width: 35,
+  //           height: 35,
+  //           padding: const EdgeInsets.all(3),
+  //           decoration: const BoxDecoration(
+  //             shape: BoxShape.circle,
+  //             color: Colors.white,
+  //           ),
+  //           child: ClipOval(
+  //             child: Image.asset(
+  //               'assets/images/logo_bakong.png',
+  //               // fit: BoxFit.cover,
+  //             ),
+  //           ),
+  //         ),
+  //         const SizedBox(width: 8),
+  //         const Text(
+  //           'BAKONG PAY',
+  //           style: TextStyle(
+  //             color: Colors.white,
+  //             fontWeight: FontWeight.w800,
+  //             fontSize: 14,
+  //             letterSpacing: 0.5,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildContent(
     String minutes,

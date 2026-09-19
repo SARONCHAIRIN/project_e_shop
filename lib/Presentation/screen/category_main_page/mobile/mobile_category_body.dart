@@ -215,7 +215,4 @@ class _MobileCategoryBodyState extends ConsumerState<MobileCategoryBody> {
     );
   }
 
-  Widget _mainAppBar() {
-    return MainAppBar(showBars: true, authRepository: widget.authRepository);
-  }
 }

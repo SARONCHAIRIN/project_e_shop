@@ -368,44 +368,6 @@ class _CartScreenState extends ConsumerState<TabletCart> {
     );
   }
 
-  Widget _buildError({VoidCallback? onRetry}) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Lottie.asset(
-              'assets/animations/Error_404.json',
-              width: 220,
-              height: 220,
-              repeat: true,
-            ),
-
-            const SizedBox(height: 10),
-
-            Text(
-              "something_went_wrong".tr(),
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-
-            const SizedBox(height: 20),
-
-            ElevatedButton.icon(
-              onPressed: onRetry,
-              icon: const Icon(Icons.refresh),
-              label: Text("retry".tr()),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildEmptyCart() => Center(
     child: Column(

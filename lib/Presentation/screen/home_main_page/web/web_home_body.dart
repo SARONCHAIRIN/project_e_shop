@@ -115,81 +115,81 @@ class _WebHomeBodyState extends ConsumerState<WebHomeBody> {
     );
   }
 
-  Widget _translate() {
-    final isKhmer = context.locale.languageCode == 'km';
-
-    return Material(
-      color: Colors.transparent,
-      child: PopupMenuButton<Locale>(
-        padding: EdgeInsets.zero,
-        offset: const Offset(0, 48),
-        elevation: 2,
-        color: Theme.of(context).colorScheme.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-          side: BorderSide(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
-          ),
-        ),
-        initialValue: context.locale,
-        onSelected: (Locale locale) => context.setLocale(locale),
-        itemBuilder: (context) => [
-          _languageMenuItem(
-            context,
-            locale: const Locale('en'),
-            flag: '🇬🇧',
-            label: 'English',
-            isSelected: !isKhmer,
-          ),
-          _languageMenuItem(
-            context,
-            locale: const Locale('km'),
-            flag: '🇰🇭',
-            label: 'ខ្មែរ',
-            isSelected: isKhmer,
-          ),
-        ],
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.grey.shade300),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.02),
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                isKhmer ? '🇰🇭' : '🇬🇧',
-                style: const TextStyle(fontSize: 18),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                isKhmer ? 'KM' : 'EN',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(width: 6),
-              Icon(
-                Icons.keyboard_arrow_down_rounded,
-                size: 18,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _translate() {
+  //   final isKhmer = context.locale.languageCode == 'km';
+  //
+  //   return Material(
+  //     color: Colors.transparent,
+  //     child: PopupMenuButton<Locale>(
+  //       padding: EdgeInsets.zero,
+  //       offset: const Offset(0, 48),
+  //       elevation: 2,
+  //       color: Theme.of(context).colorScheme.surface,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(14),
+  //         side: BorderSide(
+  //           color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+  //         ),
+  //       ),
+  //       initialValue: context.locale,
+  //       onSelected: (Locale locale) => context.setLocale(locale),
+  //       itemBuilder: (context) => [
+  //         _languageMenuItem(
+  //           context,
+  //           locale: const Locale('en'),
+  //           flag: '🇬🇧',
+  //           label: 'English',
+  //           isSelected: !isKhmer,
+  //         ),
+  //         _languageMenuItem(
+  //           context,
+  //           locale: const Locale('km'),
+  //           flag: '🇰🇭',
+  //           label: 'ខ្មែរ',
+  //           isSelected: isKhmer,
+  //         ),
+  //       ],
+  //       child: Container(
+  //         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+  //         decoration: BoxDecoration(
+  //           color: Theme.of(context).colorScheme.surface,
+  //           borderRadius: BorderRadius.circular(24),
+  //           border: Border.all(color: Colors.grey.shade300),
+  //           boxShadow: [
+  //             BoxShadow(
+  //               color: Colors.black.withOpacity(0.02),
+  //               blurRadius: 6,
+  //               offset: const Offset(0, 2),
+  //             ),
+  //           ],
+  //         ),
+  //         child: Row(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             Text(
+  //               isKhmer ? '🇰🇭' : '🇬🇧',
+  //               style: const TextStyle(fontSize: 18),
+  //             ),
+  //             const SizedBox(width: 8),
+  //             Text(
+  //               isKhmer ? 'KM' : 'EN',
+  //               style: const TextStyle(
+  //                 fontSize: 14,
+  //                 fontWeight: FontWeight.w600,
+  //               ),
+  //             ),
+  //             const SizedBox(width: 6),
+  //             Icon(
+  //               Icons.keyboard_arrow_down_rounded,
+  //               size: 18,
+  //               color: Theme.of(context).colorScheme.onSurfaceVariant,
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   PopupMenuItem<Locale> _languageMenuItem(
     BuildContext context, {

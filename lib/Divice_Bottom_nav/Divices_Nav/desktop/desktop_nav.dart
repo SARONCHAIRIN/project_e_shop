@@ -5,9 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../../Presentation/screen/order/order_history_screen.dart';
 import '../../../Presentation/screen/order/web_guest_order.dart';
 import '../../../Presentation/screen/profile_main_page/setting_page.dart';
-import '../../../Presentation/screen/profile_main_page/web/web_guest_profile.dart';
 import '../../../core/storage/token_storage.dart';
-import '../../../data/datasources/order_service.dart';
 import '../../../data/repositories/user_auth_repository.dart';
 import '../models/navigation_item.dart';
 import 'desktop_shell.dart';
@@ -107,7 +105,6 @@ class _DesktopNavState extends State<DesktopNav> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final width = constraints.maxWidth;
         final deskItem = [
           ...widget.items,
           NavigationItem(icon: Icons.shopping_bag, label: "order".tr()),

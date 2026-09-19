@@ -1,4 +1,3 @@
-import 'package:e_shop/Main_App_Bar/desktop/desktop_app_bar.dart';
 import 'package:e_shop/Main_App_Bar/web/web_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -116,6 +115,7 @@ class _DesktopHomeBodyState extends ConsumerState<DesktopHomeBody> {
     );
   }
 
+/*
   Widget _translate() {
     final isKhmer = context.locale.languageCode == 'km';
 
@@ -172,8 +172,9 @@ class _DesktopHomeBodyState extends ConsumerState<DesktopHomeBody> {
       ),
     );
   }
+*/
 
-  PopupMenuItem<Locale> _languageMenuItem(
+  /*PopupMenuItem<Locale> _languageMenuItem(
       BuildContext context, {
         required Locale locale,
         required String flag,
@@ -226,7 +227,7 @@ class _DesktopHomeBodyState extends ConsumerState<DesktopHomeBody> {
         ),
       ),
     );
-  }
+  }*/
 
   Widget _categoryShimmer() {
     return Padding(

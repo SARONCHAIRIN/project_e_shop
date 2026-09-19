@@ -2,8 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../../Main_App_Bar/app_bar.dart';
 import '../../../../Main_App_Bar/web/web_app_bar.dart';
 import '../../../../data/models/category/category_model.dart';
 import '../../../../provider/category_provider.dart';

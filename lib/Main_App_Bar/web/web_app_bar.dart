@@ -154,7 +154,6 @@ class _WebAppBarState extends State<WebAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
 
 
     return SliverAppBar(

@@ -1,4 +1,3 @@
-import 'package:e_shop/Presentation/screen/profile_main_page/setting_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 

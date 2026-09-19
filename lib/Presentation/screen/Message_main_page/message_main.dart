@@ -42,7 +42,6 @@ class _MessageMainState extends State<MessageMain> {
   @override
   Widget build(BuildContext context) {
     final bool isMobile = Responsive.isMobile(context);
-    final theme = Theme.of(context);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F8FB),

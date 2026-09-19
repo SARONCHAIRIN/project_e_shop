@@ -22,8 +22,6 @@ class _Palette {
   static const glassBorder = Color(0x2EFFFFFF); // white @ ~18%
 
   static const coral = Color(0xFFFF6B6B);
-  static const mint = Color(0xFF35D07F);
-  static const amber = Color(0xFFFFB020);
 
   static const bg = Color(0xFF0B1120);
 }
