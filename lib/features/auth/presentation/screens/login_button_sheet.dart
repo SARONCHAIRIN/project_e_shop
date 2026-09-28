@@ -4,6 +4,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/storage/token_storage.dart' show TokenStorage;
+import '../../../../provider/category_icon_provider.dart';
+import '../../data/datasources/device_token_service.dart';
 import '../../data/models/auth_models.dart';
 import '../providers/auth_providers.dart';
 
@@ -34,6 +36,89 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
     super.dispose();
   }
 
+  // Future<void> _login() async {
+  //   if (!_formKey.currentState!.validate()) return;
+  //
+  //   final controller = ref.read(authControllerProvider.notifier);
+  //
+  //   await controller.login(
+  //     LoginRequest(
+  //       identifier: _emailController.text.trim(),
+  //       password: _passwordController.text.trim(),
+  //     ),
+  //   );
+  //
+  //   if (!mounted) return;
+  //
+  //   final state = ref.read(authControllerProvider);
+  //
+  //   if (state.error == null && state.data != null) {
+  //     await TokenStorage().saveUserId(state.data!.userId!);
+  //
+  //
+  //
+  //     final auth = state.data!;
+  //
+  //     //  Save user ID
+  //
+  //     if (auth.userId != null) {
+  //
+  //       await TokenStorage().saveUserId(auth.userId!);
+  //
+  //     }
+  //
+  //
+  //     // ================================
+  //
+  //     //  REGISTER FCM TOKEN HERE
+  //
+  //     // ================================
+  //
+  //     try {
+  //
+  //       final accessToken = auth.accessToken;
+  //
+  //       if (accessToken != null && accessToken.isNotEmpty) {
+  //
+  //         await DeviceTokenService(
+  //
+  //           dio: ref.read(dioProvider),
+  //
+  //         ).registerDeviceToken(
+  //
+  //           accessToken: accessToken,
+  //
+  //         );
+  //
+  //       }
+  //
+  //     } catch (e) {
+  //
+  //       // Notification registration should NOT block login
+  //
+  //       debugPrint('FCM registration error: $e');
+  //
+  //     }
+  //
+  //     if (!mounted) return;
+  //     Navigator.pop(context, true); // close bottom sheet first
+  //
+  //     await Future.delayed(const Duration(milliseconds: 100));
+  //
+  //     Navigator.pushReplacementNamed(
+  //       context,
+  //       '/divicenav',
+  //     ); // then go to main screen
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text(state.error ?? "invalid_credentials".tr()),
+  //         backgroundColor: Colors.redAccent,
+  //       ),
+  //     );
+  //   }
+  // }
+
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -51,27 +136,62 @@ class _LoginBottomSheetState extends ConsumerState<LoginBottomSheet1> {
     final state = ref.read(authControllerProvider);
 
     if (state.error == null && state.data != null) {
-      await TokenStorage().saveUserId(state.data!.userId!);
+      final auth = state.data!;
+
+      // Save user id
+      if (auth.userId != null) {
+        await ref
+            .read(tokenStorageProvider)
+            .saveUserId(auth.userId!);
+      }
+
+      // 🔥 Register FCM device
+      try {
+        final tokenStorage = ref.read(tokenStorageProvider);
+        final accessToken = await tokenStorage.readToken();
+
+
+        if (accessToken != null && accessToken.isNotEmpty) {
+          await DeviceTokenService(
+            dio: ref.read(localDioProvider),
+          ).registerDeviceToken(
+            accessToken: accessToken,
+          );
+
+          debugPrint('✅ FCM device registered');
+        } else {
+          debugPrint('⚠️ No access token found');
+        }
+      } catch (e) {
+        // Login should still work even if FCM registration fails
+        debugPrint('❌ FCM registration failed: $e');
+      }
 
       if (!mounted) return;
-      Navigator.pop(context, true); // close bottom sheet first
 
-      await Future.delayed(const Duration(milliseconds: 100));
+      Navigator.pop(context, true);
+
+      await Future.delayed(
+        const Duration(milliseconds: 100),
+      );
+
+      if (!mounted) return;
 
       Navigator.pushReplacementNamed(
         context,
         '/divicenav',
-      ); // then go to main screen
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(state.error ?? "invalid_credentials".tr()),
+          content: Text(
+            state.error ?? "invalid_credentials".tr(),
+          ),
           backgroundColor: Colors.redAccent,
         ),
       );
     }
   }
-
   void _forgotPassword() {
     Navigator.push(
       context,

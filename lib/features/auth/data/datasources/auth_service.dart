@@ -26,7 +26,7 @@ class AuthService {
       print("====================================");
       print("LOGIN START");
       print(
-        "URL: ${serverDio.options.baseUrl}/api/v1/public/email/username/login",
+        "URL: ${localDio.options.baseUrl}/api/v1/public/email/username/login",
       );
       print("INPUT: $input");
       print("IS EMAIL: $isEmail");
@@ -34,7 +34,7 @@ class AuthService {
       print("HEADERS: ${serverDio.options.headers}");
       print("====================================");
 
-      final res = await serverDio.post(
+      final res = await localDio.post(
         "/api/v1/public/email/username/login",
         data: body,
       );
@@ -60,7 +60,7 @@ class AuthService {
       print("URL: $_base/register");
       print("BODY: ${request.toJson()}");
 
-      final res = await serverDio.post(
+      final res = await localDio.post(
         // "http://localhost:8080/api/v1/public/register",
         "/api/v1/public/register",
         data: request.toJson(),

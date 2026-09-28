@@ -73,6 +73,9 @@ dependencies:
   gal: ^2.3.0
   flutter_svg: ^2.2.0
   easy_localization: ^3.0.8
+  firebase_core: ^4.15.0
+  firebase_messaging: ^16.7.0
+
 
 
 
