@@ -44,7 +44,7 @@ Future<void> main() async {
   );
 
   // FCM Notification
-  await FirebaseNotificationService().initialize();
+  // await FirebaseNotificationService().initialize();
 
   // ============================
   // WEB URL STRATEGY
