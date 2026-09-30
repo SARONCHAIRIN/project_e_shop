@@ -33,6 +33,75 @@ class _MessageMainState extends State<MessageMain> {
     }
   }
 
+  static const String botUsername = "eshop_customer_support_bot";
+
+  Future<void> _openTelegramBot() async {
+
+    final Uri appUrl = Uri.parse(
+
+      "tg://resolve?domain=$botUsername&start=support",
+
+    );
+
+    final Uri webUrl = Uri.parse(
+
+      "https://t.me/$botUsername?start=support",
+
+    );
+
+    try {
+
+      final bool opened = await launchUrl(
+
+        appUrl,
+
+        mode: LaunchMode.externalApplication,
+
+      );
+
+      if (!opened) {
+
+        await launchUrl(
+
+          webUrl,
+
+          mode: LaunchMode.externalApplication,
+
+        );
+
+      }
+
+    } catch (e) {
+
+      try {
+
+        await launchUrl(
+
+          webUrl,
+
+          mode: LaunchMode.externalApplication,
+
+        );
+
+      } catch (_) {
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+
+          SnackBar(
+
+            content: Text("could_not_open_telegram".tr()),
+
+          ),
+
+        );
+
+      }
+
+    }
+
+  }
   @override
   void initState() {
     super.initState();
@@ -135,7 +204,7 @@ class _MessageMainState extends State<MessageMain> {
                       color: Colors.transparent,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(16),
-                        onTap: _openTelegram,
+                        onTap: _openTelegramBot,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 18,
@@ -198,7 +267,7 @@ class _MessageMainState extends State<MessageMain> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton.icon(
-                      onPressed: _openTelegram,
+                      onPressed: _openTelegramBot,
                       icon: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
                       label: Text(
                         "contact_via_telegram".tr(),
