@@ -48,6 +48,48 @@ pipeline {
             }
         }
 
+        // ==========================================
+        // Firebase Android Configuration
+        // ==========================================
+        stage('Setup Firebase') {
+            steps {
+                withCredentials([
+                    string(
+                        credentialsId: 'firebase-google-services-base64',
+                        variable: 'GOOGLE_SERVICES_JSON_BASE64'
+                    )
+                ]) {
+                    sh '''
+                        set -e
+
+                        echo "===== Setup Firebase Android ====="
+
+                        mkdir -p android/app
+
+                        echo "Creating google-services.json..."
+
+                        printf '%s' "$GOOGLE_SERVICES_JSON_BASE64" \
+                            | base64 --decode \
+                            > android/app/google-services.json
+
+                        if [ ! -s android/app/google-services.json ]; then
+                            echo "❌ google-services.json missing or empty"
+                            exit 1
+                        fi
+
+                        echo "✅ google-services.json created successfully"
+
+                        ls -lh android/app/google-services.json
+
+                        echo "Checking JSON..."
+                        python3 -m json.tool android/app/google-services.json > /dev/null
+
+                        echo "✅ google-services.json is valid JSON"
+                    '''
+                }
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 sh '''
@@ -78,7 +120,25 @@ pipeline {
         stage('Build APK') {
             steps {
                 sh '''
+                    set -e
+
                     echo "===== Build APK ====="
+
+                    echo "Checking required files..."
+
+                    if [ ! -f .env ]; then
+                        echo "❌ .env missing"
+                        exit 1
+                    fi
+
+                    if [ ! -f android/app/google-services.json ]; then
+                        echo "❌ google-services.json missing"
+                        exit 1
+                    fi
+
+                    echo "✅ .env found"
+                    echo "✅ google-services.json found"
+
                     flutter build apk --release
                 '''
             }
@@ -88,8 +148,10 @@ pipeline {
             steps {
                 echo "===== Archive APK ====="
 
-                archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/app-release.apk',
-                                  fingerprint: true
+                archiveArtifacts(
+                    artifacts: 'build/app/outputs/flutter-apk/app-release.apk',
+                    fingerprint: true
+                )
             }
         }
     }
@@ -105,7 +167,15 @@ pipeline {
         }
 
         always {
-            sh 'rm -f .env'
+            sh '''
+                echo "===== Cleaning CI secrets ====="
+
+                rm -f .env
+                rm -f android/app/google-services.json
+
+                echo "✅ CI secrets cleaned"
+            '''
+
             echo '===== Jenkins Flutter CI Finished ====='
         }
     }
